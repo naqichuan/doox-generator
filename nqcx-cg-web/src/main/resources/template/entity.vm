@@ -1,0 +1,28 @@
+/* 
+ * Copyright 2014 nqcx.org All right reserved. This software is the 
+ * confidential and proprietary information of nqcx.org ("Confidential 
+ * Information"). You shall not disclose such Confidential Information and shall
+ * use it only in accordance with the terms of the license agreement you entered
+ * into with nqcx.org.
+ */
+
+package ${entityPackage};
+
+import org.nqcx.commons.lang.EntityBase;
+
+/**
+ * 
+ * @author naqichuan ${date}
+ * 
+ */
+public class $!{entityName} extends EntityBase {
+
+#foreach($field in $entityFields)
+    $field
+#end
+
+#foreach($method in $entityMethods)
+$method
+#end
+
+}

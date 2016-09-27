@@ -1,0 +1,35 @@
+/* 
+ * Copyright 2014 nqcx.org All right reserved. This software is the 
+ * confidential and proprietary information of nqcx.org ("Confidential 
+ * Information"). You shall not disclose such Confidential Information and shall
+ * use it only in accordance with the terms of the license agreement you entered
+ * into with nqcx.org.
+ */
+
+package ${serviceProjectPackage1};
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import ${serviceProjectPackage}.${serviceInterface};
+import ${daoProjectPackage}.${daoInterface};
+import org.nqcx.commons.dao.DaoInterface;
+import org.nqcx.commons.service.ServiceSupport;
+
+/**
+ * 
+ * @author naqichuan ${date}
+ * 
+ */
+@Service
+public class ${serviceImplements} extends ServiceSupport implements
+        ${serviceInterface} {
+
+    @Autowired
+    private ${daoInterface} ${daoInterface1};
+
+    @Override
+    protected DaoInterface getDao() {
+        return ${daoInterface1};
+    }
+}

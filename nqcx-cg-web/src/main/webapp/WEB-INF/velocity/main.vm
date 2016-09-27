@@ -1,0 +1,431 @@
+#set($layout='_layout/empty.vm')
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Nqcx - #pageTitle(${nqcxValues.defaultTitle} ${title})</title>
+<link href="#springUrl('/favicon.ico')" rel="icon" type="image/x-icon">
+<link href="#springUrl('/assets/themes/default/easyui.css')" rel="stylesheet" type="text/css">  
+<link href="#springUrl('/assets/themes/icon.css')" rel="stylesheet" type="text/css">  
+<link href="#springUrl('/assets/css/demo.css')" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="#springUrl('/assets/jquery/jquery.min.js')"></script>
+<script type="text/javascript" src="#springUrl('/assets/jquery/jquery.easyui.min.js')"></script>
+<script type="text/javascript" src="#springUrl('/assets/jquery/jquery.easyui.nqcx.js')"></script>
+<style type="text/css">
+	#fileShow {list-style-type:none;}
+	#fileShow li {line-height:20px;font-size:14px; font-weight: 700;}
+	table td,table th {padding:0 5px;}
+	table td.lable {text-align: right;}
+	input[type="text"] {width:100px;}
+	input[type="password"] {width:100px;}
+	input[type="text"].big {width:120px;}
+	input[type="text"].big_200 {width:200px;}
+	input[type="text"].middle {width:80px;}
+	input[type="text"].small {width:40px;}
+</style>
+<script type="text/javascript">
+    String.prototype.compare = function(str) {
+    	return this.toLowerCase() == str.toLowerCase();
+    };
+    String.prototype.startWith = function(str){
+    	if(str==null||str==''||this.length==0||str.length>this.length)
+    	  return false;
+    	return this.substr(0,str.length).compare(str);
+    };
+    String.prototype.endWith = function(str){
+        if(str==null||str==""||this.length==0||str.length>this.length)
+          return false;
+        if(this.substring(this.length-str.length)==str)
+          return true;
+        else
+          return false;
+        return true;
+    };
+	String.prototype.replaceFirstUP = function(){
+    	if(this.length==0)
+			return this;
+      	return this.replace(/\b(\w)|\s(\w)|(_\w)/g,function(m){
+			if(m.indexOf('_') > -1){
+				return m.substring(m.indexOf('_') + 1).toUpperCase();
+			} else
+				return m.toUpperCase();
+		});
+	};
+	String.prototype.replaceFirstLow = function(){
+    	if(this.length==0)
+			return this;
+      	return this.replace(/\b(\w)|\s(\w)|(_\w)/g,function(m){
+			if(m.indexOf('_') > -1){
+				return m.substring(m.indexOf('_') + 1).toLowerCase();
+			} else
+				return m.toLowerCase();
+		});
+	};
+</script>
+<script type="text/javascript">
+	var db = {
+		conn: function(callBack) {
+           	$('#connForm').form('nqcxSubmit',{
+        		url: '#springUrl('/session')',
+        		onSubmit: function(){
+        			return $(this).form('validate');
+        		},
+    			success: function(result){
+					if(callBack)
+						callBack();
+    			}
+    		});
+		},
+		reconnect: function(callBack) {
+			jQuery.get('#springUrl('/destroySession')'+'?t='+(new Date()).getTime(),function(result){
+				db.conn(function() {
+					jQuery.messager.show({  
+						title: 'Success',  
+						msg: 'Connected'
+					});
+					if(callBack)
+						callBack();
+				});
+			});
+		}
+	};
+
+	var retryTimes = 1;
+	var nqcxPost = function(url,data,callBack) {
+		jQuery.post(url,data,function(result){
+			if (result.success){
+				retryTimes = 1;
+				if(callBack)
+					callBack(result);
+			} else if(result.errorCode == '11') {
+				if(retryTimes == 0) {
+    				jQuery.messager.show({
+    					title: 'Error',
+    					msg: result.errorText
+    				});
+				} else {
+					retryTimes --;
+					db.conn(connCallBack);
+				}
+			} else {
+				jQuery.messager.show({
+					title: 'Error',
+					msg: result.errorText
+				});
+			}
+		},'json');
+		var connCallBack = function() {
+			nqcxPost(url,data,callBack);
+		}
+	};
+	
+	var nqcxGet = function(url,data,callBack) {
+		if(url) {
+			if(url.indexOf('?') == -1)
+				url +=	'?t='+(new Date()).getTime();
+			else
+				url +=	'&t='+(new Date()).getTime();
+		}
+	
+		jQuery.get(url,data,function(result){
+			if (result.success){
+				retryTimes = 1;
+				if(callBack)
+					callBack(result);
+			} else if(result.errorCode == '11') {
+				if(retryTimes == 0) {
+    				jQuery.messager.show({
+    					title: 'Error',
+    					msg: result.errorText
+    				});
+				} else {
+					retryTimes --;
+					db.conn(connCallBack);
+				}
+			} else {
+				jQuery.messager.show({
+					title: 'Error',
+					msg: result.errorText
+				});
+			}
+		},'json');
+		var connCallBack = function() {
+			nqcxGet(url,data,callBack);
+		}
+	};
+
+	var table = {
+		tableName: function() {
+			return jQuery('select[name="tableName"]');
+		},
+		listNames: function() {
+			nqcxGet('#springUrl('/table/list')',{},function(result) {
+				table.empty();
+				if(result.list) {
+					for(t in result.list) {
+						table.listNamesAppend(result.list[t].name,result.list[t].name);
+					}
+				}
+				jQuery.messager.show({  
+					title: 'Success',  
+					msg: 'Loaded'
+				});
+				table.change();
+			});
+		},
+		empty: function() {
+			jQuery('select[name="tableName"] option').each(function(){
+                if($(this).val()){
+                	$(this).remove();
+				}
+			});
+		},
+		listNamesAppend: function(value,text) {
+			jQuery('<option value="'+value+'">'+text+'</option>').appendTo(this.tableName());
+		},
+		selected: function() {
+			return this.tableName().val();
+		},
+		change: function() {
+			var tableNameValue = this.tableName().val();
+			if(!tableNameValue) {
+				this.clear();
+				return;
+			} else {
+        		jQuery.post('#springUrl('/center')','',function(result){
+        			center.load(result);
+        		},'html');
+			}
+		},
+		clear: function() {
+			center.clear();
+		}
+	};
+	
+	var ws = {
+		wsPath: function() {
+			return jQuery('input[name="wsPath"]');
+		}
+	}
+	
+	var project = {
+		pName: function() {
+			return jQuery('select[name="pName"]');
+		},
+		pType: function() {
+			return jQuery('input[name="pType"]');
+		},
+		pPath: function() {
+			return jQuery('input[name="pPath"]');
+		},
+		pPackage: function() {
+			return jQuery('input[name="pPackage"]');
+		},
+		change: function() {
+			var pNameValue = this.pName().val();
+			if(!pNameValue) {
+				this.clear();
+				return;
+			}
+
+			// var pTypeValue = this.pType().filter(':checked').val();
+			var pPackageValue = this.pPackage().val();
+
+			if(!pPackageValue)
+				pPackageValue = 'org.nqcx';
+				
+			this.pPath().val('/' + pNameValue + '/');
+			this.pPackage().val(pPackageValue);
+			
+			if(this.childChange)
+				this.childChange();
+			
+			path.openFile();
+		},
+		clear: function() {
+			this.pPath().val('');
+			this.pPackage().val('');
+
+			path.setRelativePath('');
+			path.loadCgFile('',[]);
+		}
+	};
+	
+	var path = {
+		relativePath: function() {
+			return jQuery('input[name="relativePath"]');
+		},
+		fileShow: function() {
+			return jQuery('#fileShow');
+		},
+		setRelativePath: function(value) {
+			this.relativePath().val(value);
+		},
+		enterKeyDown: function(e) {
+    		var key = e.which;
+    		if (key == 13) {
+    			e.preventDefault();
+				
+    			var relativePathValue = this.relativePath().val();
+				var path = '';
+				var name = '';
+				if(!relativePathValue)
+					relativePathValue = '/';
+				
+				if(relativePathValue.indexOf('/') == -1)
+					relativePathValue = '/' + relativePathValue;
+				
+				if(relativePathValue.length > 1 && relativePathValue.endWith('/'))
+					relativePathValue = relativePathValue.substring(0,relativePathValue.lastIndexOf('/'));
+					
+    			this.openFile(relativePathValue.substring(0,relativePathValue.lastIndexOf('/') + 1),relativePathValue.substring(relativePathValue.lastIndexOf('/') + 1,relativePathValue.length));
+    		}
+		},
+		openFile: function(pathValue,nameValue) {
+			var pPath = project.pPath().val();
+			if(!pPath) {
+				jQuery.messager.show({
+					title: 'Error',
+					msg: 'Please select project.'
+				});
+				return;
+			}
+			
+			if(!pathValue)
+				pathValue='';
+			if(!nameValue)
+				nameValue='';
+
+			nqcxPost('#springUrl('/project/openFile')',{pPath: pPath, path: pathValue, name: nameValue},function(result) {
+				var relativePathPath = '/';
+				var relativePathName = '';
+				var cgFileListValue = [];
+				if(result.success) {
+					if(result.object) {
+    	  				relativePathPath = result.object.path;
+						relativePathName = result.object.name;
+					}
+					if(result.object.cgFileList)
+         				cgFileListValue = result.object.cgFileList;
+				}
+				path.setRelativePath(relativePathPath + relativePathName);
+				path.loadCgFile(relativePathPath, cgFileListValue);
+			});
+		},
+		loadCgFile: function(pathValue,cgFileList) {
+			var cgFileHtml = '';
+			if(pathValue)
+				cgFileHtml += '<li><a href="javascript:void(0);" onclick="javascript:path.openFile(\''+ pathValue +'\',\'\');">..</a></li>';
+			for(idx in cgFileList) {
+				if(cgFileList[idx].file)
+					cgFileHtml += '<li>'+cgFileList[idx].name+'</li>';
+				else
+					cgFileHtml += '<li><a href="javascript:void(0);" onclick="javascript:path.openFile(\''+ cgFileList[idx].path +'\',\''+cgFileList[idx].name+'\');">'+cgFileList[idx].name+'</a></li>';
+			}
+			this.fileShow().html(cgFileHtml);
+		}
+	};
+
+	var center = {
+		o: function() {
+			return jQuery('div#center');
+		},
+		load: function(content) {
+			this.o().html(content);
+		},
+		clear: function() {
+			this.o().html('');
+		}
+	};
+
+</script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		//db.reconnect();
+		//table.listNames();
+		
+		$('#loadTables').click(function() {
+			table.listNames();
+		});
+		$('#reconnect').click(function() {
+			db.reconnect(function() {
+				retryTimes = 1;
+			});
+			table.listNames();
+		});
+		table.tableName().change(function() {
+			table.change();
+		});
+		project.pName().change(function() {
+			project.change();
+		});
+		project.pType().change(function() {
+			project.change();
+		});
+		path.relativePath().keydown(function (e) {
+			path.enterKeyDown(e);
+		});
+		project.pPackage().keyup(function(e) {
+			if(e.which != 8 || project.pPackage().val())
+				project.change();
+		});
+	});
+</script>
+</head>
+<body class="easyui-layout">
+    <div data-options="region:'north',split:true" style="height:85px;padding:5px 5px 0;overflow:hidden;">
+        <form id="connForm" method="post" action="session">
+        	<table border="0" cellpadding="0" cellspacing="0">
+                <tr height="35px">
+                    <td class="lable">Hostname:</td>
+                    <td><input type="text" name="hostname" value="localhost" /></td>
+                    <td class="lable">Port:</td>
+                    <td><input type="text" name="port" value="3306" class="small" /></td>
+                    <td class="lable">Username:</td>
+                    <td><input type="text" name="username" value="nqcx" /></td>
+                    <td class="lable">Password:</td>
+                    <td><input type="password" name="password" value="nqcx" /></td>
+                    <td class="lable">Schema:</td>
+                    <td><input type="text" name="schema" value="up" /></td>
+                    <td>
+						<input id="loadTables" type="button" value="Load tables" />
+						<input id="reconnect" type="button" value="Reconnect" />
+					</td>
+				</tr>
+				<tr height="30px">
+					<td class="lable">WorkSapce:</td>
+					<td><input type="text" name="wsPath" value="$!{ws.path}" readonly="true"/></td>
+					<td class="lable">Project:</td>
+					<td>
+            			<select name="pName">
+                            <option value="">Select Project</option>
+                            #foreach($cfFile in $!{ws.cgFileList})
+                    			<option value="$!{cfFile.name}">$!{cfFile.name}</option>
+                            #end
+                        </select>
+					</td>
+					<td class="lable">Type:</td>
+					<td nowrap>
+                    	<input type="radio" name="pType" value="0" />Single <input type="radio" name="pType" value="1" checked="checked" />Multiple
+                    </td>
+					<td class="lable">Path:</td>
+					<td class="lable"><input type="text" name="pPath" value="" readonly="true"></td>
+					<td class="lable">Package:</td>
+					<td><input type="text" name="pPackage" value=""></td>
+					<td>
+						<select name="tableName">
+							 <option value="">Select Table</option>
+                        </select>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+    <div data-options="region:'south',split:true" style="height:30px;"></div>
+    <div data-options="region:'west',split:true" style="width:230px;">
+		Current path: <input type="text" class="big" name="relativePath" value="" />
+		<ul id="fileShow"></ul>
+	</div>
+    <div id="center" data-options="region:'center'" style="padding:5px;background:#eee;"></div>
+</body>
+</html>
