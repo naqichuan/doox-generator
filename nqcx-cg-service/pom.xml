@@ -9,7 +9,7 @@
 	<artifactId>nqcx-cg-service</artifactId>
 
 	<name>nqcx-cg-service</name>
-	<url>http://maven.apache.org</url>
+	<url>http://nqcx.org</url>
 
 	<dependencies>
 		<dependency>

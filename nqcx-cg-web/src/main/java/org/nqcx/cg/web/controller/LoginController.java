@@ -52,8 +52,7 @@ public class LoginController extends CgController {
 			@RequestParam("password") String password,
 			@RequestParam("schema") String schema) {
 
-		String connNum = connService.createConn(hostname, port, username,
-				password, schema);
+		String connNum = connService.createConn(hostname, port, username, password, schema);
 
 		DTO dto = new DTO();
 		if (StringUtils.isNotBlank(connNum)) {

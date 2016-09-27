@@ -1,154 +1,124 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<artifactId>nqcx-cg</artifactId>
-		<groupId>org.nqcx.cg</groupId>
-		<version>1.0.1-SNAPSHOT</version>
-	</parent>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>nqcx-cg</artifactId>
+        <groupId>org.nqcx.cg</groupId>
+        <version>1.0.1-SNAPSHOT</version>
+    </parent>
 
-	<artifactId>nqcx-cg-web</artifactId>
-	<packaging>war</packaging>
+    <artifactId>nqcx-cg-web</artifactId>
+    <packaging>war</packaging>
 
-	<name>nqcx-cg-web Maven Webapp</name>
-	<url>http://maven.apache.org</url>
+    <name>nqcx-cg-web Maven Webapp</name>
+    <url>http://nqcx.org</url>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.nqcx.cg</groupId>
-			<artifactId>nqcx-cg-service</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>org.nqcx.cg</groupId>
+            <artifactId>nqcx-cg-service</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
-		<!-- ########## 2rd party library ########## -->
-		<dependency>
-			<groupId>org.nqcx.commons</groupId>
-			<artifactId>nqcx-commons-lang</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.nqcx.commons</groupId>
-			<artifactId>nqcx-commons-util</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.nqcx.commons</groupId>
-			<artifactId>nqcx-commons-web</artifactId>
-		</dependency>
+        <!-- ########## 2rd party library ########## -->
+        <dependency>
+            <groupId>org.nqcx.commons</groupId>
+            <artifactId>nqcx-commons-lang</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.nqcx.commons</groupId>
+            <artifactId>nqcx-commons-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.nqcx.commons</groupId>
+            <artifactId>nqcx-commons-web</artifactId>
+        </dependency>
 
-		<!-- ########## 3rd party library ########## -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-		</dependency>
+        <!-- ########## 3rd party library ########## -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<scope>provided</scope>
-			<optional>true</optional>
-		</dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
 
-		<dependency>
-			<groupId>org.apache.velocity</groupId>
-			<artifactId>velocity</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.velocity</groupId>
-			<artifactId>velocity-tools</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity-tools</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-tx</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context-support</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
 
-		<!-- if you enable json support in spring mvc. -->
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-core-asl</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
-		</dependency>
+        <!-- if you enable json support in spring mvc. -->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-			<optional>true</optional>
-		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
 
-	<build>
-		<finalName>nqcx-cg-web</finalName>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.1-beta-1</version>
-				<configuration>
-					<archiveClasses>false</archiveClasses>
-				</configuration>
-			</plugin>
-		</plugins>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>config/*.properties</include>
-					<include>log4j.xml</include>
-					<include>log4j.dtd</include>
-				</includes>
-			</resource>
-			<resource>
-				<directory>src/main/resources</directory>
-				<includes>
-					<include>gmsg/*.properties</include>
-					<include>beans.xml</include>
-					<include>spring/*.xml</include>
-					<include>template/*.vm</include>
-				</includes>
-			</resource>
-		</resources>
-	</build>
+    <build>
+        <finalName>nqcx-cg-web</finalName>
+     </build>
 
-	<profiles>
-		<profile>
-			<id>my</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<workspace.path>/Users/nqcx/Works/MyWorks/workspace</workspace.path>
+    <profiles>
+        <profile>
+            <id>my</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <workspace.path>/Users/nqcx/Works/MyWorks/workspace</workspace.path>
 
-				<log.file.base>/var/log/cg</log.file.base>
-				<log.web.level.min>INFO</log.web.level.min>
-				<log.web.level.max>FATAL</log.web.level.max>
-				<log.web.file>${log.file.base}/cg-web.log</log.web.file>
-			</properties>
-		</profile>
-	</profiles>
+                <log.file.base>/var/log/cg</log.file.base>
+                <log.web.level.min>INFO</log.web.level.min>
+                <log.web.level.max>FATAL</log.web.level.max>
+                <log.web.file>${log.file.base}/cg-web.log</log.web.file>
+            </properties>
+        </profile>
+    </profiles>
 </project>
