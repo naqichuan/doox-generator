@@ -8,14 +8,14 @@
 
 package org.nqcx.cg.entity.table;
 
-import org.nqcx.commons.lang.EntityBase;
+import org.nqcx.commons.lang.o.EntityBO;
 
 /**
  * 
  * @author naqichuan Feb 8, 2014 9:49:43 PM
  * 
  */
-public class Column extends EntityBase {
+public class Column extends EntityBO {
 
 	private String field;
 	private String type;

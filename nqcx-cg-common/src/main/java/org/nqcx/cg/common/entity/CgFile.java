@@ -12,14 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.nqcx.cg.common.util.CgFileUtils;
-import org.nqcx.commons.lang.EntityBase;
+import org.nqcx.commons.lang.o.EntityBO;
 
 /**
  * 
  * @author naqichuan Mar 1, 2014 4:45:01 PM
  * 
  */
-public class CgFile extends EntityBase {
+public class CgFile extends EntityBO {
 
 	private String path;
 	private String name;

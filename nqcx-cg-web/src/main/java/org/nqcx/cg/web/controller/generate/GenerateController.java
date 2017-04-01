@@ -17,7 +17,7 @@ import org.nqcx.cg.service.generate.GenerateService;
 import org.nqcx.cg.service.table.TableService;
 import org.nqcx.cg.service.ws.WsService;
 import org.nqcx.cg.web.controller.CgController;
-import org.nqcx.commons.lang.DTO;
+import org.nqcx.commons.lang.o.DTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -79,7 +79,7 @@ public class GenerateController extends CgController {
 				serviceProjectName, serviceProjectPackage, tableColumns, entityField, entityType, mapperInterface,
 				managerInterface, managerImplement, serviceInterface, serviceImplement);
 
-		return returnResult(dto);
+		return buildResult(dto);
 	}
 
 }

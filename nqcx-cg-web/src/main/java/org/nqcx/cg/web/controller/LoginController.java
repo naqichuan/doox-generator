@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.nqcx.cg.service.conn.ConnService;
-import org.nqcx.commons.lang.DTO;
+import org.nqcx.commons.lang.o.DTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,7 +64,7 @@ public class LoginController extends CgController {
 			dto.setSuccess(false);
 		}
 
-		return returnResult(dto);
+		return buildResult(dto);
 	}
 
 	@RequestMapping(value = "/destroySession", method = { RequestMethod.GET }, produces = "application/json")
@@ -77,6 +77,6 @@ public class LoginController extends CgController {
 			session.removeAttribute(CONNECTION_KEY);
 		}
 
-		return returnResult(new DTO(true));
+		return buildResult(new DTO(true));
 	}
 }

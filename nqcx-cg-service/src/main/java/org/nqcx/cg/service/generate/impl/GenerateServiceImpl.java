@@ -22,7 +22,7 @@ import org.apache.velocity.app.VelocityEngine;
 import org.nqcx.cg.common.util.CgFileUtils;
 import org.nqcx.cg.entity.ws.enums.PType;
 import org.nqcx.cg.service.generate.GenerateService;
-import org.nqcx.commons.lang.DTO;
+import org.nqcx.commons.lang.o.DTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -31,7 +31,7 @@ public class CgController extends WebSupport {
 //	 * @param dto
 //	 * @return
 //	 */
-//	protected Map<?, ?> returnResult(DTO dto) {
+//	protected Map<?, ?> buildResult(DTO dto) {
 //		if (dto == null) {
 //			dto = new DTO();
 //			// 默认调用失败

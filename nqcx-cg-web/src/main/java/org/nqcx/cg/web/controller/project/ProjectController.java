@@ -38,6 +38,6 @@ public class ProjectController extends CgController {
 			@RequestParam(value = "pPath", required = false, defaultValue = "") String pPath,
 			@RequestParam(value = "path", required = false, defaultValue = "") String path,
 			@RequestParam(value = "name", required = false, defaultValue = "") String name) {
-		return returnResult(projectService.openFile(pPath, path, name));
+		return buildResult(projectService.openFile(pPath, path, name));
 	}
 }

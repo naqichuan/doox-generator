@@ -1,21 +1,23 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="java.io.UnsupportedEncodingException" %>
-<%@ page import="java.io.ByteArrayOutputStream" %>
-<%@ page import="java.net.URLDecoder" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isErrorPage="true"%>
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
+<%@ page import="java.io.ByteArrayOutputStream" %>
+<%@ page import="java.io.PrintWriter" %>
+<%@ page import="java.io.StringWriter" %>
+<%@ page import="java.io.UnsupportedEncodingException" %>
+<%@ page import="java.net.URLDecoder" %>
 <%!
-    private static final String[] urls = new String[]{"/assets", "/error", "/msg", "/success", "/favicon.ico"};
+    private static final String[] urls = new String[]{"/assets/", "/r/"};
     private static final String WEBSPHERE_URI_ATTRIBUTE = "com.ibm.websphere.servlet.uri_non_decoded";
     private static final String FORWARD_REQUEST_URI_ATTRIBUTE = "javax.servlet.forward.request_uri";
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger logger = LoggerFactory.getLogger("_ERROR_PAGE");
 
     private boolean urlBeginWithResource(HttpServletRequest request) {
         String url = null;
         if ((url = getOriginatingRequestUri(request)) == null)
             return false;
 
-        logger.info("Originating request uri is " + url + ", context path is " + request.getContextPath());
+        logger.info("Scheme is ["+ request.getScheme() +"], host is ["+ request.getHeader("Host") +"], port is [" + request.getServerPort() + "], context path is [" + request.getContextPath() + "], originating request uri is [" + url + "]");
 
         for (String u : urls) {
             if (url.startsWith(request.getContextPath() + u))
@@ -95,7 +97,7 @@
                     if (u == -1 || l == -1) {
                         throw new IllegalArgumentException("Invalid encoded sequence \"" + source.substring(i) + "\"");
                     }
-                    bos.write((char) ((u << 4) + l));
+                     bos.write((char) ((u << 4) + l));
                     i += 2;
                     changed = true;
                 } else {
@@ -109,9 +111,18 @@
     }
 %>
 <%
+    if(exception != null) {
+        StringWriter sw = new StringWriter();
+        logger.error("错误跳转页异常", exception);
+        try {
+            exception.printStackTrace(new PrintWriter(sw));
+        } finally {
+            logger.error("exception.printStackTrace", sw.toString());
+        }
+    }
     if (!urlBeginWithResource(request)) {
-        response.sendRedirect(request.getContextPath() + "/error/1");
+        response.sendRedirect(request.getContextPath() + "/r/e/1?url=/index");
     } else {
-        out.println("Not Found");
+        out.print("Not Found");
     }
 %>

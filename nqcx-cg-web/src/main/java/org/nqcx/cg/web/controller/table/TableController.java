@@ -36,13 +36,13 @@ public class TableController extends CgController {
 			RequestMethod.POST }, produces = "application/json")
 	@ResponseBody
 	public Map<?, ?> listTable() {
-		return returnResult(tableService.listTables(this.getConnNum()));
+		return buildResult(tableService.listTables(this.getConnNum()));
 	}
 
 	@RequestMapping(value = "/get/{table}", method = { RequestMethod.GET,
 			RequestMethod.POST }, produces = "application/json")
 	@ResponseBody
 	public Map<?, ?> config(@PathVariable("table") String table, Model model) {
-		return returnResult(tableService.getTable(this.getConnNum(), table));
+		return buildResult(tableService.getTable(this.getConnNum(), table));
 	}
 }

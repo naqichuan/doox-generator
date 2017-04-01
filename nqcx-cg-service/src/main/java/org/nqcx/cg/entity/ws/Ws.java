@@ -11,14 +11,14 @@ package org.nqcx.cg.entity.ws;
 import java.util.List;
 
 import org.nqcx.cg.common.entity.CgFile;
-import org.nqcx.commons.lang.EntityBase;
+import org.nqcx.commons.lang.o.EntityBO;
 
 /**
  * 
  * @author naqichuan Feb 9, 2014 10:13:31 PM
  * 
  */
-public class Ws extends EntityBase {
+public class Ws extends EntityBO {
 
 	private String path;
 

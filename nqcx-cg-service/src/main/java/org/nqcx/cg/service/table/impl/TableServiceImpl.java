@@ -18,7 +18,7 @@ import org.nqcx.cg.entity.table.Table;
 import org.nqcx.cg.service.conn.CgResult;
 import org.nqcx.cg.service.conn.ConnService;
 import org.nqcx.cg.service.table.TableService;
-import org.nqcx.commons.lang.DTO;
+import org.nqcx.commons.lang.o.DTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

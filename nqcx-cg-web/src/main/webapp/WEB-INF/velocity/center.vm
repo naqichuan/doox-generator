@@ -331,7 +331,7 @@
 			var rowHtml = '';
 			
 			var entityName = table.replaceFirstUP();
-			var entityBase = "EntityBase";
+			var entityBase = "EntityBO";
 			var show = 'public class ' + entityName + ' extends ' + entityBase;
 			
 			rowHtml += '<td>' + table + '</td>';
@@ -356,7 +356,7 @@
 		},
 		show: function(table){
 			var entityName = document.getElementById('entityName_'+table).value;
-			var entityBase = "EntityBase";
+			var entityBase = "EntityBO";
 			var show = 'public class ' + entityName + ' extends ' + entityBase;
 			jQuery('#entityText_'+table).html(show);
 		},

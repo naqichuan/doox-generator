@@ -26,11 +26,18 @@
 		<property name="basenames">
 			<list>
 				<value>gmsg.gmsg</value>
+				<value>gmsg.0000_CG</value>
 			</list>
 		</property>
 	</bean>
-	
+
+	<!-- 该配置文件是 nqcx-commons-web 包下 -->
+	<import resource="classpath:spring/bean-commons-result.xml"/>
+
+	<!-- 打包时，以下配置文件不进行占位符${}过滤和值替换 -->
 	<import resource="spring/bean-nqcx.xml" />
 	<import resource="spring/bean-service.xml" />
 	<import resource="spring/bean-web.xml" />
+
+	<!-- 打包时，以下配置文件需要进行占位符${}过滤和值替换 -->
 </beans>

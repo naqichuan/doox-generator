@@ -8,7 +8,7 @@
 
 package org.nqcx.cg.service.ws;
 
-import org.nqcx.commons.lang.DTO;
+import org.nqcx.commons.lang.o.DTO;
 
 /**
  * 

@@ -1,94 +1,101 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util"
-	xsi:schemaLocation="
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
 		http://www.springframework.org/schema/util  http://www.springframework.org/schema/util/spring-util-3.2.xsd">
 
-	<mvc:annotation-driven />
-	<mvc:default-servlet-handler />
-	<context:component-scan base-package="org.nqcx.commons.web.controller,org.nqcx.cg.web.controller" />
+    <mvc:annotation-driven/>
+    <mvc:default-servlet-handler/>
+    <import resource="classpath:spring/bean-commons-servlet.xml"/>
+    <context:component-scan base-package="org.nqcx.cg.web.controller"/>
 
-	<!-- static resources -->
-	<mvc:resources location="/assets/**" mapping="/assets/" cache-period="864000" /><!-- 24 * 3600 * 10 -->
-	<mvc:resources location="/favicon.ico" mapping="/favicon.ico" cache-period="864000" /><!-- 24 * 3600 * 10 -->
+    <util:map id="_attributesMap">
+        <entry key="nqcxValues">
+            <ref bean="_nqcxValues"/>
+        </entry>
+    </util:map>
 
-	<bean id="velocityConfig"
-		class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
-		<property name="resourceLoaderPath" value="/WEB-INF/velocity/" />
-		<property name="velocityProperties">
-			<props>
-				<prop key="input.encoding">UTF-8</prop>
-				<prop key="output.encoding">UTF-8</prop>
-				<prop key="velocimacro.library">_macro/macros.vm</prop>
-			</props>
-		</property>
-	</bean>
+    <!-- ====以下是 ViewResolver & Velocity 配置==== -->
+    <bean id="velocityConfig"
+          class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+        <property name="resourceLoaderPath" value="/WEB-INF/velocity/"/>
+        <property name="velocityProperties">
+            <props>
+                <prop key="input.encoding">UTF-8</prop>
+                <prop key="output.encoding">UTF-8</prop>
+                <prop key="velocimacro.library">_macro/macros.vm</prop>
+            </props>
+        </property>
+    </bean>
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.velocity.VelocityLayoutViewResolver">
+        <property name="layoutUrl" value="_layout/default.vm"/>
+        <property name="cache" value="false"/>
+        <property name="prefix" value=""/>
+        <property name="suffix" value=".vm"/>
+        <property name="exposeSpringMacroHelpers" value="true"/>
+        <property name="dateToolAttribute" value="dateTool"/>
+        <property name="numberToolAttribute" value="numberTool"/>
+        <property name="attributesMap" ref="_attributesMap"/>
+        <property name="contentType" value="text/html;charset=UTF-8"/>
+        <property name="order" value="1"/>
+    </bean>
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="contentNegotiationManager">
+            <bean class="org.springframework.web.accept.ContentNegotiationManager">
+                <constructor-arg>
+                    <bean class="org.springframework.web.accept.PathExtensionContentNegotiationStrategy">
+                        <constructor-arg>
+                            <map>
+                                <entry key="json" value="application/json;charset=utf-8"/>
+                                <entry key="xml" value="application/xml;charset=utf-8"/>
+                            </map>
+                        </constructor-arg>
+                    </bean>
+                </constructor-arg>
+            </bean>
+        </property>
+        <property name="viewResolvers">
+            <list>
+                <ref bean="viewResolver"/>
+            </list>
+        </property>
+        <property name="defaultViews">
+            <list>
+                <bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView"/>
+            </list>
+        </property>
+    </bean>
 
-	<util:map id="_attributesMap">
-		<entry key="nqcxValues">
-			<ref bean="_nqcxValues" />
-		</entry>
-	</util:map>
+    <bean id="_WebContextInterceptor" class="org.nqcx.commons.web.interceptor.WebContextInterceptor">
+        <property name="localeResolver">
+            <bean class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+                <property name="cookieName" value="_clientlocale"/>
+                <property name="defaultLocale" value="zh_CN"/>
+                <property name="cookieMaxAge" value="2147483647"/>
+            </bean>
+        </property>
+    </bean>
+    <bean id="_ConnSessionInterceptor" class="org.nqcx.cg.web.interceptor.ConnSessionInterceptor"/>
 
-	<bean id="viewResolver"
-		class="org.springframework.web.servlet.view.velocity.VelocityLayoutViewResolver">
-		<property name="layoutUrl" value="_layout/default.vm" />
-		<property name="cache" value="false" />
-		<property name="prefix" value="" />
-		<property name="suffix" value=".vm" />
-		<property name="exposeSpringMacroHelpers" value="true" />
-		<property name="dateToolAttribute" value="dateTool" />
-		<property name="numberToolAttribute" value="numberTool" />
-		<property name="attributesMap" ref="_attributesMap" />
-		<property name="contentType" value="text/html;charset=UTF-8" />
-	</bean>
-
-	<bean
-		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
-		<property name="defaultContentType" value="text/html" />
-		<!-- not by accept header -->
-		<property name="ignoreAcceptHeader" value="true" />
-		<!-- by extension -->
-		<property name="mediaTypes">
-			<map>
-				<entry key="xml" value="application/xml" />
-				<entry key="json" value="application/json" />
-			</map>
-		</property>
-		<property name="viewResolvers">
-			<list>
-				<ref bean="viewResolver" />
-			</list>
-		</property>
-		<property name="defaultViews">
-			<list>
-				<bean
-					class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" />
-			</list>
-		</property>
-	</bean>
-
-	<bean id="_WebContextInterceptor" class="org.nqcx.commons.web.interceptor.WebContextInterceptor" />
-	<bean id="_ConnSessionInterceptor" class="org.nqcx.cg.web.interceptor.ConnSessionInterceptor" />
-
-	<mvc:interceptors>
-		<mvc:interceptor>
-			<mvc:mapping path="/**" />
-			<mvc:exclude-mapping path="/favicon.ico"/>
-			<mvc:exclude-mapping path="/assets/**"/>
-			<ref bean="_WebContextInterceptor" />
-		</mvc:interceptor>
-		<mvc:interceptor>
-			<mvc:mapping path="/table/**"/>
-			<ref bean="_ConnSessionInterceptor" />
-		</mvc:interceptor>
-		<mvc:interceptor>
-			<mvc:mapping path="/generate/**"/>
-			<ref bean="_ConnSessionInterceptor" />
-		</mvc:interceptor>
-	</mvc:interceptors>
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/favicon.ico"/>
+            <mvc:exclude-mapping path="/assets/**"/>
+            <ref bean="_WebContextInterceptor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/table/**"/>
+            <ref bean="_ConnSessionInterceptor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/generate/**"/>
+            <ref bean="_ConnSessionInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
 </beans>

@@ -112,7 +112,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <workspace.path>/Users/nqcx/Works/MyWorks/workspace</workspace.path>
+                <workspace.path>/Users/nqcx/Works/development/projects</workspace.path>
 
                 <log.file.base>/var/log/cg</log.file.base>
                 <log.web.level.min>INFO</log.web.level.min>

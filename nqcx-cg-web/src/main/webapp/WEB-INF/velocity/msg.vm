@@ -7,9 +7,10 @@
         <meta http-equiv="refresh" content="$!{auto};URL=$!{url}">
     #end
     <title>$title</title>
-    <link rel="stylesheet" type="text/css" href="$!{assetsUrl.forPath().build()}/css/nqcx.min.css$!{timeSure}"/>
-    <link rel="stylesheet" type="text/css" href="$!{assetsUrl.forPath().build()}/css/docs.min.css$!{timeSure}"/>
-    <link rel="stylesheet" type="text/css" href="$!{assetsUrl.forPath().build()}/css/msg.min.css$!{timeSure}"/>
+    <link rel="stylesheet" type="text/css" href="$!{assetsUrl.forPath().build()}/assets/css/nqcx-min.css$!{timeSure}"/>
+    <link rel="stylesheet" type="text/css" href="$!{assetsUrl.forPath().build()}/assets/css/docs-min.css$!{timeSure}"/>
+    <link rel="stylesheet" type="text/css" href="$!{assetsUrl.forPath().build()}/assets/css/msg-min.css$!{timeSure}"/>
+    <link rel="stylesheet" type="text/css" href="#springUrl('')/assets/fonts/fonts-min.css$!{timeSure}">
 </head>
 <body>
 <div class="container">
@@ -47,9 +48,9 @@
                                 #springMessageText('T.AUTORETURN' [$auto])
                             #end
                         #end
-                        #if("$!index" != "")
-                            <a href="$!{index}"><span class="glyphicon glyphicon-home">#springMessage('T.RETURNTOHOME')</span></a>
-                        #end
+##                        #if("$!index" != "")
+##                            <a href="$!{index}"><span class="glyphicon glyphicon-home">#springMessage('T.RETURNTOHOME')</span></a>
+##                        #end
                         #if("$!url" != "")
                             <a href="$!{url}"><span class="glyphicon glyphicon-circle-arrow-left"></span>#springMessage('T.RETURN')</a>
                         #end

@@ -5,68 +5,17 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/util  http://www.springframework.org/schema/util/spring-util.xsd">
 
+	<!-- 用于配置全局通用属性，页面中可以通过 $!{nqcxValues.defaultTitle} 取值，bean 中通过属性注入可取值 -->
 	<util:map id="_nqcxValues">
-		 <entry key="defaultTitle" value="Code generate" />
+		<entry key="defaultTitle" value="Code generate"/>
 	</util:map>
-
 	<bean id="nqcxValues" class="org.nqcx.commons.web.values.NqcxValues">
 		<property name="values">
-			<ref bean="_nqcxValues" />
+			<ref bean="_nqcxValues"/>
 		</property>
 	</bean>
 
-	<bean id="nqcxResult" class="org.nqcx.commons.web.result.NqcxResult">
-		<property name="results">
-			<map>
-				<entry key="E00000">
-					<ref bean="E00000" />
-				</entry>
-				<entry key="E00001">
-					<ref bean="E00001" />
-				</entry>
-				<entry key="M00000">
-					<ref bean="M00000" />
-				</entry>
-				<entry key="S00000">
-					<ref bean="S00000" />
-				</entry>
-			</map>
-		</property>
-	</bean>
-	<bean id="E00000" class="org.nqcx.commons.web.result.Result">
-		<property name="type" value="error" />
-		<property name="code" value="0" />
-		<property name="title" value="RE.00000.TITLE" />
-		<property name="subject" value="RE.00000.SUBJECT" />
-		<property name="auto" value="RE.00000.AUTO" />
-	</bean>
-	<bean id="E00001" class="org.nqcx.commons.web.result.Result">
-		<property name="type" value="error" />
-		<property name="code" value="1" />
-		<property name="subject" value="RE.00001.SUBJECT" />
-		<property name="suggestTitle" value="RE.00000.SUGGESTTITLE" />
-		<property name="suggest">
-			<list>
-				<value>RE.00001.SUGGEST.0001</value>
-				<value>RE.00001.SUGGEST.0002</value>
-				<value>RE.00001.SUGGEST.0003</value>
-			</list>
-		</property>
-	</bean>
-
-	<bean id="M00000" class="org.nqcx.commons.web.result.Result">
-		<property name="type" value="msg" />
-		<property name="code" value="0" />
-		<property name="title" value="RM.00000.TITLE" />
-		<property name="subject" value="RM.00000.SUBJECT" />
-		<property name="auto" value="RM.00000.AUTO" />
-	</bean>
-
-	<bean id="S00000" class="org.nqcx.commons.web.result.Result">
-		<property name="type" value="success" />
-		<property name="code" value="0" />
-		<property name="title" value="RS.00000.TITLE" />
-		<property name="subject" value="RS.00000.SUBJECT" />
-		<property name="auto" value="RS.00000.AUTO" />
-	</bean>
+	<!-- 用于注入 bean-commons-result.xml 中 ResultBuilder 的 resultExtends 属性 -->
+	<util:map id="resultExtends">
+	</util:map>
 </beans>
