@@ -12,13 +12,14 @@
 <script type="text/javascript" src="#springUrl('/assets/jquery/jquery.easyui.min.js')"></script>
 <script type="text/javascript" src="#springUrl('/assets/jquery/jquery.easyui.nqcx.js')"></script>
 <style type="text/css">
-	#fileShow {list-style-type:none;}
+	#fileShow {list-style-type:none;margin: 0;padding:0}
 	#fileShow li {line-height:20px;font-size:14px; font-weight: 700;}
-	table td,table th {padding:0 5px;}
+	table td,table th {padding:0 2px;}
 	table td.lable {text-align: right;}
 	input[type="text"] {width:100px;}
 	input[type="password"] {width:100px;}
 	input[type="text"].big {width:120px;}
+	input[type="text"].big_140 {width:140px;}
 	input[type="text"].big_200 {width:200px;}
 	input[type="text"].middle {width:80px;}
 	input[type="text"].small {width:40px;}
@@ -245,9 +246,10 @@
 
 			if(this.childChange)
 				this.childChange();
-			
+
 			path.openFile();
 		},
+
         clear: function() {
 			this.pPath().val('');
 			this.pPackage().val('');
@@ -445,15 +447,19 @@
 			path.enterKeyDown(e);
 		});
 		project.pPackage().keyup(function(e) {
-			if(e.which != 8 || project.pPackage().val())
-				project.change();
+			if(e.which != 8 || project.pPackage().val()) {
+				// project.change();
+			    if(project.childChange)
+			    	project.childChange();
+			}
 		});
 	});
 </script>
 </head>
 <body class="easyui-layout">
-    <div data-options="region:'north',split:true" style="height:115px;padding:5px 5px 0;overflow:hidden;">
+    <div data-options="region:'north',split:true" style="height:75px;padding:5px 5px 0;overflow:hidden;">
         <form id="connForm" method="post" action="session">
+            <input type="hidden" name="wsPath" value="$!{ws.path}" readonly="true"/>
         	<table border="0" cellpadding="0" cellspacing="0">
                 <tr height="35px">
                     <td class="lable">Hostname:</td>
@@ -464,75 +470,107 @@
                     <td><input type="text" name="username" value="nqcx" /></td>
                     <td class="lable">Password:</td>
                     <td><input type="password" name="password" value="nqcx" /></td>
+				</tr>
+				<tr heigth="30">
                     <td class="lable">Schema:</td>
                     <td><input type="text" name="schema" value="up" /></td>
-                    <td>
-						<input id="loadTables" type="button" value="Load tables" />
+                    <td colspan="2" class="lable">
 						<input id="reconnect" type="button" value="Reconnect" />
-					</td>
-				</tr>
-				<tr height="30px">
-					<td class="lable">WorkSapce:</td>
-					<td><input type="text" name="wsPath" value="$!{ws.path}" readonly="true"/></td>
-					<td class="lable">Project:</td>
-					<td>
-            			<select name="pName">
-                            <option value="">Select Project</option>
-                            #foreach($cfFile in $!{ws.cgFileList})
-                    			<option value="$!{cfFile.name}">$!{cfFile.name}</option>
-                            #end
-                        </select>
-					</td>
-					<td class="lable">Type:</td>
-					<td nowrap>
-                    	<input type="radio" name="pType" value="0" />Single <input type="radio" name="pType" value="1" checked="checked" />Multiple
                     </td>
-					<td class="lable">Path:</td>
-					<td class="lable"><input type="text" name="pPath" value="" readonly="true"></td>
-					<td class="lable">Package:</td>
-					<td><input type="text" name="pPackage" value=""></td>
-					<td>
-						<select name="tableName">
-							 <option value="">Select Table</option>
+                    <td class="lable">
+                        <input id="loadTables" type="button" value="Load tables" />
+					</td>
+					<td colspan="2" class="lable">
+                        <select name="tableName">
+                            <option value="">Select Table</option>
                         </select>
 					</td>
-				</tr>
-				<tr height="30">
-					<td class="lable">Provide:</td>
-					<td>
-                        <select name="provideModuleName">
-                            <option value="">/</option>
-                        </select>
+					<td class="lable">
+                        <input id="reloadAll" type="button" value="Reload Result" />
 					</td>
-                    <td class="lable">DAO:</td>
-					<td>
-                        <select name="daoModuleName">
-                            <option value="">/</option>
-                        </select>
-					</td>
-                    <td class="lable">Service:</td>
-					<td>
-                        <select name="serviceModuleName">
-                            <option value="">/</option>
-                        </select>
-					</td>
-                    <td class="lable">Web:</td>
-					<td>
-                        <select name="webModuleName">
-                            <option value="">/</option>
-                        </select>
-					</td>
-                    <td class="lable"></td>
-                    <td></td>
-					<td></td>
 				</tr>
 			</table>
 		</form>
 	</div>
     <div data-options="region:'south',split:true" style="height:30px;"></div>
     <div data-options="region:'west',split:true" style="width:230px;">
-		Current path: <input type="text" class="big" name="relativePath" value="" />
-		<ul id="fileShow"></ul>
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tr height="30">
+				<td colspan="2">$!{ws.path}</td>
+			</tr>
+ 			<tr height="30">
+				<td class="lable">
+					Project:
+				</td>
+				<td>
+                    <select name="pName">
+                        <option value="">Select Project</option>
+						#foreach($cfFile in $!{ws.cgFileList})
+                            <option value="$!{cfFile.name}">$!{cfFile.name}</option>
+						#end
+                    </select>
+				</td>
+			</tr>
+            <tr height="30">
+                <td class="lable">Path:</td>
+                <td><input type="text" class="big_140" name="pPath" value="" readonly="true"></td>
+            </tr>
+            <tr height="30">
+                <td class="lable">Package:</td>
+                <td>
+                    <input type="text" class="big_140" name="pPackage" value="">
+                </td>
+            </tr>
+            <tr height="30">
+                <td class="lable">Type:</td>
+                <td nowrap>
+                    <input type="radio" name="pType" value="0" />Single <input type="radio" name="pType" value="1" checked="checked" />Multiple
+                </td>
+            </tr>
+             <tr height="30">
+                <td class="lable">Provide:</td>
+                <td>
+                    <select name="provideModuleName">
+                        <option value="">/</option>
+                    </select>
+                </td>
+            </tr>
+            <tr height="30">
+				<td class="lable">DAO:</td>
+                <td>
+                    <select name="daoModuleName">
+                        <option value="">/</option>
+                    </select>
+                </td>
+            </tr>
+            <tr height="30">
+				<td class="lable">Service:</td>
+                <td>
+                    <select name="serviceModuleName">
+                        <option value="">/</option>
+                    </select>
+                </td>
+            </tr>
+            <tr height="30">
+				<td class="lable">Web:</td>
+                <td>
+                    <select name="webModuleName">
+                        <option value="">/</option>
+                    </select>
+                </td>
+            </tr>
+		</table>
+		<hr/>
+        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+                <td style="padding-left: 10px"><strong>.</strong><input type="text" class="big_200" name="relativePath" value="" />
+            </tr>
+			<tr>
+				<td style="padding-left: 10px">
+                    <ul id="fileShow"></ul>
+				</td>
+			</tr>
+		</table>
 	</div>
     <div id="center" data-options="region:'center'" style="padding:5px;background:#eee;"></div>
 </body>
