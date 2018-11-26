@@ -112,9 +112,9 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <workspace.path>/Users/nqcx/Works/development/projects</workspace.path>
+                <workspace.path>/Users/nqcx/Works/NQC/projects</workspace.path>
 
-                <log.file.base>/var/log/cg</log.file.base>
+                <log.file.base>/export/logs/cg</log.file.base>
                 <log.web.level.min>INFO</log.web.level.min>
                 <log.web.level.max>FATAL</log.web.level.max>
                 <log.web.file>${log.file.base}/cg-web.log</log.web.file>

@@ -1,21 +1,12 @@
-/* 
- * Copyright 2014 nqcx.org All right reserved. This software is the 
- * confidential and proprietary information of nqcx.org ("Confidential 
+/*
+ * Copyright 2014 nqcx.org All right reserved. This software is the
+ * confidential and proprietary information of nqcx.org ("Confidential
  * Information"). You shall not disclose such Confidential Information and shall
  * use it only in accordance with the terms of the license agreement you entered
  * into with nqcx.org.
  */
 
 package org.nqcx.cg.service.generate.impl;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.app.VelocityEngine;
@@ -30,10 +21,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
+
 /**
- * 
  * @author naqichuan Feb 9, 2014 2:18:27 AM
- * 
  */
 @Service
 public class GenerateServiceImpl implements GenerateService {
@@ -47,9 +41,6 @@ public class GenerateServiceImpl implements GenerateService {
     private static String ENTITY_TEMPLATE_NAME = "entity.vm";
     private static String MAPPER_JAVA_TEMPLATE_NAME = "mapper_java.vm";
     private static String MAPPER_XML_TEMPLATE_NAME = "mapper_xml.vm";
-    // private static String DAO_TEMPLATE_NAME = "dao.vm";
-    // private static String MANAGERR_INTERFACE_TEMPLATE_NAME = "manager_interface.vm";
-    // private static String MANAGERR_IMPLEMENTS_TEMPLATE_NAME = "manager_implements.vm";
     private static String SERVICE_INTERFACE_TEMPLATE_NAME = "service_interface.vm";
     private static String SERVICE_IMPLEMENTS_TEMPLATE_NAME = "service_implements.vm";
 
@@ -67,13 +58,12 @@ public class GenerateServiceImpl implements GenerateService {
 
     @Override
     public DTO generate(String tableName, String pName, PType pType, String pPath, String pPackage, String entityName,
-            String entityProjectName, String entityProjectPackage,
-            String mapperProjectName,
-            String mapperProjectPackage,
-            // String managerProjectName, String managerProjectPackage,
-            String serviceProjectName, String serviceProjectPackage, String[] tableColumns, String[] entityField,
-            String[] entityType, String mapperInterface, String managerInterface, String managerImplement,
-            String serviceInterface, String serviceImplement) {
+                        String entityProjectName, String entityProjectPackage,
+                        String mapperProjectName,
+                        String mapperProjectPackage,
+                        String serviceProjectName, String serviceProjectPackage,
+                        String[] tableColumns, String[] entityField, String[] entityType,
+                        String mapperInterface, String serviceInterface, String serviceImplement) {
 
         DTO dto = new DTO();
         if (isNotBlank(entityName) && (PType.MULTIPLE == pType && isBlank(entityProjectName))
@@ -105,13 +95,6 @@ public class GenerateServiceImpl implements GenerateService {
                     entityField);
         }
 
-        // String managerPath = pathMap.get(P_MANAGER_PATH_KEY);
-        // if ((managerPath != null || (PType.MULTIPLE == pType && isNotBlank(managerProjectName)))
-        // && isNotBlank(managerInterface) && isNotBlank(managerImplement) && isNotBlank(managerProjectPackage)) {
-        // this.generateManager(managerProjectName, managerPath, managerInterface, managerImplement,
-        // managerProjectPackage, mapperInterface, mapperProjectPackage);
-        // }
-
         String daoInterface = mapperInterface;
         String daoProjectPackage = mapperProjectPackage;
 
@@ -142,15 +125,14 @@ public class GenerateServiceImpl implements GenerateService {
      * @param pType
      * @param pPath
      * @param entityProjectName
-     * @param mapperProjectName
-     *            // * @param managerProjectName
+     * @param mapperProjectName  // * @param managerProjectName
      * @param serviceProjectName
      * @return
      */
     private Map<String, String> getPathString(String wsPath, PType pType, String pPath, String entityProjectName,
-            String mapperProjectName,
-            // String managerProjectName,
-            String serviceProjectName) {
+                                              String mapperProjectName,
+                                              // String managerProjectName,
+                                              String serviceProjectName) {
         Map<String, String> map = new HashMap<String, String>();
 
         if (isNotBlank(entityProjectName) || (PType.SINGLE == pType && isBlank(serviceProjectName))) {
@@ -188,7 +170,7 @@ public class GenerateServiceImpl implements GenerateService {
      * @param entityType
      */
     private void generateEntity(String entityPath, String entityName, String entityPackage, String[] entityField,
-            String[] entityType) {
+                                String[] entityType) {
 
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("date", new Date());
@@ -232,14 +214,13 @@ public class GenerateServiceImpl implements GenerateService {
     }
 
     /**
-     * 
      * @param tableName
      * @param mapperPath
      * @param mapperName
      * @param mapperPackage
      */
     private void generateMapper(String tableName, String mapperPath, String mapperName, String mapperPackage,
-            String entityName, String[] tableColumns, String[] entityField) {
+                                String entityName, String[] tableColumns, String[] entityField) {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("date", new Date());
         model.put("mapperName", mapperName);
@@ -347,7 +328,7 @@ public class GenerateServiceImpl implements GenerateService {
      * @param daoProjectPackage
      */
     private void generateService(String serviceProjectName, String servicePath, String serviceInterface,
-            String serviceImplement, String serviceProjectPackage, String daoInterface, String daoProjectPackage) {
+                                 String serviceImplement, String serviceProjectPackage, String daoInterface, String daoProjectPackage) {
 
         Map<String, Object> modelInterface = new HashMap<String, Object>();
         modelInterface.put("date", new Date());

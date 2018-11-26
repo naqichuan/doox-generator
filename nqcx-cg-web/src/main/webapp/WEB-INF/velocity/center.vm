@@ -1,6 +1,13 @@
 #set($layout='_layout/empty.vm')
 <form id="generate_form" method="post" action="">
-	<table border="1">
+    <fieldset>
+        <input id="reloadAll" type="button" value="Reload all" />
+		<input id="entityConfig" type="button" value="Add entity" data-value='0' />
+        <input id="mapperConfig" type="button" value="Add mapper" data-value='0' />
+        <input id="serviceConfig" type="button" value="Add service" data-value='0' />
+    </fieldset>
+    <br />
+    <table border="1" style="border-color: #6a6a6a;" cellpadding="0" cellspacing="0">
 		<thead>
 			<tr>
 				<th>field</th>
@@ -32,16 +39,6 @@
 	</table>
 	<br />
 	<fieldset>
-		<input id="reloadAll" type="button" value="Reload all" /> <input
-			id="entityConfig" type="button" value="Add entity" data-value='0' />
-		<input id="mapperConfig" type="button" value="Add mapper"
-			data-value='0' />
-		<!--  	<input id="managerConfig" type="button" value="Add manager" data-value='0' /> -->
-		<input id="serviceConfig" type="button" value="Add service"
-			data-value='0' />
-	</fieldset>
-	<br />
-	<fieldset>
 		<legend>
 			<span style="font-weight: 700;">Package name & Package: </span>
 		</legend>
@@ -66,12 +63,6 @@
 				<td><input type="text" name="mapperProjectPackage"
 					class="big_200" value=""></td>
 			</tr>
-			<!--             <tr id="managerProjectTr" style="display:none;"> -->
-			<!--                 <td align="right"><span style="font-weight:700;">Manager project name: </span></td> -->
-			<!--                 <td><input type="text" name="managerProjectName" class="big_200" value=""></td> -->
-			<!--                 <td align="right"><span style="font-weight:700;">Manager project package: </span></td> -->
-			<!--                 <td><input type="text" name="managerProjectPackage" class="big_200" value=""></td> -->
-			<!--			</tr> -->
 			<tr id="serviceProjectTr" style="display: none;">
 				<td align="right"><span style="font-weight: 700;">Service
 						project name: </span></td>
@@ -99,13 +90,6 @@
 		<div id="config_mapper_div"></div>
 	</fieldset>
 	<br /> <br />
-	<!--	<fieldset> -->
-	<!-- 	<legend><span style="font-weight:700;">Manager: </span></legend> -->
-	<!--         <div id="config_manager_div"> -->
-	<!--         </div> -->
-	<!-- 	</fieldset> -->
-	<!--     <br /> -->
-	<!--     <br /> -->
 	<fieldset>
 		<legend>
 			<span style="font-weight: 700;">Service: </span>
@@ -154,26 +138,8 @@
 				this.mapperConfig().val('Add mapper');
 				this.mapperConfig().css('background-color','');
 				mapper.projectClear();
-		}
+			}
 		},
-//		managerConfig: function() {
-//			return jQuery('#managerConfig');
-//		},
-//		managerConfigValueAlternation: function() {
-//			if(!this.checkProjectName())
-//				return;
-//			if(!this.managerConfig().attr('data-value') || this.managerConfig().attr('data-value') == 0) {
-//				this.managerConfig().attr('data-value','1');
-//				this.managerConfig().val('Cancel manager');
-//				this.managerConfig().css('background-color','orange');
-//				manager.projectFill();
-//			} else {
-//				this.managerConfig().attr('data-value','0');
-//				this.managerConfig().val('Add manager');
-//				this.managerConfig().css('background-color','');
-//				manager.projectClear();
-//			}
-//		},
 		serviceConfig: function() {
 			return jQuery('#serviceConfig');
 		},
@@ -210,8 +176,6 @@
 			entity.projectFill();
 		if(button.mapperConfig().attr('data-value') == 1)
 			mapper.projectFill();
-//		if(button.managerConfig().attr('data-value') == 1)
-//			manager.projectFill();
 		if(button.serviceConfig().attr('data-value') == 1)
 			service.projectFill();
 	};
@@ -255,18 +219,16 @@
 </script>
 <script type="text/javascript">
 	$(document).ready(function(){
-	button.reloadAll().click(function() {
-		table.change();
-	});
+		button.reloadAll().click(function() {
+			table.change();
+		});
+
 		button.entityConfig().click(function() {
 			button.entityConfigValueAlternation();
 		});
 		button.mapperConfig().click(function() {
 			button.mapperConfigValueAlternation();
 		});
-//		button.managerConfig().click(function() {
-//			button.managerConfigValueAlternation();
-//		});
 		button.serviceConfig().click(function() {
 			button.serviceConfigValueAlternation();
 		});
