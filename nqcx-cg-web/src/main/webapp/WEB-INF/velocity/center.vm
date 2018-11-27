@@ -31,101 +31,108 @@
         </tbody>
     </table>
     <br/>
-    <fieldset>
-        <table border="0" cellpadding="0" cellspacing="0">
-            <tr height="25">
-                <td class="lable">Provide-provide Package:</td>
-                <td>
-
-                </td>
-                <td rowspan="2" class="lable">
-                    <input id="entityConfig" type="button" value="Add entity" data-value='0'/>
-                </td>
-            </tr>
-            <tr height="25">
-                <td class="lable">Provide-service package:</td>
-                <td>a</td>
-            </tr>
-            <tr height="25">
-                <td class="lable">Dao-data package:</td>
-                <td></td>
-                <td rowspan="2" class="lable"><input id="mapperConfig" type="button" value="Add mapper" data-value='0'/>
-                </td>
-            </tr>
-            <tr height="25">
-                <td class="lable">Dao-dao package:</td>
-                <td></td>
-            </tr>
-            <tr height="25">
-                <td class="lable">Service-service package:</td>
-                <td></td>
-                <td class="lable"><input id="serviceConfig" type="button" value="Add service" data-value='0'/></td>
-            </tr>
-            <tr height="25">
-                <td class="lable">Web-web package:</td>
-                <td></td>
-                <td class="lable"><input id="webConfig" type="button" value="Add web" data-value='0'/></td>
-            </tr>
-        </table>
-    </fieldset>
+##    <fieldset>
+##        <table border="0" cellpadding="0" cellspacing="0">
+##            <tr height="25">
+##                <td class="lable">Provide-provide Package:</td>
+##                <td>
+##
+##                </td>
+##                <td rowspan="2" class="lable">
+##                    <input id="entityConfig" type="button" value="Add entity" data-value='0'/>
+##                </td>
+##            </tr>
+##            <tr height="25">
+##                <td class="lable">Provide-service package:</td>
+##                <td>a</td>
+##            </tr>
+##            <tr height="25">
+##                <td class="lable">Dao-data package:</td>
+##                <td></td>
+##                <td rowspan="2" class="lable"><input id="mapperConfig" type="button" value="Add mapper" data-value='0'/>
+##                </td>
+##            </tr>
+##            <tr height="25">
+##                <td class="lable">Dao-dao package:</td>
+##                <td></td>
+##            </tr>
+##            <tr height="25">
+##                <td class="lable">Service-service package:</td>
+##                <td></td>
+##                <td class="lable"><input id="serviceConfig" type="button" value="Add service" data-value='0'/></td>
+##            </tr>
+##            <tr height="25">
+##                <td class="lable">Web-web package:</td>
+##                <td></td>
+##                <td class="lable"><input id="webConfig" type="button" value="Add web" data-value='0'/></td>
+##            </tr>
+##        </table>
+##    </fieldset>
+##    <br/>
+##    <fieldset>
+##        <legend>
+##            <span style="font-weight: 700;">Package name & Package: </span>
+##        </legend>
+##        <table border="0">
+##            <tr id="entityProjectTr" style="display: none;">
+##                <td align="right"><span style="font-weight: 700;">Entity project name: </span></td>
+##                <td></td>
+##                <td align="right"><span style="font-weight: 700;">Entity project package: </span></td>
+##                <td></td>
+##            </tr>
+##            <tr id="mapperProjectTr" style="display: none;">
+##                <td align="right"><span style="font-weight: 700;">Mapper project name: </span></td>
+##                <td><input type="text" name="mapperProjectName" class="big_200" value=""></td>
+##                <td align="right"><span style="font-weight: 700;">Mapper project package: </span></td>
+##                <td><input type="text" name="mapperProjectPackage" class="big_200" value=""></td>
+##            </tr>
+##            <tr id="serviceProjectTr" style="display: none;">
+##                <td align="right"><span style="font-weight: 700;">Service project name: </span></td>
+##                <td><input type="text" name="serviceProjectName" class="big_200" value=""></td>
+##                <td align="right"><span style="font-weight: 700;">Service project package: </span></td>
+##                <td><input type="text" name="serviceProjectPackage" class="big_200" value=""></td>
+##            </tr>
+##        </table>
+##    </fieldset>
     <br/>
     <fieldset>
         <legend>
-            <span style="font-weight: 700;">Package name & Package: </span>
-        </legend>
-        <table border="0">
-            <tr id="entityProjectTr" style="display: none;">
-                <td align="right"><span style="font-weight: 700;">Entity project name: </span></td>
-                <td></td>
-                <td align="right"><span style="font-weight: 700;">Entity project package: </span></td>
-                <td></td>
-            </tr>
-            <tr id="mapperProjectTr" style="display: none;">
-                <td align="right"><span style="font-weight: 700;">Mapper project name: </span></td>
-                <td><input type="text" name="mapperProjectName" class="big_200" value=""></td>
-                <td align="right"><span style="font-weight: 700;">Mapper project package: </span></td>
-                <td><input type="text" name="mapperProjectPackage" class="big_200" value=""></td>
-            </tr>
-            <tr id="serviceProjectTr" style="display: none;">
-                <td align="right"><span style="font-weight: 700;">Service project name: </span></td>
-                <td><input type="text" name="serviceProjectName" class="big_200" value=""></td>
-                <td align="right"><span style="font-weight: 700;">Service project package: </span></td>
-                <td><input type="text" name="serviceProjectPackage" class="big_200" value=""></td>
-            </tr>
-        </table>
-    </fieldset>
-    <br/>
-    <fieldset>
-        <legend>
-            <span style="font-weight: 700;"><input type="checkbox" name="provide" value="1">Provide</span>
+            <span style="font-weight: 700;"><input type="checkbox" name="provide" value="1">Module -> Provide</span>
         </legend>
         <table border="0" cellpadding="0" cellspacing="0">
-            <td class="lable"></td>
+            <td class="lable">Module provide package:</td>
             <td>
-                <input type="text" name="entityProjectName" class="big_200" value="">
-                <input type="text" name="entityProjectPackage" class="big_200" value="">
+                <input type="text" name="provideProvidePackage" class="big_200" value="">
             </td>
+            <td class="lable">Module service package:</td>
+            <td>
+                <input type="text" name="provideServicePackage" class="big_200" value="">
+            </td>
+##            <td>
+##                <input type="text" name="entityProjectName" class="big_200" value="">
+##                <input type="text" name="entityProjectPackage" class="big_200" value="">
+##            </td>
         </table>
         <div id="config_entity_div"></div>
     </fieldset>
     <br/> <br/>
     <fieldset>
         <legend>
-            <span style="font-weight: 700;"><input type="checkbox" name="dao" value="1"> Dao</span>
+            <span style="font-weight: 700;"><input type="checkbox" name="dao" value="1">Module -> Dao</span>
         </legend>
         <div id="config_mapper_div"></div>
     </fieldset>
     <br/> <br/>
     <fieldset>
         <legend>
-            <span style="font-weight: 700;"><input type="checkbox" name="service" value="1">Service</span>
+            <span style="font-weight: 700;"><input type="checkbox" name="service" value="1">Module -> Service</span>
         </legend>
         <div id="config_service_div"></div>
     </fieldset>
     <br/> <br/>
     <fieldset>
         <legend>
-            <span style="font-weight: 700;"><input type="checkbox" name="web" value="1">Web:</span>
+            <span style="font-weight: 700;"><input type="checkbox" name="web" value="1">Module -> Web:</span>
         </legend>
         <div id="config_web_div"></div>
     </fieldset>
@@ -138,60 +145,60 @@
         reloadAll: function () {
             return jQuery('#reloadAll');
         },
-        entityConfig: function () {
-            return jQuery('#entityConfig');
-        },
-        entityConfigValueAlternation: function () {
-            if (!this.checkProjectName())
-                return;
-            if (!this.entityConfig().attr('data-value') || this.entityConfig().attr('data-value') == 0) {
-                this.entityConfig().attr('data-value', '1');
-                this.entityConfig().val('Cancel entity');
-                this.entityConfig().css('background-color', 'orange');
-                entity.projectFill();
-            } else {
-                this.entityConfig().attr('data-value', '0');
-                this.entityConfig().val('Add entity');
-                this.entityConfig().css('background-color', '');
-                entity.projectClear();
-            }
-        },
-        mapperConfig: function () {
-            return jQuery('#mapperConfig');
-        },
-        mapperConfigValueAlternation: function () {
-            if (!this.checkProjectName())
-                return;
-            if (!this.mapperConfig().attr('data-value') || this.mapperConfig().attr('data-value') == 0) {
-                this.mapperConfig().attr('data-value', '1');
-                this.mapperConfig().val('Cancel mapper');
-                this.mapperConfig().css('background-color', 'orange');
-                mapper.projectFill();
-            } else {
-                this.mapperConfig().attr('data-value', '0');
-                this.mapperConfig().val('Add mapper');
-                this.mapperConfig().css('background-color', '');
-                mapper.projectClear();
-            }
-        },
-        serviceConfig: function () {
-            return jQuery('#serviceConfig');
-        },
-        serviceConfigValueAlternation: function () {
-            if (!this.checkProjectName())
-                return;
-            if (!this.serviceConfig().attr('data-value') || this.serviceConfig().attr('data-value') == 0) {
-                this.serviceConfig().attr('data-value', '1');
-                this.serviceConfig().val('Cancel service');
-                this.serviceConfig().css('background-color', 'orange');
-                service.projectFill();
-            } else {
-                this.serviceConfig().attr('data-value', '0');
-                this.serviceConfig().val('Add service');
-                this.serviceConfig().css('background-color', '');
-                service.projectClear();
-            }
-        },
+        // entityConfig: function () {
+        //     return jQuery('#entityConfig');
+        // },
+        // entityConfigValueAlternation: function () {
+        //     if (!this.checkProjectName())
+        //         return;
+        //     if (!this.entityConfig().attr('data-value') || this.entityConfig().attr('data-value') == 0) {
+        //         this.entityConfig().attr('data-value', '1');
+        //         this.entityConfig().val('Cancel entity');
+        //         this.entityConfig().css('background-color', 'orange');
+        //         entity.projectFill();
+        //     } else {
+        //         this.entityConfig().attr('data-value', '0');
+        //         this.entityConfig().val('Add entity');
+        //         this.entityConfig().css('background-color', '');
+        //         entity.projectClear();
+        //     }
+        // },
+        // mapperConfig: function () {
+        //     return jQuery('#mapperConfig');
+        // },
+        // mapperConfigValueAlternation: function () {
+        //     if (!this.checkProjectName())
+        //         return;
+        //     if (!this.mapperConfig().attr('data-value') || this.mapperConfig().attr('data-value') == 0) {
+        //         this.mapperConfig().attr('data-value', '1');
+        //         this.mapperConfig().val('Cancel mapper');
+        //         this.mapperConfig().css('background-color', 'orange');
+        //         mapper.projectFill();
+        //     } else {
+        //         this.mapperConfig().attr('data-value', '0');
+        //         this.mapperConfig().val('Add mapper');
+        //         this.mapperConfig().css('background-color', '');
+        //         mapper.projectClear();
+        //     }
+        // },
+        // serviceConfig: function () {
+        //     return jQuery('#serviceConfig');
+        // },
+        // serviceConfigValueAlternation: function () {
+        //     if (!this.checkProjectName())
+        //         return;
+        //     if (!this.serviceConfig().attr('data-value') || this.serviceConfig().attr('data-value') == 0) {
+        //         this.serviceConfig().attr('data-value', '1');
+        //         this.serviceConfig().val('Cancel service');
+        //         this.serviceConfig().css('background-color', 'orange');
+        //         service.projectFill();
+        //     } else {
+        //         this.serviceConfig().attr('data-value', '0');
+        //         this.serviceConfig().val('Add service');
+        //         this.serviceConfig().css('background-color', '');
+        //         service.projectClear();
+        //     }
+        // },
         checkProjectName: function () {
             if (project.pName().val()) {
                 return true;
@@ -204,16 +211,8 @@
             }
         }
     };
-
-    project.childChange = function () {
-        if (button.entityConfig().attr('data-value') == 1)
-            entity.projectFill();
-        if (button.mapperConfig().attr('data-value') == 1)
-            mapper.projectFill();
-        if (button.serviceConfig().attr('data-value') == 1)
-            service.projectFill();
-    };
-
+</script>
+<script type="text/javascript">
     var tableInfo = {
         info: function () {
             return jQuery('tbody#tableInfo');
@@ -254,34 +253,78 @@
 
 <script type="text/javascript">
     var entity = {
-          projectTr: function () {
-            return jQuery('#entityProjectTr');
-        },
+        // projectTr: function () {
+        //     return jQuery('#entityProjectTr');
+        // },
         projectDiv: function () {
             return jQuery('#config_entity_div');
         },
-        projectName: function () {
-            return jQuery('input[name="entityProjectName"]');
+        // projectName: function () {
+        //     return jQuery('input[name="entityProjectName"]');
+        // },
+        providePackage: function () {
+            return jQuery('input[name="provideProvidePackage"]');
         },
-        projectPackage: function () {
-            return jQuery('input[name="entityProjectPackage"]');
+        servicePackage: function () {
+            return jQuery('input[name="provideServicePackage"]');
         },
         projectInit: function () {
+            this.loadPackage();
+            this.loadTable();
         },
-        projectFill: function () {
-            var pNameValue = project.pName().val();
-            var pTypeValue = project.pType().filter(':checked').val();
-            var pPackageValue = project.pPackage().val();
+          projectClear: function () {
+            // this.projectName().val('');
+            // this.projectPackage().val('');
+            // this.projectTr().css('display', 'none');
+            // this.projectDiv().html('');
+        },
+        loadPackage: function() {
+            var tableName = table.tableName().val();
+
+            // current value
+            var prpValue = this.providePackage().val();
+            var sepValue = this.servicePackage().val();
+
+            // project pakcage value
+            var ppValue = project.pPackage().val() || '';
+
+            var idx = 0;
+            if ((idx = prpValue.indexOf('.provide.')) > 0)
+                prpValue = ppValue + prpValue.substring(idx);
+            else
+                prpValue = ppValue + '.provide.' + tableName;
+            if(prpValue.indexOf(".") == 0 && prpValue.length > 1)
+                prpValue = prpValue.substring(1);
+
+            idx = 0;
+            if ((idx = sepValue.indexOf('.service.')) > 0)
+                sepValue = ppValue + sepValue.substring(idx);
+            else
+                sepValue = ppValue + '.service.' + tableName;
+            if(sepValue.indexOf(".") == 0 && sepValue.length > 1)
+                sepValue = sepValue.substring(1);
+
+            // set value
+            this.providePackage().val(prpValue);
+            this.servicePackage().val(sepValue);
+        },
+        loadTable: function () {
+            // var pNameValue = project.pName().val();
+            // var pTypeValue = project.pType().filter(':checked').val();
+            // var pPackageValue = project.pPackage().val();
+
+            // var moduleName = project.module.provide().val();
+
 
             var tableName = table.tableName().val();
             var columns = [];
             if (!tableName)
                 return;
 
-            this.projectName().val(pTypeValue == 0 ? '' : pNameValue + '-entity');
-            this.projectPackage().val(pPackageValue + '.entity.' + tableName);
+            // this.projectName().val(moduleName);
+            // this.projectPackage().val(pPackageValue + '.entity.' + tableName);
 
-            this.projectTr().css('display', '');
+            // this.projectTr().css('display', '');
 
 
             nqcxGet('#springUrl('/table/get/')' + tableName, {}, function (result) {
@@ -290,12 +333,6 @@
                 }
                 entity.config(columns, tableName);
             });
-        },
-        projectClear: function () {
-            this.projectName().val('');
-            this.projectPackage().val('');
-            this.projectTr().css('display', 'none');
-            this.projectDiv().html('');
         },
         config: function (columns, table) {
             var entityHtml = '<table border="0" cellpadding="0" cellspacing="0">';
@@ -373,7 +410,8 @@
                 return input;
         }
     };
-
+</script>
+<script type="text/javascript">
     var mapper = {
         projectTr: function () {
             return jQuery('#mapperProjectTr');
@@ -433,7 +471,8 @@
             jQuery('#mapperText_' + table).html(show);
         }
     };
-
+</script>
+<script type="text/javascript">
     //	var manager = {
     //		projectTr: function() {
     //			return jQuery('#managerProjectTr');
@@ -516,7 +555,8 @@
     //			jQuery('#managerText1_'+table).html(show);
     //		}
     //	};
-
+</script>
+<script type="text/javascript">
     var service = {
         projectTr: function () {
             return jQuery('#serviceProjectTr');
@@ -601,18 +641,8 @@
         }
     };
 
-    jQuery('#config_entity_btn').click(function () {
-        entity.config($(":checkbox[name=column]"), jQuery("#tableName").val());
-    });
-    jQuery('#config_mapper_btn').click(function () {
-        mapper.config(jQuery("#tableName").val());
-    });
-    //	jQuery('#config_manager_btn').click(function() {
-    //		manager.config(jQuery("#tableName").val());
-    //	});
-    jQuery('#config_service_btn').click(function () {
-        service.config(jQuery("#tableName").val());
-    });
+</script>
+<script type="text/javascript">
 
     var generate = function () {
         $('#generate_form').form('nqcxSubmit', {
@@ -649,24 +679,35 @@
     });
 </script>
 <script type="text/javascript">
+    project.module.change = function () {
+        entity.loadPackage();
+
+        // if (button.entityConfig().attr('data-value') == 1)
+        //     entity.projectFill();
+        // if (button.mapperConfig().attr('data-value') == 1)
+        //     mapper.projectFill();
+        // if (button.serviceConfig().attr('data-value') == 1)
+        //     service.projectFill();
+    };
+
     $(document).ready(function () {
         button.reloadAll().click(function () {
             table.change();
         });
 
-        button.entityConfig().click(function () {
-            button.entityConfigValueAlternation();
-        });
-        button.mapperConfig().click(function () {
-            button.mapperConfigValueAlternation();
-        });
-        button.serviceConfig().click(function () {
-            button.serviceConfigValueAlternation();
-        });
+        // button.entityConfig().click(function () {
+        //     button.entityConfigValueAlternation();
+        // });
+        // button.mapperConfig().click(function () {
+        //     button.mapperConfigValueAlternation();
+        // });
+        // button.serviceConfig().click(function () {
+        //     button.serviceConfigValueAlternation();
+        // });
         tableInfo.getInfo(table.tableName().val());
 
         console.log("Provide loading...")
-
+        entity.projectInit();
 
         console.log("Cernter loaded.")
     });

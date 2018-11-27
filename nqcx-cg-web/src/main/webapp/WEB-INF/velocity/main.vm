@@ -230,8 +230,9 @@
                 // project package
                 var pPackageValue = this.pPackage().val();
                 if (!pPackageValue)
-                    pPackageValue = 'org.nqcx';
+                    pPackageValue = 'org.nqcx'
                 this.pPackage().val(pPackageValue);
+
 
                 // modules
                  var pTypeValue = this.pType().filter(':checked').val();
@@ -240,11 +241,7 @@
                 else
                     this.module.emptyAll();
 
-                // child
-                if (this.childChange)
-                    this.childChange();
-
-                // file path
+                 // file path
                 path.openFile();
             },
             clear: function () {
@@ -283,6 +280,18 @@
                 });
             },
             module: {
+                provide: function() {
+                    return jQuery('select[name="provideModuleName"]');
+                },
+                dao: function() {
+                    return jQuery('select[name="daoModuleName"]');
+                },
+                service: function() {
+                    return jQuery('select[name="serviceModuleName"]');
+                },
+                web: function() {
+                    return jQuery('select[name="webModuleName"]');
+                },
                 fillAll: function (_this) {
                     if (!_this)
                         _this = this;
@@ -290,13 +299,13 @@
                     _this.module.emptyAll();
 
                     // provide
-                    _this.module.fill(_this, 'provideModuleName', _this.pName().val() + '-provide');
+                    _this.module.fill(_this, _this.module.provide().attr("name"), _this.pName().val() + '-provide');
                     // dao
-                    _this.module.fill(_this, 'daoModuleName', _this.pName().val() + '-dao');
+                    _this.module.fill(_this, _this.module.dao().attr("name"), _this.pName().val() + '-dao');
                     // service
-                    _this.module.fill(_this, 'serviceModuleName', _this.pName().val() + '-service');
+                    _this.module.fill(_this, _this.module.service().attr("name"), _this.pName().val() + '-service');
                     // web
-                    _this.module.fill(_this, 'webModuleName', _this.pName().val() + '-web');
+                    _this.module.fill(_this, _this.module.web().attr("name"), _this.pName().val() + '-web');
                 },
                 fill: function (_this, name, defaultModule) {
                     if (!_this)
@@ -313,47 +322,22 @@
                 },
                 emptyAll: function() {
                     // provide
-                    this.empty('provideModuleName');
+                    this.empty(this.provide());
                     // dao
-                    this.empty('daoModuleName');
+                    this.empty(this.dao());
                     // service
-                    this.empty('serviceModuleName');
+                    this.empty(this.service());
                     // web
-                    this.empty('webModuleName');
+                    this.empty(this.web());
                 },
-                empty: function(name) {
-                    jQuery('select[name="' + name + '"] option').each(function () {
+                empty: function(module) {
+                    jQuery('option', module).each(function () {
                         if ($(this).val()) {
                             $(this).remove();
                         }
                     });
                 }
-            },
-            // fillAllModules: function (_this) {
-            //     if (!_this)
-            //         _this = this;
-            //
-            //     // provide
-            //     _this.fillModules(_this, 'provideModuleName', _this.pName().val() + '-provide');
-            //     // dao
-            //     _this.fillModules(_this, 'daoModuleName', _this.pName().val() + '-dao');
-            //     // service
-            //     _this.fillModules(_this, 'serviceModuleName', _this.pName().val() + '-service');
-            //     // web
-            //     _this.fillModules(_this, 'webModuleName', _this.pName().val() + '-web');
-            // },
-            // emptyAllModules: function () {
-            //   },
-            // fillModules: function (_this, name, defaultModule) {
-            //     var select = jQuery('select[name="' + name + '"]');
-            //     var ml = _this.dirList;
-            //     for (idx in ml) {
-            //         if (defaultModule && defaultModule == ml[idx])
-            //             jQuery('<option selected="selected" value="' + ml[idx] + '">' + ml[idx] + '</option>').appendTo(select);
-            //         else
-            //             jQuery('<option value="' + ml[idx] + '">' + ml[idx] + '</option>').appendTo(select);
-            //     }
-            // }
+            }
          };
     </script>
     <script type="text/javascript">
@@ -448,38 +432,6 @@
                 this.o().html('');
             }
         };
-
-    </script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#loadTables').click(function () {
-                table.listNames();
-            });
-            $('#reconnect').click(function () {
-                db.reconnect(function () {
-                    retryTimes = 1;
-                });
-                table.listNames();
-            });
-            table.tableName().change(function () {
-                table.change();
-            });
-            project.pName().change(function () {
-                project.change();
-            });
-            project.pType().change(function () {
-                project.change();
-            });
-            path.relativePath().keydown(function (e) {
-                path.enterKeyDown(e);
-            });
-            project.pPackage().keyup(function (e) {
-                if (e.which != 8 || project.pPackage().val()) {
-                    if (project.childChange)
-                        project.childChange();
-                }
-            });
-        });
     </script>
 </head>
 <body class="easyui-layout">
@@ -493,7 +445,7 @@
                 <td class="lable">User:</td>
                 <td><input type="text" class="small" name="user" value="$!{user}"/></td>
                 <td class="lable">Password:</td>
-                <td><input type="password" class="small" name="password" value="$!{password}"/></td>
+                <td><input type="password" class="small" name="password" value="$!{password}" autocomplete="off" /></td>
                 <td>
                     <input id="reconnect" type="button" value="Connect DB"/>
                 </td>
@@ -595,5 +547,58 @@
     </table>
 </div>
 <div id="center" data-options="region:'center'" style="padding:5px;background:#eee;"></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#loadTables').click(function () {
+            table.listNames();
+        });
+        $('#reconnect').click(function () {
+            db.reconnect(function () {
+                retryTimes = 1;
+            });
+            table.listNames();
+        });
+
+        // table
+        table.tableName().change(function () {
+            table.change();
+        });
+        // end of table
+
+        // project
+        project.pName().change(function () {
+            project.change();
+
+            // child
+            if (project.module.change)
+                project.module.change();
+        });
+        project.pType().change(function () {
+            project.change();
+
+            // child
+            if (project.module.change)
+                project.module.change();
+        });
+        project.pPackage().change(function() {
+            console.log("Project package changed.")
+            // child
+            if (project.module.change)
+                project.module.change();
+        });
+        project.pPackage().keyup(function (e) {
+            console.log("Project package keyup.")
+            if (e.which != 8) {
+                if (project.module.change)
+                    project.module.change();
+            }
+        });
+        // end of project
+
+        path.relativePath().keydown(function (e) {
+            path.enterKeyDown(e);
+        });
+     });
+</script>
 </body>
 </html>
