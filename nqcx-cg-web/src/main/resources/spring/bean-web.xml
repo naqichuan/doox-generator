@@ -4,4 +4,36 @@
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
+	<bean id="cookieCipherTools" class="org.nqcx.commons.web.cookie.CookieCipherTools">
+		<property name="charsetName" value="UTF-8" />
+	</bean>
+
+	<bean id="_nqcxCookie" class="org.nqcx.commons.web.cookie.NqcxCookie"
+		  abstract="true">
+		<property name="cookieCipherTools">
+			<ref bean="cookieCipherTools" />
+		</property>
+	</bean>
+
+	<bean id="_normalCookie" parent="_nqcxCookie" abstract="true">
+		<property name="path" value="/" />
+		<property name="domain" value="" />
+		<property name="key" value="kVgKySMDePHOwrGtTJqA9CfSCrh81wEo" />
+	</bean>
+
+	<bean id="jdbcCookie" parent="_normalCookie">
+		<property name="name" value="jdbc" />
+		<property name="encrypt" value="false" />
+		<property name="expiry" value="-1" />
+	</bean>
+
+	<bean class="org.nqcx.commons.web.cookie.CookieUtils">
+		<property name="cookieMap">
+			<map>
+				<entry key="jdbc">
+					<ref bean="jdbcCookie" />
+				</entry>
+			</map>
+		</property>
+	</bean>
 </beans>

@@ -457,36 +457,30 @@
 </script>
 </head>
 <body class="easyui-layout">
-    <div data-options="region:'north',split:true" style="height:75px;padding:5px 5px 0;overflow:hidden;">
+    <div data-options="region:'north',split:true" style="height:50px;padding:5px 5px 0;overflow:hidden;">
         <form id="connForm" method="post" action="session">
             <input type="hidden" name="wsPath" value="$!{ws.path}" readonly="true"/>
         	<table border="0" cellpadding="0" cellspacing="0">
                 <tr height="35px">
-                    <td class="lable">Hostname:</td>
-                    <td><input type="text" name="hostname" value="localhost" /></td>
-                    <td class="lable">Port:</td>
-                    <td><input type="text" name="port" value="3306" class="small" /></td>
-                    <td class="lable">Username:</td>
-                    <td><input type="text" name="username" value="nqcx" /></td>
+					<td class="lable">jdbc:mysql://</td>
+					<td><input type="text" class="big_200" name="jdbcUrl" value="$!{jdbcUrl}"></td>
+                    <td class="lable">User:</td>
+                    <td><input type="text" class="small" name="user" value="$!{user}" /></td>
                     <td class="lable">Password:</td>
-                    <td><input type="password" name="password" value="nqcx" /></td>
-				</tr>
-				<tr heigth="30">
-                    <td class="lable">Schema:</td>
-                    <td><input type="text" name="schema" value="up" /></td>
-                    <td colspan="2" class="lable">
-						<input id="reconnect" type="button" value="Reconnect" />
+                    <td><input type="password" class="small" name="password" value="$!{password}" /></td>
+                    <td>
+						<input id="reconnect" type="button" value="Connect DB" />
                     </td>
-                    <td class="lable">
+                    <td>
                         <input id="loadTables" type="button" value="Load tables" />
 					</td>
-					<td colspan="2" class="lable">
+					<td>
                         <select name="tableName">
                             <option value="">Select Table</option>
                         </select>
 					</td>
-					<td class="lable">
-                        <input id="reloadAll" type="button" value="Reload Result" />
+					<td>
+                        <input id="reloadAll" type="button" value="Reload Center" />
 					</td>
 				</tr>
 			</table>
