@@ -153,6 +153,9 @@
             tableName: function () {
                 return jQuery('select[name="tableName"]');
             },
+            colPrefix: function() {
+                return jQuery('input[name="colPrefix"]');
+            },
             listNames: function () {
                 nqcxGet('#springUrl('/table/list')', {}, function (result) {
                     table.empty();
@@ -452,11 +455,13 @@
                 <td>
                     <input id="loadTables" type="button" value="Load tables"/>
                 </td>
-                <td>
+                 <td>
                     <select name="tableName">
                         <option value="">Select Table</option>
                     </select>
                 </td>
+                <td class="lable">Col-prefix:</td>
+                <td><input type="text" name="colPrefix" value="t_" /></td>
                 <td>
                     <input id="reloadAll" type="button" value="Reload Center"/>
                 </td>
