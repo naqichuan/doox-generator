@@ -108,10 +108,6 @@
             <td>
                 <input type="text" name="provideServicePackage" class="big_200" value="">
             </td>
-##            <td>
-##                <input type="text" name="entityProjectName" class="big_200" value="">
-##                <input type="text" name="entityProjectPackage" class="big_200" value="">
-##            </td>
         </table>
         <div id="config_entity_div"></div>
     </fieldset>
@@ -309,23 +305,10 @@
             this.servicePackage().val(sepValue);
         },
         loadTable: function () {
-            // var pNameValue = project.pName().val();
-            // var pTypeValue = project.pType().filter(':checked').val();
-            // var pPackageValue = project.pPackage().val();
-
-            // var moduleName = project.module.provide().val();
-
-
-            var tableName = table.tableName().val();
+             var tableName = table.tableName().val();
             var columns = [];
             if (!tableName)
                 return;
-
-            // this.projectName().val(moduleName);
-            // this.projectPackage().val(pPackageValue + '.entity.' + tableName);
-
-            // this.projectTr().css('display', '');
-
 
             nqcxGet('#springUrl('/table/get/')' + tableName, {}, function (result) {
                 if (result.object && result.object.columns) {
@@ -335,8 +318,12 @@
             });
         },
         config: function (columns, table) {
-            var entityHtml = '<table border="0" cellpadding="0" cellspacing="0">';
-            entityHtml += '<tr>' + this.row(table) + '</tr>';
+            var entityHtml = '<hr />';
+            entityHtml += '<table border="0" cellpadding="0" cellspacing="0">';
+            entityHtml +=  this.row(table);
+            // entityHtml += '<tr>' + this.row(table, '') + '</tr>';
+            // entityHtml += '<tr>' + this.row(table, 'Provide') + '</tr>';
+            // entityHtml += '<tr>' + this.row(table, 'Service') + '</tr>';
             entityHtml += '</table>';
             entityHtml += '<hr />';
             entityHtml += '<table border="0" cellpadding="0" cellspacing="0">';
@@ -346,16 +333,26 @@
             entityHtml += '</table>';
             this.projectDiv().html(entityHtml);
         },
-        row: function (table) {
+        row: function (table, o) {
             var rowHtml = '';
-
             var entityName = table.replaceFirstUP();
-            var entityBase = "EntityBO";
-            var show = 'public class ' + entityName + ' extends ' + entityBase;
 
-            rowHtml += '<td>' + table + '</td>';
-            rowHtml += '<td><input id="entityName_' + table + '" type="text" name="entityName" class="big_200" value="' + entityName + '" onkeyup="entity.show(\'' + table + '\')" onafterpaste="entity.show(\'' + table + '\')" onblur="entity.show(\'' + table + '\')" /></td>';
-            rowHtml += '<td><span id="entityText_' + table + '">' + show + '</span></td>';
+            rowHtml += '<tr><td class="lable">Create BO:</td>';
+            rowHtml += '<td class="lable">' +
+                    'public class <input id="privideBO" type="text" name="privideBO" class="big_200" value="' + entityName + 'BO"></td></tr>';
+
+            rowHtml += '<tr><td class="lable">Create O:</td>';
+            rowHtml += '<td class="lable">' +
+                    'public class <input id="privideO" type="text" name="privideO" class="big_200" value="' + entityName + '"></td></tr>';
+
+            rowHtml += '<tr><td class="lable">Create Provide:</td>';
+            rowHtml += '<td class="lable">' +
+                    'public class <input id="privideProvide" type="text" name="privideProvide" class="big_200" value="I' + entityName + 'Provide"></td></tr>';
+
+            rowHtml += '<tr><td class="lable">Create Service:</td>';
+            rowHtml += '<td class="lable">' +
+                    'public class <input id="privideService" type="text" name="privideService" class="big_200" value="I' + entityName + 'Service"></td></tr>';
+
             return rowHtml;
         },
         row1: function (column) {
@@ -375,7 +372,8 @@
         },
         show: function (table) {
             var entityName = document.getElementById('entityName_' + table).value;
-            var entityBase = "EntityBO";
+            // var entityBase = "EntityBO";
+
             var show = 'public class ' + entityName + ' extends ' + entityBase;
             jQuery('#entityText_' + table).html(show);
         },
@@ -709,6 +707,6 @@
         console.log("Provide loading...")
         entity.projectInit();
 
-        console.log("Cernter loaded.")
+        console.log("Center loaded.")
     });
 </script>

@@ -587,11 +587,10 @@
                 project.module.change();
         });
         project.pPackage().keyup(function (e) {
-            console.log("Project package keyup.")
-            if (e.which != 8) {
-                if (project.module.change)
-                    project.module.change();
-            }
+            console.log("Project package " + e.which + " keyup.")
+
+            if (project.module.change)
+                project.module.change();
         });
         // end of project
 
