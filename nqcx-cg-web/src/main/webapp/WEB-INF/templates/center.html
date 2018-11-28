@@ -289,24 +289,17 @@
             var tablePack = table.tablePack().val();
 
             // current value
-            var prpValue = this.providePackage().val();
-            var sepValue = this.servicePackage().val();
+            // var prpValue = this.providePackage().val();
+            // var sepValue = this.servicePackage().val();
 
             // project pakcage value
             var ppValue = project.pPackage().val() || '';
 
-            var idx;
-            if ((idx = prpValue.indexOf('.provide.')) > 0)
-                prpValue = ppValue + prpValue.substring(idx);
-            else
-                prpValue = ppValue + '.provide.' + tablePack;
+            var prpValue = ppValue + '.provide' + (tablePack ? "." + tablePack : "") ;
             if(prpValue.indexOf(".") === 0 && prpValue.length > 1)
                 prpValue = prpValue.substring(1);
 
-            if ((idx = sepValue.indexOf('.service.')) > 0)
-                sepValue = ppValue + sepValue.substring(idx);
-            else
-                sepValue = ppValue + '.service.' + tablePack;
+            var sepValue = ppValue + '.service' + (tablePack ? "." + tablePack : "");
             if(sepValue.indexOf(".") === 0 && sepValue.length > 1)
                 sepValue = sepValue.substring(1);
 
@@ -459,24 +452,24 @@
             var tablePack = table.tablePack().val();
 
             // current value
-            var daoValue = this.daoPackage().val();
-            var dataValue = this.dataPackage().val();
+            // var daoValue = this.daoPackage().val();
+            // var dataValue = this.dataPackage().val();
 
             // project pakcage value
             var ppValue = project.pPackage().val() || '';
 
-            var idx;
-            if ((idx = daoValue.indexOf('.provide.')) > 0)
-                daoValue = ppValue + daoValue.substring(idx);
-            else
-                daoValue = ppValue + '.provide.' + tablePack;
+            // var idx;
+            // if ((idx = daoValue.indexOf('.provide.')) > 0)
+            //     daoValue = ppValue + daoValue.substring(idx);
+            // else
+            var daoValue = ppValue + '.dao' + (tablePack ? "." + tablePack : "");
             if(daoValue.indexOf(".") === 0 && daoValue.length > 1)
                 daoValue = daoValue.substring(1);
 
-            if ((idx = dataValue.indexOf('.service.')) > 0)
-                dataValue = ppValue + dataValue.substring(idx);
-            else
-                dataValue = ppValue + '.service.' + tablePack;
+            // if ((idx = dataValue.indexOf('.service.')) > 0)
+            //     dataValue = ppValue + dataValue.substring(idx);
+            // else
+            var dataValue = ppValue + '.data' + (tablePack ? "." + tablePack : "");
             if(dataValue.indexOf(".") === 0 && dataValue.length > 1)
                 dataValue = dataValue.substring(1);
 

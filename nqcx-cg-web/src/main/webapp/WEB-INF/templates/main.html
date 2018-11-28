@@ -234,6 +234,19 @@
             pType: function () {
                 return jQuery('input[name="pType"]');
             },
+            pPackageChange() {
+                var ppName = this.pName().val();
+                if(ppName)
+                    ppName = ppName.replace("nqcx-", "").toLocaleLowerCase();
+                else
+                    ppName = "";
+
+                // project package
+                var pPackageValue = this.pPackage().val();
+                if (!pPackageValue)
+                    pPackageValue = 'org.nqcx.' + ppName;
+                this.pPackage().val(pPackageValue);
+            },
             change: function () {
                 var pNameValue = this.pName().val();
                 if (!pNameValue) {
@@ -243,12 +256,9 @@
                 // project path
                 this.pPath().val('/' + pNameValue + '/');
 
-                // project package
-                var pPackageValue = this.pPackage().val();
-                if (!pPackageValue)
-                    pPackageValue = 'org.nqcx'
-                this.pPackage().val(pPackageValue);
 
+                // project package
+                this.pPackageChange();
 
                 // modules
                  var pTypeValue = this.pType().filter(':checked').val();
