@@ -8,16 +8,15 @@
 
 package org.nqcx.cg.web.controller.generate;
 
+import org.nqcx.cg.data.vo.GenerateVO;
 import org.nqcx.cg.entity.ws.enums.PType;
 import org.nqcx.cg.service.generate.GenerateService;
 import org.nqcx.cg.web.controller.CgController;
 import org.nqcx.commons.lang.o.DTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -32,10 +31,17 @@ public class GenerateController extends CgController {
     @Autowired
     private GenerateService generateService;
 
+    @InitBinder
+    @Override
+    public void initBinder(ServletRequestDataBinder binder) {
+        super.initBinder(binder);
+    }
+
     @RequestMapping(value = "/doit", method = {RequestMethod.GET, RequestMethod.POST}, produces = "application/json")
     @ResponseBody
     public Map<?, ?> doit(
             HttpServletRequest request,
+            GenerateVO vo,
             @RequestParam(value = "tableName", required = true) String tableName,
             @RequestParam(value = "pName", required = true) String pName,
             @RequestParam(value = "pType", required = true) String pType,
