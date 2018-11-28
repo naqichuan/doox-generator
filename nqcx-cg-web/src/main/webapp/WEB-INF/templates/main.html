@@ -162,6 +162,9 @@
             colPrefix: function() {
                 return jQuery('input[name="colPrefix"]');
             },
+            tablePack: function() {
+                return jQuery('input[name="tablePack"]');
+            },
             listNames: function () {
                 var url = /*[['/table/list']]*/'';
                 nqcxGet(url, {}, function (result) {
@@ -197,6 +200,8 @@
                     this.clear();
                     return;
                 } else {
+                    this.tablePack().val(tableNameValue.replaceFirstLow());
+
                     var url = /*[['/center']]*/'';
                     jQuery.post(url, '', function (result) {
                         center.load(result);
@@ -267,7 +272,7 @@
                 var _this = this;
 
                 // clear array
-                _this.dirList = new Array();
+                _this.dirList = [];
 
                 var pPath = _this.pPath().val();
                 if (!pPath) {
@@ -472,6 +477,8 @@
                 </td>
                 <td class="lable">Col-prefix:</td>
                 <td><input type="text" name="colPrefix" value="t_" /></td>
+                <td class="lable">Table-pack:</td>
+                <td><input type="text" name="tablePack" value="" /></td>
                 <td>
                     <input id="reloadAll" type="button" value="Reload Center"/>
                 </td>
@@ -576,6 +583,16 @@
         table.tableName().change(function () {
             table.change();
         });
+        table.tablePack().change(function(){
+            // child
+            if (project.module.change)
+                project.module.change();
+        });
+        table.tablePack().keyup(function(){
+            // child
+            if (project.module.change)
+                project.module.change();
+        });
         // end of table
 
         // project
@@ -595,6 +612,7 @@
         });
         project.pPackage().change(function() {
             console.log("Project package changed.")
+
             // child
             if (project.module.change)
                 project.module.change();
