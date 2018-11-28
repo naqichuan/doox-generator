@@ -9,7 +9,7 @@
 package org.nqcx.cg.service.generate;
 
 import org.nqcx.cg.entity.ws.enums.PType;
-import org.nqcx.commons.lang.o.DTO;
+import org.nqcx.commons3.lang.o.DTO;
 
 /**
  * @author naqichuan Feb 9, 2014 2:21:48 AM

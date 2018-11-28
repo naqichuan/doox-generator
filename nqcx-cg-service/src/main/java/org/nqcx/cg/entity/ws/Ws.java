@@ -8,17 +8,17 @@
 
 package org.nqcx.cg.entity.ws;
 
+import java.io.Serializable;
 import java.util.List;
 
-import org.nqcx.cg.common.entity.CgFile;
-import org.nqcx.commons.lang.o.EntityBO;
+import org.nqcx.cg.provide.o.CgFile;
 
 /**
  * 
  * @author naqichuan Feb 9, 2014 10:13:31 PM
  * 
  */
-public class Ws extends EntityBO {
+public class Ws implements Serializable {
 
 	private String path;
 

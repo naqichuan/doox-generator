@@ -8,7 +8,7 @@
 
 package ${mapperPackage};
 
-import org.nqcx.commons.dao.DaoInterface;
+import org.nqcx.commons3.dao.DaoInterface;
 
 /**
  * 

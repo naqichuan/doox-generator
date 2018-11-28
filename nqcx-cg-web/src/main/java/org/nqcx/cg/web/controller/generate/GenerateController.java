@@ -12,7 +12,7 @@ import org.nqcx.cg.data.vo.GenerateVO;
 import org.nqcx.cg.entity.ws.enums.PType;
 import org.nqcx.cg.service.generate.GenerateService;
 import org.nqcx.cg.web.controller.CgController;
-import org.nqcx.commons.lang.o.DTO;
+import org.nqcx.commons3.lang.o.DTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestDataBinder;

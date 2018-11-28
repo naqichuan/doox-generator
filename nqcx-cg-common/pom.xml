@@ -12,9 +12,22 @@
 	<url>http://nqcx.org</url>
 
 	<dependencies>
+		<!-- ########## 2nd party library ########## -->
 		<dependency>
-			<groupId>org.nqcx.commons</groupId>
-			<artifactId>nqcx-commons-lang</artifactId>
+			<groupId>org.nqcx.commons3</groupId>
+			<artifactId>nqcx-commons3-lang</artifactId>
 		</dependency>
+
+		<!-- ########## 3rd party library ########## -->
+		<!--<dependency>-->
+			<!--<groupId>org.springframework</groupId>-->
+			<!--<artifactId>spring-test</artifactId>-->
+			<!--<scope>provided</scope>-->
+		<!--</dependency>-->
+		<!--<dependency>-->
+			<!--<groupId>junit</groupId>-->
+			<!--<artifactId>junit</artifactId>-->
+			<!--<scope>provided</scope>-->
+		<!--</dependency>-->
 	</dependencies>
 </project>

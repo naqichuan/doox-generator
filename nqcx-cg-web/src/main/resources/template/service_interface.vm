@@ -8,7 +8,7 @@
 
 package ${serviceProjectPackage};
 
-import org.nqcx.commons.service.ServiceInterface;
+import org.nqcx.commons3.service.ServiceInterface;
 
 /**
  * 

@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.nqcx.cg.common.web.ConnContext;
 import org.nqcx.cg.service.conn.ConnService;
-import org.nqcx.commons.web.WebContext;
-import org.nqcx.commons.web.interceptor.WebContextInterceptor;
+import org.nqcx.commons3.web.WebContext;
+import org.nqcx.commons3.web.interceptor.WebContextInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

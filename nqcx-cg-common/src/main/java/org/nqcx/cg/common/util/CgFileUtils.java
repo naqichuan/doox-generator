@@ -12,7 +12,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Comparator;
 
-import org.nqcx.cg.common.entity.CgFile;
+import org.nqcx.cg.provide.o.CgFile;
 
 /**
  * 

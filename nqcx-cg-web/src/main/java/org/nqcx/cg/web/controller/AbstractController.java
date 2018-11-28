@@ -6,9 +6,9 @@
 
 package org.nqcx.cg.web.controller;
 
-import org.nqcx.commons.lang.enums.BoolEO;
-import org.nqcx.commons.util.StringUtils;
-import org.nqcx.commons.web.WebSupport;
+import org.nqcx.commons3.lang.enums.BoolEO;
+import org.nqcx.commons3.util.StringUtils;
+import org.nqcx.commons3.web.WebSupport;
 import org.springframework.beans.propertyeditors.PropertiesEditor;
 import org.springframework.web.bind.ServletRequestDataBinder;
 

@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 
 import ${serviceProjectPackage}.${serviceInterface};
 import ${daoProjectPackage}.${daoInterface};
-import org.nqcx.commons.dao.DaoInterface;
-import org.nqcx.commons.service.ServiceSupport;
+import org.nqcx.commons3.dao.DaoInterface;
+import org.nqcx.commons3.service.ServiceSupport;
 
 /**
  * 

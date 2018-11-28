@@ -6,20 +6,20 @@
  * into with nqcx.org.
  */
 
-package org.nqcx.cg.common.entity;
+package org.nqcx.cg.provide.o;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.nqcx.cg.common.util.CgFileUtils;
-import org.nqcx.commons.lang.o.EntityBO;
 
 /**
  * 
  * @author naqichuan Mar 1, 2014 4:45:01 PM
  * 
  */
-public class CgFile extends EntityBO {
+public class CgFile implements Serializable {
 
 	private String path;
 	private String name;

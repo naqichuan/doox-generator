@@ -10,9 +10,9 @@ package org.nqcx.cg.web.controller;
 
 import org.apache.commons.lang.StringUtils;
 import org.nqcx.cg.service.conn.ConnService;
-import org.nqcx.commons.lang.o.DTO;
-import org.nqcx.commons.web.cookie.CookieUtils;
-import org.nqcx.commons.web.cookie.NqcxCookie;
+import org.nqcx.commons3.lang.o.DTO;
+import org.nqcx.commons3.web.cookie.CookieUtils;
+import org.nqcx.commons3.web.cookie.NqcxCookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;

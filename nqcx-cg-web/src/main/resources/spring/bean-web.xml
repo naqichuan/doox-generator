@@ -4,11 +4,14 @@
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-	<bean id="cookieCipherTools" class="org.nqcx.commons.web.cookie.CookieCipherTools">
+	<!-- url -->
+	<bean id="_homeUrl" class="org.nqcx.commons3.web.url.UrlBuilder"/>
+
+	<bean id="cookieCipherTools" class="org.nqcx.commons3.web.cookie.CookieCipherTools">
 		<property name="charsetName" value="UTF-8" />
 	</bean>
 
-	<bean id="_nqcxCookie" class="org.nqcx.commons.web.cookie.NqcxCookie"
+	<bean id="_nqcxCookie" class="org.nqcx.commons3.web.cookie.NqcxCookie"
 		  abstract="true">
 		<property name="cookieCipherTools">
 			<ref bean="cookieCipherTools" />
@@ -27,7 +30,7 @@
 		<property name="expiry" value="31536000" />
 	</bean>
 
-	<bean class="org.nqcx.commons.web.cookie.CookieUtils">
+	<bean class="org.nqcx.commons3.web.cookie.CookieUtils">
 		<property name="cookieMap">
 			<map>
 				<entry key="jdbc">

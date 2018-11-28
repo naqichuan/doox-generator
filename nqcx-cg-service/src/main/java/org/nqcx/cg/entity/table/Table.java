@@ -8,16 +8,15 @@
 
 package org.nqcx.cg.entity.table;
 
+import java.io.Serializable;
 import java.util.List;
-
-import org.nqcx.commons.lang.o.EntityBO;
 
 /**
  * 
  * @author naqichuan Feb 8, 2014 10:48:47 AM
  * 
  */
-public class Table extends EntityBO {
+public class Table implements Serializable {
 
 	private String name;
 

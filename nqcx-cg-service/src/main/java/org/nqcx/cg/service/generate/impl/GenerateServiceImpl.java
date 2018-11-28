@@ -9,21 +9,22 @@
 package org.nqcx.cg.service.generate.impl;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.nqcx.cg.common.util.CgFileUtils;
 import org.nqcx.cg.entity.ws.enums.PType;
 import org.nqcx.cg.service.generate.GenerateService;
-import org.nqcx.commons.lang.o.DTO;
+import org.nqcx.commons3.lang.o.DTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.*;
 
 /**
@@ -51,10 +52,6 @@ public class GenerateServiceImpl implements GenerateService {
 
     @Autowired
     private String workspacePath;
-
-    @Autowired
-    @Qualifier("velocityEngine")
-    private VelocityEngine velocityEngine;
 
     @Override
     public DTO generate(String tableName, String pName, PType pType, String pPath, String pPackage, String entityName,
@@ -356,12 +353,37 @@ public class GenerateServiceImpl implements GenerateService {
     }
 
     /**
+     * @return
+     * @throws Exception
+     */
+    private VelocityEngine velocityEngine() {
+        Properties properties = new Properties();
+        properties.setProperty("input.encoding", "UTF-8");
+        properties.setProperty("output.encoding", "UTF-8");
+
+        properties.setProperty("resource.loader", "file");
+        properties.setProperty("file.resource.loader.cache", "true");
+        properties.setProperty("file.resource.loader.path", "classpath:/template/");
+
+        properties.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+        VelocityEngine velocityEngine = new VelocityEngine(properties);
+        return velocityEngine;
+    }
+
+    /**
      * @param templateLocation
      * @param model
      * @return
      */
     private String mergeTemplateIntoString(String templateLocation, Map<String, Object> model) {
-        return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, templateLocation, "UTF-8", model);
+        VelocityEngine velocityEngine = velocityEngine();
+
+        VelocityContext context = new VelocityContext(model);
+
+        StringWriter stringWriter = new StringWriter();
+        velocityEngine.mergeTemplate(templateLocation, "UTF-8", context, stringWriter);
+
+        return stringWriter.toString();
     }
 
     /**

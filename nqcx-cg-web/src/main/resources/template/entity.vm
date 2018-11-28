@@ -8,14 +8,14 @@
 
 package ${entityPackage};
 
-import org.nqcx.commons.lang.o.EntityBO;
+import org.nqcx.commons3.lang.o.EntityBO;
 
 /**
  * 
  * @author naqichuan ${date}
  * 
  */
-public class $!{entityName} extends EntityBO {
+public class $!{entityName} implements Serializable {
 
 #foreach($field in $entityFields)
     $field

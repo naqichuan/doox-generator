@@ -8,14 +8,14 @@
 
 package org.nqcx.cg.entity.table;
 
-import org.nqcx.commons.lang.o.EntityBO;
+import java.io.Serializable;
 
 /**
  * 
  * @author naqichuan Feb 8, 2014 9:49:43 PM
  * 
  */
-public class Column extends EntityBO {
+public class Column implements Serializable {
 
 	private String field;
 	private String type;

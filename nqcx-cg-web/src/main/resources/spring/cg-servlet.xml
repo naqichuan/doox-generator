@@ -9,69 +9,67 @@
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
 		http://www.springframework.org/schema/util  http://www.springframework.org/schema/util/spring-util-3.2.xsd">
 
-    <mvc:annotation-driven/>
-    <mvc:default-servlet-handler/>
     <import resource="classpath:spring/bean-commons-servlet.xml"/>
     <context:component-scan base-package="org.nqcx.cg.web.controller"/>
 
-    <util:map id="_attributesMap">
+    <util:map id="_staticVariables">
         <entry key="nqcxValues">
             <ref bean="_nqcxValues"/>
         </entry>
     </util:map>
 
     <!-- ====以下是 ViewResolver & Velocity 配置==== -->
-    <bean id="velocityConfig"
-          class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
-        <property name="resourceLoaderPath" value="/WEB-INF/velocity/"/>
-        <property name="velocityProperties">
-            <props>
-                <prop key="input.encoding">UTF-8</prop>
-                <prop key="output.encoding">UTF-8</prop>
-                <prop key="velocimacro.library">_macro/macros.vm</prop>
-            </props>
-        </property>
-    </bean>
-    <bean id="viewResolver" class="org.springframework.web.servlet.view.velocity.VelocityLayoutViewResolver">
-        <property name="layoutUrl" value="_layout/default.vm"/>
-        <property name="cache" value="false"/>
-        <property name="prefix" value=""/>
-        <property name="suffix" value=".vm"/>
-        <property name="exposeSpringMacroHelpers" value="true"/>
-        <property name="dateToolAttribute" value="dateTool"/>
-        <property name="numberToolAttribute" value="numberTool"/>
-        <property name="attributesMap" ref="_attributesMap"/>
-        <property name="contentType" value="text/html;charset=UTF-8"/>
-        <property name="order" value="1"/>
-    </bean>
     <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
         <property name="contentNegotiationManager">
-            <bean class="org.springframework.web.accept.ContentNegotiationManager">
-                <constructor-arg>
-                    <bean class="org.springframework.web.accept.PathExtensionContentNegotiationStrategy">
-                        <constructor-arg>
-                            <map>
-                                <entry key="json" value="application/json;charset=utf-8"/>
-                                <entry key="xml" value="application/xml;charset=utf-8"/>
-                            </map>
-                        </constructor-arg>
-                    </bean>
-                </constructor-arg>
+            <bean class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+                <property name="favorPathExtension" value="true"/>
+                <property name="ignoreAcceptHeader" value="false"/>
+                <property name="favorParameter" value="false"/>
+                <property name="mediaTypes">
+                    <map>
+                        <entry key="html" value="text/html"/>
+                        <entry key="json" value="application/json"/>
+                        <entry key="xml" value="application/xml"/>
+                    </map>
+                </property>
+                <property name="defaultContentType" value="text/html"/>
             </bean>
         </property>
         <property name="viewResolvers">
             <list>
-                <ref bean="viewResolver"/>
+                <bean class="org.thymeleaf.spring5.view.ThymeleafViewResolver">
+                    <property name="order" value="1"/>
+                    <property name="staticVariables" ref="_staticVariables"/>
+                    <property name="templateEngine">
+                        <bean class="org.thymeleaf.spring5.SpringTemplateEngine">
+                            <property name="templateResolver">
+                                <bean class="org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver">
+                                    <property name="cacheable" value="false"/>
+                                    <property name="prefix" value="/WEB-INF/templates/"/>
+                                    <property name="suffix" value=".html"/>
+                                    <property name="templateMode" value="HTML"/>
+                                </bean>
+                            </property>
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+                    <property name="order" value="2"/>
+                    <property name="prefix" value="/WEB-INF/views/"/>
+                    <property name="suffix" value=".jsp"/>
+                    <property name="attributesMap" ref="_staticVariables"/>
+                </bean>
             </list>
         </property>
         <property name="defaultViews">
             <list>
-                <bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView"/>
+                <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"/>
+                <bean class="org.springframework.web.servlet.view.xml.MappingJackson2XmlView"/>
             </list>
         </property>
     </bean>
 
-    <bean id="_WebContextInterceptor" class="org.nqcx.commons.web.interceptor.WebContextInterceptor">
+    <bean id="_WebContextInterceptor" class="org.nqcx.commons3.web.interceptor.WebContextInterceptor">
         <property name="localeResolver">
             <bean class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
                 <property name="cookieName" value="_clientlocale"/>

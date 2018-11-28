@@ -9,7 +9,7 @@
 	<util:map id="_nqcxValues">
 		<entry key="defaultTitle" value="Code generate"/>
 	</util:map>
-	<bean id="nqcxValues" class="org.nqcx.commons.web.values.NqcxValues">
+	<bean id="nqcxValues" class="org.nqcx.commons3.web.values.NqcxValues">
 		<property name="values">
 			<ref bean="_nqcxValues"/>
 		</property>
