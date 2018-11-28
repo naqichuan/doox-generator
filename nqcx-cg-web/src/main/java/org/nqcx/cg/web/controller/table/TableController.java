@@ -8,10 +8,8 @@
 
 package org.nqcx.cg.web.controller.table;
 
-import java.util.Map;
-
 import org.nqcx.cg.service.table.TableService;
-import org.nqcx.cg.web.controller.CgController;
+import org.nqcx.cg.web.controller.AbstractController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Map;
+
 /**
  * 
  * @author naqichuan Feb 8, 2014 11:32:39 AM
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping("/table")
-public class TableController extends CgController {
+public class TableController extends AbstractController {
 
 	@Autowired
 	private TableService tableService;

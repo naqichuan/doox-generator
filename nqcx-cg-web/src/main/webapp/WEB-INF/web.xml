@@ -37,6 +37,12 @@
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 
+	<servlet-mapping>
+		<servlet-name>default</servlet-name>
+		<url-pattern>/favicon.ico</url-pattern>
+		<url-pattern>/assets/*</url-pattern>
+	</servlet-mapping>
+
 	<!-- Character Encoding filter -->
 	<filter>
 		<filter-name>encodingFilter</filter-name>
@@ -63,16 +69,16 @@
 	</welcome-file-list>
 
 	<!-- 出错页面定义 -->
-	<error-page>
-		<error-code>400</error-code>
-		<location>/error.jsp</location>
-	</error-page>
-	<error-page>
-		<error-code>404</error-code>
-		<location>/error.jsp</location>
-	</error-page>
-	<error-page>
-		<error-code>500</error-code>
-		<location>/error.jsp</location>
-	</error-page>
+	<!--<error-page>-->
+		<!--<error-code>400</error-code>-->
+		<!--<location>/error.jsp</location>-->
+	<!--</error-page>-->
+	<!--<error-page>-->
+		<!--<error-code>404</error-code>-->
+		<!--<location>/error.jsp</location>-->
+	<!--</error-page>-->
+	<!--<error-page>-->
+		<!--<error-code>500</error-code>-->
+		<!--<location>/error.jsp</location>-->
+	<!--</error-page>-->
 </web-app>

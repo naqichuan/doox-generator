@@ -9,7 +9,6 @@
 package org.nqcx.cg.web.controller;
 
 import org.nqcx.cg.service.ws.WsService;
-import org.nqcx.commons3.web.WebSupport;
 import org.nqcx.commons3.web.cookie.CookieUtils;
 import org.nqcx.commons3.web.cookie.NqcxCookie;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author naqichuan Feb 7, 2014 3:14:16 PM
  */
 @Controller
-public class IndexController extends WebSupport {
+public class IndexController extends AbstractController {
 
     @Autowired
     private WsService wsService;

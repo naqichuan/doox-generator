@@ -8,16 +8,16 @@
 
 package org.nqcx.cg.web.controller.project;
 
-import java.util.Map;
-
 import org.nqcx.cg.service.ws.ProjectService;
-import org.nqcx.cg.web.controller.CgController;
+import org.nqcx.cg.web.controller.AbstractController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Map;
 
 /**
  * 
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping("/project")
-public class ProjectController extends CgController {
+public class ProjectController extends AbstractController {
 
 	@Autowired
 	private ProjectService projectService;

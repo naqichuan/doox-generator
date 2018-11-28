@@ -6,6 +6,7 @@
 
 package org.nqcx.cg.web.controller;
 
+import org.nqcx.cg.common.web.ConnContext;
 import org.nqcx.commons3.lang.enums.BoolEO;
 import org.nqcx.commons3.util.StringUtils;
 import org.nqcx.commons3.web.WebSupport;
@@ -16,6 +17,13 @@ import org.springframework.web.bind.ServletRequestDataBinder;
  * @author naqichuan 15/11/23 17:17
  */
 public abstract class AbstractController extends WebSupport {
+
+    /**
+     * @return
+     */
+    protected String getConnNum() {
+        return ConnContext.getConnContext().getConnNum();
+    }
 
     // ========================================================================
 

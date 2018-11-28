@@ -15,6 +15,7 @@ import org.nqcx.commons3.web.cookie.CookieUtils;
 import org.nqcx.commons3.web.cookie.NqcxCookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,7 +33,7 @@ import static org.nqcx.cg.common.consts.CgConst.CONNECTION_KEY;
  * @author naqichuan Feb 7, 2014 4:04:01 PM
  */
 @Controller
-public class LoginController extends CgController {
+public class SessionController extends AbstractController {
 
     @Autowired
     private ConnService connService;
@@ -67,7 +68,8 @@ public class LoginController extends CgController {
         return buildResult(dto);
     }
 
-    @RequestMapping(value = "/destroySession", method = {RequestMethod.GET}, produces = "application/json")
+    @RequestMapping(value = "/destroySession", method = {RequestMethod.GET},
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public Map<?, ?> destroySession(HttpServletRequest request) {
         HttpSession session = request.getSession();

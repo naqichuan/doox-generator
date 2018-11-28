@@ -11,7 +11,7 @@ package org.nqcx.cg.web.controller.generate;
 import org.nqcx.cg.data.vo.GenerateVO;
 import org.nqcx.cg.entity.ws.enums.PType;
 import org.nqcx.cg.service.generate.GenerateService;
-import org.nqcx.cg.web.controller.CgController;
+import org.nqcx.cg.web.controller.AbstractController;
 import org.nqcx.commons3.lang.o.DTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,7 +26,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/generate")
-public class GenerateController extends CgController {
+public class GenerateController extends AbstractController {
 
     @Autowired
     private GenerateService generateService;

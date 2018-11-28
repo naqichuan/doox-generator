@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta content="no-title" name="x5-page-mode">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0" name="viewport">
+    <meta content="telephone=no" name="format-detection">
+    <title th:text="${title?:nqcxValues['defaultTitle']}">Nqcx code generate</title>
+    <link th:href="@{'/favicon.ico'}" href="/favicon.ico" rel="icon" type="image/x-icon">
+    <link th:href="@{'/assets/themes/default/easyui.css'}" href="/assets/themes/default/easyui.css" rel="stylesheet" type="text/css">
+    <link th:href="@{'/assets/themes/icon.css'}" href="/assets/themes/icon.css" rel="stylesheet" type="text/css">
+    <link th:href="@{'/assets/css/demo.css'}" href="/assets/css/demo.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" th:src="@{'/assets/jquery/jquery.min.js'}" href="/assets/jquery/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{'/assets/jquery/jquery.easyui.min.js'}" href="/assets/jquery/jquery.easyui.min.js"></script>
+    <script type="text/javascript" th:src="@{'/assets/jquery/jquery.easyui.nqcx.js'}" href="/assets/jquery/jquery.easyui.nqcx.js"></script>
+    <style type="text/css">
+        #fileShow {list-style-type: none;margin: 0;padding: 0;}  #fileShow li {line-height: 20px;font-size: 14px;font-weight: 700;}  table td, table th {padding: 0 2px;}  table td.lable {text-align: right;}  input[type="text"] {width: 100px;}  input[type="password"] {width: 100px;}  input[type="text"].big {width: 120px;}  input[type="text"].big_140 {width: 140px;}  input[type="text"].big_200 {width: 200px;}  input[type="text"].middle {width: 80px;}  input[type="text"].small {width: 40px;}
+    </style>
+    <script type="text/javascript" th:inline="javascript">
+        String.prototype.compare = function (str) {
+            return this.toLowerCase() == str.toLowerCase();
+        };
+        String.prototype.startWith = function (str) {
+            if (str == null || str == '' || this.length == 0 || str.length > this.length)
+                return false;
+            return this.substr(0, str.length).compare(str);
+        };
+        String.prototype.endWith = function (str) {
+            if (str == null || str == "" || this.length == 0 || str.length > this.length)
+                return false;
+            if (this.substring(this.length - str.length) == str)
+                return true;
+            else
+                return false;
+            return true;
+        };
+        String.prototype.replaceFirstUP = function () {
+            if (this.length == 0)
+                return this;
+            return this.replace(/\b(\w)|\s(\w)|(_\w)/g, function (m) {
+                if (m.indexOf('_') > -1) {
+                    return m.substring(m.indexOf('_') + 1).toUpperCase();
+                } else
+                    return m.toUpperCase();
+            });
+        };
+        String.prototype.replaceFirstLow = function () {
+            if (this.length == 0)
+                return this;
+            return this.replace(/\b(\w)|\s(\w)|(_\w)/g, function (m) {
+                if (m.indexOf('_') > -1) {
+                    return m.substring(m.indexOf('_') + 1).toLowerCase();
+                } else
+                    return m.toLowerCase();
+            });
+        };
+    </script>
+    <script type="text/javascript" th:inline="javascript">
+        // db =====================================================================
+        var db = {
+            conn: function (callBack) {
+                $('#connForm').form('nqcxSubmit', {
+                    url: /*[['/session']]*/'',
+                    dataType: 'json',
+                    onSubmit: function () {
+                        return $(this).form('validate');
+                    },
+                    success: function (result) {
+                        if (callBack)
+                            callBack();
+                    }
+                });
+            },
+            reconnect: function (callBack) {
+                var url = /*[['/destroySession']]*/'';
+                jQuery.get( url + '?t=' + (new Date()).getTime(), function (result) {
+                    db.conn(function () {
+                        jQuery.messager.show({
+                            title: 'Success',
+                            msg: 'Connected'
+                        });
+                        if (callBack)
+                            callBack();
+                    });
+                });
+            }
+        };
+        // end of db ==============================================================
+    </script>
+    <script type="text/javascript" th:inline="javascript">
+        var retryTimes = 1;
+        var nqcxPost = function (url, data, callBack) {
+            jQuery.post(url, data, function (result) {
+                if (result.success) {
+                    retryTimes = 1;
+                    if (callBack)
+                        callBack(result);
+                } else if (result.errorCode == '11') {
+                    if (retryTimes == 0) {
+                        jQuery.messager.show({
+                            title: 'Error',
+                            msg: result.errorText
+                        });
+                    } else {
+                        retryTimes--;
+                        db.conn(connCallBack);
+                    }
+                } else {
+                    jQuery.messager.show({
+                        title: 'Error',
+                        msg: result.errorText
+                    });
+                }
+            }, 'json');
+            var connCallBack = function () {
+                nqcxPost(url, data, callBack);
+            }
+        };
+
+        var nqcxGet = function (url, data, callBack) {
+            if (url) {
+                if (url.indexOf('?') == -1)
+                    url += '?t=' + (new Date()).getTime();
+                else
+                    url += '&t=' + (new Date()).getTime();
+            }
+
+            jQuery.get(url, data, function (result) {
+                if (result.success) {
+                    retryTimes = 1;
+                    if (callBack)
+                        callBack(result);
+                } else if (result.errorCode == '11') {
+                    if (retryTimes == 0) {
+                        jQuery.messager.show({
+                            title: 'Error',
+                            msg: result.errorText
+                        });
+                    } else {
+                        retryTimes--;
+                        db.conn(connCallBack);
+                    }
+                } else {
+                    jQuery.messager.show({
+                        title: 'Error',
+                        msg: result.errorText
+                    });
+                }
+            }, 'json');
+            var connCallBack = function () {
+                nqcxGet(url, data, callBack);
+            }
+        };
+    </script>
+    <script type="text/javascript" th:inline="javascript">
+        var table = {
+            tableName: function () {
+                return jQuery('select[name="tableName"]');
+            },
+            colPrefix: function() {
+                return jQuery('input[name="colPrefix"]');
+            },
+            listNames: function () {
+                var url = /*[['/table/list']]*/'';
+                nqcxGet(url, {}, function (result) {
+                    table.empty();
+                    if (result.list) {
+                        for (t in result.list) {
+                            table.listNamesAppend(result.list[t].name, result.list[t].name);
+                        }
+                    }
+                    jQuery.messager.show({
+                        title: 'Success',
+                        msg: 'Loaded'
+                    });
+                    table.change();
+                });
+            },
+            empty: function () {
+                jQuery('select[name="tableName"] option').each(function () {
+                    if ($(this).val()) {
+                        $(this).remove();
+                    }
+                });
+            },
+            listNamesAppend: function (value, text) {
+                jQuery('<option value="' + value + '">' + text + '</option>').appendTo(this.tableName());
+            },
+            selected: function () {
+                return this.tableName().val();
+            },
+            change: function () {
+                var tableNameValue = this.tableName().val();
+                if (!tableNameValue) {
+                    this.clear();
+                    return;
+                } else {
+                    var url = /*[['/center']]*/'';
+                    jQuery.post(url, '', function (result) {
+                        center.load(result);
+                    }, 'html');
+                }
+            },
+            clear: function () {
+                center.clear();
+            }
+        };
+    </script>
+    <script type="text/javascript" th:inline="javascript">
+        var ws = {
+            wsPath: function () {
+                return jQuery('input[name="wsPath"]');
+            }
+        }
+    </script>
+    <script type="text/javascript" th:inline="javascript">
+        var project = {
+            pName: function () {
+                return jQuery('select[name="pName"]');
+            },
+            pPath: function () {
+                return jQuery('input[name="pPath"]');
+            },
+            pPackage: function () {
+                return jQuery('input[name="pPackage"]');
+            },
+            pType: function () {
+                return jQuery('input[name="pType"]');
+            },
+            change: function () {
+                var pNameValue = this.pName().val();
+                if (!pNameValue) {
+                    this.clear();
+                    return;
+                }
+                // project path
+                this.pPath().val('/' + pNameValue + '/');
+
+                // project package
+                var pPackageValue = this.pPackage().val();
+                if (!pPackageValue)
+                    pPackageValue = 'org.nqcx'
+                this.pPackage().val(pPackageValue);
+
+
+                // modules
+                 var pTypeValue = this.pType().filter(':checked').val();
+                if (pTypeValue == 1)
+                    this.fecthDirs(this.module.fillAll);
+                else
+                    this.module.emptyAll();
+
+                 // file path
+                path.openFile();
+            },
+            clear: function () {
+                this.pPath().val('');
+                this.pPackage().val('');
+
+                path.setRelativePath('');
+                path.loadCgFile('', []);
+            },
+            dirList: null,
+            fecthDirs: function (callback) {
+                var _this = this;
+
+                // clear array
+                _this.dirList = new Array();
+
+                var pPath = _this.pPath().val();
+                if (!pPath) {
+                    jQuery.messager.show({
+                        title: 'Error',
+                        msg: 'Please select project.'
+                    });
+                    return;
+                }
+
+                var url = /*[['/project/openFile']]*/'';
+                nqcxPost(url, {pPath: pPath, path: '', name: ''}, function (result) {
+                    if (result.success && result.object.cgFileList) {
+                        var cgFileList = result.object.cgFileList;
+                        for (idx in cgFileList) {
+                            if (!cgFileList[idx].file)
+                                _this.dirList.push(cgFileList[idx].name)
+                        }
+                        if (_this.dirList)
+                            callback(_this);
+                    }
+                });
+            },
+            module: {
+                provide: function() {
+                    return jQuery('select[name="provideModuleName"]');
+                },
+                dao: function() {
+                    return jQuery('select[name="daoModuleName"]');
+                },
+                service: function() {
+                    return jQuery('select[name="serviceModuleName"]');
+                },
+                web: function() {
+                    return jQuery('select[name="webModuleName"]');
+                },
+                fillAll: function (_this) {
+                    if (!_this)
+                        _this = this;
+
+                    _this.module.emptyAll();
+
+                    // provide
+                    _this.module.fill(_this, _this.module.provide().attr("name"), _this.pName().val() + '-provide');
+                    // dao
+                    _this.module.fill(_this, _this.module.dao().attr("name"), _this.pName().val() + '-dao');
+                    // service
+                    _this.module.fill(_this, _this.module.service().attr("name"), _this.pName().val() + '-service');
+                    // web
+                    _this.module.fill(_this, _this.module.web().attr("name"), _this.pName().val() + '-web');
+                },
+                fill: function (_this, name, defaultModule) {
+                    if (!_this)
+                        _this = this;
+
+                    var select = jQuery('select[name="' + name + '"]');
+                    var ml = _this.dirList;
+                    for (idx in ml) {
+                        if (defaultModule && defaultModule == ml[idx])
+                            jQuery('<option selected="selected" value="' + ml[idx] + '">' + ml[idx] + '</option>').appendTo(select);
+                        else
+                            jQuery('<option value="' + ml[idx] + '">' + ml[idx] + '</option>').appendTo(select);
+                    }
+                },
+                emptyAll: function() {
+                    // provide
+                    this.empty(this.provide());
+                    // dao
+                    this.empty(this.dao());
+                    // service
+                    this.empty(this.service());
+                    // web
+                    this.empty(this.web());
+                },
+                empty: function(module) {
+                    jQuery('option', module).each(function () {
+                        if ($(this).val()) {
+                            $(this).remove();
+                        }
+                    });
+                }
+            }
+         };
+    </script>
+    <script type="text/javascript" th:inline="javascript">
+        var path = {
+            relativePath: function () {
+                return jQuery('input[name="relativePath"]');
+            },
+            fileShow: function () {
+                return jQuery('#fileShow');
+            },
+            setRelativePath: function (value) {
+                this.relativePath().val(value);
+            },
+            enterKeyDown: function (e) {
+                var key = e.which;
+                if (key == 13) {
+                    e.preventDefault();
+
+                    var relativePathValue = this.relativePath().val();
+                    var path = '';
+                    var name = '';
+                    if (!relativePathValue)
+                        relativePathValue = '/';
+
+                    if (relativePathValue.indexOf('/') == -1)
+                        relativePathValue = '/' + relativePathValue;
+
+                    if (relativePathValue.length > 1 && relativePathValue.endWith('/'))
+                        relativePathValue = relativePathValue.substring(0, relativePathValue.lastIndexOf('/'));
+
+                    this.openFile(relativePathValue.substring(0, relativePathValue.lastIndexOf('/') + 1), relativePathValue.substring(relativePathValue.lastIndexOf('/') + 1, relativePathValue.length));
+                }
+            },
+            openFile: function (pathValue, nameValue) {
+                var pPath = project.pPath().val();
+                if (!pPath) {
+                    jQuery.messager.show({
+                        title: 'Error',
+                        msg: 'Please select project.'
+                    });
+                    return;
+                }
+
+                if (!pathValue)
+                    pathValue = '';
+                if (!nameValue)
+                    nameValue = '';
+
+                var url = /*[['/project/openFile']]*/'';
+                nqcxPost(url, {
+                    pPath: pPath,
+                    path: pathValue,
+                    name: nameValue
+                }, function (result) {
+                    var relativePathPath = '/';
+                    var relativePathName = '';
+                    var cgFileListValue = [];
+                    if (result.success) {
+                        if (result.object) {
+                            relativePathPath = result.object.path;
+                            relativePathName = result.object.name;
+                        }
+                        if (result.object.cgFileList)
+                            cgFileListValue = result.object.cgFileList;
+                    }
+                    path.setRelativePath(relativePathPath + relativePathName);
+                    path.loadCgFile(relativePathPath, cgFileListValue);
+                });
+            },
+            loadCgFile: function (pathValue, cgFileList) {
+                var cgFileHtml = '';
+                if (pathValue)
+                    cgFileHtml += '<li><a href="javascript:void(0);" onclick="javascript:path.openFile(\'' + pathValue + '\',\'\');">..</a></li>';
+                for (idx in cgFileList) {
+                    if (cgFileList[idx].file)
+                        cgFileHtml += '<li>' + cgFileList[idx].name + '</li>';
+                    else
+                        cgFileHtml += '<li><a href="javascript:void(0);" onclick="javascript:path.openFile(\'' + cgFileList[idx].path + '\',\'' + cgFileList[idx].name + '\');">' + cgFileList[idx].name + '</a></li>';
+                }
+                this.fileShow().html(cgFileHtml);
+            }
+        };
+    </script>
+    <script type="text/javascript" th:inline="javascript">
+        var center = {
+            o: function () {
+                return jQuery('div#center');
+            },
+            load: function (content) {
+                this.o().html(content);
+            },
+            clear: function () {
+                this.o().html('');
+            }
+        };
+    </script>
+</head>
+<body class="easyui-layout">
+<div data-options="region:'north',split:true" style="height:50px;padding:5px 5px 0;overflow:hidden;">
+    <form id="connForm" method="post" action="session">
+        <input type="hidden" name="wsPath" th:value="${ws.path}" value="" readonly="true"/>
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tr height="35px">
+                <td class="lable">jdbc:mysql://</td>
+                <td><input type="text" class="big_200" name="jdbcUrl" th:value="${jdbcUrl}" value="jdbcUrl"></td>
+                <td class="lable">User:</td>
+                <td><input type="text" class="small" name="user" th:value="${user}" value="user"/></td>
+                <td class="lable">Password:</td>
+                <td><input type="password" class="small" name="password" th:value="${password}" value="password" autocomplete="off" /></td>
+                <td>
+                    <input id="reconnect" type="button" value="Connect DB"/>
+                </td>
+                <td>
+                    <input id="loadTables" type="button" value="Load tables"/>
+                </td>
+                 <td>
+                    <select name="tableName">
+                        <option value="">Select Table</option>
+                    </select>
+                </td>
+                <td class="lable">Col-prefix:</td>
+                <td><input type="text" name="colPrefix" value="t_" /></td>
+                <td>
+                    <input id="reloadAll" type="button" value="Reload Center"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div data-options="region:'south',split:true" style="height:30px;"></div>
+<div data-options="region:'west',split:true" style="width:230px;">
+    <table border="0" cellpadding="0" cellspacing="0">
+        <tr height="30">
+            <td colspan="2"><th:block th:text="${ws.path}"></th:block></td>
+        </tr>
+        <tr height="30">
+            <td class="lable">
+                Project:
+            </td>
+            <td>
+                <select name="pName">
+                    <option value="">Select Project</option>
+                    <option th:each="cfFile:${ws.cgFileList}" th:value="${cfFile.name}" th:text="${cfFile.name}" />
+                </select>
+            </td>
+        </tr>
+        <tr height="30">
+            <td class="lable">Path:</td>
+            <td><input type="text" class="big_140" name="pPath" value="" readonly="true"></td>
+        </tr>
+        <tr height="30">
+            <td class="lable">Package:</td>
+            <td>
+                <input type="text" class="big_140" name="pPackage" value="">
+            </td>
+        </tr>
+        <tr height="30">
+            <td class="lable">Type:</td>
+            <td nowrap>
+                <input type="radio" name="pType" value="0"/>Single <input type="radio" name="pType" value="1"
+                                                                          checked="checked"/>Multiple
+            </td>
+        </tr>
+        <tr height="30">
+            <td class="lable">Provide:</td>
+            <td>
+                <select name="provideModuleName">
+                    <option value="">/</option>
+                </select>
+            </td>
+        </tr>
+        <tr height="30">
+            <td class="lable">DAO:</td>
+            <td>
+                <select name="daoModuleName">
+                    <option value="">/</option>
+                </select>
+            </td>
+        </tr>
+        <tr height="30">
+            <td class="lable">Service:</td>
+            <td>
+                <select name="serviceModuleName">
+                    <option value="">/</option>
+                </select>
+            </td>
+        </tr>
+        <tr height="30">
+            <td class="lable">Web:</td>
+            <td>
+                <select name="webModuleName">
+                    <option value="">/</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <hr/>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td style="padding-left: 10px"><strong>.</strong><input type="text" class="big_200" name="relativePath"
+                                                                    value=""/>
+        </tr>
+        <tr>
+            <td style="padding-left: 10px">
+                <ul id="fileShow"></ul>
+            </td>
+        </tr>
+    </table>
+</div>
+<div id="center" data-options="region:'center'" style="padding:5px;background:#eee;"></div>
+<script type="text/javascript" th:inline="javascript">
+    $(document).ready(function () {
+        $('#loadTables').click(function () {
+            table.listNames();
+        });
+        $('#reconnect').click(function () {
+            db.reconnect(function () {
+                retryTimes = 1;
+            });
+            table.listNames();
+        });
+
+        // table
+        table.tableName().change(function () {
+            table.change();
+        });
+        // end of table
+
+        // project
+        project.pName().change(function () {
+            project.change();
+
+            // child
+            if (project.module.change)
+                project.module.change();
+        });
+        project.pType().change(function () {
+            project.change();
+
+            // child
+            if (project.module.change)
+                project.module.change();
+        });
+        project.pPackage().change(function() {
+            console.log("Project package changed.")
+            // child
+            if (project.module.change)
+                project.module.change();
+        });
+        project.pPackage().keyup(function (e) {
+            console.log("Project package " + e.which + " keyup.")
+
+            if (project.module.change)
+                project.module.change();
+        });
+        // end of project
+
+        path.relativePath().keydown(function (e) {
+            path.enterKeyDown(e);
+        });
+     });
+</script>
+</body>
+</html>
