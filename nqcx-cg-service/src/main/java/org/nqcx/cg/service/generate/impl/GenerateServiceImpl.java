@@ -13,12 +13,12 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.nqcx.cg.common.util.CgFileUtils;
 import org.nqcx.cg.entity.ws.enums.PType;
+import org.nqcx.cg.provide.o.Generate;
 import org.nqcx.cg.service.generate.GenerateService;
 import org.nqcx.commons3.lang.o.DTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -45,64 +45,56 @@ public class GenerateServiceImpl implements GenerateService {
     private static String SERVICE_INTERFACE_TEMPLATE_NAME = "service_interface.vm";
     private static String SERVICE_IMPLEMENTS_TEMPLATE_NAME = "service_implements.vm";
 
-    private static String P_ENTITY_PATH_KEY = "entityProjectPath";
-    private static String P_MAPPER_PATH_KEY = "mapperProjectPath";
-    // private static String P_MANAGER_PATH_KEY = "managerProjectPath";
-    private static String P_SERVICE_PATH_KEY = "serviceProjectPath";
+    private static String P_PROVIDE_PATH_KEY = "provideModule";
+    private static String P_DAO_PATH_KEY = "daoModule";
+    private static String P_SERVICE_PATH_KEY = "serviceModule";
+    private static String P_WEB_PATH_KEY = "webModule";
 
     @Autowired
     private String workspacePath;
 
     @Override
-    public DTO generate(String tableName, String pName, PType pType, String pPath, String pPackage, String entityName,
+    public DTO generate(Generate g, String tableName, String pName, PType pType, String pPath, String pPackage,
+                        String entityName,
                         String entityProjectName, String entityProjectPackage,
                         String mapperProjectName,
                         String mapperProjectPackage,
                         String serviceProjectName, String serviceProjectPackage,
-                        String[] tableColumns, String[] entityField, String[] entityType,
+                        String[] tableColumns, String[] provideField, String[] provideType,
                         String mapperInterface, String serviceInterface, String serviceImplement) {
 
-        DTO dto = new DTO();
-        if (isNotBlank(entityName) && (PType.MULTIPLE == pType && isBlank(entityProjectName))
-                && isBlank(entityProjectPackage)) {
-            dto.setSuccess(false);
-            dto.putResult("100", "102");
-            return dto;
+        if (g == null)
+            return new DTO(false).putResult("100", "生成代码失败！");
+
+        if (!pPathExist(workspacePath, g.getpPath()))
+            return new DTO(false).putResult("101", "工程路径不存在");
+
+        Map<String, String> pathMap = this.getPathString(workspacePath, pPath, g.getProvideModule(),
+                g.getDaoModule(), g.getServiceModule(), g.getWebModule());
+
+        String providePath = pathMap.get(P_PROVIDE_PATH_KEY);
+        if (g.getProvide().isTrue()) {
+            this.generateProvide(providePath, g.getPrivideO(), g.getProvideProvidePackage(), provideField, provideType);
         }
 
-        if (!pPathExist(workspacePath, pPath)) {
-            dto.setSuccess(false);
-            dto.putResult("100", "101");
-            return dto;
-        }
+//        String mapperPath = pathMap.get(P_MAPPER_PATH_KEY);
+//        if ((mapperPath != null || (PType.MULTIPLE == pType && isNotBlank(mapperProjectName)))
+//                && isNotBlank(mapperProjectPackage) && isNotBlank(mapperInterface)) {
+//            this.generateMapper(tableName, mapperPath, mapperInterface, mapperProjectPackage, entityName, tableColumns,
+//                    entityField);
+//        }
+//
+//        String daoInterface = mapperInterface;
+//        String daoProjectPackage = mapperProjectPackage;
+//
+//        String servicePath = pathMap.get(P_SERVICE_PATH_KEY);
+//        if ((servicePath != null || (PType.MULTIPLE == pType && isNotBlank(serviceProjectName)))
+//                && isNotBlank(serviceInterface) && isNotBlank(serviceImplement) && isNotBlank(serviceProjectPackage)) {
+//            this.generateService(serviceProjectName, servicePath, serviceInterface, serviceImplement,
+//                    serviceProjectPackage, daoInterface, daoProjectPackage);
+//        }
 
-        Map<String, String> pathMap = this.getPathString(workspacePath, pType, pPath, entityProjectName,
-                mapperProjectName, /* managerProjectName, */serviceProjectName);
-
-        String entityPath = pathMap.get(P_ENTITY_PATH_KEY);
-        if ((entityPath != null || (PType.MULTIPLE == pType && isNotBlank(entityProjectName))) && entityField != null
-                && entityType != null) {
-            this.generateEntity(entityPath, entityName, entityProjectPackage, entityField, entityType);
-        }
-
-        String mapperPath = pathMap.get(P_MAPPER_PATH_KEY);
-        if ((mapperPath != null || (PType.MULTIPLE == pType && isNotBlank(mapperProjectName)))
-                && isNotBlank(mapperProjectPackage) && isNotBlank(mapperInterface)) {
-            this.generateMapper(tableName, mapperPath, mapperInterface, mapperProjectPackage, entityName, tableColumns,
-                    entityField);
-        }
-
-        String daoInterface = mapperInterface;
-        String daoProjectPackage = mapperProjectPackage;
-
-        String servicePath = pathMap.get(P_SERVICE_PATH_KEY);
-        if ((servicePath != null || (PType.MULTIPLE == pType && isNotBlank(serviceProjectName)))
-                && isNotBlank(serviceInterface) && isNotBlank(serviceImplement) && isNotBlank(serviceProjectPackage)) {
-            this.generateService(serviceProjectName, servicePath, serviceInterface, serviceImplement,
-                    serviceProjectPackage, daoInterface, daoProjectPackage);
-        }
-
-        return dto.setSuccess(true);
+        return new DTO(true);
     }
 
     /**
@@ -119,42 +111,36 @@ public class GenerateServiceImpl implements GenerateService {
 
     /**
      * @param wsPath
-     * @param pType
      * @param pPath
-     * @param entityProjectName
-     * @param mapperProjectName  // * @param managerProjectName
-     * @param serviceProjectName
+     * @param provideModuleName
+     * @param daoModuleName
+     * @param serviceModuleName
+     * @param webModuleName
      * @return
      */
-    private Map<String, String> getPathString(String wsPath, PType pType, String pPath, String entityProjectName,
-                                              String mapperProjectName,
-                                              // String managerProjectName,
-                                              String serviceProjectName) {
+    private Map<String, String> getPathString(String wsPath, String pPath,
+                                              String provideModuleName,
+                                              String daoModuleName,
+                                              String serviceModuleName,
+                                              String webModuleName) {
         Map<String, String> map = new HashMap<String, String>();
 
-        if (isNotBlank(entityProjectName) || (PType.SINGLE == pType && isBlank(serviceProjectName))) {
-            String entityProjectPath = wsPath + pPath + entityProjectName;
-            if (new File(entityProjectPath).exists())
-                map.put(P_ENTITY_PATH_KEY, entityProjectPath);
-        }
+        String provideModulePath = wsPath + pPath + provideModuleName;
+        if (new File(provideModulePath).exists())
+            map.put(P_PROVIDE_PATH_KEY, provideModulePath);
 
-        if (isNotBlank(mapperProjectName) || (PType.SINGLE == pType && isBlank(mapperProjectName))) {
-            String mapperProjectPath = wsPath + pPath + mapperProjectName;
-            if (new File(mapperProjectPath).exists())
-                map.put(P_MAPPER_PATH_KEY, mapperProjectPath);
-        }
+        String daoModulePath = wsPath + pPath + daoModuleName;
+        if (new File(daoModulePath).exists())
+            map.put(P_DAO_PATH_KEY, daoModulePath);
 
-        // if (isNotBlank(managerProjectName) || (PType.SINGLE == pType && isBlank(managerProjectName))) {
-        // String managerProjectPath = wsPath + pPath + managerProjectName;
-        // if ((new File(managerProjectPath)).exists())
-        // map.put(P_MANAGER_PATH_KEY, managerProjectPath);
-        // }
+        String serviceModulePath = wsPath + pPath + webModuleName;
+        if ((new File(serviceModulePath)).exists())
+            map.put(P_SERVICE_PATH_KEY, serviceModulePath);
 
-        if (isNotBlank(serviceProjectName) || (PType.SINGLE == pType && isBlank(serviceProjectName))) {
-            String serviceProjectPath = wsPath + pPath + serviceProjectName;
-            if ((new File(serviceProjectPath)).exists())
-                map.put(P_SERVICE_PATH_KEY, serviceProjectPath);
-        }
+        String webModulePath = wsPath + pPath + serviceModuleName;
+        if ((new File(webModulePath)).exists())
+            map.put(P_WEB_PATH_KEY, webModulePath);
+
 
         return map;
     }
@@ -166,8 +152,8 @@ public class GenerateServiceImpl implements GenerateService {
      * @param entityField
      * @param entityType
      */
-    private void generateEntity(String entityPath, String entityName, String entityPackage, String[] entityField,
-                                String[] entityType) {
+    private void generateProvide(String entityPath, String entityName, String entityPackage, String[] entityField,
+                                 String[] entityType) {
 
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("date", new Date());

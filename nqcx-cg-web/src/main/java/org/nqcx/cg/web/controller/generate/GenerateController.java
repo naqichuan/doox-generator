@@ -8,11 +8,14 @@
 
 package org.nqcx.cg.web.controller.generate;
 
+import org.nqcx.cg.data.converter.OrikaWeb;
 import org.nqcx.cg.data.vo.GenerateVO;
 import org.nqcx.cg.entity.ws.enums.PType;
+import org.nqcx.cg.provide.o.Generate;
 import org.nqcx.cg.service.generate.GenerateService;
 import org.nqcx.cg.web.controller.AbstractController;
 import org.nqcx.commons3.lang.o.DTO;
+import org.nqcx.commons3.util.orika.Orika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestDataBinder;
@@ -57,11 +60,13 @@ public class GenerateController extends AbstractController {
             String[] tableColumns, String[] entityField, String[] entityType,
             @RequestParam(value = "mapperInterface", required = false, defaultValue = "") String mapperInterface,
             @RequestParam(value = "serviceInterface", required = false, defaultValue = "") String serviceInterface,
-            @RequestParam(value = "serviceImplement", required = false, defaultValue = "") String serviceImplement) {
+            @RequestParam(value = "serviceImplement", required = false, defaultValue = "") String serviceImplement) throws ClassNotFoundException {
 
         PType newPType = PType.get(Integer.parseInt(pType));
 
-        DTO dto = generateService.generate(tableName, pName, newPType, pPath, pPackage, entityName, entityProjectName,
+        Generate g = Orika.o2o(vo, Generate.class);
+
+        DTO dto = generateService.generate(g, tableName, pName, newPType, pPath, pPackage, entityName, entityProjectName,
                 entityProjectPackage, mapperProjectName,
                 mapperProjectPackage,
                 serviceProjectName, serviceProjectPackage, tableColumns, entityField, entityType, mapperInterface,

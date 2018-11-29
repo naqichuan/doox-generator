@@ -12,7 +12,7 @@
     <mvc:annotation-driven/>
     <mvc:default-servlet-handler/>
     <import resource="classpath:spring/bean-commons-servlet.xml"/>
-    <context:component-scan base-package="org.nqcx.cg.web.controller"/>
+    <context:component-scan base-package="org.nqcx.cg.data.converter, org.nqcx.cg.web.controller"/>
 
     <util:map id="_staticVariables">
         <entry key="nqcxValues">

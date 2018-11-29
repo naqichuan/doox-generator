@@ -9,6 +9,7 @@
 package org.nqcx.cg.service.generate;
 
 import org.nqcx.cg.entity.ws.enums.PType;
+import org.nqcx.cg.provide.o.Generate;
 import org.nqcx.commons3.lang.o.DTO;
 
 /**
@@ -38,12 +39,12 @@ public interface GenerateService {
      * @param serviceImplement
      * @return
      */
-    public DTO generate(String tableName, String pName, PType pType, String pPath, String pPackage, String entityName,
-                        String entityProjectName, String entityProjectPackage,
-                        String mapperProjectName,
-                        String mapperProjectPackage,
-                        // String manageProjectName, String manageProjectPackage,
-                        String serviceProjectName, String serviceProjectPackage, String[] tableColumns, String[] entityField,
-                        String[] entityType, String mapperInterface,
-                        String serviceInterface, String serviceImplement);
+    DTO generate(Generate generate, String tableName, String pName, PType pType, String pPath, String pPackage, String entityName,
+                 String entityProjectName, String entityProjectPackage,
+                 String mapperProjectName,
+                 String mapperProjectPackage,
+                 // String manageProjectName, String manageProjectPackage,
+                 String serviceProjectName, String serviceProjectPackage, String[] tableColumns, String[] entityField,
+                 String[] entityType, String mapperInterface,
+                 String serviceInterface, String serviceImplement);
 }
