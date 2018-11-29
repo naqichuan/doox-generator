@@ -20,6 +20,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.context.EngineContext;
+import org.thymeleaf.context.IContext;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -73,7 +80,7 @@ public class GenerateServiceImpl implements GenerateService {
                 g.getDaoModule(), g.getServiceModule(), g.getWebModule());
 
         String providePath = pathMap.get(P_PROVIDE_PATH_KEY);
-        if (g.getProvide().isTrue()) {
+        if (g.getProvide_().isTrue()) {
             this.generateProvide(providePath, g.getPrivideO(), g.getProvideProvidePackage(), provideField, provideType);
         }
 
@@ -155,45 +162,48 @@ public class GenerateServiceImpl implements GenerateService {
     private void generateProvide(String entityPath, String entityName, String entityPackage, String[] entityField,
                                  String[] entityType) {
 
-        Map<String, Object> model = new HashMap<String, Object>();
-        model.put("date", new Date());
-        model.put("entityName", entityName);
-        model.put("entityPackage", entityPackage);
-
-        List<String> entityFields = new ArrayList<String>();
-        StringBuffer entityFieldsTmp = null;
-        for (int i = 0; i < entityField.length; i++) {
-            entityFieldsTmp = new StringBuffer();
-            entityFieldsTmp.append("private ");
-            entityFieldsTmp.append(entityType[i]);
-            entityFieldsTmp.append(" ");
-            entityFieldsTmp.append(entityField[i]);
-            entityFieldsTmp.append(";");
-            entityFields.add(entityFieldsTmp.toString());
-        }
-        model.put("entityFields", entityFields);
-
-        List<String> entityMethods = new ArrayList<String>();
-        StringBuffer entityMethodsTmp = null;
-        for (int i = 0; i < entityField.length; i++) {
-            entityMethodsTmp = new StringBuffer();
-
-            entityMethodsTmp.append("\tpublic " + entityType[i] + " get" + StringUtils.capitalize(entityField[i])
-                    + "() {\r\n");
-            entityMethodsTmp.append("\t\treturn " + entityField[i] + ";\r\n");
-            entityMethodsTmp.append("\t}\r\n");
-            entityMethodsTmp.append("\r\n");
-            entityMethodsTmp.append("\tpublic void set" + StringUtils.capitalize(entityField[i]) + "(" + entityType[i]
-                    + " " + entityField[i] + ") {\r\n");
-            entityMethodsTmp.append("\t\tthis." + entityField[i] + " = " + entityField[i] + ";\r\n");
-            entityMethodsTmp.append("\t}\r\n");
-
-            entityMethods.add(entityMethodsTmp.toString());
-        }
-        model.put("entityMethods", entityMethods);
-
-        this.writeFile(entityPath + "/" + JAVA_PATH + entityPackage.replace('.', '/'), entityName + JAVA_EXT_NAME,
-                mergeTemplateIntoString(ENTITY_TEMPLATE_NAME, model));
+        Context cxt = new Context();
+        cxt.setVariable("abcde", "aa");
+//        Map<String, Object> model = new HashMap<String, Object>();
+//        model.put("date", new Date());
+//        model.put("entityName", entityName);
+//        model.put("entityPackage", entityPackage);
+//
+//        List<String> entityFields = new ArrayList<String>();
+//        StringBuffer entityFieldsTmp = null;
+//        for (int i = 0; i < entityField.length; i++) {
+//            entityFieldsTmp = new StringBuffer();
+//            entityFieldsTmp.append("private ");
+//            entityFieldsTmp.append(entityType[i]);
+//            entityFieldsTmp.append(" ");
+//            entityFieldsTmp.append(entityField[i]);
+//            entityFieldsTmp.append(";");
+//            entityFields.add(entityFieldsTmp.toString());
+//        }
+//        model.put("entityFields", entityFields);
+//
+//        List<String> entityMethods = new ArrayList<String>();
+//        StringBuffer entityMethodsTmp = null;
+//        for (int i = 0; i < entityField.length; i++) {
+//            entityMethodsTmp = new StringBuffer();
+//
+//            entityMethodsTmp.append("\tpublic " + entityType[i] + " get" + StringUtils.capitalize(entityField[i])
+//                    + "() {\r\n");
+//            entityMethodsTmp.append("\t\treturn " + entityField[i] + ";\r\n");
+//            entityMethodsTmp.append("\t}\r\n");
+//            entityMethodsTmp.append("\r\n");
+//            entityMethodsTmp.append("\tpublic void set" + StringUtils.capitalize(entityField[i]) + "(" + entityType[i]
+//                    + " " + entityField[i] + ") {\r\n");
+//            entityMethodsTmp.append("\t\tthis." + entityField[i] + " = " + entityField[i] + ";\r\n");
+//            entityMethodsTmp.append("\t}\r\n");
+//
+//            entityMethods.add(entityMethodsTmp.toString());
+//        }
+//        model.put("entityMethods", entityMethods);
+//
+//        this.writeFile(entityPath + "/" + JAVA_PATH + entityPackage.replace('.', '/'), entityName + JAVA_EXT_NAME,
+//                mergeTemplateIntoString(ENTITY_TEMPLATE_NAME, model));
+        System.out.println(this.process("abcd", cxt));
     }
 
     /**
@@ -370,6 +380,26 @@ public class GenerateServiceImpl implements GenerateService {
         velocityEngine.mergeTemplate(templateLocation, "UTF-8", context, stringWriter);
 
         return stringWriter.toString();
+    }
+
+    private String process(String template, IContext context) {
+        return templateEngine().process(template, context);
+    }
+
+
+    public TemplateEngine templateEngine() {
+        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+
+        templateResolver.setTemplateMode(TemplateMode.TEXT);
+        templateResolver.setPrefix("/template/");
+        templateResolver.setSuffix(".txt");
+        templateResolver.setCacheTTLMs(Long.valueOf(3600000L));
+        templateResolver.setCacheable(true);
+
+        TemplateEngine templateEngine = new TemplateEngine();
+        templateEngine.setTemplateResolver(templateResolver);
+
+        return templateEngine;
     }
 
     /**

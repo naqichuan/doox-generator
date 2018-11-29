@@ -94,48 +94,71 @@
     <!--<br/>-->
     <fieldset>
         <legend>
-            <span style="font-weight: 700;"><input type="checkbox" name="provide" value="1">Module -> Provide</span>
+            <span style="font-weight: 700;"><input type="checkbox" name="provide_" value="true">Module -> Provide</span>
         </legend>
         <table border="0" cellpadding="0" cellspacing="0">
-            <td class="lable">Module provide package:</td>
-            <td>
-                <input type="text" name="provideProvidePackage" class="big_200" value="">
-            </td>
-            <td class="lable">Module service package:</td>
-            <td>
-                <input type="text" name="provideServicePackage" class="big_200" value="">
-            </td>
-        </table>
+            <tr>
+                <td class="lable">BO package:</td>
+                <td>
+                    <input type="text" name="provideBOPackage" class="big_200" value="">
+                </td>
+                <td class="lable">O package:</td>
+                <td>
+                    <input type="text" name="provideOPackage" class="big_200" value="">
+                </td>
+            </tr>
+            <tr>
+                <td class="lable">Module provide package:</td>
+                <td>
+                    <input type="text" name="provideProvidePackage" class="big_200" value="">
+                </td>
+                <td class="lable"></td>
+                <td>
+                </td>
+            </tr>
+         </table>
         <div id="config_provide_div"></div>
     </fieldset>
     <br/> <br/>
     <fieldset>
         <legend>
-            <span style="font-weight: 700;"><input type="checkbox" name="dao" value="1">Module -> Dao</span>
+            <span style="font-weight: 700;"><input type="checkbox" name="dao_" value="true">Module -> Dao</span>
         </legend>
         <table border="0" cellpadding="0" cellspacing="0">
-            <td class="lable">Module dao package:</td>
-            <td>
-                <input type="text" name="daoDaoPackage" class="big_200" value="">
-            </td>
-            <td class="lable">Module service package:</td>
-            <td>
-                <input type="text" name="daoDataPackage" class="big_200" value="">
-            </td>
-        </table>
+            <tr>
+                <td class="lable">PO package:</td>
+                <td>
+                    <input type="text" name="daoPOPackage" class="big_200" value="">
+                </td>
+                <td class="lable">Mapper package:</td>
+                <td>
+                    <input type="text" name="daoMapperPackage" class="big_200" value="">
+                </td>
+            </tr>
+            <tr>
+                <td class="lable">Jpa package:</td>
+                <td>
+                    <input type="text" name="daoJpaPackage" class="big_200" value="">
+                </td>
+                <td class="lable">Dao package:</td>
+                <td>
+                    <input type="text" name="daoDaoPackage" class="big_200" value="">
+                </td>
+            </tr>
+         </table>
         <div id="config_dao_div"></div>
     </fieldset>
     <br/> <br/>
     <fieldset>
         <legend>
-            <span style="font-weight: 700;"><input type="checkbox" name="service" value="1">Module -> Service</span>
+            <span style="font-weight: 700;"><input type="checkbox" name="service_" value="true">Module -> Service</span>
         </legend>
         <div id="config_service_div"></div>
     </fieldset>
     <br/> <br/>
     <fieldset>
         <legend>
-            <span style="font-weight: 700;"><input type="checkbox" name="web" value="1">Module -> Web:</span>
+            <span style="font-weight: 700;"><input type="checkbox" name="web_" value="true">Module -> Web:</span>
         </legend>
         <div id="config_web_div"></div>
     </fieldset>
@@ -267,11 +290,14 @@
         // projectName: function () {
         //     return jQuery('input[name="provideProjectName"]');
         // },
-        providePackage: function () {
-            return jQuery('input[name="provideProvidePackage"]');
+        provideBOPackage: function () {
+            return jQuery('input[name="provideBOPackage"]');
         },
-        servicePackage: function () {
-            return jQuery('input[name="provideServicePackage"]');
+        provideOPackage: function () {
+            return jQuery('input[name="provideOPackage"]');
+        },
+        provideProvidePackage: function () {
+            return jQuery('input[name="provideProvidePackage"]');
         },
         projectInit: function () {
             this.loadPackage();
@@ -286,24 +312,25 @@
         loadPackage: function() {
             var tablePack = table.tablePack().val();
 
-            // current value
-            // var prpValue = this.providePackage().val();
-            // var sepValue = this.servicePackage().val();
-
             // project pakcage value
-            var ppValue = project.pPackage().val() || '';
+            var pValue = project.pPackage().val() || '';
 
-            var prpValue = ppValue + '.provide' + (tablePack ? "." + tablePack : "") ;
-            if(prpValue.indexOf(".") === 0 && prpValue.length > 1)
-                prpValue = prpValue.substring(1);
+            var pbValue = pValue + '.provide.bo' + (tablePack ? "." + tablePack : "") ;
+            if(pbValue.indexOf(".") === 0 && pbValue.length > 1)
+                pbValue = pbValue.substring(1);
 
-            var sepValue = ppValue + '.service' + (tablePack ? "." + tablePack : "");
-            if(sepValue.indexOf(".") === 0 && sepValue.length > 1)
-                sepValue = sepValue.substring(1);
+            var poValue = pValue + '.service.o' + (tablePack ? "." + tablePack : "");
+            if(poValue.indexOf(".") === 0 && poValue.length > 1)
+                poValue = poValue.substring(1);
+
+            var ppValue = pValue + '.service' + (tablePack ? "." + tablePack : "");
+            if(ppValue.indexOf(".") === 0 && ppValue.length > 1)
+                ppValue = ppValue.substring(1);
 
             // set value
-            this.providePackage().val(prpValue);
-            this.servicePackage().val(sepValue);
+            this.provideBOPackage().val(pbValue);
+            this.provideOPackage().val(poValue);
+            this.provideProvidePackage().val(ppValue);
         },
         loadTable: function () {
             var tableName = table.tableName().val();
@@ -339,16 +366,15 @@
             var provideName = table.replaceFirstUP();
 
             rowHtml += '<tr><td class="lable">Create BO:</td><td class="lable">public class</td><td>' +
-                    '<input id="privideBO" type="text" name="privideBO" class="big_200" value="' + provideName + 'BO"></td></tr>';
+                    '<input id="privideBO" type="text" name="privideBO" class="big_200" value="' + provideName + 'BO"></td>';
 
-            rowHtml += '<tr><td class="lable">Create O:</td><td class="lable">public class</td><td>' +
+            rowHtml += '<td class="lable">Create O:</td><td class="lable">public class</td><td>' +
                     '<input id="privideO" type="text" name="privideO" class="big_200" value="' + provideName + '"></td></tr>';
 
             rowHtml += '<tr><td class="lable">Create Provide:</td><td class="lable">public interface</td><td>' +
                     '<input id="privideProvide" type="text" name="privideProvide" class="big_200" value="I' + provideName + 'Provide"></td></tr>';
 
-            rowHtml += '<tr><td class="lable">Create Service:</td><td class="lable">public interface</td><td>' +
-                    '<input id="privideService" type="text" name="privideService" class="big_200" value="I' + provideName + 'Service"></td></tr>';
+            rowHtml += '<tr><td class="lable"></td><td></td></tr>'
 
             return rowHtml;
         },
@@ -362,8 +388,8 @@
 
             rowHtml += '<td><input id="tableColumns_' + field + '" type="text" name="tableColumns" class="big_200" value="' + field + '" readonly="true" /></td>';
             rowHtml += '<td>' + type + '</td>';
-            rowHtml += '<td><input id="provideField_' + field + '" type="text" name="provideField" class="big_200" value="' + field_ + '" onkeyup="provide.show1(\'' + field + '\')" onafterpaste="provide.show1(\'' + field + '\')" onblur="provide.show1(\'' + field + '\')" /></td>';
-            rowHtml += '<td><input id="provideType_' + field + '" type="text" name="provideType" class="big_200" value="' + type_ + '" onkeyup="provide.show1(\'' + field + '\')" onafterpaste="provide.show1(\'' + field + '\')" onblur="provide.show1(\'' + field + '\')" /></td>';
+            rowHtml += '<td><input id="provideField_' + field + '" type="text" name="provideFields" class="big_200" value="' + field_ + '" onkeyup="provide.show1(\'' + field + '\')" onafterpaste="provide.show1(\'' + field + '\')" onblur="provide.show1(\'' + field + '\')" /></td>';
+            rowHtml += '<td><input id="provideType_' + field + '" type="text" name="provideTypes" class="big_200" value="' + type_ + '" onkeyup="provide.show1(\'' + field + '\')" onafterpaste="provide.show1(\'' + field + '\')" onblur="provide.show1(\'' + field + '\')" /></td>';
             rowHtml += '<td><span id="provideText_' + field + '">' + show + '</span></td>';
 
             return rowHtml;
@@ -429,11 +455,17 @@
         // projectName: function () {
         //     return jQuery('input[name="daoProjectName"]');
         // },
+        poPackage: function () {
+            return jQuery('input[name="daoPOPackage"]');
+        },
+        mapperPackage: function () {
+            return jQuery('input[name="daoMapperPackage"]');
+        },
+        jpaPackage: function () {
+            return jQuery('input[name="daoJpaPackage"]');
+        },
         daoPackage: function () {
             return jQuery('input[name="daoDaoPackage"]');
-        },
-        dataPackage: function () {
-            return jQuery('input[name="daoDataPackage"]');
         },
         projectInit: function () {
             this.loadPackage();
@@ -448,31 +480,30 @@
         loadPackage: function() {
             var tablePack = table.tablePack().val();
 
-            // current value
-            // var daoValue = this.daoPackage().val();
-            // var dataValue = this.dataPackage().val();
-
             // project pakcage value
-            var ppValue = project.pPackage().val() || '';
+            var pValue = project.pPackage().val() || '';
 
-            // var idx;
-            // if ((idx = daoValue.indexOf('.provide.')) > 0)
-            //     daoValue = ppValue + daoValue.substring(idx);
-            // else
-            var daoValue = ppValue + '.dao' + (tablePack ? "." + tablePack : "");
+            var poValue = pValue + '.data.po' + (tablePack ? "." + tablePack : "");
+            if(poValue.indexOf(".") === 0 && poValue.length > 1)
+                poValue = poValue.substring(1);
+
+            var mapperValue = pValue + '.data.mapper' + (tablePack ? "." + tablePack : "");
+            if(mapperValue.indexOf(".") === 0 && mapperValue.length > 1)
+                mapperValue = mapperValue.substring(1);
+
+            var jpaValue = pValue + '.data.jpa' + (tablePack ? "." + tablePack : "");
+            if(jpaValue.indexOf(".") === 0 && jpaValue.length > 1)
+                jpaValue = jpaValue.substring(1);
+
+            var daoValue = pValue + '.dao' + (tablePack ? "." + tablePack : "");
             if(daoValue.indexOf(".") === 0 && daoValue.length > 1)
                 daoValue = daoValue.substring(1);
 
-            // if ((idx = dataValue.indexOf('.service.')) > 0)
-            //     dataValue = ppValue + dataValue.substring(idx);
-            // else
-            var dataValue = ppValue + '.data' + (tablePack ? "." + tablePack : "");
-            if(dataValue.indexOf(".") === 0 && dataValue.length > 1)
-                dataValue = dataValue.substring(1);
-
             // set value
+            this.poPackage().val(poValue);
+            this.mapperPackage().val(mapperValue);
+            this.jpaPackage().val(jpaValue);
             this.daoPackage().val(daoValue);
-            this.dataPackage().val(dataValue);
         },
         // projectFill: function () {
         //     var pNameValue = project.pName().val();
@@ -516,11 +547,19 @@
             rowHtml += '<tr><td class="lable">Create PO:</td><td class="lable">public class</td><td>' +
                 '<input id="daoPO" type="text" name="daoPO" class="big_200" value="' + daoName + 'PO"/></td>';
 
-            rowHtml += '<tr><td class="lable">Create IDAO:</td><td class="lable">public interface</td><td>' +
-                '<input id="daoIDAO" type="text" name="daoIDAO" class="big_200" value="I' + daoName + 'DAO"/></td>';
+            rowHtml += '<td class="lable">Create Mapper:</td><td class="lable">public interface</td><td>' +
+                '<input id="daoMapper" type="text" name="daoMapper" class="big_200" value="I' + daoName + 'Mapper"/></td></tr>';
+
+            rowHtml += '<tr><td class="lable">Create Jpa:</td><td class="lable">public interface</td><td>' +
+                '<input id="daoJpa" type="text" name="daoJpa" class="big_200" value="I' + daoName + 'Jpa"/></td>';
+
+            rowHtml += '<td class="lable">Create IDAO:</td><td class="lable">public interface</td><td>' +
+                '<input id="daoDAO" type="text" name="daoDAO" class="big_200" value="I' + daoName + 'DAO"/></td></tr>';
 
             rowHtml += '<tr><td class="lable">Create IDAO impl:</td><td class="lable">public class</td><td>' +
-                '<input id="daoDAO" type="text" name="daoDAO" class="big_200" value="' + daoName + 'DAO"/> implements I' + daoName + 'DAO</td>';
+                '<input id="daoDAOImpl" type="text" name="daoDAOImpl" class="big_200" value="' + daoName + 'DAO"/></td>';
+
+            rowHtml += '<tr><td class="lable"></td><td></td></tr>'
 
             return rowHtml;
         },
@@ -713,6 +752,7 @@
             },
             addDatas: {
                 tableName: table.tableName().val(),
+                tablePack: table.tablePack().val(),
                 wsPath: ws.wsPath().val(),
                 pName: project.pName().val(),
                 pPath: project.pPath().val(),

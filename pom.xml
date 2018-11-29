@@ -242,6 +242,7 @@
                     <include>spring/*.xml</include>
                     <include>mybatis/*.xml</include>
                     <include>template/*.vm</include>
+                    <include>template/*.txt</include>
                 </includes>
             </resource>
         </resources>
