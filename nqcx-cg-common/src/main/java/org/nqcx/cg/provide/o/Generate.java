@@ -36,9 +36,9 @@ public class Generate implements Serializable {
     private String provideBOPackage;
     private String provideOPackage;
     private String provideProvidePackage;
-    private String privideBO;
-    private String privideO;
-    private String privideProvide;
+    private String provideBO;
+    private String provideO;
+    private String provideProvide;
     // end of provide field
 
     // pojo
@@ -176,28 +176,28 @@ public class Generate implements Serializable {
         this.provideProvidePackage = provideProvidePackage;
     }
 
-    public String getPrivideBO() {
-        return privideBO;
+    public String getProvideBO() {
+        return provideBO;
     }
 
-    public void setPrivideBO(String privideBO) {
-        this.privideBO = privideBO;
+    public void setProvideBO(String provideBO) {
+        this.provideBO = provideBO;
     }
 
-    public String getPrivideO() {
-        return privideO;
+    public String getProvideO() {
+        return provideO;
     }
 
-    public void setPrivideO(String privideO) {
-        this.privideO = privideO;
+    public void setProvideO(String provideO) {
+        this.provideO = provideO;
     }
 
-    public String getPrivideProvide() {
-        return privideProvide;
+    public String getProvideProvide() {
+        return provideProvide;
     }
 
-    public void setPrivideProvide(String privideProvide) {
-        this.privideProvide = privideProvide;
+    public void setProvideProvide(String provideProvide) {
+        this.provideProvide = provideProvide;
     }
 
     public String[] getTableColumns() {

@@ -8,25 +8,25 @@
 
 package org.nqcx.cg.service.generate.impl;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.nqcx.cg.common.util.CgFileUtils;
 import org.nqcx.cg.entity.ws.enums.PType;
+import org.nqcx.cg.provide.o.CgField;
 import org.nqcx.cg.provide.o.Generate;
 import org.nqcx.cg.service.generate.GenerateService;
 import org.nqcx.commons3.lang.o.DTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import org.thymeleaf.context.EngineContext;
 import org.thymeleaf.context.IContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
-import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -46,11 +46,13 @@ public class GenerateServiceImpl implements GenerateService {
     private static String JAVA_EXT_NAME = ".java";
     private static String XML_EXT_NAME = ".xml";
 
-    private static String ENTITY_TEMPLATE_NAME = "entity.vm";
-    private static String MAPPER_JAVA_TEMPLATE_NAME = "mapper_java.vm";
-    private static String MAPPER_XML_TEMPLATE_NAME = "mapper_xml.vm";
-    private static String SERVICE_INTERFACE_TEMPLATE_NAME = "service_interface.vm";
-    private static String SERVICE_IMPLEMENTS_TEMPLATE_NAME = "service_implements.vm";
+    private final static String BO_TXT_TEMPLATE_NAME = "bo.txt";
+
+    private final static String ENTITY_TEMPLATE_NAME = "entity.vm";
+    private final static String MAPPER_JAVA_TEMPLATE_NAME = "mapper_java.vm";
+    private final static String MAPPER_XML_TEMPLATE_NAME = "mapper_xml.vm";
+    private final static String SERVICE_INTERFACE_TEMPLATE_NAME = "service_interface.vm";
+    private final static String SERVICE_IMPLEMENTS_TEMPLATE_NAME = "service_implements.vm";
 
     private static String P_PROVIDE_PATH_KEY = "provideModule";
     private static String P_DAO_PATH_KEY = "daoModule";
@@ -58,7 +60,11 @@ public class GenerateServiceImpl implements GenerateService {
     private static String P_WEB_PATH_KEY = "webModule";
 
     @Autowired
+    @Qualifier("workspacePath")
     private String workspacePath;
+    @Autowired
+    @Qualifier("workspaceAuthor")
+    private String workspaceAuthor;
 
     @Override
     public DTO generate(Generate g, String tableName, String pName, PType pType, String pPath, String pPackage,
@@ -81,7 +87,10 @@ public class GenerateServiceImpl implements GenerateService {
 
         String providePath = pathMap.get(P_PROVIDE_PATH_KEY);
         if (g.getProvide_().isTrue()) {
-            this.generateProvide(providePath, g.getPrivideO(), g.getProvideProvidePackage(), provideField, provideType);
+            this.generateProvide(providePath, g.getProvideBOPackage(), g.getProvideBO(),
+                    g.getProvideOPackage(), g.getProvideO(),
+                    g.getProvideProvidePackage(), g.getProvideProvide(),
+                    g.getProvideFields(), g.getProvideTypes());
         }
 
 //        String mapperPath = pathMap.get(P_MAPPER_PATH_KEY);
@@ -152,36 +161,53 @@ public class GenerateServiceImpl implements GenerateService {
         return map;
     }
 
+
     /**
-     * @param entityPath
-     * @param entityName
-     * @param entityPackage
-     * @param entityField
-     * @param entityType
+     * @param providePath
+     * @param boPackage
+     * @param boName
+     * @param oPackage
+     * @param oName
+     * @param providePackage
+     * @param provideName
+     * @param fields
+     * @param types
      */
-    private void generateProvide(String entityPath, String entityName, String entityPackage, String[] entityField,
-                                 String[] entityType) {
+    private void generateProvide(String providePath, String boPackage, String boName,
+                                 String oPackage, String oName,
+                                 String providePackage, String provideName,
+                                 String[] fields,
+                                 String[] types) {
 
         Context cxt = new Context();
-        cxt.setVariable("abcde", "aa");
-//        Map<String, Object> model = new HashMap<String, Object>();
-//        model.put("date", new Date());
-//        model.put("entityName", entityName);
-//        model.put("entityPackage", entityPackage);
-//
-//        List<String> entityFields = new ArrayList<String>();
-//        StringBuffer entityFieldsTmp = null;
-//        for (int i = 0; i < entityField.length; i++) {
-//            entityFieldsTmp = new StringBuffer();
-//            entityFieldsTmp.append("private ");
-//            entityFieldsTmp.append(entityType[i]);
-//            entityFieldsTmp.append(" ");
-//            entityFieldsTmp.append(entityField[i]);
-//            entityFieldsTmp.append(";");
-//            entityFields.add(entityFieldsTmp.toString());
-//        }
-//        model.put("entityFields", entityFields);
-//
+
+        // bo
+        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("date", new Date());
+        cxt.setVariable("boPackage", boPackage);
+        cxt.setVariable("boName", boName);
+        if (fields != null && types != null && fields.length == types.length) {
+            // bo field
+            List<String> boFields = new ArrayList<>();
+            // getter & setter
+            List<CgField> boGetterAndSetters = new ArrayList<>();
+            for (int i = 0; i < fields.length; i++) {
+                boFields.add(String.format("private %s %s;", types[i], fields[i]));
+
+                CgField field = new CgField();
+                field.setType(types[i]);
+                field.setField(fields[i]);
+                field.setName(StringUtils.capitalize(fields[i]));
+
+                boGetterAndSetters.add(field);
+            }
+            cxt.setVariable("boFields", boFields);
+            cxt.setVariable("boGetterAndSetter", boGetterAndSetters);
+        }
+
+        this.writeFile(providePath + "/" + JAVA_PATH + boPackage.replace('.', '/'), boName, JAVA_EXT_NAME,
+                process(BO_TXT_TEMPLATE_NAME, cxt));
+
 //        List<String> entityMethods = new ArrayList<String>();
 //        StringBuffer entityMethodsTmp = null;
 //        for (int i = 0; i < entityField.length; i++) {
@@ -203,7 +229,6 @@ public class GenerateServiceImpl implements GenerateService {
 //
 //        this.writeFile(entityPath + "/" + JAVA_PATH + entityPackage.replace('.', '/'), entityName + JAVA_EXT_NAME,
 //                mergeTemplateIntoString(ENTITY_TEMPLATE_NAME, model));
-        System.out.println(this.process("abcd", cxt));
     }
 
     /**
@@ -266,11 +291,11 @@ public class GenerateServiceImpl implements GenerateService {
 
         this.writeFile(
                 CgFileUtils.formatPath(mapperPath + "/" + JAVA_PATH + mapperPackage.replace('.', '/'), false, false),
-                mapperName + JAVA_EXT_NAME, mergeTemplateIntoString(MAPPER_JAVA_TEMPLATE_NAME, model));
+                mapperName, JAVA_EXT_NAME, mergeTemplateIntoString(MAPPER_JAVA_TEMPLATE_NAME, model));
 
         this.writeFile(
                 CgFileUtils.formatPath(mapperPath + "/" + JAVA_PATH + mapperPackage.replace('.', '/'), false, false),
-                mapperName + XML_EXT_NAME, mergeTemplateIntoString(MAPPER_XML_TEMPLATE_NAME, model));
+                mapperName, XML_EXT_NAME, mergeTemplateIntoString(MAPPER_XML_TEMPLATE_NAME, model));
     }
 
     // /**
@@ -329,7 +354,7 @@ public class GenerateServiceImpl implements GenerateService {
         modelInterface.put("serviceProjectPackage", serviceProjectPackage);
 
         this.writeFile(CgFileUtils.formatPath(servicePath + "/" + JAVA_PATH + serviceProjectPackage.replace('.', '/'),
-                false, false), serviceInterface + JAVA_EXT_NAME,
+                false, false), serviceInterface, JAVA_EXT_NAME,
                 mergeTemplateIntoString(SERVICE_INTERFACE_TEMPLATE_NAME, modelInterface));
 
         Map<String, Object> modelImplement = new HashMap<String, Object>();
@@ -344,7 +369,7 @@ public class GenerateServiceImpl implements GenerateService {
 
         this.writeFile(CgFileUtils.formatPath(
                 servicePath + "/" + JAVA_PATH + (serviceProjectPackage + ".impl").replace('.', '/'), false, false),
-                serviceImplement + JAVA_EXT_NAME,
+                serviceImplement, JAVA_EXT_NAME,
                 mergeTemplateIntoString(SERVICE_IMPLEMENTS_TEMPLATE_NAME, modelImplement));
     }
 
@@ -394,7 +419,7 @@ public class GenerateServiceImpl implements GenerateService {
         templateResolver.setPrefix("/template/");
         templateResolver.setSuffix(".txt");
         templateResolver.setCacheTTLMs(Long.valueOf(3600000L));
-        templateResolver.setCacheable(true);
+        templateResolver.setCacheable(false);
 
         TemplateEngine templateEngine = new TemplateEngine();
         templateEngine.setTemplateResolver(templateResolver);
@@ -406,7 +431,7 @@ public class GenerateServiceImpl implements GenerateService {
      * @param path
      * @param content
      */
-    private void writeFile(String path, String fileName, String content) {
+    private void writeFile(String path, String name, String ext, String content) {
         if (isBlank(path))
             return;
         if (content == null)
@@ -416,9 +441,14 @@ public class GenerateServiceImpl implements GenerateService {
         if (!pathFile.exists())
             pathFile.mkdirs();
 
+        String fileName = name + ext;
+        File file = new File(fileName);
+        if (file.exists())
+            fileName = name + "_" + ext;
+
         FileWriter fw = null;
         try {
-            fw = new FileWriter(path + "/" + fileName);
+            fw = new FileWriter(fileName);
             fw.write(content, 0, content.length());
             fw.flush();
         } catch (IOException e) {

@@ -161,6 +161,7 @@
             </activation>
             <properties>
                 <workspace.path>/Users/nqcx/Works/NQC/projects</workspace.path>
+                <workspace.author>Naqi Chuan</workspace.author>
 
                 <log.file.base>/export/logs/cg</log.file.base>
                 <log.web.level.min>INFO</log.web.level.min>
