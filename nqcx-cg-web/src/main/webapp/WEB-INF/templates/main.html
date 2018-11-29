@@ -463,24 +463,24 @@
     </script>
 </head>
 <body class="easyui-layout">
-<div data-options="region:'north',split:true" style="height:50px;padding:5px 5px 0;overflow:hidden;">
+<div data-options="region:'north',split:true" style="height:75px;padding:5px 5px 0;overflow:hidden;">
     <form id="connForm" method="post" action="session">
         <input type="hidden" name="wsPath" th:value="${ws.path}" value="" readonly="true"/>
         <table border="0" cellpadding="0" cellspacing="0">
-            <tr height="35px">
+            <tr height="30px">
                 <td class="lable">jdbc:mysql://</td>
                 <td><input type="text" class="big_200" name="jdbcUrl" th:value="${jdbcUrl}" value="jdbcUrl"></td>
                 <td class="lable">User:</td>
-                <td><input type="text" class="small" name="user" th:value="${user}" value="user"/></td>
+                <td><input type="text" name="user" th:value="${user}" value="user"/></td>
                 <td class="lable">Password:</td>
                 <td><input type="password" class="small" name="password" th:value="${password}" value="password" autocomplete="off" /></td>
-                <td>
+                <td class="lable">
                     <input id="reconnect" type="button" value="Connect DB"/>
                 </td>
-                <td>
-                    <input id="loadTables" type="button" value="Load tables"/>
-                </td>
-                 <td>
+            </tr>
+            <tr height="30px">
+                <td colspan="2">
+                    <input id="loadTables" type="button" value=">>Load tables>>"/>
                     <select name="tableName">
                         <option value="">Select Table</option>
                     </select>
@@ -489,8 +489,8 @@
                 <td><input type="text" name="colPrefix" value="t_" /></td>
                 <td class="lable">Table-pack:</td>
                 <td><input type="text" name="tablePack" value="" /></td>
-                <td>
-                    <input id="reloadAll" type="button" value="Reload Center"/>
+                <td class="lable">
+                    <input id="reloadAll" type="button" value="Load Center"/>
                 </td>
             </tr>
         </table>

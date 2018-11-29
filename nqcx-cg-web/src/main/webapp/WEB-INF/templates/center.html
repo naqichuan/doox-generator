@@ -123,9 +123,7 @@
                 <input type="text" name="daoDataPackage" class="big_200" value="">
             </td>
         </table>
-        <div id="config_dao_div">
-
-        </div>
+        <div id="config_dao_div"></div>
     </fieldset>
     <br/> <br/>
     <fieldset>
@@ -309,10 +307,10 @@
         },
         loadTable: function () {
             var tableName = table.tableName().val();
-            var columns = [];
             if (!tableName)
                 return;
 
+            var columns = [];
             nqcxGet("[(@{'/table/get/'})]" + tableName, {}, function (result) {
                 if (result.object && result.object.columns) {
                     columns = result.object.columns;
@@ -340,21 +338,17 @@
             var rowHtml = '';
             var provideName = table.replaceFirstUP();
 
-            rowHtml += '<tr><td class="lable">Create BO:</td>';
-            rowHtml += '<td class="lable">' +
-                    'public class <input id="privideBO" type="text" name="privideBO" class="big_200" value="' + provideName + 'BO"></td></tr>';
+            rowHtml += '<tr><td class="lable">Create BO:</td><td class="lable">public class</td><td>' +
+                    '<input id="privideBO" type="text" name="privideBO" class="big_200" value="' + provideName + 'BO"></td></tr>';
 
-            rowHtml += '<tr><td class="lable">Create O:</td>';
-            rowHtml += '<td class="lable">' +
-                    'public class <input id="privideO" type="text" name="privideO" class="big_200" value="' + provideName + '"></td></tr>';
+            rowHtml += '<tr><td class="lable">Create O:</td><td class="lable">public class</td><td>' +
+                    '<input id="privideO" type="text" name="privideO" class="big_200" value="' + provideName + '"></td></tr>';
 
-            rowHtml += '<tr><td class="lable">Create Provide:</td>';
-            rowHtml += '<td class="lable">' +
-                    'public class <input id="privideProvide" type="text" name="privideProvide" class="big_200" value="I' + provideName + 'Provide"></td></tr>';
+            rowHtml += '<tr><td class="lable">Create Provide:</td><td class="lable">public interface</td><td>' +
+                    '<input id="privideProvide" type="text" name="privideProvide" class="big_200" value="I' + provideName + 'Provide"></td></tr>';
 
-            rowHtml += '<tr><td class="lable">Create Service:</td>';
-            rowHtml += '<td class="lable">' +
-                    'public class <input id="privideService" type="text" name="privideService" class="big_200" value="I' + provideName + 'Service"></td></tr>';
+            rowHtml += '<tr><td class="lable">Create Service:</td><td class="lable">public interface</td><td>' +
+                    '<input id="privideService" type="text" name="privideService" class="big_200" value="I' + provideName + 'Service"></td></tr>';
 
             return rowHtml;
         },
@@ -417,6 +411,8 @@
                 return "String";
             else if (input.startWith('datetime') || input.startWith('date') || input.startWith('timestamp'))
                 return "Date";
+            else if (input.startWith('blob'))
+                return "byte[]"
             else
                 return input;
         }
@@ -441,6 +437,7 @@
         },
         projectInit: function () {
             this.loadPackage();
+            this.config()
         },
         // projectClear: function () {
         //     this.projectName().val('');
@@ -477,45 +474,62 @@
             this.daoPackage().val(daoValue);
             this.dataPackage().val(dataValue);
         },
-        projectFill: function () {
-            var pNameValue = project.pName().val();
-            var pTypeValue = project.pType().filter(':checked').val();
-            var pPackageValue = project.pPackage().val();
-
+        // projectFill: function () {
+        //     var pNameValue = project.pName().val();
+        //     var pTypeValue = project.pType().filter(':checked').val();
+        //     var pPackageValue = project.pPackage().val();
+        //
+        //     var tableName = table.tableName().val();
+        //     if (!tableName)
+        //         return;
+        //
+        //     this.projectName().val(pTypeValue == 0 ? '' : pNameValue + '-dao');
+        //     this.projectPackage().val(pPackageValue + '.dao.' + tableName);
+        //     this.projectTr().css('display', '');
+        //
+        //     this.config(tableName);
+        // },
+        config: function () {
             var tableName = table.tableName().val();
             if (!tableName)
                 return;
 
-            this.projectName().val(pTypeValue == 0 ? '' : pNameValue + '-dao');
-            this.projectPackage().val(pPackageValue + '.dao.' + tableName);
-            this.projectTr().css('display', '');
-
-            this.config(tableName);
-        },
-        config: function (table) {
-            var daoHtml = '<table border="0" cellpadding="0" cellspacing="0">';
-            daoHtml += '<tr>' + this.row(table) + '</tr>';
+            var daoHtml = '<hr />';
+            daoHtml += '<table border="0" cellpadding="0" cellspacing="0">';
+            daoHtml +=  this.row(tableName)
             daoHtml += '</table>';
             jQuery('#config_dao_div').html(daoHtml);
         },
         row: function (table) {
             var rowHtml = '';
+            var daoName = table.replaceFirstUP();
 
-            var interface = table.replaceFirstUP() + 'Mapper';
-            var extendsInterface = "MapperInterface";
-            var show = 'public interface ' + interface + ' extends ' + extendsInterface;
+            // var interface = table.replaceFirstUP() + 'Mapper';
+            // var extendsInterface = "MapperInterface";
+            // var show = 'public interface ' + interface + ' extends ' + extendsInterface;
+            var show = '';
 
-            rowHtml += '<td>' + table + '</td>';
-            rowHtml += '<td><input id="daoInterface_' + table + '" type="text" name="daoInterface" class="big_200" value="' + interface + '" onkeyup="dao.show(\'' + table + '\')" onafterpaste="dao.show(\'' + table + '\')" onblur="dao.show(\'' + table + '\')" /></td>';
-            rowHtml += '<td><span id="daoText_' + table + '">' + show + '</span></td>';
+            // rowHtml += '<td>' + table + '</td>';
+            // rowHtml += '<td><input id="daoInterface_' + table + '" type="text" name="daoInterface" class="big_200" value="' + interface + '" onkeyup="dao.show(\'' + table + '\')" onafterpaste="dao.show(\'' + table + '\')" onblur="dao.show(\'' + table + '\')" /></td>';
+            // rowHtml += '<td><span id="daoText_' + table + '">' + show + '</span></td>';
+
+            rowHtml += '<tr><td class="lable">Create PO:</td><td class="lable">public class</td><td>' +
+                '<input id="daoPO" type="text" name="daoPO" class="big_200" value="' + daoName + 'PO"/></td>';
+
+            rowHtml += '<tr><td class="lable">Create IDAO:</td><td class="lable">public interface</td><td>' +
+                '<input id="daoIDAO" type="text" name="daoIDAO" class="big_200" value="I' + daoName + 'DAO"/></td>';
+
+            rowHtml += '<tr><td class="lable">Create IDAO impl:</td><td class="lable">public class</td><td>' +
+                '<input id="daoDAO" type="text" name="daoDAO" class="big_200" value="' + daoName + 'DAO"/> implements I' + daoName + 'DAO</td>';
+
             return rowHtml;
         },
-        show: function (table) {
-            var interface = document.getElementById('daoInterface_' + table).value;
-            var extendsInterface = "MapperInterface";
-            var show = 'public interface ' + interface + ' extends ' + extendsInterface;
-            jQuery('#daoText_' + table).html(show);
-        }
+        // show: function (table) {
+        //     var interface = document.getElementById('daoInterface_' + table).value;
+        //     var extendsInterface = "MapperInterface";
+        //     var show = 'public interface ' + interface + ' extends ' + extendsInterface;
+        //     jQuery('#daoText_' + table).html(show);
+        // }
     };
 </script>
 <script type="text/javascript">

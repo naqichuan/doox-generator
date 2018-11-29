@@ -47,7 +47,7 @@ public class Generate implements Serializable {
     private String webModule;
     // end of project filed
 
-    // provide
+    // provide field
     private BoolEO provide = BoolEO.FALSE;
     private String provideProvidePackage;
     private String provideServicePackage;
@@ -55,8 +55,17 @@ public class Generate implements Serializable {
     private String privideO;
     private String privideProvide;
     private String privideService;
-    // end of provide
+    // end of provide field
 
+
+    // dao field
+    private BoolEO dao = BoolEO.FALSE;
+    private String daoDaoPackage;
+    private String daoDataPackage;
+    private String daoPO;
+    private String daoIDAO;
+    private String daoDAO;
+    // end of dao field
 
     public String getTableName() {
         return tableName;
@@ -184,5 +193,53 @@ public class Generate implements Serializable {
 
     public void setPrivideService(String privideService) {
         this.privideService = privideService;
+    }
+
+    public BoolEO getDao() {
+        return dao;
+    }
+
+    public void setDao(BoolEO dao) {
+        this.dao = dao;
+    }
+
+    public String getDaoDaoPackage() {
+        return daoDaoPackage;
+    }
+
+    public void setDaoDaoPackage(String daoDaoPackage) {
+        this.daoDaoPackage = daoDaoPackage;
+    }
+
+    public String getDaoDataPackage() {
+        return daoDataPackage;
+    }
+
+    public void setDaoDataPackage(String daoDataPackage) {
+        this.daoDataPackage = daoDataPackage;
+    }
+
+    public String getDaoPO() {
+        return daoPO;
+    }
+
+    public void setDaoPO(String daoPO) {
+        this.daoPO = daoPO;
+    }
+
+    public String getDaoIDAO() {
+        return daoIDAO;
+    }
+
+    public void setDaoIDAO(String daoIDAO) {
+        this.daoIDAO = daoIDAO;
+    }
+
+    public String getDaoDAO() {
+        return daoDAO;
+    }
+
+    public void setDaoDAO(String daoDAO) {
+        this.daoDAO = daoDAO;
     }
 }
