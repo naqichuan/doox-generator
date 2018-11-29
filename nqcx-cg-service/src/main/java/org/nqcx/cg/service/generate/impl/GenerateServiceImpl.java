@@ -441,10 +441,10 @@ public class GenerateServiceImpl implements GenerateService {
         if (!pathFile.exists())
             pathFile.mkdirs();
 
-        String fileName = name + ext;
+        String fileName = path + "/" + name + ext;
         File file = new File(fileName);
         if (file.exists())
-            fileName = name + "_" + ext;
+            fileName = path + "/" + name + "_" + ext;
 
         FileWriter fw = null;
         try {
