@@ -160,13 +160,8 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <workspace.path>/Users/nqcx/Works/NQC/projects</workspace.path>
-                <workspace.author>Naqi Chuan</workspace.author>
-
-                <log.file.base>/export/logs/cg</log.file.base>
-                <log.web.level.min>INFO</log.web.level.min>
-                <log.web.level.max>FATAL</log.web.level.max>
-                <log.web.file>${log.file.base}/cg-web.log</log.web.file>
+                <workspace.path>/Users/nqcx/Works/NQC/github</workspace.path>
+                <workspace.author>NaqiChuan</workspace.author>
             </properties>
         </profile>
     </profiles>

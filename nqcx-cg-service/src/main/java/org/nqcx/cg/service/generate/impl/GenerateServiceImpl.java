@@ -47,6 +47,8 @@ public class GenerateServiceImpl implements GenerateService {
     private static String XML_EXT_NAME = ".xml";
 
     private final static String BO_TXT_TEMPLATE_NAME = "bo.txt";
+    private final static String O_TXT_TEMPLATE_NAME = "o.txt";
+    private final static String PROVIDE_TXT_TEMPLATE_NAME = "provide.txt";
 
     private final static String ENTITY_TEMPLATE_NAME = "entity.vm";
     private final static String MAPPER_JAVA_TEMPLATE_NAME = "mapper_java.vm";
@@ -59,12 +61,22 @@ public class GenerateServiceImpl implements GenerateService {
     private static String P_SERVICE_PATH_KEY = "serviceModule";
     private static String P_WEB_PATH_KEY = "webModule";
 
+    private final static Map<String, String> classMapping = new HashMap<>();
+
+
     @Autowired
     @Qualifier("workspacePath")
     private String workspacePath;
     @Autowired
     @Qualifier("workspaceAuthor")
     private String workspaceAuthor;
+
+    static {
+        classMapping.put("Serializable", "java.io.Serializable");
+        classMapping.put("Date", "java.util.Date");
+        classMapping.put("Integer", "java.lang.Integer");
+        classMapping.put("Long", "java.lang.Long");
+    }
 
     @Override
     public DTO generate(Generate g, String tableName, String pName, PType pType, String pPath, String pPackage,
@@ -85,12 +97,16 @@ public class GenerateServiceImpl implements GenerateService {
         Map<String, String> pathMap = this.getPathString(workspacePath, pPath, g.getProvideModule(),
                 g.getDaoModule(), g.getServiceModule(), g.getWebModule());
 
+        classMapping.put(g.getProvideBO(), g.getProvideBOPackage() + "." + g.getProvideBO());
+        classMapping.put(g.getProvideO(), g.getProvideOPackage() + "." + g.getProvideO());
+        classMapping.put(g.getProvideProvide(), g.getProvideProvidePackage() + "." + g.getProvideProvide());
+
         String providePath = pathMap.get(P_PROVIDE_PATH_KEY);
         if (g.getProvide_().isTrue()) {
             this.generateProvide(providePath, g.getProvideBOPackage(), g.getProvideBO(),
                     g.getProvideOPackage(), g.getProvideO(),
                     g.getProvideProvidePackage(), g.getProvideProvide(),
-                    g.getProvideFields(), g.getProvideTypes());
+                    g.getTableColumns(), g.getProvideFields(), g.getProvideTypes());
         }
 
 //        String mapperPath = pathMap.get(P_MAPPER_PATH_KEY);
@@ -161,6 +177,18 @@ public class GenerateServiceImpl implements GenerateService {
         return map;
     }
 
+    /**
+     * @param imports
+     * @param className
+     */
+    private void mappingImport(Set<String> imports, String className) {
+        if (imports == null || className == null)
+            return;
+
+        String name = classMapping.get(className);
+        if (name != null && name.length() > 0)
+            imports.add(name);
+    }
 
     /**
      * @param providePath
@@ -176,22 +204,34 @@ public class GenerateServiceImpl implements GenerateService {
     private void generateProvide(String providePath, String boPackage, String boName,
                                  String oPackage, String oName,
                                  String providePackage, String provideName,
+                                 String[] tableColumns,
                                  String[] fields,
                                  String[] types) {
 
         Context cxt = new Context();
+        Set<String> imports = new HashSet<>();
 
         // bo
+        mappingImport(imports, "Serializable");
+
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
-        cxt.setVariable("boPackage", boPackage);
-        cxt.setVariable("boName", boName);
-        if (fields != null && types != null && fields.length == types.length) {
+        cxt.setVariable("package", boPackage);
+        cxt.setVariable("imports", imports);
+        cxt.setVariable("name", boName);
+
+        if (fields != null && types != null && tableColumns != null
+                && fields.length == types.length && fields.length == tableColumns.length) {
             // bo field
             List<String> boFields = new ArrayList<>();
             // getter & setter
             List<CgField> boGetterAndSetters = new ArrayList<>();
             for (int i = 0; i < fields.length; i++) {
+                if (tableColumns[i].contains("_create") || tableColumns[i].contains("_modify"))
+                    continue;
+
+                mappingImport(imports, types[i]);
+
                 boFields.add(String.format("private %s %s;", types[i], fields[i]));
 
                 CgField field = new CgField();
@@ -207,6 +247,35 @@ public class GenerateServiceImpl implements GenerateService {
 
         this.writeFile(providePath + "/" + JAVA_PATH + boPackage.replace('.', '/'), boName, JAVA_EXT_NAME,
                 process(BO_TXT_TEMPLATE_NAME, cxt));
+
+        // o
+        cxt.clearVariables();
+        imports.clear();
+        mappingImport(imports, boName);
+
+        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("date", new Date());
+        cxt.setVariable("package", oPackage);
+        cxt.setVariable("imports", imports);
+        cxt.setVariable("name", oName);
+
+        cxt.setVariable("boName", boName);
+
+        this.writeFile(providePath + "/" + JAVA_PATH + oPackage.replace('.', '/'), oName, JAVA_EXT_NAME,
+                process(O_TXT_TEMPLATE_NAME, cxt));
+
+        // provide
+        cxt.clearVariables();
+        imports.clear();
+
+        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("date", new Date());
+        cxt.setVariable("package", providePackage);
+        cxt.setVariable("imports", imports);
+        cxt.setVariable("name", provideName);
+
+        this.writeFile(providePath + "/" + JAVA_PATH + providePackage.replace('.', '/'), provideName, JAVA_EXT_NAME,
+                process(PROVIDE_TXT_TEMPLATE_NAME, cxt));
 
 //        List<String> entityMethods = new ArrayList<String>();
 //        StringBuffer entityMethodsTmp = null;
