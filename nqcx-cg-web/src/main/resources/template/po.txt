@@ -11,6 +11,24 @@ import [(${import})];
 /**
  * @author [(${author})] [(${#dates.format(date, 'yyyy-MM-dd HH:mm')})]
  */
+@Entity
+@Table(name = "[(${tableName})]")
 public class [(${name})] extends [(${boName})] {
+[# th:each="f : ${poFields}"]
+    [(${f})][/]
+[# th:each="gs : ${poGetter}"]
 
+    public [(${gs.type})] get[(${gs.name})]() {
+        return super.get[(${gs.name})]();
+    }[/]
+[# th:each="gs : ${poGetterAndSetter}"]
+
+    public [(${gs.type})] get[(${gs.name})]() {
+        return [(${gs.field})];
+    }
+
+    public void set[(${gs.name})]([(${gs.type})] [(${gs.field})]) {
+        this.[(${gs.field})] = [(${gs.field})];
+    }
+[/]
 }

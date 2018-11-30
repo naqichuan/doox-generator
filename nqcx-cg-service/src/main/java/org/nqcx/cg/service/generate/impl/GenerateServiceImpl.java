@@ -82,6 +82,8 @@ public class GenerateServiceImpl implements GenerateService {
         classMapping.put("Date", "java.util.Date");
         classMapping.put("Integer", "java.lang.Integer");
         classMapping.put("Long", "java.lang.Long");
+        classMapping.put("Entity", "javax.persistence.Entity");
+        classMapping.put("Table", "javax.persistence.Table");
     }
 
     @Override
@@ -127,7 +129,7 @@ public class GenerateServiceImpl implements GenerateService {
                     g.getDaoMapperPackage(), g.getDaoMapper(),
                     g.getDaoJpaPackage(), g.getDaoJpa(),
                     g.getDaoDaoPackage(), g.getDaoDAO(), g.getDaoDaoPackage() + ".impl", g.getDaoDAOImpl(),
-                    g.getTableColumns(), g.getProvideFields(), g.getProvideTypes(),
+                    g.getTableName(), g.getTableColumns(), g.getProvideFields(), g.getProvideTypes(),
                     g.getProvideBO());
         }
 //
@@ -313,6 +315,7 @@ public class GenerateServiceImpl implements GenerateService {
                              String mapperPackage, String mapper,
                              String jpaPackage, String jpa,
                              String daoPackage, String dao, String daoImplPackage, String daoImpl,
+                             String tableName,
                              String[] tableColumns,
                              String[] fields,
                              String[] types,
@@ -323,6 +326,8 @@ public class GenerateServiceImpl implements GenerateService {
 
         // po
         mappingImport(imports, boName);
+        mappingImport(imports, "Entity");
+        mappingImport(imports, "Table");
 
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
@@ -331,6 +336,40 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("name", po);
 
         cxt.setVariable("boName", boName);
+        cxt.setVariable("tableName", tableName);
+
+        if (fields != null && types != null && tableColumns != null
+                && fields.length == types.length && fields.length == tableColumns.length) {
+            // bo field
+            List<String> poFields = new ArrayList<>();
+            // po getter
+            List<CgField> poGetter = new ArrayList<>();
+            // getter & setter
+            List<CgField> poGetterAndSetters = new ArrayList<>();
+            for (int i = 0; i < fields.length; i++) {
+
+                mappingImport(imports, types[i]);
+
+                CgField field = new CgField();
+                field.setType(types[i]);
+                field.setField(fields[i]);
+                field.setName(StringUtils.capitalize(fields[i]));
+
+                if (tableColumns[i].contains("_create") || tableColumns[i].contains("_modify")) {
+                    poFields.add(String.format("private %s %s;", types[i], fields[i]));
+                    cxt.setVariable("poFields", poFields);
+
+                    cxt.setVariable("poGetterAndSetter", poGetterAndSetters);
+
+                    poGetterAndSetters.add(field);
+                } else {
+                    cxt.setVariable("poGetter", poGetter);
+
+                    poGetter.add(field);
+                }
+            }
+        }
+
 
         this.writeFile(daoPath + "/" + JAVA_PATH + poPackage.replace('.', '/'),
                 po, JAVA_EXT_NAME,
