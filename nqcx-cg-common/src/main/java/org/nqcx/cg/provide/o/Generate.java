@@ -56,11 +56,8 @@ public class Generate implements Serializable {
     private String daoPO;
     private String daoMapper;
     private String daoJpa;
-    private String daoIDAO;
     private String daoDAO;
     private String daoDAOImpl;
-
-
     // end of dao field
 
 
@@ -286,14 +283,6 @@ public class Generate implements Serializable {
 
     public void setDaoJpa(String daoJpa) {
         this.daoJpa = daoJpa;
-    }
-
-    public String getDaoIDAO() {
-        return daoIDAO;
-    }
-
-    public void setDaoIDAO(String daoIDAO) {
-        this.daoIDAO = daoIDAO;
     }
 
     public String getDaoDAO() {

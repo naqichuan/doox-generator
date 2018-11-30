@@ -49,10 +49,16 @@ public class GenerateServiceImpl implements GenerateService {
     private final static String BO_TXT_TEMPLATE_NAME = "bo.txt";
     private final static String O_TXT_TEMPLATE_NAME = "o.txt";
     private final static String PROVIDE_TXT_TEMPLATE_NAME = "provide.txt";
+    private final static String PO_TXT_TEMPLATE_NAME = "po.txt";
+    private final static String MAPPER_TXT_TEMPLATE_NAME = "mapper.txt";
+    private final static String MAPPERXML_TXT_TEMPLATE_NAME = "mapper_xml.txt";
+    private final static String JPA_TXT_TEMPLATE_NAME = "jpa.txt";
+    private final static String DAO_TXT_TEMPLATE_NAME = "dao.txt";
+    private final static String DAOIMPL_TXT_TEMPLATE_NAME = "daoimpl.txt";
 
-    private final static String ENTITY_TEMPLATE_NAME = "entity.vm";
-    private final static String MAPPER_JAVA_TEMPLATE_NAME = "mapper_java.vm";
-    private final static String MAPPER_XML_TEMPLATE_NAME = "mapper_xml.vm";
+    //    private final static String ENTITY_TEMPLATE_NAME = "entity.vm";
+//    private final static String MAPPER_JAVA_TEMPLATE_NAME = "mapper_java.vm";
+//    private final static String MAPPER_XML_TEMPLATE_NAME = "mapper_xml.vm";
     private final static String SERVICE_INTERFACE_TEMPLATE_NAME = "service_interface.vm";
     private final static String SERVICE_IMPLEMENTS_TEMPLATE_NAME = "service_implements.vm";
 
@@ -109,12 +115,21 @@ public class GenerateServiceImpl implements GenerateService {
                     g.getTableColumns(), g.getProvideFields(), g.getProvideTypes());
         }
 
-//        String mapperPath = pathMap.get(P_MAPPER_PATH_KEY);
-//        if ((mapperPath != null || (PType.MULTIPLE == pType && isNotBlank(mapperProjectName)))
-//                && isNotBlank(mapperProjectPackage) && isNotBlank(mapperInterface)) {
-//            this.generateMapper(tableName, mapperPath, mapperInterface, mapperProjectPackage, entityName, tableColumns,
-//                    entityField);
-//        }
+        classMapping.put(g.getDaoPO(), g.getDaoPOPackage() + "." + g.getDaoPO());
+        classMapping.put(g.getDaoMapper(), g.getDaoMapperPackage() + "." + g.getDaoMapper());
+        classMapping.put(g.getDaoJpa(), g.getDaoJpaPackage() + "." + g.getDaoJpa());
+        classMapping.put(g.getDaoDAO(), g.getDaoDaoPackage() + "." + g.getDaoDAO());
+        classMapping.put(g.getDaoDAOImpl(), g.getDaoDaoPackage() + ".impl." + g.getDaoDAOImpl());
+
+        String daoPath = pathMap.get(P_DAO_PATH_KEY);
+        if (g.getDao_().isTrue()) {
+            this.generateDao(daoPath, g.getDaoPOPackage(), g.getDaoPO(),
+                    g.getDaoMapperPackage(), g.getDaoMapper(),
+                    g.getDaoJpaPackage(), g.getDaoJpa(),
+                    g.getDaoDaoPackage(), g.getDaoDAO(), g.getDaoDaoPackage() + ".impl", g.getDaoDAOImpl(),
+                    g.getTableColumns(), g.getProvideFields(), g.getProvideTypes(),
+                    g.getProvideBO());
+        }
 //
 //        String daoInterface = mapperInterface;
 //        String daoProjectPackage = mapperProjectPackage;
@@ -276,95 +291,176 @@ public class GenerateServiceImpl implements GenerateService {
 
         this.writeFile(providePath + "/" + JAVA_PATH + providePackage.replace('.', '/'), provideName, JAVA_EXT_NAME,
                 process(PROVIDE_TXT_TEMPLATE_NAME, cxt));
-
-//        List<String> entityMethods = new ArrayList<String>();
-//        StringBuffer entityMethodsTmp = null;
-//        for (int i = 0; i < entityField.length; i++) {
-//            entityMethodsTmp = new StringBuffer();
-//
-//            entityMethodsTmp.append("\tpublic " + entityType[i] + " get" + StringUtils.capitalize(entityField[i])
-//                    + "() {\r\n");
-//            entityMethodsTmp.append("\t\treturn " + entityField[i] + ";\r\n");
-//            entityMethodsTmp.append("\t}\r\n");
-//            entityMethodsTmp.append("\r\n");
-//            entityMethodsTmp.append("\tpublic void set" + StringUtils.capitalize(entityField[i]) + "(" + entityType[i]
-//                    + " " + entityField[i] + ") {\r\n");
-//            entityMethodsTmp.append("\t\tthis." + entityField[i] + " = " + entityField[i] + ";\r\n");
-//            entityMethodsTmp.append("\t}\r\n");
-//
-//            entityMethods.add(entityMethodsTmp.toString());
-//        }
-//        model.put("entityMethods", entityMethods);
-//
-//        this.writeFile(entityPath + "/" + JAVA_PATH + entityPackage.replace('.', '/'), entityName + JAVA_EXT_NAME,
-//                mergeTemplateIntoString(ENTITY_TEMPLATE_NAME, model));
     }
 
     /**
-     * @param tableName
-     * @param mapperPath
-     * @param mapperName
+     * @param daoPath
+     * @param poPackage
+     * @param po
      * @param mapperPackage
+     * @param mapper
+     * @param jpaPackage
+     * @param jpa
+     * @param daoPackage
+     * @param dao
+     * @param daoImplPackage
+     * @param daoImpl
+     * @param tableColumns
+     * @param fields
+     * @param types
      */
-    private void generateMapper(String tableName, String mapperPath, String mapperName, String mapperPackage,
-                                String entityName, String[] tableColumns, String[] entityField) {
-        Map<String, Object> model = new HashMap<String, Object>();
-        model.put("date", new Date());
-        model.put("mapperName", mapperName);
-        model.put("mapperPackage", mapperPackage);
-        model.put("tableName", tableName);
-        model.put("entityName", entityName);
+    private void generateDao(String daoPath, String poPackage, String po,
+                             String mapperPackage, String mapper,
+                             String jpaPackage, String jpa,
+                             String daoPackage, String dao, String daoImplPackage, String daoImpl,
+                             String[] tableColumns,
+                             String[] fields,
+                             String[] types,
+                             String boName) {
 
-        List<String> resultMap = new ArrayList<String>();
-        List<String> entityFields = new ArrayList<String>();
-        String tableColumnsStr = new String();
-        String idColumn = new String();
-        String idField = new String();
-        String idFieldName = new String();
+        Context cxt = new Context();
+        Set<String> imports = new HashSet<>();
 
-        if (tableColumns != null && entityField != null && tableColumns.length == entityField.length)
-            for (int i = 0; i < entityField.length; i++) {
-                if (i == 0) {
-                    idColumn = tableColumns[i];
-                    idFieldName = entityField[i];
-                    idField = "#{" + entityField[i] + "}";
-                }
+        // po
+        mappingImport(imports, boName);
 
-                if ("id".equals(entityField[i])) {
-                    resultMap.add("<id property=\"" + entityField[i] + "\" column=\"" + tableColumns[i] + "\" />");
+        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("date", new Date());
+        cxt.setVariable("package", poPackage);
+        cxt.setVariable("imports", imports);
+        cxt.setVariable("name", po);
 
-                    entityFields.add("NULL");
+        cxt.setVariable("boName", boName);
 
-                    idColumn = tableColumns[i];
-                    idFieldName = entityField[i];
-                    idField = "#{" + entityField[i] + "}";
-                } else {
-                    resultMap.add("<result property=\"" + entityField[i] + "\" column=\"" + tableColumns[i] + "\" />");
+        this.writeFile(daoPath + "/" + JAVA_PATH + poPackage.replace('.', '/'),
+                po, JAVA_EXT_NAME,
+                process(PO_TXT_TEMPLATE_NAME, cxt));
 
-                    entityFields.add("#{" + entityField[i] + "}");
-                }
+        // mapper
+        cxt.clearVariables();
+        imports.clear();
 
-                if (tableColumnsStr.length() == 0)
-                    tableColumnsStr += tableColumns[i];
-                else
-                    tableColumnsStr += ", " + tableColumns[i];
+        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("date", new Date());
+        cxt.setVariable("package", mapperPackage);
+        cxt.setVariable("imports", imports);
+        cxt.setVariable("name", mapper);
 
-            }
-        model.put("idColumn", idColumn);
-        model.put("idField", idField);
-        model.put("idFieldName", idFieldName);
-        model.put("tableColumnsStr", tableColumnsStr);
-        model.put("resultMap", resultMap);
-        model.put("entityFields", entityFields);
-        model.put("tableColumns", tableColumns);
+        cxt.setVariable("poName", po);
 
-        this.writeFile(
-                CgFileUtils.formatPath(mapperPath + "/" + JAVA_PATH + mapperPackage.replace('.', '/'), false, false),
-                mapperName, JAVA_EXT_NAME, mergeTemplateIntoString(MAPPER_JAVA_TEMPLATE_NAME, model));
+        this.writeFile(daoPath + "/" + JAVA_PATH + mapperPackage.replace('.', '/'),
+                mapper, JAVA_EXT_NAME,
+                process(MAPPER_TXT_TEMPLATE_NAME, cxt));
 
-        this.writeFile(
-                CgFileUtils.formatPath(mapperPath + "/" + JAVA_PATH + mapperPackage.replace('.', '/'), false, false),
-                mapperName, XML_EXT_NAME, mergeTemplateIntoString(MAPPER_XML_TEMPLATE_NAME, model));
+        // mapper xml
+        this.writeFile(daoPath + "/" + JAVA_PATH + mapperPackage.replace('.', '/'),
+                mapper, XML_EXT_NAME,
+                process(MAPPERXML_TXT_TEMPLATE_NAME, cxt));
+
+
+        // jpa
+        cxt.clearVariables();
+        imports.clear();
+
+        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("date", new Date());
+        cxt.setVariable("package", jpaPackage);
+        cxt.setVariable("imports", imports);
+        cxt.setVariable("name", jpa);
+
+        this.writeFile(daoPath + "/" + JAVA_PATH + jpaPackage.replace('.', '/'),
+                jpa, JAVA_EXT_NAME,
+                process(JPA_TXT_TEMPLATE_NAME, cxt));
+
+        // dao
+        cxt.clearVariables();
+        imports.clear();
+
+        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("date", new Date());
+        cxt.setVariable("package", daoPackage);
+        cxt.setVariable("imports", imports);
+        cxt.setVariable("name", dao);
+
+        this.writeFile(daoPath + "/" + JAVA_PATH + daoPackage.replace('.', '/'),
+                dao, JAVA_EXT_NAME,
+                process(DAO_TXT_TEMPLATE_NAME, cxt));
+
+        // dao impl
+        cxt.clearVariables();
+        imports.clear();
+
+        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("date", new Date());
+        cxt.setVariable("package", daoImplPackage);
+        cxt.setVariable("imports", imports);
+        cxt.setVariable("name", daoImpl);
+
+        cxt.setVariable("daoName", dao);
+
+        mappingImport(imports, dao);
+
+        this.writeFile(daoPath + "/" + JAVA_PATH + daoImplPackage.replace('.', '/'),
+                daoImpl, JAVA_EXT_NAME,
+                process(DAOIMPL_TXT_TEMPLATE_NAME, cxt));
+
+//        Map<String, Object> model = new HashMap<String, Object>();
+//        model.put("date", new Date());
+//        model.put("mapperName", mapperName);
+//        model.put("mapperPackage", mapperPackage);
+//        model.put("tableName", tableName);
+//        model.put("entityName", entityName);
+//
+//        List<String> resultMap = new ArrayList<String>();
+//        List<String> entityFields = new ArrayList<String>();
+//        String tableColumnsStr = new String();
+//        String idColumn = new String();
+//        String idField = new String();
+//        String idFieldName = new String();
+//
+//        if (tableColumns != null && entityField != null && tableColumns.length == entityField.length)
+//            for (int i = 0; i < entityField.length; i++) {
+//                if (i == 0) {
+//                    idColumn = tableColumns[i];
+//                    idFieldName = entityField[i];
+//                    idField = "#{" + entityField[i] + "}";
+//                }
+//
+//                if ("id".equals(entityField[i])) {
+//                    resultMap.add("<id property=\"" + entityField[i] + "\" column=\"" + tableColumns[i] + "\" />");
+//
+//                    entityFields.add("NULL");
+//
+//                    idColumn = tableColumns[i];
+//                    idFieldName = entityField[i];
+//                    idField = "#{" + entityField[i] + "}";
+//                } else {
+//                    resultMap.add("<result property=\"" + entityField[i] + "\" column=\"" + tableColumns[i] + "\" />");
+//
+//                    entityFields.add("#{" + entityField[i] + "}");
+//                }
+//
+//                if (tableColumnsStr.length() == 0)
+//                    tableColumnsStr += tableColumns[i];
+//                else
+//                    tableColumnsStr += ", " + tableColumns[i];
+//
+//            }
+//        model.put("idColumn", idColumn);
+//        model.put("idField", idField);
+//        model.put("idFieldName", idFieldName);
+//        model.put("tableColumnsStr", tableColumnsStr);
+//        model.put("resultMap", resultMap);
+//        model.put("entityFields", entityFields);
+//        model.put("tableColumns", tableColumns);
+//
+//        this.writeFile(
+//                CgFileUtils.formatPath(mapperPath + "/" + JAVA_PATH + mapperPackage.replace('.', '/'), false, false),
+//                mapperName, JAVA_EXT_NAME, mergeTemplateIntoString(MAPPER_JAVA_TEMPLATE_NAME, model));
+//
+//        this.writeFile(
+//                CgFileUtils.formatPath(mapperPath + "/" + JAVA_PATH + mapperPackage.replace('.', '/'), false, false),
+//                mapperName, XML_EXT_NAME, mergeTemplateIntoString(MAPPER_XML_TEMPLATE_NAME, model));
     }
 
     // /**
@@ -513,7 +609,9 @@ public class GenerateServiceImpl implements GenerateService {
         String fileName = path + "/" + name + ext;
         File file = new File(fileName);
         if (file.exists())
-            fileName = path + "/" + name + "_" + ext;
+            fileName = path + "/" + name + ext;
+        // TODO sssssssssssssssssss
+//            fileName = path + "/" + name + "_" + ext;
 
         FileWriter fw = null;
         try {
