@@ -13,9 +13,7 @@
 
 	<bean id="_nqcxCookie" class="org.nqcx.commons3.web.cookie.NqcxCookie"
 		  abstract="true">
-		<property name="cookieCipherTools">
-			<ref bean="cookieCipherTools" />
-		</property>
+		<property name="cookieCipherTools" ref="cookieCipherTools"/>
 	</bean>
 
 	<bean id="_normalCookie" parent="_nqcxCookie" abstract="true">
@@ -33,9 +31,7 @@
 	<bean class="org.nqcx.commons3.web.cookie.CookieUtils">
 		<property name="cookieMap">
 			<map>
-				<entry key="jdbc">
-					<ref bean="jdbcCookie" />
-				</entry>
+				<entry key="jdbc" value-ref="jdbcCookie"/>
 			</map>
 		</property>
 	</bean>

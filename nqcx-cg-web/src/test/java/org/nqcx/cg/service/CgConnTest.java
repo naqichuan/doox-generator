@@ -34,7 +34,7 @@ public class CgConnTest extends TestCase {
 		String url = "jdbc:mysql://localhost:3306/passport";
 		String username = "nqcx";
 		String password = "nqcx";
-		CgConn cc = CgConn.newInstance(url, username, password);
+		CgConn cc = null; //CgConn.newInstance(url, username, password);
 
 		Statement stmt = cc.getStatement();
 		ResultSet rs = null;

@@ -10,4 +10,44 @@
     <bean id="workspaceAuthor" class="java.lang.String">
         <constructor-arg value="${workspace.author}"/>
     </bean>
+
+    <!--==================== dataSource ====================-->
+    <bean id="abstractDataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="filters" value="stat"/>
+        <!--连接池的最大数据库连接数。设为0表示无限制。一般把maxActive设置成可能的并发量就行了-->
+        <property name="maxActive" value="1000"/>
+        <!--初始化大小-->
+        <property name="initialSize" value="10"/>
+        <!--最大等待毫秒数, 单位为 ms, 如果超过此时间将接到异常,设为-1表示无限制-->
+        <property name="maxWait" value="60000"/>
+        <!--最大等待(空闲)连接中的数量,设 0 为没有限制-->
+        <!--<property name="maxIdle" value="100"/>-->
+        <!--最小等待(空闲)连接中的数量-->
+        <property name="minIdle" value="10"/>
+        <!--在空闲连接回收器线程运行期间休眠的时间值,以毫秒为单位. 如果设置为非正数,则不运行空闲连接回收器线程-->
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+        <!--连接池中保持空闲而不被空闲连接回收器线程 ，回收的最小时间值，单位毫秒-->
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+        <!--SQL查询,用来验证从连接池取出的连接,在将连接返回给调用者之前.如果指定, 则查询必须是一个SQL SELECT并且必须返回至少一行记录-->
+        <property name="validationQuery" value="SELECT 'x'"/>
+        <!--指明连接是否被空闲连接回收器(如果有)进行检验.如果检测失败, 则连接将被从池中去除.-->
+        <!--注意: 设置为true后如果要生效,validationQuery参数必须设置为非空字符串-->
+        <property name="testWhileIdle" value="true"/>
+        <!--指明是否在从池中取出连接前进行检验,如果检验失败 则从池中去除连接并尝试取出另一个. 注意: 设置为true后如果要生效,validationQuery参数必须设置为非空字符串-->
+        <property name="testOnBorrow" value="false"/>
+        <!--指明是否在归还到池中前进行检验-->
+        <property name="testOnReturn" value="false"/>
+        <!--开启池的prepared statement 池功能-->
+        <property name="poolPreparedStatements" value="true"/>
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="50"/>
+
+        <property name="proxyFilters">
+            <list>
+                <bean class="com.alibaba.druid.filter.logging.Slf4jLogFilter">
+                    <property name="statementExecutableSqlLogEnable" value="false"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
 </beans>

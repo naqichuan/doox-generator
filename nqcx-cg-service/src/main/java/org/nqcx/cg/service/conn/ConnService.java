@@ -9,6 +9,8 @@
 package org.nqcx.cg.service.conn;
 
 
+import java.sql.Connection;
+
 /**
  * @author naqichuan Feb 7, 2014 10:53:49 PM
  */
@@ -20,7 +22,12 @@ public interface ConnService {
      * @param password
      * @return
      */
-    String createConn(String jdbcUrl, String user, String password);
+    boolean createConn(String jdbcUrl, String user, String password);
+
+    /**
+     * @return
+     */
+    Connection getConn();
 
     /**
      * @param connNum

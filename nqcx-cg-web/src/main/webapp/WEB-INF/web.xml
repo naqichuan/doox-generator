@@ -11,9 +11,9 @@
 		<param-value>classpath:beans.xml</param-value>
 	</context-param>
 
-	<listener>
-		<listener-class>org.nqcx.cg.web.session.ConnSessionListener</listener-class>
-	</listener>
+	<!--<listener>-->
+		<!--<listener-class>org.nqcx.cg.web.session.ConnSessionListener</listener-class>-->
+	<!--</listener>-->
 
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>

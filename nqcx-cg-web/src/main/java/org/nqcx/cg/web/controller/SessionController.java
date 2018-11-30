@@ -48,12 +48,12 @@ public class SessionController extends AbstractController {
                              @RequestParam("user") String user,
                              @RequestParam("password") String password) {
 
-        String connNum = connService.createConn(jdbcUrl, user, password);
+        boolean connNum = connService.createConn(jdbcUrl, user, password);
 
         DTO dto = new DTO();
-        if (StringUtils.isNotBlank(connNum)) {
-            HttpSession session = request.getSession();
-            session.setAttribute(CONNECTION_KEY, connNum);
+        if (connNum) {
+//            HttpSession session = request.getSession();
+//            session.setAttribute(CONNECTION_KEY, connNum);
             dto.setSuccess(true);
 
             String cookieValue = jdbcUrl + "," + user + "," + password;
@@ -72,12 +72,12 @@ public class SessionController extends AbstractController {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public Map<?, ?> destroySession(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        String connNum = (String) session.getAttribute(CONNECTION_KEY);
-        if (StringUtils.isNotBlank(connNum)) {
-            connService.destroyConn(connNum);
-            session.removeAttribute(CONNECTION_KEY);
-        }
+//        HttpSession session = request.getSession();
+//        String connNum = (String) session.getAttribute(CONNECTION_KEY);
+//        if (StringUtils.isNotBlank(connNum)) {
+//            connService.destroyConn(connNum);
+//            session.removeAttribute(CONNECTION_KEY);
+//        }
 
         return buildResult(new DTO(true));
     }

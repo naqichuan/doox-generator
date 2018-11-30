@@ -8,18 +8,18 @@
 
 package org.nqcx.cg.service.conn.impl;
 
-import org.nqcx.cg.service.conn.CgConn;
+import com.alibaba.druid.pool.DruidDataSource;
 import org.nqcx.cg.service.conn.CgResult;
 import org.nqcx.cg.service.conn.ConnService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author naqichuan Feb 7, 2014 10:58:42 PM
@@ -27,18 +27,59 @@ import java.util.UUID;
 @Service("connService")
 public class ConnServiceImpl implements ConnService {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final Map<String, CgConn> connMap = new HashMap<String, CgConn>();
+    private final static Logger logger = LoggerFactory.getLogger(ConnServiceImpl.class);
+//    private final Map<String, CgConn> connMap = new HashMap<String, CgConn>();
+
+    private volatile String initString = "";
+    private DruidDataSource dataSource = null;
+
+
+    @Autowired
+    @Qualifier("abstractDataSource")
+    private DruidDataSource abstractDataSource;
 
     @Override
-    public String createConn(String jdbcUrl, String user, String password) {
+    public boolean createConn(String jdbcUrl, String user, String password) {
 
-        CgConn cc = CgConn.newInstance("jdbc:mysql://" + jdbcUrl, user, password);
+        String url = "jdbc:mysql://" + jdbcUrl;
 
-        if (cc.isSuccess()) {
-            String connNum = UUID.randomUUID().toString();
-            this.connMap.put(connNum, cc);
-            return connNum;
+        if (initString.equals(url + "_" + user) && dataSource.isInited() && dataSource.isEnable())
+            return true;
+
+        if (dataSource != null) {
+            initString = "";
+            dataSource.close();
+        }
+
+        dataSource = abstractDataSource.cloneDruidDataSource();
+
+        dataSource.setUrl(url);
+        dataSource.setUsername(user);
+        dataSource.setPassword(password);
+
+        try {
+            initString = url + "_" + user;
+            dataSource.init();
+        } catch (SQLException e) {
+            logger.error("", e);
+
+            if (dataSource != null) {
+                initString = "";
+                dataSource.close();
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public Connection getConn() {
+        try {
+            return dataSource != null && !dataSource.isClosed() ? dataSource.getConnection() : null;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
         return null;
@@ -46,29 +87,43 @@ public class ConnServiceImpl implements ConnService {
 
     @Override
     public void destroyConn(String connNum) {
+        if (!dataSource.isClosed())
+            dataSource.close();
 
-        CgConn cc = connMap.get(connNum);
-
-        try {
-            if (cc != null)
-                cc.close();
-        } catch (SQLException e) {
-            logger.error("", e);
-        }
-
-        connMap.remove(connNum);
-        cc = null;
+//        CgConn cc = connMap.get(connNum);
+//
+//        try {
+//            if (cc != null)
+//                cc.close();
+//        } catch (SQLException e) {
+//            logger.error("", e);
+//        }
+//
+//        connMap.remove(connNum);
+//        cc = null;
     }
+
 
     @Override
     public CgResult query(String connNum, String sql) {
 
-        CgConn cgConn = this.connMap.get(connNum);
-        Statement st = null;
+//        CgConn cgConn = this.connMap.get(connNum);
         CgResult result = CgResult.newResult(null);
-        if (cgConn == null || (st = cgConn.getStatement()) == null) {
-            return result.setStatement(st);
+        Connection connection = null;
+        Statement st = null;
+        try {
+            connection = getConn();
+            if (connection == null)
+                return result;
+            st = connection.createStatement();
+        } catch (SQLException e) {
+            result.setMsg(e.toString());
+            logger.error("", e);
         }
+
+        if (st == null)
+            return result;
+
         try {
             return result.setResultSet(st.executeQuery(sql)).setSuccess(true);
         } catch (SQLException e) {
@@ -85,7 +140,7 @@ public class ConnServiceImpl implements ConnService {
 
         CgResult result = this.query(connNum, sql);
         try {
-            return result.getResultSet() == null ? false : result
+            return result.getResultSet() != null && result
                     .getResultSet().next();
         } catch (SQLException e) {
             logger.error("", e);

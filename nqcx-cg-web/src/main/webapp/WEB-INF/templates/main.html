@@ -74,8 +74,8 @@
                 });
             },
             reconnect: function (callBack) {
-                var url = /*[['/destroySession']]*/'';
-                jQuery.get( url + '?t=' + (new Date()).getTime(), function (result) {
+                // var url = /*[['/destroySession']]*/'';
+                // jQuery.get( url + '?t=' + (new Date()).getTime(), function (result) {
                     db.conn(function () {
                         jQuery.messager.show({
                             title: 'Success',
@@ -84,7 +84,7 @@
                         if (callBack)
                             callBack();
                     });
-                });
+                // });
             }
         };
         // end of db ==============================================================

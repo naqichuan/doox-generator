@@ -84,6 +84,9 @@ public class GenerateServiceImpl implements GenerateService {
         classMapping.put("Long", "java.lang.Long");
         classMapping.put("Entity", "javax.persistence.Entity");
         classMapping.put("Table", "javax.persistence.Table");
+        classMapping.put("ID", "javax.persistence.Id");
+        classMapping.put("Column", "javax.persistence.Column");
+        classMapping.put("Temporal", "javax.persistence.Temporal");
     }
 
     @Override
@@ -328,6 +331,9 @@ public class GenerateServiceImpl implements GenerateService {
         mappingImport(imports, boName);
         mappingImport(imports, "Entity");
         mappingImport(imports, "Table");
+        mappingImport(imports, "ID");
+        mappingImport(imports, "Column");
+        mappingImport(imports, "Temporal");
 
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
