@@ -72,7 +72,7 @@ public class TableServiceImpl implements TableService {
 		DTO dto = new DTO();
 		Table t = new Table();
 		t.setName(tableName);
-		t.setColumns(new ArrayList<Column>());
+		t.setColumns(new ArrayList<>());
 
 		String cSql = "SHOW FULL COLUMNS FROM " + tableName;
 		CgResult result = connService.query(connNum, cSql);

@@ -12,10 +12,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.nqcx.cg.common.util.CgFileUtils;
+import org.nqcx.cg.entity.table.Column;
+import org.nqcx.cg.entity.table.Table;
 import org.nqcx.cg.entity.ws.enums.PType;
 import org.nqcx.cg.provide.o.CgField;
 import org.nqcx.cg.provide.o.Generate;
 import org.nqcx.cg.service.generate.GenerateService;
+import org.nqcx.cg.service.table.TableService;
 import org.nqcx.commons3.lang.o.DTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +36,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author naqichuan Feb 9, 2014 2:18:27 AM
@@ -41,6 +46,8 @@ import java.util.*;
 public class GenerateServiceImpl implements GenerateService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private final static Pattern TYPE_LENGTH_PATTERN = Pattern.compile(".+\\((\\d+)\\)");
 
     private static String JAVA_PATH = "src/main/java/";
     private static String JAVA_EXT_NAME = ".java";
@@ -76,6 +83,8 @@ public class GenerateServiceImpl implements GenerateService {
     @Autowired
     @Qualifier("workspaceAuthor")
     private String workspaceAuthor;
+    @Autowired
+    private TableService tableService;
 
     static {
         classMapping.put("Serializable", "java.io.Serializable");
@@ -85,7 +94,9 @@ public class GenerateServiceImpl implements GenerateService {
         classMapping.put("Entity", "javax.persistence.Entity");
         classMapping.put("Table", "javax.persistence.Table");
         classMapping.put("ID", "javax.persistence.Id");
+        classMapping.put("GenerationType", "javax.persistence.GenerationType");
         classMapping.put("Column", "javax.persistence.Column");
+        classMapping.put("GeneratedValue", "javax.persistence.GeneratedValue");
         classMapping.put("Temporal", "javax.persistence.Temporal");
     }
 
@@ -104,6 +115,12 @@ public class GenerateServiceImpl implements GenerateService {
 
         if (!pPathExist(workspacePath, g.getpPath()))
             return new DTO(false).putResult("101", "工程路径不存在");
+
+
+        DTO trd = tableService.getTable(null, g.getTableName());
+        Table table;
+        if (trd == null || !trd.isSuccess() || (table = trd.getObject()) == null)
+            return new DTO(false).putResult("102", "表不存在！");
 
         Map<String, String> pathMap = this.getPathString(workspacePath, pPath, g.getProvideModule(),
                 g.getDaoModule(), g.getServiceModule(), g.getWebModule());
@@ -132,7 +149,7 @@ public class GenerateServiceImpl implements GenerateService {
                     g.getDaoMapperPackage(), g.getDaoMapper(),
                     g.getDaoJpaPackage(), g.getDaoJpa(),
                     g.getDaoDaoPackage(), g.getDaoDAO(), g.getDaoDaoPackage() + ".impl", g.getDaoDAOImpl(),
-                    g.getTableName(), g.getTableColumns(), g.getProvideFields(), g.getProvideTypes(),
+                    table, g.getTableColumns(), g.getProvideFields(), g.getProvideTypes(),
                     g.getProvideBO());
         }
 //
@@ -318,11 +335,12 @@ public class GenerateServiceImpl implements GenerateService {
                              String mapperPackage, String mapper,
                              String jpaPackage, String jpa,
                              String daoPackage, String dao, String daoImplPackage, String daoImpl,
-                             String tableName,
+                             Table table,
                              String[] tableColumns,
                              String[] fields,
                              String[] types,
                              String boName) {
+
 
         Context cxt = new Context();
         Set<String> imports = new HashSet<>();
@@ -331,9 +349,7 @@ public class GenerateServiceImpl implements GenerateService {
         mappingImport(imports, boName);
         mappingImport(imports, "Entity");
         mappingImport(imports, "Table");
-        mappingImport(imports, "ID");
         mappingImport(imports, "Column");
-        mappingImport(imports, "Temporal");
 
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
@@ -342,10 +358,10 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("name", po);
 
         cxt.setVariable("boName", boName);
-        cxt.setVariable("tableName", tableName);
+        cxt.setVariable("tableName", table.getName());
 
-        if (fields != null && types != null && tableColumns != null
-                && fields.length == types.length && fields.length == tableColumns.length) {
+        if (fields != null && types != null && tableColumns != null && table != null && table.getColumns() != null
+                && fields.length == types.length && fields.length == tableColumns.length && fields.length == table.getColumns().size()) {
             // bo field
             List<String> poFields = new ArrayList<>();
             // po getter
@@ -360,8 +376,48 @@ public class GenerateServiceImpl implements GenerateService {
                 field.setType(types[i]);
                 field.setField(fields[i]);
                 field.setName(StringUtils.capitalize(fields[i]));
+                field.setAnnotations(new ArrayList<>());
 
-                if (tableColumns[i].contains("_create") || tableColumns[i].contains("_modify")) {
+                Column col = table.getColumns().get(i);
+                // annotations
+                if ("PRI".equals(col.getKey()) && col.getField().contains("id")) {
+                    mappingImport(imports, "ID");
+                    mappingImport(imports, "GeneratedValue");
+                    mappingImport(imports, "GenerationType");
+
+                    field.getAnnotations().add("@Id");
+                    field.getAnnotations().add("@GeneratedValue(strategy = GenerationType.IDENTITY)");
+                }
+
+                String colAnno = "name = \"" + col.getField() + "\"";
+                if ("NO".equals(col.getIsNull()))
+                    colAnno += ", nullable = false";
+                else if ("YES".equals(col.getIsNull()))
+                    colAnno += ", nullable = true";
+
+                Matcher matcher = TYPE_LENGTH_PATTERN.matcher(col.getType());
+                if (matcher.matches() && matcher.groupCount() >= 1 && matcher.group(1) != null)
+                    colAnno += ", length = " + matcher.group(1);
+
+                if (col.getField().contains("_create") || col.getField().contains("_modify")) {
+//                    mappingImport(imports, "Temporal");
+
+                    colAnno += ", insertable = false, updatable = false";
+                    String columnDefinition = col.getType().toUpperCase();
+                    if (col.getDefaultValue() != null && col.getDefaultValue().length() > 0) {
+                        if (columnDefinition.length() != 0)
+                            columnDefinition += " ";
+                        columnDefinition += "DEFAULT " + col.getDefaultValue().toUpperCase();
+                    }
+
+                    if (col.getExtra() != null && col.getExtra().length() > 0) {
+                        if (columnDefinition.length() != 0)
+                            columnDefinition += " ";
+
+                        columnDefinition += col.getExtra().toUpperCase();
+                    }
+                    colAnno += ", columnDefinition = \"" + columnDefinition + "\"";
+
                     poFields.add(String.format("private %s %s;", types[i], fields[i]));
                     cxt.setVariable("poFields", poFields);
 
@@ -373,6 +429,10 @@ public class GenerateServiceImpl implements GenerateService {
 
                     poGetter.add(field);
                 }
+
+
+
+                field.getAnnotations().add("@Column(" + colAnno + ")");
             }
         }
 
