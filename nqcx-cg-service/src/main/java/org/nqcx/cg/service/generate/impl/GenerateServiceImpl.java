@@ -50,6 +50,7 @@ public class GenerateServiceImpl implements GenerateService {
     private final static Pattern TYPE_LENGTH_PATTERN = Pattern.compile(".+\\((\\d+)\\)");
 
     private static String JAVA_PATH = "src/main/java/";
+    private static String TEST_PATH = "src/main/java/";
     private static String JAVA_EXT_NAME = ".java";
     private static String XML_EXT_NAME = ".xml";
 
@@ -61,6 +62,7 @@ public class GenerateServiceImpl implements GenerateService {
     private final static String MAPPERXML_TXT_TEMPLATE_NAME = "mapper_xml.txt";
     private final static String JPA_TXT_TEMPLATE_NAME = "jpa.txt";
     private final static String DAO_TXT_TEMPLATE_NAME = "dao.txt";
+    private final static String DAO_TEST_TXT_TEMPLATE_NAME = "daotest.txt";
     private final static String DAOIMPL_TXT_TEMPLATE_NAME = "daoimpl.txt";
 
     //    private final static String ENTITY_TEMPLATE_NAME = "entity.vm";
@@ -491,6 +493,11 @@ public class GenerateServiceImpl implements GenerateService {
                 dao, JAVA_EXT_NAME,
                 process(DAO_TXT_TEMPLATE_NAME, cxt));
 
+        // dao test
+        this.writeFile(daoPath + "/" + TEST_PATH + daoPackage.replace('.', '/'),
+                dao, JAVA_EXT_NAME,
+                process(DAO_TEST_TXT_TEMPLATE_NAME, cxt));
+
         // dao impl
         cxt.clearVariables();
         imports.clear();
@@ -508,6 +515,10 @@ public class GenerateServiceImpl implements GenerateService {
         this.writeFile(daoPath + "/" + JAVA_PATH + daoImplPackage.replace('.', '/'),
                 daoImpl, JAVA_EXT_NAME,
                 process(DAOIMPL_TXT_TEMPLATE_NAME, cxt));
+
+
+
+
 
 //        Map<String, Object> model = new HashMap<String, Object>();
 //        model.put("date", new Date());
