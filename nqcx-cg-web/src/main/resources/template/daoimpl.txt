@@ -11,6 +11,25 @@ import [(${import})];
 /**
  * @author [(${author})] [(${#dates.format(date, 'yyyy-MM-dd HH:mm')})]
  */
-public class [(${name})] implements [(${daoName})]<[(${po})], Long> {
+@Service
+public class [(${name})] extends CacheSupport<[(${poName})], Long> implements [(${daoName})]<[(${poName})], Long> {
+
+    private final ILocksJpa jpa;
+    private final ILocksMapper mapper;
+
+    public [(${name})](ILocksJpa jpa, ILocksMapper mapper) {
+        this.jpa = jpa;
+        this.mapper = mapper;
+    }
+
+    @Override
+    protected IMapper<[(${poName})], Long> getMapper() {
+        return this.mapper;
+    }
+
+    @Override
+    protected IJpa<[(${poName})], Long> getJpa() {
+        return this.jpa;
+    }
 
 }

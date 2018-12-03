@@ -93,6 +93,7 @@ public class GenerateServiceImpl implements GenerateService {
         classMapping.put("Date", "java.util.Date");
         classMapping.put("Integer", "java.lang.Integer");
         classMapping.put("Long", "java.lang.Long");
+
         classMapping.put("Entity", "javax.persistence.Entity");
         classMapping.put("Table", "javax.persistence.Table");
         classMapping.put("ID", "javax.persistence.Id");
@@ -101,9 +102,15 @@ public class GenerateServiceImpl implements GenerateService {
         classMapping.put("GeneratedValue", "javax.persistence.GeneratedValue");
         classMapping.put("Temporal", "javax.persistence.Temporal");
 
+        classMapping.put("IDao", "org.nqcx.commons3.dao.IDao");
         classMapping.put("IJpa", "org.nqcx.commons3.data.jpa.IJpa");
         classMapping.put("IMapper", "org.nqcx.commons3.data.mapper.IMapper");
 
+        classMapping.put("JpaSupport", "org.nqcx.commons3.data.jpa.JpaSupport");
+        classMapping.put("MapperSupport", "org.nqcx.commons3.data.mapper.MapperSupport");
+        classMapping.put("CacheSupport", "org.nqcx.commons3.data.cache.CacheSupport");
+
+        classMapping.put("stereotype.Service", "org.springframework.stereotype.Service");
     }
 
     @Override
@@ -451,6 +458,7 @@ public class GenerateServiceImpl implements GenerateService {
         imports.clear();
 
         imports.add(classMapping.get("IMapper"));
+        imports.add(classMapping.get(po));
 
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
@@ -475,12 +483,15 @@ public class GenerateServiceImpl implements GenerateService {
         imports.clear();
 
         imports.add(classMapping.get("IJpa"));
+        imports.add(classMapping.get(po));
 
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
         cxt.setVariable("package", jpaPackage);
         cxt.setVariable("imports", imports);
         cxt.setVariable("name", jpa);
+
+        cxt.setVariable("poName", po);
 
         this.writeFile(daoPath + "/" + JAVA_PATH + jpaPackage.replace('.', '/'),
                 jpa, JAVA_EXT_NAME,
@@ -489,6 +500,8 @@ public class GenerateServiceImpl implements GenerateService {
         // dao
         cxt.clearVariables();
         imports.clear();
+
+        imports.add(classMapping.get("IDao"));
 
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
@@ -500,12 +513,17 @@ public class GenerateServiceImpl implements GenerateService {
                 dao, JAVA_EXT_NAME,
                 process(DAO_TXT_TEMPLATE_NAME, cxt));
 
-
         // dao impl
         cxt.clearVariables();
         imports.clear();
 
+        imports.add(classMapping.get("CacheSupport"));
         imports.add(classMapping.get(po));
+        imports.add(classMapping.get(mapper));
+        imports.add(classMapping.get(jpa));
+        imports.add(classMapping.get("IMapper"));
+        imports.add(classMapping.get("IJpa"));
+        imports.add(classMapping.get("stereotype.Service"));
 
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
@@ -513,7 +531,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("imports", imports);
         cxt.setVariable("name", daoImpl);
 
-        cxt.setVariable("po", po);
+        cxt.setVariable("poName", po);
         cxt.setVariable("daoName", dao);
 
         mappingImport(imports, dao);
@@ -535,9 +553,9 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("imports", imports);
         cxt.setVariable("name", daoImpl + "Test");
 
-        cxt.setVariable("po", po);
+        cxt.setVariable("poName", po);
         cxt.setVariable("daoName", dao);
-        cxt.setVariable("daoVeriable", StringUtils.capitalize(daoImpl));
+        cxt.setVariable("daoVeriable", StringUtils.uncapitalize(daoImpl));
 
         this.writeFile(daoPath + "/" + TEST_PATH + daoPackage.replace('.', '/'),
                 daoImpl + "Test", JAVA_EXT_NAME,

@@ -25,8 +25,14 @@ import [(${import})];
  * @author [(${author})] [(${#dates.format(date, 'yyyy-MM-dd HH:mm')})]
  */
 @TestExecutionListeners({TransactionalTestExecutionListener.class, DependencyInjectionTestExecutionListener.class})
-public class [(${name})] {
+public class [(${name})] extends AutoInject {
 
     @Autowired
-    private [(${daoName})]<[(${po})], Long> [(${daoVeriable})];
+    private [(${daoName})]<[(${poName})], Long> [(${daoVeriable})];
+
+    @Test
+    public void findById() {
+        [(${poName})] poName = [(${daoVeriable})].findById(-1L).orElse(null);
+        System.out.println(poName);
+    }
 }
