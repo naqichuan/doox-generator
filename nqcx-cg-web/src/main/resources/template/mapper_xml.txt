@@ -9,59 +9,58 @@
 	</resultMap>
 
 	<sql id="[(${tableName})]_columns">
-		[(${tableColumnsStr})]
+		[(${idColumn})], [(${tableColumnsStr})]
 	</sql>
 
-	<insert id="insert" parameterType="[(${po})]" useGeneratedKeys="true" keyProperty="id">
+	<insert id="save" parameterType="[(${po})]" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO [(${tableName})] (
 			<include refid="[(${tableName})]_columns" />
-		) VALUES ([# th:each="c : ${poColumns}"]
-		    [# th:if="${cStat.index > 0}"],[/][(*{poFields[__${cStat.index}__]})][/]
+		) VALUES (
+		    NULL[# th:each="c : ${poColumns}"],
+		    [(*{poFields[__${cStat.index}__]})][/]
 		)
 	</insert>
 
 	<update id="update" parameterType="[(${po})]">
 		UPDATE
 			[(${tableName})]
-		SET
-#foreach($field in $entityFields)
-	#set($index = ${velocityCount} - 1)
-	#if($!{velocityCount} == $entityFields.size())
-		$tableColumns.get($index)=$field
-	#else
-		$tableColumns.get($index)=$field,
-	#end
-#end
+		SET [# th:each="c : ${poColumns}"][# th:if="${cStat.index > 0}"],[/]
+		    [(${c})]=[(*{poFields[__${cStat.index}__]})][/]
 		WHERE
-			$!{idColumn}=$!{idField}
+			[(${idColumn})]=[(${idField})]
 	</update>
 
-	<delete id="deleteById" parameterType="long">
-		DELETE FROM
+	<select id="findById" resultMap="[(${tableName})]_rm" parameterType="long">
+		SELECT
+			<include refid="[(${tableName})]_columns" />
+		FROM
 			[(${tableName})]
 		WHERE
-			$!{idColumn}=$!{idField}
-	</delete>
+			[(${idColumn})]=[(${idField})]
+	</select>
 
-	<delete id="deleteByIds">
-		DELETE FROM
+	<select id="findByIds" resultMap="[(${tableName})]_rm">
+		SELECT
+			<include refid="[(${tableName})]_columns" />
+		FROM
 			[(${tableName})]
 		WHERE
-			$!{idColumn} IN
-			<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+			[(${idColumn})] IN
+			<foreach item="item" index="index" collection="list"
+			         open="(" separator="," close=")">
 				#{item}
 			</foreach>
-	</delete>
+	</select>
 
 	<sql id="condition">
 		<where>
-			<if test="$!{idFieldName} != null and $!{idFieldName} != ''">
-				$!{idColumn}=$!{idField}
+			<if test="[(${idFieldName})] != null and [(${idFieldName})] != ''">
+				[(${idColumn})]=[(${idField})]
 			</if>
 		</where>
 	</sql>
 
-	<select id="query" parameterType="map" resultMap="[(${tableName})]_rm">
+	<select id="findAll" resultMap="[(${tableName})]_rm" parameterType="map">
 		SELECT
 			<include refid="[(${tableName})]_columns" />
 		FROM
@@ -75,7 +74,7 @@
 		</if>
 	</select>
 
-	<select id="queryCount" parameterType="map" resultType="long">
+	<select id="getCount" parameterType="map" resultType="long">
 		SELECT
 			count(*)
 		FROM
@@ -83,12 +82,21 @@
 		<include refid="condition" />
 	</select>
 
-	<select id="getById" resultMap="[(${tableName})]_rm" parameterType="long">
-		SELECT
-			<include refid="[(${tableName})]_columns" />
-		FROM
+	<delete id="deleteById" parameterType="long">
+		DELETE FROM
 			[(${tableName})]
 		WHERE
-			$!{idColumn}=$!{idField}
-	</select>
+			[(${idColumn})]=[(${idField})]
+	</delete>
+
+	<delete id="deleteByIds">
+		DELETE FROM
+			[(${tableName})]
+		WHERE
+			[(${idColumn})] IN
+			<foreach item="item" index="index" collection="list"
+			         open="(" separator="," close=")">
+				#{item}
+			</foreach>
+	</delete>
 </mapper>

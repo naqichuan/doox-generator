@@ -484,14 +484,13 @@ public class GenerateServiceImpl implements GenerateService {
         if (fields != null && types != null && tableColumns != null && table != null && table.getColumns() != null
                 && fields.length == types.length && fields.length == tableColumns.length && fields.length == table.getColumns().size()) {
 
-
             List<String> resultMap = new ArrayList<>();
             List<String> poFields = new ArrayList<>();
             List<String> poColumns = new ArrayList<>();
-            String tableColumnsStr = new String();
-            String idColumn = new String();
-            String idField = new String();
-            String idFieldName = new String();
+            String tableColumnsStr = "";
+            String idColumn = "";
+            String idField = "";
+            String idFieldName = "";
 
             for (int i = 0; i < fields.length; i++) {
                 Column col = table.getColumns().get(i);
@@ -505,23 +504,21 @@ public class GenerateServiceImpl implements GenerateService {
                     idField = "#{" + fields[i] + "}";
                 }
 
-                poColumns.add(col.getField());
                 if ("PRI".equals(col.getKey()) && col.getField().contains("id")) {
                     idColumn = col.getField();
                     idFieldName = fields[i];
 
                     resultMap.add("<id property=\"" + fields[i] + "\" column=\"" + tableColumns[i] + "\" />");
-
-                    poFields.add("NULL");
                 } else {
                     resultMap.add("<result property=\"" + fields[i] + "\" column=\"" + col.getField() + "\" />");
 
+                    poColumns.add(col.getField());
                     poFields.add("#{" + fields[i] + "}");
-                }
 
-                if (tableColumnsStr.length() > 0)
-                    tableColumnsStr += ", ";
-                tableColumnsStr += tableColumns[i];
+                    if (tableColumnsStr.length() > 0)
+                        tableColumnsStr += ", ";
+                    tableColumnsStr += tableColumns[i];
+                }
             }
 
             cxt.setVariable("resultMap", resultMap);
