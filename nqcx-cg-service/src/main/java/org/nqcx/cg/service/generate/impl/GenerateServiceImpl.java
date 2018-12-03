@@ -50,7 +50,7 @@ public class GenerateServiceImpl implements GenerateService {
     private final static Pattern TYPE_LENGTH_PATTERN = Pattern.compile(".+\\((\\d+)\\)");
 
     private static String JAVA_PATH = "src/main/java/";
-    private static String TEST_PATH = "src/main/java/";
+    private static String TEST_PATH = "src/test/java/";
     private static String JAVA_EXT_NAME = ".java";
     private static String XML_EXT_NAME = ".xml";
 
@@ -100,6 +100,10 @@ public class GenerateServiceImpl implements GenerateService {
         classMapping.put("Column", "javax.persistence.Column");
         classMapping.put("GeneratedValue", "javax.persistence.GeneratedValue");
         classMapping.put("Temporal", "javax.persistence.Temporal");
+
+        classMapping.put("IJpa", "org.nqcx.commons3.data.jpa.IJpa");
+        classMapping.put("IMapper", "org.nqcx.commons3.data.mapper.IMapper");
+
     }
 
     @Override
@@ -433,7 +437,6 @@ public class GenerateServiceImpl implements GenerateService {
                 }
 
 
-
                 field.getAnnotations().add("@Column(" + colAnno + ")");
             }
         }
@@ -446,6 +449,8 @@ public class GenerateServiceImpl implements GenerateService {
         // mapper
         cxt.clearVariables();
         imports.clear();
+
+        imports.add(classMapping.get("IMapper"));
 
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
@@ -468,6 +473,8 @@ public class GenerateServiceImpl implements GenerateService {
         // jpa
         cxt.clearVariables();
         imports.clear();
+
+        imports.add(classMapping.get("IJpa"));
 
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
@@ -493,14 +500,12 @@ public class GenerateServiceImpl implements GenerateService {
                 dao, JAVA_EXT_NAME,
                 process(DAO_TXT_TEMPLATE_NAME, cxt));
 
-        // dao test
-        this.writeFile(daoPath + "/" + TEST_PATH + daoPackage.replace('.', '/'),
-                dao, JAVA_EXT_NAME,
-                process(DAO_TEST_TXT_TEMPLATE_NAME, cxt));
 
         // dao impl
         cxt.clearVariables();
         imports.clear();
+
+        imports.add(classMapping.get(po));
 
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
@@ -508,6 +513,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("imports", imports);
         cxt.setVariable("name", daoImpl);
 
+        cxt.setVariable("po", po);
         cxt.setVariable("daoName", dao);
 
         mappingImport(imports, dao);
@@ -516,8 +522,26 @@ public class GenerateServiceImpl implements GenerateService {
                 daoImpl, JAVA_EXT_NAME,
                 process(DAOIMPL_TXT_TEMPLATE_NAME, cxt));
 
+        // dao test
+        cxt.clearVariables();
+        imports.clear();
 
+        mappingImport(imports, dao);
+        mappingImport(imports, po);
 
+        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("date", new Date());
+        cxt.setVariable("package", daoPackage);
+        cxt.setVariable("imports", imports);
+        cxt.setVariable("name", daoImpl + "Test");
+
+        cxt.setVariable("po", po);
+        cxt.setVariable("daoName", dao);
+        cxt.setVariable("daoVeriable", StringUtils.capitalize(daoImpl));
+
+        this.writeFile(daoPath + "/" + TEST_PATH + daoPackage.replace('.', '/'),
+                daoImpl + "Test", JAVA_EXT_NAME,
+                process(DAO_TEST_TXT_TEMPLATE_NAME, cxt));
 
 
 //        Map<String, Object> model = new HashMap<String, Object>();
