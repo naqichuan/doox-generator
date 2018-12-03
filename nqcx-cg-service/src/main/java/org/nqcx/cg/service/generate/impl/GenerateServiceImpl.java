@@ -90,9 +90,10 @@ public class GenerateServiceImpl implements GenerateService {
 
     static {
         classMapping.put("Serializable", "java.io.Serializable");
-        classMapping.put("Date", "java.util.Date");
         classMapping.put("Integer", "java.lang.Integer");
         classMapping.put("Long", "java.lang.Long");
+        classMapping.put("Date", "java.util.Date");
+        classMapping.put("Arrays", "java.util.Arrays");
 
         classMapping.put("Entity", "javax.persistence.Entity");
         classMapping.put("Table", "javax.persistence.Table");
@@ -129,6 +130,9 @@ public class GenerateServiceImpl implements GenerateService {
         if (!pPathExist(workspacePath, g.getpPath()))
             return new DTO(false).putResult("101", "工程路径不存在");
 
+        // 写入空行到日志
+        File cgLogFile = new File(workspacePath + g.getpPath() + "/cglog.log");
+        this.writeLog(cgLogFile, "");
 
         DTO trd = tableService.getTable(null, g.getTableName());
         Table table;
@@ -144,7 +148,7 @@ public class GenerateServiceImpl implements GenerateService {
 
         String providePath = pathMap.get(P_PROVIDE_PATH_KEY);
         if (g.getProvide_().isTrue()) {
-            this.generateProvide(providePath, g.getProvideBOPackage(), g.getProvideBO(),
+            this.generateProvide(cgLogFile, providePath, g.getProvideBOPackage(), g.getProvideBO(),
                     g.getProvideOPackage(), g.getProvideO(),
                     g.getProvideProvidePackage(), g.getProvideProvide(),
                     g.getTableColumns(), g.getProvideFields(), g.getProvideTypes());
@@ -158,7 +162,7 @@ public class GenerateServiceImpl implements GenerateService {
 
         String daoPath = pathMap.get(P_DAO_PATH_KEY);
         if (g.getDao_().isTrue()) {
-            this.generateDao(daoPath, g.getDaoPOPackage(), g.getDaoPO(),
+            this.generateDao(cgLogFile, daoPath, g.getDaoPOPackage(), g.getDaoPO(),
                     g.getDaoMapperPackage(), g.getDaoMapper(),
                     g.getDaoJpaPackage(), g.getDaoJpa(),
                     g.getDaoDaoPackage(), g.getDaoDAO(), g.getDaoDaoPackage() + ".impl", g.getDaoDAOImpl(),
@@ -251,7 +255,7 @@ public class GenerateServiceImpl implements GenerateService {
      * @param fields
      * @param types
      */
-    private void generateProvide(String providePath, String boPackage, String boName,
+    private void generateProvide(File logFile, String providePath, String boPackage, String boName,
                                  String oPackage, String oName,
                                  String providePackage, String provideName,
                                  String[] tableColumns,
@@ -295,7 +299,7 @@ public class GenerateServiceImpl implements GenerateService {
             cxt.setVariable("boGetterAndSetter", boGetterAndSetters);
         }
 
-        this.writeFile(providePath + "/" + JAVA_PATH + boPackage.replace('.', '/'), boName, JAVA_EXT_NAME,
+        this.writeFile(logFile,providePath + "/" + JAVA_PATH + boPackage.replace('.', '/'), boName, JAVA_EXT_NAME,
                 process(BO_TXT_TEMPLATE_NAME, cxt));
 
         // o
@@ -311,7 +315,7 @@ public class GenerateServiceImpl implements GenerateService {
 
         cxt.setVariable("boName", boName);
 
-        this.writeFile(providePath + "/" + JAVA_PATH + oPackage.replace('.', '/'), oName, JAVA_EXT_NAME,
+        this.writeFile(logFile, providePath + "/" + JAVA_PATH + oPackage.replace('.', '/'), oName, JAVA_EXT_NAME,
                 process(O_TXT_TEMPLATE_NAME, cxt));
 
         // provide
@@ -324,7 +328,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("imports", imports);
         cxt.setVariable("name", provideName);
 
-        this.writeFile(providePath + "/" + JAVA_PATH + providePackage.replace('.', '/'), provideName, JAVA_EXT_NAME,
+        this.writeFile(logFile, providePath + "/" + JAVA_PATH + providePackage.replace('.', '/'), provideName, JAVA_EXT_NAME,
                 process(PROVIDE_TXT_TEMPLATE_NAME, cxt));
     }
 
@@ -344,7 +348,7 @@ public class GenerateServiceImpl implements GenerateService {
      * @param fields
      * @param types
      */
-    private void generateDao(String daoPath, String poPackage, String po,
+    private void generateDao(File logFile, String daoPath, String poPackage, String po,
                              String mapperPackage, String mapper,
                              String jpaPackage, String jpa,
                              String daoPackage, String dao, String daoImplPackage, String daoImpl,
@@ -449,7 +453,7 @@ public class GenerateServiceImpl implements GenerateService {
         }
 
 
-        this.writeFile(daoPath + "/" + JAVA_PATH + poPackage.replace('.', '/'),
+        this.writeFile(logFile, daoPath + "/" + JAVA_PATH + poPackage.replace('.', '/'),
                 po, JAVA_EXT_NAME,
                 process(PO_TXT_TEMPLATE_NAME, cxt));
 
@@ -468,7 +472,7 @@ public class GenerateServiceImpl implements GenerateService {
 
         cxt.setVariable("poName", po);
 
-        this.writeFile(daoPath + "/" + JAVA_PATH + mapperPackage.replace('.', '/'),
+        this.writeFile(logFile, daoPath + "/" + JAVA_PATH + mapperPackage.replace('.', '/'),
                 mapper, JAVA_EXT_NAME,
                 process(MAPPER_TXT_TEMPLATE_NAME, cxt));
         // end of mapper
@@ -531,7 +535,7 @@ public class GenerateServiceImpl implements GenerateService {
             cxt.setVariable("tableColumns", tableColumns);
         }
 
-        this.writeFile(daoPath + "/" + JAVA_PATH + mapperPackage.replace('.', '/'),
+        this.writeFile(logFile, daoPath + "/" + JAVA_PATH + mapperPackage.replace('.', '/'),
                 mapper, XML_EXT_NAME,
                 process(MAPPERXML_TXT_TEMPLATE_NAME, cxt));
         // end of mapper xml
@@ -551,7 +555,7 @@ public class GenerateServiceImpl implements GenerateService {
 
         cxt.setVariable("poName", po);
 
-        this.writeFile(daoPath + "/" + JAVA_PATH + jpaPackage.replace('.', '/'),
+        this.writeFile(logFile, daoPath + "/" + JAVA_PATH + jpaPackage.replace('.', '/'),
                 jpa, JAVA_EXT_NAME,
                 process(JPA_TXT_TEMPLATE_NAME, cxt));
 
@@ -567,7 +571,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("imports", imports);
         cxt.setVariable("name", dao);
 
-        this.writeFile(daoPath + "/" + JAVA_PATH + daoPackage.replace('.', '/'),
+        this.writeFile(logFile, daoPath + "/" + JAVA_PATH + daoPackage.replace('.', '/'),
                 dao, JAVA_EXT_NAME,
                 process(DAO_TXT_TEMPLATE_NAME, cxt));
 
@@ -594,7 +598,7 @@ public class GenerateServiceImpl implements GenerateService {
 
         mappingImport(imports, dao);
 
-        this.writeFile(daoPath + "/" + JAVA_PATH + daoImplPackage.replace('.', '/'),
+        this.writeFile(logFile, daoPath + "/" + JAVA_PATH + daoImplPackage.replace('.', '/'),
                 daoImpl, JAVA_EXT_NAME,
                 process(DAOIMPL_TXT_TEMPLATE_NAME, cxt));
 
@@ -615,68 +619,28 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("daoName", dao);
         cxt.setVariable("daoVeriable", StringUtils.uncapitalize(daoImpl));
 
-        this.writeFile(daoPath + "/" + TEST_PATH + daoPackage.replace('.', '/'),
+        if (fields != null && types != null && tableColumns != null && table != null && table.getColumns() != null
+                && fields.length == types.length && fields.length == tableColumns.length && fields.length == table.getColumns().size()) {
+
+            mappingImport(imports, "Arrays");
+
+            List<String> poSetters = new ArrayList<>();
+
+            for (int i = 0; i < fields.length; i++) {
+                Column col = table.getColumns().get(i);
+
+                if (col.getField().contains("_create") || col.getField().contains("_modify"))
+                    continue;
+
+                poSetters.add("// po.set" + StringUtils.capitalize(fields[i]) + "(\"" + fields[i] + "\");");
+            }
+
+            cxt.setVariable("poSetters", poSetters);
+        }
+
+        this.writeFile(logFile, daoPath + "/" + TEST_PATH + daoPackage.replace('.', '/'),
                 daoImpl + "Test", JAVA_EXT_NAME,
                 process(DAO_TEST_TXT_TEMPLATE_NAME, cxt));
-
-
-//        Map<String, Object> model = new HashMap<String, Object>();
-//        model.put("date", new Date());
-//        model.put("mapperName", mapperName);
-//        model.put("mapperPackage", mapperPackage);
-//        model.put("tableName", tableName);
-//        model.put("entityName", entityName);
-//
-//        List<String> resultMap = new ArrayList<String>();
-//        List<String> entityFields = new ArrayList<String>();
-//        String tableColumnsStr = new String();
-//        String idColumn = new String();
-//        String idField = new String();
-//        String idFieldName = new String();
-//
-//        if (tableColumns != null && entityField != null && tableColumns.length == entityField.length)
-//            for (int i = 0; i < entityField.length; i++) {
-//                if (i == 0) {
-//                    idColumn = tableColumns[i];
-//                    idFieldName = entityField[i];
-//                    idField = "#{" + entityField[i] + "}";
-//                }
-//
-//                if ("id".equals(entityField[i])) {
-//                    resultMap.add("<id property=\"" + entityField[i] + "\" column=\"" + tableColumns[i] + "\" />");
-//
-//                    entityFields.add("NULL");
-//
-//                    idColumn = tableColumns[i];
-//                    idFieldName = entityField[i];
-//                    idField = "#{" + entityField[i] + "}";
-//                } else {
-//                    resultMap.add("<result property=\"" + entityField[i] + "\" column=\"" + tableColumns[i] + "\" />");
-//
-//                    entityFields.add("#{" + entityField[i] + "}");
-//                }
-//
-//                if (tableColumnsStr.length() == 0)
-//                    tableColumnsStr += tableColumns[i];
-//                else
-//                    tableColumnsStr += ", " + tableColumns[i];
-//
-//            }
-//        model.put("idColumn", idColumn);
-//        model.put("idField", idField);
-//        model.put("idFieldName", idFieldName);
-//        model.put("tableColumnsStr", tableColumnsStr);
-//        model.put("resultMap", resultMap);
-//        model.put("entityFields", entityFields);
-//        model.put("tableColumns", tableColumns);
-//
-//        this.writeFile(
-//                CgFileUtils.formatPath(mapperPath + "/" + JAVA_PATH + mapperPackage.replace('.', '/'), false, false),
-//                mapperName, JAVA_EXT_NAME, mergeTemplateIntoString(MAPPER_JAVA_TEMPLATE_NAME, model));
-//
-//        this.writeFile(
-//                CgFileUtils.formatPath(mapperPath + "/" + JAVA_PATH + mapperPackage.replace('.', '/'), false, false),
-//                mapperName, XML_EXT_NAME, mergeTemplateIntoString(MAPPER_XML_TEMPLATE_NAME, model));
     }
 
     // /**
@@ -726,7 +690,7 @@ public class GenerateServiceImpl implements GenerateService {
      * @param daoInterface
      * @param daoProjectPackage
      */
-    private void generateService(String serviceProjectName, String servicePath, String serviceInterface,
+    private void generateService(File logFile, String serviceProjectName, String servicePath, String serviceInterface,
                                  String serviceImplement, String serviceProjectPackage, String daoInterface, String daoProjectPackage) {
 
         Map<String, Object> modelInterface = new HashMap<String, Object>();
@@ -734,7 +698,7 @@ public class GenerateServiceImpl implements GenerateService {
         modelInterface.put("serviceInterface", serviceInterface);
         modelInterface.put("serviceProjectPackage", serviceProjectPackage);
 
-        this.writeFile(CgFileUtils.formatPath(servicePath + "/" + JAVA_PATH + serviceProjectPackage.replace('.', '/'),
+        this.writeFile(logFile, CgFileUtils.formatPath(servicePath + "/" + JAVA_PATH + serviceProjectPackage.replace('.', '/'),
                 false, false), serviceInterface, JAVA_EXT_NAME,
                 mergeTemplateIntoString(SERVICE_INTERFACE_TEMPLATE_NAME, modelInterface));
 
@@ -748,7 +712,7 @@ public class GenerateServiceImpl implements GenerateService {
         modelImplement.put("daoInterface1", StringUtils.uncapitalize(daoInterface));
         modelImplement.put("daoProjectPackage", daoProjectPackage);
 
-        this.writeFile(CgFileUtils.formatPath(
+        this.writeFile(logFile, CgFileUtils.formatPath(
                 servicePath + "/" + JAVA_PATH + (serviceProjectPackage + ".impl").replace('.', '/'), false, false),
                 serviceImplement, JAVA_EXT_NAME,
                 mergeTemplateIntoString(SERVICE_IMPLEMENTS_TEMPLATE_NAME, modelImplement));
@@ -809,30 +773,50 @@ public class GenerateServiceImpl implements GenerateService {
     }
 
     /**
-     * @param path
+     * @param pPath
      * @param content
      */
-    private void writeFile(String path, String name, String ext, String content) {
-        if (isBlank(path))
+    private void writeFile(File logFile, String pPath, String name, String ext, String content) {
+        if (isBlank(pPath))
             return;
         if (content == null)
             content = "";
 
-        File pathFile = new File(path);
+        File pathFile = new File(pPath);
         if (!pathFile.exists())
             pathFile.mkdirs();
 
-        String fileName = path + "/" + name + ext;
+        String fileName = pPath + "/" + name + ext;
         File file = new File(fileName);
         if (file.exists())
-            fileName = path + "/" + name + ext;
-        // TODO sssssssssssssssssss
-//            fileName = path + "/" + name + "_" + ext;
+            fileName = pPath + "/" + name + "_" + ext;
+
+        // write log
+        writeLog(logFile, fileName);
 
         FileWriter fw = null;
         try {
             fw = new FileWriter(fileName);
             fw.write(content, 0, content.length());
+            fw.flush();
+        } catch (IOException e) {
+            logger.error("", e);
+        } finally {
+            if (fw != null) {
+                try {
+                    fw.close();
+                } catch (IOException e) {
+                    logger.error("", e);
+                }
+            }
+        }
+    }
+
+    private void writeLog(File logFile, String line) {
+        FileWriter fw = null;
+        try {
+            fw = new FileWriter(logFile, true);
+            fw.write(line + "\n");
             fw.flush();
         } catch (IOException e) {
             logger.error("", e);
