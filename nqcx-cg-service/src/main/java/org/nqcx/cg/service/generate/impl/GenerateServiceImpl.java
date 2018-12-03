@@ -108,7 +108,7 @@ public class GenerateServiceImpl implements GenerateService {
 
         classMapping.put("JpaSupport", "org.nqcx.commons3.data.jpa.JpaSupport");
         classMapping.put("MapperSupport", "org.nqcx.commons3.data.mapper.MapperSupport");
-        classMapping.put("CacheSupport", "org.nqcx.commons3.data.cache.CacheSupport");
+        classMapping.put("DaoSupport", "org.nqcx.commons3.dao.DaoSupport");
 
         classMapping.put("stereotype.Service", "org.springframework.stereotype.Service");
     }
@@ -471,12 +471,73 @@ public class GenerateServiceImpl implements GenerateService {
         this.writeFile(daoPath + "/" + JAVA_PATH + mapperPackage.replace('.', '/'),
                 mapper, JAVA_EXT_NAME,
                 process(MAPPER_TXT_TEMPLATE_NAME, cxt));
+        // end of mapper
 
         // mapper xml
+        cxt.clearVariables();
+        imports.clear();
+
+        cxt.setVariable("namespace", mapperPackage + "." + mapper);
+        cxt.setVariable("tableName", table.getName());
+        cxt.setVariable("po", po);
+
+        if (fields != null && types != null && tableColumns != null && table != null && table.getColumns() != null
+                && fields.length == types.length && fields.length == tableColumns.length && fields.length == table.getColumns().size()) {
+
+
+            List<String> resultMap = new ArrayList<>();
+            List<String> poFields = new ArrayList<>();
+            List<String> poColumns = new ArrayList<>();
+            String tableColumnsStr = new String();
+            String idColumn = new String();
+            String idField = new String();
+            String idFieldName = new String();
+
+            for (int i = 0; i < fields.length; i++) {
+                Column col = table.getColumns().get(i);
+
+                if (col.getField().contains("_create") || col.getField().contains("_modify"))
+                    continue;
+
+                if (i == 0) {
+                    idColumn = col.getField();
+                    idFieldName = fields[i];
+                    idField = "#{" + fields[i] + "}";
+                }
+
+                poColumns.add(col.getField());
+                if ("PRI".equals(col.getKey()) && col.getField().contains("id")) {
+                    idColumn = col.getField();
+                    idFieldName = fields[i];
+
+                    resultMap.add("<id property=\"" + fields[i] + "\" column=\"" + tableColumns[i] + "\" />");
+
+                    poFields.add("NULL");
+                } else {
+                    resultMap.add("<result property=\"" + fields[i] + "\" column=\"" + col.getField() + "\" />");
+
+                    poFields.add("#{" + fields[i] + "}");
+                }
+
+                if (tableColumnsStr.length() > 0)
+                    tableColumnsStr += ", ";
+                tableColumnsStr += tableColumns[i];
+            }
+
+            cxt.setVariable("resultMap", resultMap);
+            cxt.setVariable("poColumns", poColumns);
+            cxt.setVariable("poFields", poFields);
+            cxt.setVariable("tableColumnsStr", tableColumnsStr);
+            cxt.setVariable("idColumn", idColumn);
+            cxt.setVariable("idField", idField);
+            cxt.setVariable("idFieldName", idFieldName);
+            cxt.setVariable("tableColumns", tableColumns);
+        }
+
         this.writeFile(daoPath + "/" + JAVA_PATH + mapperPackage.replace('.', '/'),
                 mapper, XML_EXT_NAME,
                 process(MAPPERXML_TXT_TEMPLATE_NAME, cxt));
-
+        // end of mapper xml
 
         // jpa
         cxt.clearVariables();
@@ -517,7 +578,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.clearVariables();
         imports.clear();
 
-        imports.add(classMapping.get("CacheSupport"));
+        imports.add(classMapping.get("DaoSupport"));
         imports.add(classMapping.get(po));
         imports.add(classMapping.get(mapper));
         imports.add(classMapping.get(jpa));

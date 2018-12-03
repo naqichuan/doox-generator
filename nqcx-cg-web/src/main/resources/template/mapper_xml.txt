@@ -2,8 +2,93 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.mybatis.example.BlogMapper">
-  <select id="selectBlog" resultType="Blog">
-    select * from Blog where id = #{id}
-  </select>
+<mapper namespace="[(${namespace})]">
+
+	<resultMap id="[(${tableName})]_rm" type="[(${po})]">[# th:each="f : ${resultMap}"]
+		[(${f})][/]
+	</resultMap>
+
+	<sql id="[(${tableName})]_columns">
+		[(${tableColumnsStr})]
+	</sql>
+
+	<insert id="insert" parameterType="[(${po})]" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO [(${tableName})] (
+			<include refid="[(${tableName})]_columns" />
+		) VALUES ([# th:each="c : ${poColumns}"]
+		    [# th:if="${cStat.index > 0}"],[/][(*{poFields[__${cStat.index}__]})][/]
+		)
+	</insert>
+
+	<update id="update" parameterType="[(${po})]">
+		UPDATE
+			[(${tableName})]
+		SET
+#foreach($field in $entityFields)
+	#set($index = ${velocityCount} - 1)
+	#if($!{velocityCount} == $entityFields.size())
+		$tableColumns.get($index)=$field
+	#else
+		$tableColumns.get($index)=$field,
+	#end
+#end
+		WHERE
+			$!{idColumn}=$!{idField}
+	</update>
+
+	<delete id="deleteById" parameterType="long">
+		DELETE FROM
+			[(${tableName})]
+		WHERE
+			$!{idColumn}=$!{idField}
+	</delete>
+
+	<delete id="deleteByIds">
+		DELETE FROM
+			[(${tableName})]
+		WHERE
+			$!{idColumn} IN
+			<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+	</delete>
+
+	<sql id="condition">
+		<where>
+			<if test="$!{idFieldName} != null and $!{idFieldName} != ''">
+				$!{idColumn}=$!{idField}
+			</if>
+		</where>
+	</sql>
+
+	<select id="query" parameterType="map" resultMap="[(${tableName})]_rm">
+		SELECT
+			<include refid="[(${tableName})]_columns" />
+		FROM
+			[(${tableName})]
+		<include refid="condition" />
+		<if test="order != null">
+			${order}
+		</if>
+		<if test="pageTag == 1">
+			${position}
+		</if>
+	</select>
+
+	<select id="queryCount" parameterType="map" resultType="long">
+		SELECT
+			count(*)
+		FROM
+			[(${tableName})]
+		<include refid="condition" />
+	</select>
+
+	<select id="getById" resultMap="[(${tableName})]_rm" parameterType="long">
+		SELECT
+			<include refid="[(${tableName})]_columns" />
+		FROM
+			[(${tableName})]
+		WHERE
+			$!{idColumn}=$!{idField}
+	</select>
 </mapper>
