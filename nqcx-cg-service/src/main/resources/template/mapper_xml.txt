@@ -66,11 +66,11 @@
 		FROM
 			[(${tableName})]
 		<include refid="condition" />
-		<if test="order != null">
+		<if test="_order_ != null and _order_ != ''">
 			${order}
 		</if>
-		<if test="pageTag == 1">
-			${position}
+		<if test="_page_ != null and _page_ != ''">
+			${_page_}
 		</if>
 	</select>
 

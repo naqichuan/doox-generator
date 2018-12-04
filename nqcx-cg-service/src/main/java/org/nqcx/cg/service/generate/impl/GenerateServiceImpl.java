@@ -9,14 +9,12 @@
 package org.nqcx.cg.service.generate.impl;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
-import org.nqcx.cg.provide.util.CgFileUtils;
-import org.nqcx.cg.provide.o.table.Column;
-import org.nqcx.cg.provide.o.table.Table;
 import org.nqcx.cg.provide.enums.PType;
 import org.nqcx.cg.provide.o.CgField;
 import org.nqcx.cg.provide.o.Generate;
+import org.nqcx.cg.provide.o.table.Column;
+import org.nqcx.cg.provide.o.table.Table;
+import org.nqcx.cg.provide.util.CgFileUtils;
 import org.nqcx.cg.service.generate.GenerateService;
 import org.nqcx.cg.service.table.TableService;
 import org.nqcx.commons3.lang.o.DTO;
@@ -34,7 +32,6 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -693,64 +690,64 @@ public class GenerateServiceImpl implements GenerateService {
     private void generateService(File logFile, String serviceProjectName, String servicePath, String serviceInterface,
                                  String serviceImplement, String serviceProjectPackage, String daoInterface, String daoProjectPackage) {
 
-        Map<String, Object> modelInterface = new HashMap<String, Object>();
-        modelInterface.put("date", new Date());
-        modelInterface.put("serviceInterface", serviceInterface);
-        modelInterface.put("serviceProjectPackage", serviceProjectPackage);
-
-        this.writeFile(logFile, CgFileUtils.formatPath(servicePath + "/" + JAVA_PATH + serviceProjectPackage.replace('.', '/'),
-                false, false), serviceInterface, JAVA_EXT_NAME,
-                mergeTemplateIntoString(SERVICE_INTERFACE_TEMPLATE_NAME, modelInterface));
-
-        Map<String, Object> modelImplement = new HashMap<String, Object>();
-        modelImplement.put("date", new Date());
-        modelImplement.put("serviceInterface", serviceInterface);
-        modelImplement.put("serviceImplements", serviceImplement);
-        modelImplement.put("serviceProjectPackage", serviceProjectPackage);
-        modelImplement.put("serviceProjectPackage1", serviceProjectPackage + ".impl");
-        modelImplement.put("daoInterface", daoInterface);
-        modelImplement.put("daoInterface1", StringUtils.uncapitalize(daoInterface));
-        modelImplement.put("daoProjectPackage", daoProjectPackage);
-
-        this.writeFile(logFile, CgFileUtils.formatPath(
-                servicePath + "/" + JAVA_PATH + (serviceProjectPackage + ".impl").replace('.', '/'), false, false),
-                serviceImplement, JAVA_EXT_NAME,
-                mergeTemplateIntoString(SERVICE_IMPLEMENTS_TEMPLATE_NAME, modelImplement));
+//        Map<String, Object> modelInterface = new HashMap<String, Object>();
+//        modelInterface.put("date", new Date());
+//        modelInterface.put("serviceInterface", serviceInterface);
+//        modelInterface.put("serviceProjectPackage", serviceProjectPackage);
+//
+//        this.writeFile(logFile, CgFileUtils.formatPath(servicePath + "/" + JAVA_PATH + serviceProjectPackage.replace('.', '/'),
+//                false, false), serviceInterface, JAVA_EXT_NAME,
+//                mergeTemplateIntoString(SERVICE_INTERFACE_TEMPLATE_NAME, modelInterface));
+//
+//        Map<String, Object> modelImplement = new HashMap<String, Object>();
+//        modelImplement.put("date", new Date());
+//        modelImplement.put("serviceInterface", serviceInterface);
+//        modelImplement.put("serviceImplements", serviceImplement);
+//        modelImplement.put("serviceProjectPackage", serviceProjectPackage);
+//        modelImplement.put("serviceProjectPackage1", serviceProjectPackage + ".impl");
+//        modelImplement.put("daoInterface", daoInterface);
+//        modelImplement.put("daoInterface1", StringUtils.uncapitalize(daoInterface));
+//        modelImplement.put("daoProjectPackage", daoProjectPackage);
+//
+//        this.writeFile(logFile, CgFileUtils.formatPath(
+//                servicePath + "/" + JAVA_PATH + (serviceProjectPackage + ".impl").replace('.', '/'), false, false),
+//                serviceImplement, JAVA_EXT_NAME,
+//                mergeTemplateIntoString(SERVICE_IMPLEMENTS_TEMPLATE_NAME, modelImplement));
     }
 
-    /**
-     * @return
-     * @throws Exception
-     */
-    private VelocityEngine velocityEngine() {
-        Properties properties = new Properties();
-        properties.setProperty("input.encoding", "UTF-8");
-        properties.setProperty("output.encoding", "UTF-8");
-
-        properties.setProperty("resource.loader", "file");
-        properties.setProperty("file.resource.loader.cache", "true");
-        properties.setProperty("file.resource.loader.path", "classpath:/template/");
-
-        properties.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
-        VelocityEngine velocityEngine = new VelocityEngine(properties);
-        return velocityEngine;
-    }
-
-    /**
-     * @param templateLocation
-     * @param model
-     * @return
-     */
-    private String mergeTemplateIntoString(String templateLocation, Map<String, Object> model) {
-        VelocityEngine velocityEngine = velocityEngine();
-
-        VelocityContext context = new VelocityContext(model);
-
-        StringWriter stringWriter = new StringWriter();
-        velocityEngine.mergeTemplate(templateLocation, "UTF-8", context, stringWriter);
-
-        return stringWriter.toString();
-    }
+//    /**
+//     * @return
+//     * @throws Exception
+//     */
+//    private VelocityEngine velocityEngine() {
+//        Properties properties = new Properties();
+//        properties.setProperty("input.encoding", "UTF-8");
+//        properties.setProperty("output.encoding", "UTF-8");
+//
+//        properties.setProperty("resource.loader", "file");
+//        properties.setProperty("file.resource.loader.cache", "true");
+//        properties.setProperty("file.resource.loader.path", "classpath:/template/");
+//
+//        properties.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+//        VelocityEngine velocityEngine = new VelocityEngine(properties);
+//        return velocityEngine;
+//    }
+//
+//    /**
+//     * @param templateLocation
+//     * @param model
+//     * @return
+//     */
+//    private String mergeTemplateIntoString(String templateLocation, Map<String, Object> model) {
+//        VelocityEngine velocityEngine = velocityEngine();
+//
+//        VelocityContext context = new VelocityContext(model);
+//
+//        StringWriter stringWriter = new StringWriter();
+//        velocityEngine.mergeTemplate(templateLocation, "UTF-8", context, stringWriter);
+//
+//        return stringWriter.toString();
+//    }
 
     private String process(String template, IContext context) {
         return templateEngine().process(template, context);
@@ -833,14 +830,6 @@ public class GenerateServiceImpl implements GenerateService {
                 }
             }
         }
-    }
-
-    /**
-     * @param str
-     * @return
-     */
-    private boolean isNotBlank(String str) {
-        return StringUtils.isNotBlank(str);
     }
 
     /**
