@@ -5,24 +5,17 @@
     <parent>
         <groupId>org.nqcx</groupId>
         <artifactId>nqcx-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>2.0.0-SNAPSHOT</version>
         <relativePath>../../projects/nqcx-parent</relativePath>
     </parent>
 
     <groupId>org.nqcx.cg</groupId>
     <artifactId>nqcx-cg</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>nqcx-cg</name>
     <url>http://nqcx.org</url>
-
-    <properties>
-        <!--<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
-        <!--<spring.version>3.2.6.RELEASE</spring.version>-->
-        <!--<slf4j.version>1.7.5</slf4j.version>-->
-        <!--<jackson.version>1.9.2</jackson.version>-->
-    </properties>
 
     <modules>
         <module>nqcx-cg-provide</module>
@@ -50,172 +43,6 @@
         <tag>master</tag>
     </scm>
 
-    <dependencyManagement>
-        <dependencies>
-            <!--&lt;!&ndash; ########## 2nd party library ########## &ndash;&gt;-->
-            <!--<dependency>-->
-            <!--<groupId>org.nqcx.commons</groupId>-->
-            <!--<artifactId>nqcx-commons-lang</artifactId>-->
-            <!--<version>${nqcx.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>org.nqcx.commons</groupId>-->
-            <!--<artifactId>nqcx-commons-util</artifactId>-->
-            <!--<version>${nqcx.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>org.nqcx.commons</groupId>-->
-            <!--<artifactId>nqcx-commons-web</artifactId>-->
-            <!--<version>${nqcx.version}</version>-->
-            <!--</dependency>-->
-
-            <!--&lt;!&ndash; ########## 3rd party library ########## &ndash;&gt;-->
-            <!--<dependency>-->
-            <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-core</artifactId>-->
-            <!--<version>${spring.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-beans</artifactId>-->
-            <!--<version>${spring.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-context</artifactId>-->
-            <!--<version>${spring.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-tx</artifactId>-->
-            <!--<version>${spring.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-web</artifactId>-->
-            <!--<version>${spring.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-webmvc</artifactId>-->
-            <!--<version>${spring.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-test</artifactId>-->
-            <!--<version>${spring.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-context-support</artifactId>-->
-            <!--<version>${spring.version}</version>-->
-            <!--</dependency>-->
-
-            <!--<dependency>-->
-            <!--<groupId>org.codehaus.jackson</groupId>-->
-            <!--<artifactId>jackson-core-asl</artifactId>-->
-            <!--<version>${jackson.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>org.codehaus.jackson</groupId>-->
-            <!--<artifactId>jackson-mapper-asl</artifactId>-->
-            <!--<version>${jackson.version}</version>-->
-            <!--</dependency>-->
-
-            <!--<dependency>-->
-            <!--<groupId>commons-lang</groupId>-->
-            <!--<artifactId>commons-lang</artifactId>-->
-            <!--<version>2.4</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>commons-beanutils</groupId>-->
-            <!--<artifactId>commons-beanutils</artifactId>-->
-            <!--<version>1.8.2</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>commons-collections</groupId>-->
-            <!--<artifactId>commons-collections</artifactId>-->
-            <!--<version>3.2.1</version>-->
-            <!--</dependency>-->
-
-            <!--<dependency>-->
-            <!--<groupId>javax.servlet</groupId>-->
-            <!--<artifactId>servlet-api</artifactId>-->
-            <!--<version>3.0-alpha-1</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>jspapi</groupId>-->
-            <!--<artifactId>jsp-api</artifactId>-->
-            <!--<version>2.0</version>-->
-            <!--</dependency>-->
-
-            <!--&lt;!&ndash; favor logger &ndash;&gt;-->
-            <!--<dependency>-->
-            <!--<groupId>org.slf4j</groupId>-->
-            <!--<artifactId>slf4j-api</artifactId>-->
-            <!--<version>${slf4j.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>org.slf4j</groupId>-->
-            <!--<artifactId>slf4j-log4j12</artifactId>-->
-            <!--<version>${slf4j.version}</version>-->
-            <!--</dependency>-->
-
-            <!-- velocity, only for generate code. Spring5 doesn't support velocity  -->
-            <dependency>
-                <groupId>org.apache.velocity</groupId>
-                <artifactId>velocity</artifactId>
-                <version>1.7-beta1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.velocity</groupId>
-                <artifactId>velocity-tools</artifactId>
-                <version>2.0</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.struts</groupId>
-                        <artifactId>struts-core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.apache.struts</groupId>
-                        <artifactId>struts-taglib</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.apache.struts</groupId>
-                        <artifactId>struts-tiles</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>sslext</groupId>
-                        <artifactId>sslext</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>commons-digester</groupId>
-                        <artifactId>commons-digester</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <!-- end of velocity -->
-
-            <!--<dependency>-->
-            <!--<groupId>mysql</groupId>-->
-            <!--<artifactId>mysql-connector-java</artifactId>-->
-            <!--<version>5.1.9</version>-->
-            <!--</dependency>-->
-
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-test</artifactId>
-                <version>${spring.version}</version>
-                <scope>test</scope>
-                <optional>true</optional>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <build>
         <resources>
             <resource>
@@ -241,54 +68,9 @@
                     <include>gmsg/*.properties</include>
                     <include>spring/*.xml</include>
                     <include>mybatis/*.xml</include>
-                    <include>template/*.vm</include>
                     <include>template/*.txt</include>
                 </includes>
             </resource>
         </resources>
-
-        <!--<pluginManagement>-->
-        <!--<plugins>-->
-        <!--<plugin>-->
-        <!--<groupId>org.apache.maven.plugins</groupId>-->
-        <!--<artifactId>maven-compiler-plugin</artifactId>-->
-        <!--<version>2.3.2</version>-->
-        <!--<configuration>-->
-        <!--<source>1.7</source>-->
-        <!--<target>1.7</target>-->
-        <!--</configuration>-->
-        <!--</plugin>-->
-        <!--<plugin>-->
-        <!--<groupId>org.apache.maven.plugins</groupId>-->
-        <!--<artifactId>maven-resources-plugin</artifactId>-->
-        <!--<version>2.5</version>-->
-        <!--<configuration>-->
-        <!--<encoding>UTF-8</encoding>-->
-        <!--</configuration>-->
-        <!--</plugin>-->
-        <!--<plugin>-->
-        <!--<groupId>org.apache.maven.plugins</groupId>-->
-        <!--<artifactId>maven-surefire-plugin</artifactId>-->
-        <!--<version>2.14.1</version>-->
-        <!--<configuration>-->
-        <!--<skipTests>true</skipTests>-->
-        <!--</configuration>-->
-        <!--</plugin>-->
-        <!--</plugins>-->
-        <!--</pluginManagement>-->
-        <!--<plugins>-->
-        <!--<plugin>-->
-        <!--<groupId>org.apache.maven.plugins</groupId>-->
-        <!--<artifactId>maven-compiler-plugin</artifactId>-->
-        <!--</plugin>-->
-        <!--<plugin>-->
-        <!--<groupId>org.apache.maven.plugins</groupId>-->
-        <!--<artifactId>maven-surefire-plugin</artifactId>-->
-        <!--</plugin>-->
-        <!--<plugin>-->
-        <!--<groupId>org.apache.maven.plugins</groupId>-->
-        <!--<artifactId>maven-source-plugin</artifactId>-->
-        <!--</plugin>-->
-        <!--</plugins>-->
     </build>
 </project>
