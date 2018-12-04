@@ -80,7 +80,6 @@
             </bean>
         </property>
     </bean>
-    <bean id="_ConnSessionInterceptor" class="org.nqcx.cg.web.interceptor.ConnSessionInterceptor"/>
 
     <mvc:interceptors>
         <mvc:interceptor>
@@ -89,13 +88,5 @@
             <mvc:exclude-mapping path="/assets/**"/>
             <ref bean="_WebContextInterceptor"/>
         </mvc:interceptor>
-        <!--<mvc:interceptor>-->
-            <!--<mvc:mapping path="/table/**"/>-->
-            <!--<ref bean="_ConnSessionInterceptor"/>-->
-        <!--</mvc:interceptor>-->
-        <!--<mvc:interceptor>-->
-            <!--<mvc:mapping path="/generate/**"/>-->
-            <!--<ref bean="_ConnSessionInterceptor"/>-->
-        <!--</mvc:interceptor>-->
     </mvc:interceptors>
 </beans>

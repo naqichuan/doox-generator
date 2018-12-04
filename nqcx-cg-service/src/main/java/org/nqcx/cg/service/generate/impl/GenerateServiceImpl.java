@@ -299,7 +299,7 @@ public class GenerateServiceImpl implements GenerateService {
             cxt.setVariable("boGetterAndSetter", boGetterAndSetters);
         }
 
-        this.writeFile(logFile,providePath + "/" + JAVA_PATH + boPackage.replace('.', '/'), boName, JAVA_EXT_NAME,
+        this.writeFile(logFile, providePath + "/" + JAVA_PATH + boPackage.replace('.', '/'), boName, JAVA_EXT_NAME,
                 process(BO_TXT_TEMPLATE_NAME, cxt));
 
         // o
@@ -789,7 +789,7 @@ public class GenerateServiceImpl implements GenerateService {
         String fileName = pPath + "/" + name + ext;
         File file = new File(fileName);
         if (file.exists())
-            fileName = pPath + "/" + name + "_" + ext;
+            fileName = pPath + "/" + "_" + name + ext;
 
         // write log
         writeLog(logFile, fileName);
@@ -812,6 +812,10 @@ public class GenerateServiceImpl implements GenerateService {
         }
     }
 
+    /**
+     * @param logFile
+     * @param line
+     */
     private void writeLog(File logFile, String line) {
         FileWriter fw = null;
         try {

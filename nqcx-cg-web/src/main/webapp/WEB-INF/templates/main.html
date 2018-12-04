@@ -62,7 +62,7 @@
         var db = {
             conn: function (callBack) {
                 $('#connForm').form('nqcxSubmit', {
-                    url: /*[['/session']]*/'',
+                    url: /*[['/session']]*/ '',
                     dataType: 'json',
                     onSubmit: function () {
                         return $(this).form('validate');
@@ -74,17 +74,14 @@
                 });
             },
             reconnect: function (callBack) {
-                // var url = /*[['/destroySession']]*/'';
-                // jQuery.get( url + '?t=' + (new Date()).getTime(), function (result) {
-                    db.conn(function () {
-                        jQuery.messager.show({
-                            title: 'Success',
-                            msg: 'Connected'
-                        });
-                        if (callBack)
-                            callBack();
+                db.conn(function () {
+                    jQuery.messager.show({
+                        title: 'Success',
+                        msg: 'Connected'
                     });
-                // });
+                    if (callBack)
+                        callBack();
+                });
             }
         };
         // end of db ==============================================================
