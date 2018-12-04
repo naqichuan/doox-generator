@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
-	xsi:schemaLocation="
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/util  http://www.springframework.org/schema/util/spring-util.xsd">
 
-	<!-- 用于配置全局通用属性，页面中可以通过 $!{nqcxValues.defaultTitle} 取值，bean 中通过属性注入可取值 -->
-	<util:map id="_nqcxValues">
-		<entry key="defaultTitle" value="Code generate"/>
-	</util:map>
-	<bean id="nqcxValues" class="org.nqcx.commons3.web.values.NqcxValues">
-		<property name="values">
-			<ref bean="_nqcxValues"/>
-		</property>
-	</bean>
+    <!-- 用于配置全局通用属性，页面中可以通过 $!{nqcxValues.defaultTitle} 取值，bean 中通过属性注入可取值 -->
+    <util:map id="_nqcxValues">
+        <entry key="defaultTitle" value="Code generate"/>
+    </util:map>
+    <bean id="nqcxValues" class="org.nqcx.commons3.web.values.NqcxValues">
+        <property name="values">
+            <ref bean="_nqcxValues"/>
+        </property>
+    </bean>
 
-	<!-- 用于注入 bean-commons-result.xml 中 ResultBuilder 的 resultExtends 属性 -->
-	<util:map id="resultExtends">
-	</util:map>
+    <!-- 用于注入 bean-commons-result.xml 中 ResultBuilder 的 resultExtends 属性 -->
+    <util:map id="resultExtends">
+    </util:map>
 
 
-	<bean id="workspacePath" class="java.lang.String">
-		<constructor-arg value="${workspace.path}"/>
-	</bean>
-	<bean id="workspaceAuthor" class="java.lang.String">
-		<constructor-arg value="${workspace.author}"/>
-	</bean>
+    <bean id="workspacePath" class="java.lang.String">
+        <constructor-arg value="${workspace.path}"/>
+    </bean>
+    <bean id="workspaceAuthor" class="java.lang.String">
+        <constructor-arg value="${workspace.author}"/>
+    </bean>
+    <bean id="overwrite" class="java.lang.Boolean">
+        <constructor-arg value="true"/>
+    </bean>
 </beans>

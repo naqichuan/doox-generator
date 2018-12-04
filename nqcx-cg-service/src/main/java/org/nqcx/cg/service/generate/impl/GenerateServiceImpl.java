@@ -79,6 +79,9 @@ public class GenerateServiceImpl implements GenerateService {
     @Qualifier("workspaceAuthor")
     private String workspaceAuthor;
     @Autowired
+    @Qualifier("overwrite")
+    private Boolean overwrite;
+    @Autowired
     private TableService tableService;
 
     static {
@@ -125,7 +128,8 @@ public class GenerateServiceImpl implements GenerateService {
 
         // 写入空行到日志
         File cgLogFile = new File(workspacePath + g.getpPath() + "/cglog.log");
-        this.writeLog(cgLogFile, "");
+        if (cgLogFile.exists())
+            this.writeLog(cgLogFile, "");
 
         DTO trd = tableService.getTable(g.getTableName());
         Table table;
@@ -835,7 +839,7 @@ public class GenerateServiceImpl implements GenerateService {
         templateResolver.setTemplateMode(TemplateMode.TEXT);
         templateResolver.setPrefix("/template/");
         templateResolver.setSuffix(".txt");
-        templateResolver.setCacheTTLMs(Long.valueOf(3600000L));
+        templateResolver.setCacheTTLMs(3600000L);
         templateResolver.setCacheable(false);
 
         TemplateEngine templateEngine = new TemplateEngine();
@@ -860,7 +864,8 @@ public class GenerateServiceImpl implements GenerateService {
 
         String fileName = pPath + "/" + name + ext;
         File file = new File(fileName);
-        if (file.exists())
+        if (file.exists() && !overwrite)
+            // 文件存在且不覆盖文件，在文件名前加"_"
             fileName = pPath + "/" + "_" + name + ext;
 
         // write log
