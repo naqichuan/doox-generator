@@ -11,6 +11,6 @@ import [(${import})];
 /**
  * @author [(${author})] [(${#dates.format(date, 'yyyy-MM-dd HH:mm')})]
  */
-public interface [(${name})] extends IJpa<[(${poName})], Long> {
+public interface [(${name})] extends IJpa<[(${poName})], [(${idType})]> {
 
 }

@@ -358,6 +358,9 @@ public class GenerateServiceImpl implements GenerateService {
         Context cxt = new Context();
         Set<String> imports = new HashSet<>();
 
+        // ID typ
+        String idType = "Long";
+
         // po
         mappingImport(imports, boName);
         mappingImport(imports, "Entity");
@@ -400,6 +403,9 @@ public class GenerateServiceImpl implements GenerateService {
 
                     field.getAnnotations().add("@Id");
                     field.getAnnotations().add("@GeneratedValue(strategy = GenerationType.IDENTITY)");
+
+                    if ("int".equals(types[i]))
+                        idType = "Integer";
                 }
 
                 String colAnno = "name = \"" + col.getField() + "\"";
@@ -413,8 +419,6 @@ public class GenerateServiceImpl implements GenerateService {
                     colAnno += ", length = " + matcher.group(1);
 
                 if (col.getField().contains("_create") || col.getField().contains("_modify")) {
-//                    mappingImport(imports, "Temporal");
-
                     colAnno += ", insertable = false, updatable = false";
                     String columnDefinition = col.getType().toUpperCase();
                     if (col.getDefaultValue() != null && col.getDefaultValue().length() > 0) {
@@ -467,6 +471,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("name", mapper);
 
         cxt.setVariable("poName", po);
+        cxt.setVariable("idType", idType);
 
         this.writeFile(logFile, daoPath + "/" + JAVA_PATH + mapperPackage.replace('.', '/'),
                 mapper, JAVA_EXT_NAME,
@@ -562,6 +567,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("name", jpa);
 
         cxt.setVariable("poName", po);
+        cxt.setVariable("idType", idType);
 
         this.writeFile(logFile, daoPath + "/" + JAVA_PATH + jpaPackage.replace('.', '/'),
                 jpa, JAVA_EXT_NAME,
@@ -602,6 +608,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("name", daoImpl);
 
         cxt.setVariable("poName", po);
+        cxt.setVariable("idType", idType);
         cxt.setVariable("daoName", dao);
 
         mappingImport(imports, dao);
@@ -624,6 +631,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("name", daoImpl + "Test");
 
         cxt.setVariable("poName", po);
+        cxt.setVariable("idType", idType);
         cxt.setVariable("daoName", dao);
         cxt.setVariable("daoVeriable", StringUtils.uncapitalize(daoImpl));
 

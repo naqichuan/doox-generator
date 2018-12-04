@@ -28,7 +28,7 @@ import [(${import})];
 public class [(${name})] extends AutoInject {
 
     @Autowired
-    private [(${daoName})]<[(${poName})], Long> [(${daoVeriable})];
+    private [(${daoName})]<[(${poName})], [(${idType})]> [(${daoVeriable})];
 
     @Test
     public void save() {
@@ -74,13 +74,13 @@ public class [(${name})] extends AutoInject {
 
     @Test
     public void findById() {
-        [(${poName})] poName = [(${daoVeriable})].findById(1L).orElse(null);
+        [(${poName})] poName = [(${daoVeriable})].findById(1[# th:if="${idType == 'Long'}"]L[/]).orElse(null);
         System.out.println(poName);
     }
 
     @Test
     public void findAllByIds() {
-        List<Long> ids = Arrays.asList(2L, 3L, 4L, 5L);
+        List<[(${idType})]> ids = Arrays.asList(2[# th:if="${idType == 'Long'}"]L[/], 3[# th:if="${idType == 'Long'}"]L[/], 4[# th:if="${idType == 'Long'}"]L[/], 5[# th:if="${idType == 'Long'}"]L[/]);
         List<[(${poName})]> list = [(${daoVeriable})].findAllByIds(ids);
 
         if (list == null)
@@ -128,12 +128,12 @@ public class [(${name})] extends AutoInject {
 
     @Test
     public void deleteById() {
-        [(${daoVeriable})].deleteById(6L);
+        [(${daoVeriable})].deleteById(6[# th:if="${idType == 'Long'}"]L[/]);
     }
 
     @Test
     public void deleteByIds() {
-        List<Long> ids = Arrays.asList(7L, 8L);
+        List<[(${idType})]> ids = Arrays.asList(7[# th:if="${idType == 'Long'}"]L[/], 8[# th:if="${idType == 'Long'}"]L[/]);
         [(${daoVeriable})].deleteByIds(ids);
     }
 }
