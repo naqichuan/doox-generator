@@ -6,9 +6,9 @@
 		<groupId>org.nqcx.cg</groupId>
 		<version>1.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>nqcx-cg-common</artifactId>
+	<artifactId>nqcx-cg-provide</artifactId>
 
-	<name>nqcx-cg-common</name>
+	<name>nqcx-cg-provide</name>
 	<url>http://nqcx.org</url>
 
 	<dependencies>

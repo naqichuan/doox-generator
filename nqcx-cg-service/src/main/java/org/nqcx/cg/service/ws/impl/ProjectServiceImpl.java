@@ -1,5 +1,5 @@
 /* 
- * Copyright 2014 nqcx.org All right reserved. This software is the 
+ * Copyright 2018 nqcx.org All right reserved. This software is the
  * confidential and proprietary information of nqcx.org ("Confidential 
  * Information"). You shall not disclose such Confidential Information and shall
  * use it only in accordance with the terms of the license agreement you entered
@@ -8,7 +8,7 @@
 
 package org.nqcx.cg.service.ws.impl;
 
-import org.nqcx.cg.common.util.CgFileUtils;
+import org.nqcx.cg.provide.util.CgFileUtils;
 import org.nqcx.cg.service.ws.ProjectService;
 import org.nqcx.commons3.lang.o.DTO;
 import org.springframework.beans.factory.annotation.Autowired;

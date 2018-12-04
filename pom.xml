@@ -25,7 +25,7 @@
     </properties>
 
     <modules>
-        <module>nqcx-cg-common</module>
+        <module>nqcx-cg-provide</module>
         <module>nqcx-cg-service</module>
         <module>nqcx-cg-web</module>
     </modules>

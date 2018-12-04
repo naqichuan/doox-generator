@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 nqcx.org All right reserved. This software is the
+ * Copyright 2018 nqcx.org All right reserved. This software is the
  * confidential and proprietary information of nqcx.org ("Confidential
  * Information"). You shall not disclose such Confidential Information and shall
  * use it only in accordance with the terms of the license agreement you entered
@@ -11,7 +11,7 @@ package org.nqcx.cg.service.generate.impl;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
-import org.nqcx.cg.common.util.CgFileUtils;
+import org.nqcx.cg.provide.util.CgFileUtils;
 import org.nqcx.cg.provide.o.table.Column;
 import org.nqcx.cg.provide.o.table.Table;
 import org.nqcx.cg.provide.enums.PType;
