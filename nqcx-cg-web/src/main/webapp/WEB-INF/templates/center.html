@@ -460,10 +460,10 @@
             rowHtml += '<tr><td class="lable">Create PO:</td><td class="lable">public class</td><td>' +
                 '<input id="serviceDTO" type="text" name="serviceDTO" class="big_200" value="' + serviceName + 'DTO"/></td>';
 
-            rowHtml += '<td class="lable">Create IDAO:</td><td class="lable">public interface</td><td>' +
+            rowHtml += '<td class="lable">Create IService:</td><td class="lable">public interface</td><td>' +
                 '<input id="serviceService" type="text" name="serviceService" class="big_200" value="I' + serviceName + 'Service"/></td></tr>';
 
-            rowHtml += '<tr><td class="lable">Create IDAO impl:</td><td class="lable">public class</td><td>' +
+            rowHtml += '<tr><td class="lable">Create IService impl:</td><td class="lable">public class</td><td>' +
                 '<input id="servceServiceImpl" type="text" name="servceServiceImpl" class="big_200" value="' + serviceName + 'Service"/></td>';
 
             rowHtml += '<tr><td class="lable"></td><td></td></tr>'
@@ -521,10 +521,10 @@
             var rowHtml = '';
             var webName = table.replaceFirstUP();
 
-            rowHtml += '<tr><td class="lable">Create PO:</td><td class="lable">public class</td><td>' +
+            rowHtml += '<tr><td class="lable">Create VO:</td><td class="lable">public class</td><td>' +
                 '<input id="webVO" type="text" name="webVO" class="big_200" value="' + webName + 'VO"/></td>';
 
-            rowHtml += '<td class="lable">Create IDAO:</td><td class="lable">public interface</td><td>' +
+            rowHtml += '<td class="lable">Create Controller:</td><td class="lable">public interface</td><td>' +
                 '<input id="webController" type="text" name="webController" class="big_200" value="' + webName + 'Controller"/></td></tr>';
 
             return rowHtml;

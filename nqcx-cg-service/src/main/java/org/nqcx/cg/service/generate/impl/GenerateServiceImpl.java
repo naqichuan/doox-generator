@@ -163,17 +163,26 @@ public class GenerateServiceImpl implements GenerateService {
                     g.getProvideBO());
         }
 
+        classMapping.put(g.getServiceDTO(), g.getServiceDtoPackage() + "." + g.getServiceDTO());
+        classMapping.put(g.getServiceService(), g.getServiceServicePackage() + "." + g.getServiceService());
+        classMapping.put(g.getServceServiceImpl(), g.getServiceServicePackage() + ".impl." + g.getServceServiceImpl());
 
-//
-//        String daoInterface = mapperInterface;
-//        String daoProjectPackage = mapperProjectPackage;
-//
-//        String servicePath = pathMap.get(P_SERVICE_PATH_KEY);
-//        if ((servicePath != null || (PType.MULTIPLE == pType && isNotBlank(serviceProjectName)))
-//                && isNotBlank(serviceInterface) && isNotBlank(serviceImplement) && isNotBlank(serviceProjectPackage)) {
-//            this.generateService(serviceProjectName, servicePath, serviceInterface, serviceImplement,
-//                    serviceProjectPackage, daoInterface, daoProjectPackage);
-//        }
+        String servicePath = pathMap.get(P_SERVICE_PATH_KEY);
+        if (g.getService_().isTrue()) {
+            this.generateService(cgLogFile, servicePath, g.getServiceDtoPackage(), g.getServiceDTO(),
+                    g.getServiceServicePackage(), g.getServiceService(), g.getServiceServicePackage() + ".impl", g.getServceServiceImpl(),
+                    g.getProvideO(), g.getDaoPO());
+        }
+
+        classMapping.put(g.getWebVO(), g.getWebVoPackage() + "." + g.getWebVO());
+        classMapping.put(g.getWebController(), g.getWebControllerPackage() + "." + g.getWebController());
+
+        String webPath = pathMap.get(P_WEB_PATH_KEY);
+        if (g.getWeb_().isTrue()) {
+            this.generateWeb(cgLogFile, webPath, g.getWebVoPackage(), g.getWebVO(),
+                    g.getWebControllerPackage(), g.getWebController(),
+                    g.getProvideO(), g.getServiceDTO());
+        }
 
         return new DTO(true);
     }
@@ -214,14 +223,13 @@ public class GenerateServiceImpl implements GenerateService {
         if (new File(daoModulePath).exists())
             map.put(P_DAO_PATH_KEY, daoModulePath);
 
-        String serviceModulePath = wsPath + pPath + webModuleName;
+        String serviceModulePath = wsPath + pPath + serviceModuleName;
         if ((new File(serviceModulePath)).exists())
             map.put(P_SERVICE_PATH_KEY, serviceModulePath);
 
-        String webModulePath = wsPath + pPath + serviceModuleName;
+        String webModulePath = wsPath + pPath + webModuleName;
         if ((new File(webModulePath)).exists())
             map.put(P_WEB_PATH_KEY, webModulePath);
-
 
         return map;
     }
@@ -692,7 +700,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("oName", oName);
 
         this.writeFile(logFile, servicePath + "/" + JAVA_PATH + dtoPackage.replace('.', '/'),
-                serviceImpl, JAVA_EXT_NAME,
+                dto, JAVA_EXT_NAME,
                 process(DTO_TXT_TEMPLATE_NAME, cxt));
         // end of dto
 
@@ -707,7 +715,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("name", service);
 
         this.writeFile(logFile, servicePath + "/" + JAVA_PATH + servicePackage.replace('.', '/'),
-                serviceImpl, JAVA_EXT_NAME,
+                service, JAVA_EXT_NAME,
                 process(SERVICE_TXT_TEMPLATE_NAME, cxt));
         // end of service
 
