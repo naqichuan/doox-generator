@@ -36,13 +36,13 @@ public class TableController extends AbstractController {
 			RequestMethod.POST }, produces = "application/json")
 	@ResponseBody
 	public Map<?, ?> listTable() {
-		return buildResult(tableService.listTables(this.getConnNum()));
+		return buildResult(tableService.listTables());
 	}
 
 	@RequestMapping(value = "/get/{table}", method = { RequestMethod.GET,
 			RequestMethod.POST }, produces = "application/json")
 	@ResponseBody
-	public Map<?, ?> config(@PathVariable("table") String table, Model model) {
-		return buildResult(tableService.getTable(this.getConnNum(), table));
+	public Map<?, ?> config(@PathVariable("table") String table) {
+		return buildResult(tableService.getTable(table));
 	}
 }

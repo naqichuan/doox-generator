@@ -33,9 +33,9 @@ public class TableServiceTest extends AutoInject {
         String username = "nqcx";
         String password = "nqcx";
 
-        boolean connNum = connService.createConn(jdbcUrl, username, password);
+        boolean connNum = connService.connect(jdbcUrl, username, password);
 
-        List<Table> list = tableService.listTables(null).getList();
+        List<Table> list = tableService.listTables().getList();
 
         System.out.println("#####################################");
         for (Table t : list) {
@@ -43,6 +43,6 @@ public class TableServiceTest extends AutoInject {
         }
         System.out.println("#####################################");
 
-        connService.destroyConn(null);
+        connService.destroy();
     }
 }

@@ -17,15 +17,13 @@ public interface TableService {
 
     /***
      *
-     * @param connNum
      * @return
      */
-    DTO listTables(String connNum);
+    DTO listTables();
 
     /**
-     * @param connNum
      * @param tableName
      * @return
      */
-    DTO getTable(String connNum, String tableName);
+    DTO getTable(String tableName);
 }

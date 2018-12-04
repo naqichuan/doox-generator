@@ -22,7 +22,7 @@ public interface ConnService {
      * @param password
      * @return
      */
-    boolean createConn(String jdbcUrl, String user, String password);
+    boolean connect(String jdbcUrl, String user, String password);
 
     /**
      * @return
@@ -30,20 +30,17 @@ public interface ConnService {
     Connection getConn();
 
     /**
-     * @param connNum
      */
-    void destroyConn(String connNum);
+    void destroy();
 
     /**
-     * @param connNum
      * @param sql
      * @return
      */
-    CgResult query(String connNum, String sql);
+    CgResult query(String sql);
 
     /**
-     * @param connNum
      * @return
      */
-    boolean checkConn(String connNum);
+    boolean check();
 }

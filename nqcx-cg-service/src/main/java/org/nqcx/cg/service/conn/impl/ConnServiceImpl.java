@@ -28,18 +28,16 @@ import java.sql.Statement;
 public class ConnServiceImpl implements ConnService {
 
     private final static Logger logger = LoggerFactory.getLogger(ConnServiceImpl.class);
-//    private final Map<String, CgConn> connMap = new HashMap<String, CgConn>();
 
     private volatile String initString = "";
     private DruidDataSource dataSource = null;
-
 
     @Autowired
     @Qualifier("abstractDataSource")
     private DruidDataSource abstractDataSource;
 
     @Override
-    public boolean createConn(String jdbcUrl, String user, String password) {
+    public boolean connect(String jdbcUrl, String user, String password) {
 
         String url = "jdbc:mysql://" + jdbcUrl;
 
@@ -86,28 +84,15 @@ public class ConnServiceImpl implements ConnService {
     }
 
     @Override
-    public void destroyConn(String connNum) {
+    public void destroy() {
         if (!dataSource.isClosed())
             dataSource.close();
-
-//        CgConn cc = connMap.get(connNum);
-//
-//        try {
-//            if (cc != null)
-//                cc.close();
-//        } catch (SQLException e) {
-//            logger.error("", e);
-//        }
-//
-//        connMap.remove(connNum);
-//        cc = null;
     }
 
 
     @Override
-    public CgResult query(String connNum, String sql) {
+    public CgResult query(String sql) {
 
-//        CgConn cgConn = this.connMap.get(connNum);
         CgResult result = CgResult.newResult(null);
         Connection connection = null;
         Statement st = null;
@@ -135,10 +120,10 @@ public class ConnServiceImpl implements ConnService {
     }
 
     @Override
-    public boolean checkConn(String connNum) {
+    public boolean check() {
         String sql = "select 1";
 
-        CgResult result = this.query(connNum, sql);
+        CgResult result = this.query(sql);
         try {
             return result.getResultSet() != null && result
                     .getResultSet().next();

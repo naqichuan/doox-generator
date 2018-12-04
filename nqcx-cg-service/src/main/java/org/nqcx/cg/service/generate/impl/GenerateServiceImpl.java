@@ -134,7 +134,7 @@ public class GenerateServiceImpl implements GenerateService {
         File cgLogFile = new File(workspacePath + g.getpPath() + "/cglog.log");
         this.writeLog(cgLogFile, "");
 
-        DTO trd = tableService.getTable(null, g.getTableName());
+        DTO trd = tableService.getTable(g.getTableName());
         Table table;
         if (trd == null || !trd.isSuccess() || (table = trd.getObject()) == null)
             return new DTO(false).putResult("102", "表不存在！");

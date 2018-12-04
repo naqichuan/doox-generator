@@ -38,11 +38,11 @@ public class TableServiceImpl implements TableService {
 	private ConnService connService;
 
 	@Override
-	public DTO listTables(String connNum) {
+	public DTO listTables() {
 		DTO dto = new DTO();
 
 		String sql = "SHOW TABLES";
-		CgResult result = connService.query(connNum, sql);
+		CgResult result = connService.query(sql);
 		if (!result.isSuccess())
 			return dto.putResult("10", result.getMsg());
 
@@ -68,14 +68,14 @@ public class TableServiceImpl implements TableService {
 	}
 
 	@Override
-	public DTO getTable(String connNum, String tableName) {
+	public DTO getTable(String tableName) {
 		DTO dto = new DTO();
 		Table t = new Table();
 		t.setName(tableName);
 		t.setColumns(new ArrayList<>());
 
 		String cSql = "SHOW FULL COLUMNS FROM " + tableName;
-		CgResult result = connService.query(connNum, cSql);
+		CgResult result = connService.query(cSql);
 
 		try {
 			Column c = null;

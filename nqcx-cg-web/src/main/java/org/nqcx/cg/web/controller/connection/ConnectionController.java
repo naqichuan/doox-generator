@@ -6,10 +6,10 @@
  * into with nqcx.org.
  */
 
-package org.nqcx.cg.web.controller;
+package org.nqcx.cg.web.controller.connection;
 
-import org.apache.commons.lang.StringUtils;
 import org.nqcx.cg.service.conn.ConnService;
+import org.nqcx.cg.web.controller.AbstractController;
 import org.nqcx.commons3.lang.o.DTO;
 import org.nqcx.commons3.web.cookie.CookieUtils;
 import org.nqcx.commons3.web.cookie.NqcxCookie;
@@ -24,16 +24,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.util.Map;
-
-import static org.nqcx.cg.common.consts.CgConst.CONNECTION_KEY;
 
 /**
  * @author naqichuan Feb 7, 2014 4:04:01 PM
  */
 @Controller
-public class SessionController extends AbstractController {
+@RequestMapping("/connection")
+public class ConnectionController extends AbstractController {
 
     @Autowired
     private ConnService connService;
@@ -41,43 +39,46 @@ public class SessionController extends AbstractController {
     @Qualifier("jdbcCookie")
     private NqcxCookie jdbcCookie;
 
-    @RequestMapping(value = "/session", method = {RequestMethod.POST}, produces = "application/json")
+    /**
+     * @param response
+     * @param jdbcUrl
+     * @param user
+     * @param password
+     * @return
+     */
+    @RequestMapping(value = "/connect", method = {RequestMethod.POST},
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public Map<?, ?> session(HttpServletRequest request, HttpServletResponse response,
+    public Map<?, ?> connect(HttpServletResponse response,
                              @RequestParam("jdbcUrl") String jdbcUrl,
                              @RequestParam("user") String user,
                              @RequestParam("password") String password) {
 
-        boolean connNum = connService.createConn(jdbcUrl, user, password);
+        boolean success = connService.connect(jdbcUrl, user, password);
 
-        DTO dto = new DTO();
-        if (connNum) {
-//            HttpSession session = request.getSession();
-//            session.setAttribute(CONNECTION_KEY, connNum);
-            dto.setSuccess(true);
+        if (!success)
+            return buildResult(new DTO().putResult("12", "Connect fail"));
 
-            String cookieValue = jdbcUrl + "," + user + "," + password;
 
-            // 记录写入 cookie
-            CookieUtils.setCookie(response, jdbcCookie.getName(), cookieValue);
-        } else {
-            dto.putResult("10", "12");
-            dto.setSuccess(false);
-        }
+        String cookieValue = jdbcUrl + "," + user + "," + password;
+        // 记录写入 cookie
+        CookieUtils.setCookie(response, jdbcCookie.getName(), cookieValue);
 
-        return buildResult(dto);
+        return buildResult(new DTO(true));
     }
 
-    @RequestMapping(value = "/destroySession", method = {RequestMethod.GET},
+    /**
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/destroy", method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public Map<?, ?> destroySession(HttpServletRequest request) {
-//        HttpSession session = request.getSession();
-//        String connNum = (String) session.getAttribute(CONNECTION_KEY);
-//        if (StringUtils.isNotBlank(connNum)) {
-//            connService.destroyConn(connNum);
-//            session.removeAttribute(CONNECTION_KEY);
-//        }
+    public Map<?, ?> destroy(HttpServletRequest request, HttpServletResponse response) {
+        connService.destroy();
+
+        CookieUtils.removeCookie(request, response, jdbcCookie.getName());
 
         return buildResult(new DTO(true));
     }
