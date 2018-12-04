@@ -1,11 +1,51 @@
-.DS_Store
+#########################
+#### GENERAL or ROOT ####
+#########################
 fetch
 push
-.settings
+out
+
+# Transifex
+.transifexrc
+
+# Maven
+target/
+
+# Eclipse
+/bin/
 .classpath
 .project
+.settings/
+*.pyc
+*.orig
 .externalToolBuilders
-target
+pre-commit-changes.txt
+
+# Idea
 .idea
 *.iml
-out
+
+# Emacs temp files
+~*
+*~
+
+#SVN
+.svn
+*.svn-base
+*#
+
+.AppleDouble/
+
+# OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+
+#vim files
+.*.sw?
+.*~
