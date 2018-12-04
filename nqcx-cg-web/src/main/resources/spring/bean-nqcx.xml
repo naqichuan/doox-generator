@@ -18,4 +18,12 @@
 	<!-- 用于注入 bean-commons-result.xml 中 ResultBuilder 的 resultExtends 属性 -->
 	<util:map id="resultExtends">
 	</util:map>
+
+
+	<bean id="workspacePath" class="java.lang.String">
+		<constructor-arg value="${workspace.path}"/>
+	</bean>
+	<bean id="workspaceAuthor" class="java.lang.String">
+		<constructor-arg value="${workspace.author}"/>
+	</bean>
 </beans>

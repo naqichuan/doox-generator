@@ -4,13 +4,6 @@
        xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-    <bean id="workspacePath" class="java.lang.String">
-        <constructor-arg value="${workspace.path}"/>
-    </bean>
-    <bean id="workspaceAuthor" class="java.lang.String">
-        <constructor-arg value="${workspace.author}"/>
-    </bean>
-
     <!--==================== dataSource ====================-->
     <bean id="abstractDataSource" class="com.alibaba.druid.pool.DruidDataSource">
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>

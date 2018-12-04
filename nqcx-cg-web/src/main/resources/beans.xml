@@ -15,8 +15,8 @@
 	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>
-				<value>classpath:config/gc-config.properties</value>
-				<value>classpath:config/nqcx-config.properties</value>
+				<value>classpath:config/config.properties</value>
+				<value>classpath:config/nqcx.properties</value>
 			</list>
 		</property>
 	</bean>
@@ -36,8 +36,6 @@
 
 	<!-- 打包时，以下配置文件不进行占位符${}过滤和值替换 -->
 	<import resource="spring/bean-nqcx.xml" />
-	<import resource="spring/bean-service.xml" />
+	<import resource="spring/bean-data.xml" />
 	<import resource="spring/bean-web.xml" />
-
-	<!-- 打包时，以下配置文件需要进行占位符${}过滤和值替换 -->
 </beans>
