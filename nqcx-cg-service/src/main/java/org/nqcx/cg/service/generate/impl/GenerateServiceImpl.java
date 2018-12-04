@@ -14,7 +14,6 @@ import org.nqcx.cg.provide.o.CgField;
 import org.nqcx.cg.provide.o.Generate;
 import org.nqcx.cg.provide.o.table.Column;
 import org.nqcx.cg.provide.o.table.Table;
-import org.nqcx.cg.provide.util.CgFileUtils;
 import org.nqcx.cg.service.generate.GenerateService;
 import org.nqcx.cg.service.table.TableService;
 import org.nqcx.commons3.lang.o.DTO;
@@ -486,8 +485,12 @@ public class GenerateServiceImpl implements GenerateService {
                 && fields.length == types.length && fields.length == tableColumns.length && fields.length == table.getColumns().size()) {
 
             List<String> resultMap = new ArrayList<>();
-            List<String> poFields = new ArrayList<>();
-            List<String> poColumns = new ArrayList<>();
+            List<String> poInsertColumns = new ArrayList<>();
+            List<String> poInsertFields = new ArrayList<>();
+
+            List<String> poUpdateColumns = new ArrayList<>();
+            List<String> poUpdateFields = new ArrayList<>();
+
             String tableColumnsStr = "";
             String idColumn = "";
             String idField = "";
@@ -496,40 +499,48 @@ public class GenerateServiceImpl implements GenerateService {
             for (int i = 0; i < fields.length; i++) {
                 Column col = table.getColumns().get(i);
 
-                if (col.getField().contains("_create") || col.getField().contains("_modify"))
-                    continue;
-
                 if (i == 0) {
                     idColumn = col.getField();
                     idFieldName = fields[i];
                     idField = "#{" + fields[i] + "}";
                 }
 
+                if (tableColumnsStr.length() > 0)
+                    tableColumnsStr += ", ";
+                tableColumnsStr += tableColumns[i];
+
+                poInsertColumns.add(col.getField());
+
                 if ("PRI".equals(col.getKey()) && col.getField().contains("id")) {
                     idColumn = col.getField();
                     idFieldName = fields[i];
 
                     resultMap.add("<id property=\"" + fields[i] + "\" column=\"" + tableColumns[i] + "\" />");
+
+                    poInsertFields.add("NULL");
                 } else {
                     resultMap.add("<result property=\"" + fields[i] + "\" column=\"" + col.getField() + "\" />");
 
-                    poColumns.add(col.getField());
-                    poFields.add("#{" + fields[i] + "}");
+                    if (col.getField().contains("_create") || col.getField().contains("_modify")) {
+                        poInsertFields.add("NULL");
+                    } else {
+                        poInsertFields.add("#{" + fields[i] + "}");
 
-                    if (tableColumnsStr.length() > 0)
-                        tableColumnsStr += ", ";
-                    tableColumnsStr += tableColumns[i];
+                        poUpdateColumns.add(col.getField());
+                        poUpdateFields.add("#{" + fields[i] + "}");
+                    }
                 }
             }
 
             cxt.setVariable("resultMap", resultMap);
-            cxt.setVariable("poColumns", poColumns);
-            cxt.setVariable("poFields", poFields);
             cxt.setVariable("tableColumnsStr", tableColumnsStr);
             cxt.setVariable("idColumn", idColumn);
             cxt.setVariable("idField", idField);
             cxt.setVariable("idFieldName", idFieldName);
-            cxt.setVariable("tableColumns", tableColumns);
+            cxt.setVariable("poInsertColumns", poInsertColumns);
+            cxt.setVariable("poInsertFields", poInsertFields);
+            cxt.setVariable("poUpdateColumns", poUpdateColumns);
+            cxt.setVariable("poUpdateFields", poUpdateFields);
         }
 
         this.writeFile(logFile, daoPath + "/" + JAVA_PATH + mapperPackage.replace('.', '/'),

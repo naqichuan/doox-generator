@@ -9,23 +9,22 @@
 	</resultMap>
 
 	<sql id="[(${tableName})]_columns">
-		[(${idColumn})], [(${tableColumnsStr})]
+		[(${tableColumnsStr})]
 	</sql>
 
 	<insert id="save" parameterType="[(${po})]" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO [(${tableName})] (
 			<include refid="[(${tableName})]_columns" />
-		) VALUES (
-		    NULL[# th:each="c : ${poColumns}"],
-		    [(*{poFields[__${cStat.index}__]})][/]
+		) VALUES ([# th:each="c : ${poInsertColumns}"][# th:if="${cStat.index > 0}"],[/]
+		    [(*{poInsertFields[__${cStat.index}__]})][/]
 		)
 	</insert>
 
 	<update id="update" parameterType="[(${po})]">
 		UPDATE
 			[(${tableName})]
-		SET [# th:each="c : ${poColumns}"][# th:if="${cStat.index > 0}"],[/]
-		    [(${c})]=[(*{poFields[__${cStat.index}__]})][/]
+		SET [# th:each="c : ${poUpdateColumns}"][# th:if="${cStat.index > 0}"],[/]
+		    [(${c})]=[(*{poUpdateFields[__${cStat.index}__]})][/]
 		WHERE
 			[(${idColumn})]=[(${idField})]
 	</update>
@@ -67,7 +66,7 @@
 			[(${tableName})]
 		<include refid="condition" />
 		<if test="_order_ != null and _order_ != ''">
-			${order}
+			${_order_}
 		</if>
 		<if test="_page_ != null and _page_ != ''">
 			${_page_}

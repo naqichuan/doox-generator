@@ -24,7 +24,7 @@
 
 	<bean id="jdbcCookie" parent="_normalCookie">
 		<property name="name" value="jdbc" />
-		<property name="encrypt" value="false" />
+		<property name="encrypt" value="true" />
 		<property name="expiry" value="31536000" />
 	</bean>
 
