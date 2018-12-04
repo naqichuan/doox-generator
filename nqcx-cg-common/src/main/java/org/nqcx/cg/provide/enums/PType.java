@@ -6,7 +6,7 @@
  * into with nqcx.org.
  */
 
-package org.nqcx.cg.entity.ws.enums;
+package org.nqcx.cg.provide.enums;
 
 /**
  * 

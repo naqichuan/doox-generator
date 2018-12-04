@@ -8,7 +8,7 @@
 
 package org.nqcx.cg.service.ws;
 
-import org.nqcx.cg.entity.ws.Ws;
+import org.nqcx.cg.provide.o.ws.Ws;
 
 /**
  * @author naqichuan Feb 9, 2014 10:12:24 PM

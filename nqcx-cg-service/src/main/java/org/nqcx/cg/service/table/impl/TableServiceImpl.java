@@ -13,8 +13,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.nqcx.cg.entity.table.Column;
-import org.nqcx.cg.entity.table.Table;
+import org.nqcx.cg.provide.o.table.Column;
+import org.nqcx.cg.provide.o.table.Table;
 import org.nqcx.cg.service.conn.CgResult;
 import org.nqcx.cg.service.conn.ConnService;
 import org.nqcx.cg.service.table.TableService;

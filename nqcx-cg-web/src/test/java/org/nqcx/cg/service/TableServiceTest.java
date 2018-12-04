@@ -10,7 +10,7 @@ package org.nqcx.cg.service;
 
 import org.junit.Test;
 import org.nqcx.cg.AutoInject;
-import org.nqcx.cg.entity.table.Table;
+import org.nqcx.cg.provide.o.table.Table;
 import org.nqcx.cg.service.conn.ConnService;
 import org.nqcx.cg.service.table.TableService;
 import org.springframework.beans.factory.annotation.Autowired;

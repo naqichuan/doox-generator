@@ -8,7 +8,7 @@
 
 package org.nqcx.cg.service.generate;
 
-import org.nqcx.cg.entity.ws.enums.PType;
+import org.nqcx.cg.provide.enums.PType;
 import org.nqcx.cg.provide.o.Generate;
 import org.nqcx.commons3.lang.o.DTO;
 

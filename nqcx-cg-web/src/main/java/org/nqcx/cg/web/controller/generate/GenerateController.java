@@ -8,9 +8,8 @@
 
 package org.nqcx.cg.web.controller.generate;
 
-import org.nqcx.cg.data.converter.OrikaWeb;
 import org.nqcx.cg.data.vo.GenerateVO;
-import org.nqcx.cg.entity.ws.enums.PType;
+import org.nqcx.cg.provide.enums.PType;
 import org.nqcx.cg.provide.o.Generate;
 import org.nqcx.cg.service.generate.GenerateService;
 import org.nqcx.cg.web.controller.AbstractController;

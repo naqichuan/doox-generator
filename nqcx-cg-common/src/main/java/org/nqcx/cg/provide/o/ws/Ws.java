@@ -6,7 +6,7 @@
  * into with nqcx.org.
  */
 
-package org.nqcx.cg.entity.ws;
+package org.nqcx.cg.provide.o.ws;
 
 import java.io.Serializable;
 import java.util.List;

@@ -9,7 +9,7 @@
 package org.nqcx.cg.service.ws.impl;
 
 import org.nqcx.cg.common.util.CgFileUtils;
-import org.nqcx.cg.entity.ws.Ws;
+import org.nqcx.cg.provide.o.ws.Ws;
 import org.nqcx.cg.service.ws.WsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

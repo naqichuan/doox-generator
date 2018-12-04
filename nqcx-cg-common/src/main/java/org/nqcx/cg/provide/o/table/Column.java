@@ -6,7 +6,7 @@
  * into with nqcx.org.
  */
 
-package org.nqcx.cg.entity.table;
+package org.nqcx.cg.provide.o.table;
 
 import java.io.Serializable;
 

@@ -54,16 +54,13 @@ public class CgFileUtils {
 
 				if (cgFile.getCgFileList() != null)
 					Collections.sort(cgFile.getCgFileList(),
-							new Comparator<CgFile>() {
-								@Override
-								public int compare(CgFile o1, CgFile o2) {
-									if (o1.isDirectory() && o2.isFile())
-										return -1;
-									else if (o1.isFile() && o2.isDirectory())
-										return 1;
-									else
-										return 0;
-								}
+							(o1, o2) -> {
+								if (o1.isDirectory() && o2.isFile())
+									return -1;
+								else if (o1.isFile() && o2.isDirectory())
+									return 1;
+								else
+									return 0;
 							});
 			}
 		} else {
