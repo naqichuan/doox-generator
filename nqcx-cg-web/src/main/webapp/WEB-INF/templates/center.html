@@ -28,70 +28,6 @@
         </tbody>
     </table>
     <br/>
-    <!--<fieldset>-->
-        <!--<table border="0" cellpadding="0" cellspacing="0">-->
-            <!--<tr height="25">-->
-                <!--<td class="lable">Provide-provide Package:</td>-->
-                <!--<td>-->
-
-                <!--</td>-->
-                <!--<td rowspan="2" class="lable">-->
-                    <!--<input id="entityConfig" type="button" value="Add entity" data-value='0'/>-->
-                <!--</td>-->
-            <!--</tr>-->
-            <!--<tr height="25">-->
-                <!--<td class="lable">Provide-service package:</td>-->
-                <!--<td>a</td>-->
-            <!--</tr>-->
-            <!--<tr height="25">-->
-                <!--<td class="lable">Dao-data package:</td>-->
-                <!--<td></td>-->
-                <!--<td rowspan="2" class="lable"><input id="daoConfig" type="button" value="Add dao" data-value='0'/>-->
-                <!--</td>-->
-            <!--</tr>-->
-            <!--<tr height="25">-->
-                <!--<td class="lable">Dao-dao package:</td>-->
-                <!--<td></td>-->
-            <!--</tr>-->
-            <!--<tr height="25">-->
-                <!--<td class="lable">Service-service package:</td>-->
-                <!--<td></td>-->
-                <!--<td class="lable"><input id="serviceConfig" type="button" value="Add service" data-value='0'/></td>-->
-            <!--</tr>-->
-            <!--<tr height="25">-->
-                <!--<td class="lable">Web-web package:</td>-->
-                <!--<td></td>-->
-                <!--<td class="lable"><input id="webConfig" type="button" value="Add web" data-value='0'/></td>-->
-            <!--</tr>-->
-        <!--</table>-->
-    <!--</fieldset>-->
-    <!--<br/>-->
-    <!--<fieldset>-->
-        <!--<legend>-->
-            <!--<span style="font-weight: 700;">Package name & Package: </span>-->
-        <!--</legend>-->
-        <!--<table border="0">-->
-            <!--<tr id="entityProjectTr" style="display: none;">-->
-                <!--<td align="right"><span style="font-weight: 700;">Entity project name: </span></td>-->
-                <!--<td></td>-->
-                <!--<td align="right"><span style="font-weight: 700;">Entity project package: </span></td>-->
-                <!--<td></td>-->
-            <!--</tr>-->
-            <!--<tr id="daoProjectTr" style="display: none;">-->
-                <!--<td align="right"><span style="font-weight: 700;">Mapper project name: </span></td>-->
-                <!--<td><input type="text" name="daoProjectName" class="big_200" value=""></td>-->
-                <!--<td align="right"><span style="font-weight: 700;">Mapper project package: </span></td>-->
-                <!--<td><input type="text" name="daoProjectPackage" class="big_200" value=""></td>-->
-            <!--</tr>-->
-            <!--<tr id="serviceProjectTr" style="display: none;">-->
-                <!--<td align="right"><span style="font-weight: 700;">Service project name: </span></td>-->
-                <!--<td><input type="text" name="serviceProjectName" class="big_200" value=""></td>-->
-                <!--<td align="right"><span style="font-weight: 700;">Service project package: </span></td>-->
-                <!--<td><input type="text" name="serviceProjectPackage" class="big_200" value=""></td>-->
-            <!--</tr>-->
-        <!--</table>-->
-    <!--</fieldset>-->
-    <!--<br/>-->
     <fieldset>
         <legend>
             <span style="font-weight: 700;"><input type="checkbox" name="provide_" value="true">Module -> Provide</span>
@@ -145,7 +81,7 @@
                     <input type="text" name="daoDaoPackage" class="big_200" value="">
                 </td>
             </tr>
-         </table>
+        </table>
         <div id="config_dao_div"></div>
     </fieldset>
     <br/> <br/>
@@ -153,6 +89,18 @@
         <legend>
             <span style="font-weight: 700;"><input type="checkbox" name="service_" value="true">Module -> Service</span>
         </legend>
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td class="lable">DTO package:</td>
+                <td>
+                    <input type="text" name="serviceDtoPackage" class="big_200" value="">
+                </td>
+                <td class="lable">Service package:</td>
+                <td>
+                    <input type="text" name="serviceServicePackage" class="big_200" value="">
+                </td>
+            </tr>
+        </table>
         <div id="config_service_div"></div>
     </fieldset>
     <br/> <br/>
@@ -160,11 +108,22 @@
         <legend>
             <span style="font-weight: 700;"><input type="checkbox" name="web_" value="true">Module -> Web:</span>
         </legend>
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td class="lable">VO package:</td>
+                <td>
+                    <input type="text" name="webVoPackage" class="big_200" value="">
+                </td>
+                <td class="lable">Controller package:</td>
+                <td>
+                    <input type="text" name="webControllerPackage" class="big_200" value="">
+                </td>
+            </tr>
+        </table>
         <div id="config_web_div"></div>
     </fieldset>
     <br/>
-    <input id="generate_btn" type="button" value="Generate Code"
-           style="width: 150px; height: 32px; background-color: orange;"/>
+    <input id="generate_btn" type="button" value="Generate Code" style="width: 150px; height: 32px; background-color: orange;"/>
 </form>
 
 <script type="text/javascript">
@@ -172,60 +131,6 @@
         reloadAll: function () {
             return jQuery('#reloadAll');
         },
-        // entityConfig: function () {
-        //     return jQuery('#entityConfig');
-        // },
-        // entityConfigValueAlternation: function () {
-        //     if (!this.checkProjectName())
-        //         return;
-        //     if (!this.entityConfig().attr('data-value') || this.entityConfig().attr('data-value') == 0) {
-        //         this.entityConfig().attr('data-value', '1');
-        //         this.entityConfig().val('Cancel entity');
-        //         this.entityConfig().css('background-color', 'orange');
-        //         entity.projectFill();
-        //     } else {
-        //         this.entityConfig().attr('data-value', '0');
-        //         this.entityConfig().val('Add entity');
-        //         this.entityConfig().css('background-color', '');
-        //         entity.projectClear();
-        //     }
-        // },
-        // daoConfig: function () {
-        //     return jQuery('#daoConfig');
-        // },
-        // daoConfigValueAlternation: function () {
-        //     if (!this.checkProjectName())
-        //         return;
-        //     if (!this.daoConfig().attr('data-value') || this.daoConfig().attr('data-value') == 0) {
-        //         this.daoConfig().attr('data-value', '1');
-        //         this.daoConfig().val('Cancel dao');
-        //         this.daoConfig().css('background-color', 'orange');
-        //         dao.projectFill();
-        //     } else {
-        //         this.daoConfig().attr('data-value', '0');
-        //         this.daoConfig().val('Add dao');
-        //         this.daoConfig().css('background-color', '');
-        //         dao.projectClear();
-        //     }
-        // },
-        // serviceConfig: function () {
-        //     return jQuery('#serviceConfig');
-        // },
-        // serviceConfigValueAlternation: function () {
-        //     if (!this.checkProjectName())
-        //         return;
-        //     if (!this.serviceConfig().attr('data-value') || this.serviceConfig().attr('data-value') == 0) {
-        //         this.serviceConfig().attr('data-value', '1');
-        //         this.serviceConfig().val('Cancel service');
-        //         this.serviceConfig().css('background-color', 'orange');
-        //         service.projectFill();
-        //     } else {
-        //         this.serviceConfig().attr('data-value', '0');
-        //         this.serviceConfig().val('Add service');
-        //         this.serviceConfig().css('background-color', '');
-        //         service.projectClear();
-        //     }
-        // },
         checkProjectName: function () {
             if (project.pName().val()) {
                 return true;
@@ -281,15 +186,9 @@
 
 <script type="text/javascript">
     var provide = {
-        // projectTr: function () {
-        //     return jQuery('#provideProjectTr');
-        // },
         projectDiv: function () {
             return jQuery('#config_provide_div');
         },
-        // projectName: function () {
-        //     return jQuery('input[name="provideProjectName"]');
-        // },
         provideBOPackage: function () {
             return jQuery('input[name="provideBOPackage"]');
         },
@@ -302,12 +201,6 @@
         projectInit: function () {
             this.loadPackage();
             this.loadTable();
-        },
-          projectClear: function () {
-            // this.projectName().val('');
-            // this.projectPackage().val('');
-            // this.projectTr().css('display', 'none');
-            // this.projectDiv().html('');
         },
         loadPackage: function() {
             var tablePack = table.tablePack().val();
@@ -349,9 +242,6 @@
             var provideHtml = '<hr />';
             provideHtml += '<table border="0" cellpadding="0" cellspacing="0">';
             provideHtml +=  this.row(table);
-            // provideHtml += '<tr>' + this.row(table, '') + '</tr>';
-            // provideHtml += '<tr>' + this.row(table, 'Provide') + '</tr>';
-            // provideHtml += '<tr>' + this.row(table, 'Service') + '</tr>';
             provideHtml += '</table>';
             provideHtml += '<hr />';
             provideHtml += '<table border="0" cellpadding="0" cellspacing="0">';
@@ -394,13 +284,6 @@
 
             return rowHtml;
         },
-        // show: function (table) {
-        //     var provideName = document.getElementById('provideName_' + table).value;
-        //     // var provideBase = "EntityBO";
-        //
-        //     var show = 'public class ' + provideName + ' extends ' + provideBase;
-        //     jQuery('#provideText_' + table).html(show);
-        // },
         show1: function (suffix) {
             var field_ = document.getElementById('provideField_' + suffix).value;
             var type_ = document.getElementById('provideType_' + suffix).value;
@@ -417,9 +300,6 @@
                     input = input.replace(ps[idx],'');
                 }
             }
-            // if (input.indexOf('_') != -1)
-            //     return input.substring(input.indexOf('_') + 1).replaceFirstUP().replaceFirstLow();
-            // return input.replaceFirstUP();
             return input.replaceFirstUP().replaceFirstLow();
         },
         toType: function (input) {
@@ -446,15 +326,9 @@
 </script>
 <script type="text/javascript">
     var dao = {
-        // projectTr: function () {
-        //     return jQuery('#daoProjectTr');
-        // },
         projectDiv: function () {
             return jQuery('#config_dao_div');
         },
-        // projectName: function () {
-        //     return jQuery('input[name="daoProjectName"]');
-        // },
         poPackage: function () {
             return jQuery('input[name="daoPOPackage"]');
         },
@@ -471,12 +345,6 @@
             this.loadPackage();
             this.config()
         },
-        // projectClear: function () {
-        //     this.projectName().val('');
-        //     this.projectPackage().val('');
-        //     this.projectTr().css('display', 'none');
-        //     this.projectDiv().html('');
-        // },
         loadPackage: function() {
             var tablePack = table.tablePack().val();
 
@@ -505,21 +373,6 @@
             this.jpaPackage().val(jpaValue);
             this.daoPackage().val(daoValue);
         },
-        // projectFill: function () {
-        //     var pNameValue = project.pName().val();
-        //     var pTypeValue = project.pType().filter(':checked').val();
-        //     var pPackageValue = project.pPackage().val();
-        //
-        //     var tableName = table.tableName().val();
-        //     if (!tableName)
-        //         return;
-        //
-        //     this.projectName().val(pTypeValue == 0 ? '' : pNameValue + '-dao');
-        //     this.projectPackage().val(pPackageValue + '.dao.' + tableName);
-        //     this.projectTr().css('display', '');
-        //
-        //     this.config(tableName);
-        // },
         config: function () {
             var tableName = table.tableName().val();
             if (!tableName)
@@ -529,20 +382,11 @@
             daoHtml += '<table border="0" cellpadding="0" cellspacing="0">';
             daoHtml +=  this.row(tableName)
             daoHtml += '</table>';
-            jQuery('#config_dao_div').html(daoHtml);
+            this.projectDiv().html(daoHtml);
         },
         row: function (table) {
             var rowHtml = '';
             var daoName = table.replaceFirstUP();
-
-            // var interface = table.replaceFirstUP() + 'Mapper';
-            // var extendsInterface = "MapperInterface";
-            // var show = 'public interface ' + interface + ' extends ' + extendsInterface;
-            var show = '';
-
-            // rowHtml += '<td>' + table + '</td>';
-            // rowHtml += '<td><input id="daoInterface_' + table + '" type="text" name="daoInterface" class="big_200" value="' + interface + '" onkeyup="dao.show(\'' + table + '\')" onafterpaste="dao.show(\'' + table + '\')" onblur="dao.show(\'' + table + '\')" /></td>';
-            // rowHtml += '<td><span id="daoText_' + table + '">' + show + '</span></td>';
 
             rowHtml += '<tr><td class="lable">Create PO:</td><td class="lable">public class</td><td>' +
                 '<input id="daoPO" type="text" name="daoPO" class="big_200" value="' + daoName + 'PO"/></td>';
@@ -562,184 +406,130 @@
             rowHtml += '<tr><td class="lable"></td><td></td></tr>'
 
             return rowHtml;
-        },
-        // show: function (table) {
-        //     var interface = document.getElementById('daoInterface_' + table).value;
-        //     var extendsInterface = "MapperInterface";
-        //     var show = 'public interface ' + interface + ' extends ' + extendsInterface;
-        //     jQuery('#daoText_' + table).html(show);
-        // }
+        }
     };
 </script>
 <script type="text/javascript">
-    //	var manager = {
-    //		projectTr: function() {
-    //			return jQuery('#managerProjectTr');
-    //		},
-    //		projectDiv: function() {
-    //			return jQuery('#config_manager_div');
-    //		},
-    //		projectName: function() {
-    //			return jQuery('input[name="managerProjectName"]');
-    //		},
-    //		projectPackage: function() {
-    //			return jQuery('input[name="managerProjectPackage"]');
-    //		},
-    //		projectFill: function() {
-    //			var pNameValue = project.pName().val();
-    //			var pTypeValue = project.pType().filter(':checked').val();
-    // 		var pPackageValue = project.pPackage().val();
-
-    //			this.projectName().val(pTypeValue == 0 ? '' : pNameValue + '-manager');
-    //			this.projectPackage().val(pPackageValue + '.manager');
-    //			this.projectTr().css('display','');
-
-    //			var tableName = table.tableName().val();
-    //			if(!tableName)
-    //				return;
-    //			this.config(tableName);
-    //		},
-    //		projectClear: function() {
-    //			this.projectName().val('');
-    //			this.projectPackage().val('');
-    //			this.projectTr().css('display','none');
-    //			this.projectDiv().html('');
-    //		},
-    //		config: function(table) {
-    //			var managerHtml = '<table border="0" cellpadding="0" cellspacing="0">';
-    //			managerHtml += '<tr>' + manager.row(table) + '</tr>';
-    //			managerHtml += '<tr>' + manager.row1(table) + '</tr>';
-    //			managerHtml += '</table>';
-    // 		jQuery('#config_manager_div').html(managerHtml);
-    //		},
-    //		row: function(table) {
-    //			var rowHtml = '';
-
-    //			var interface = table.replaceFirstUP() + 'Manager';
-    //			var extendsInterface = "ManagerInterface";
-    //			var show = 'public interface ' + interface + ' extends ' + extendsInterface;
-
-    //			rowHtml += '<td>' + table + '</td>';
-    //			rowHtml += '<td><input id="managerInterface_'+ table +'" type="text" name="managerInterface" value="'+ interface +'" class="big_200" onkeyup="manager.show(\''+ table +'\')" onafterpaste="manager.show(\''+ table +'\')" onblur="manager.show(\''+ table +'\')" /></td>';
-    //			rowHtml += '<td><span id="managerText_'+ table +'">'+ show +'</span></td>';
-    //			return rowHtml;
-    //		},
-    //		row1: function(table) {
-    //			var rowHtml = '';
-
-    //			var implement = table.replaceFirstUP() + 'ManagerImpl';
-    //			var interface = table.replaceFirstUP() + 'Manager';
-    //			var extendsSupport = "ManagerSupport";
-    //			var show = 'public class ' + implement + ' extends ' + extendsSupport + ' implements ' + interface;
-
-    //			rowHtml += '<td>' + table + '</td>';
-    //			rowHtml += '<td><input id="managerImplement_'+ table +'" type="text" name="managerImplement" value="'+ implement +'" class="big_200" onkeyup="manager.show1(\''+ table +'\')" onafterpaste="manager.show1(\''+ table +'\')" onblur="manager.show1(\''+ table +'\')" /></td>';
-    //			rowHtml += '<td><span id="managerText1_'+ table +'">'+ show +'</span></td>';
-    //			return rowHtml;
-    //		},
-    //		show: function(table) {
-    //			var interface = document.getElementById('managerInterface_'+table).value;
-    //			var extendsInterface = "ManagerInterface";
-    //			var show = 'public interface ' + interface + ' extends ' + extendsInterface;
-    //			jQuery('#managerText_'+table).html(show);
-
-    //			this.show1(table)
-    //		},
-    //		show1: function(table) {
-    //			var implement = document.getElementById('managerImplement_'+table).value;
-    //			var interface = document.getElementById('managerInterface_'+table).value;
-    //			var extendsSupport = "ManagerSupport";
-    //			var extendsInterface = "ManagerInterface";
-    //			var show = 'public class ' + implement + ' extends ' + extendsSupport + ' implements ' + interface;
-    //			jQuery('#managerText1_'+table).html(show);
-    //		}
-    //	};
-</script>
-<script type="text/javascript">
     var service = {
-        projectTr: function () {
-            return jQuery('#serviceProjectTr');
-        },
         projectDiv: function () {
             return jQuery('#config_service_div');
         },
-        projectName: function () {
-            return jQuery('input[name="serviceProjectName"]');
+        serviceDtoPackage: function () {
+            return jQuery('input[name="serviceDtoPackage"]');
         },
-        projectPackage: function () {
-            return jQuery('input[name="serviceProjectPackage"]');
+        serviceServicePackage: function () {
+            return jQuery('input[name="serviceServicePackage"]');
         },
-        projectFill: function () {
-            var pNameValue = project.pName().val();
-            var pTypeValue = project.pType().filter(':checked').val();
-            var pPackageValue = project.pPackage().val();
+        projectInit: function () {
+            this.loadPackage();
+            this.config();
+        },
+        loadPackage: function() {
+            var tablePack = table.tablePack().val();
 
+            // project pakcage value
+            var pValue = project.pPackage().val() || '';
+
+            var sdValue = pValue + '.data.dto' + (tablePack ? "." + tablePack : "") ;
+            if(sdValue.indexOf(".") === 0 && sdValue.length > 1)
+                sdValue = sdValue.substring(1);
+
+            var ssValue = pValue + '.service' + (tablePack ? "." + tablePack : "");
+            if(ssValue.indexOf(".") === 0 && ssValue.length > 1)
+                ssValue = ssValue.substring(1);
+
+             // set value
+            this.serviceDtoPackage().val(sdValue);
+            this.serviceServicePackage().val(ssValue);
+        },
+        config: function () {
             var tableName = table.tableName().val();
             if (!tableName)
                 return;
 
-            this.projectName().val(pTypeValue == 0 ? '' : pNameValue + '-service');
-            this.projectPackage().val(pPackageValue + '.service.' + tableName);
-            this.projectTr().css('display', '');
-
-            this.config(tableName);
-        },
-        projectClear: function () {
-            this.projectName().val('');
-            this.projectPackage().val('');
-            this.projectTr().css('display', 'none');
-            this.projectDiv().html('');
-        },
-        config: function (table) {
-            var serviceHtml = '<table border="0" cellpadding="0" cellspacing="0">';
-            serviceHtml += '<tr>' + service.row(table) + '</tr>';
-            serviceHtml += '<tr>' + service.row1(table) + '</tr>';
+            var serviceHtml = '<hr />';
+            serviceHtml += '<table border="0" cellpadding="0" cellspacing="0">';
+            serviceHtml +=  this.row(tableName)
             serviceHtml += '</table>';
-            jQuery('#config_service_div').html(serviceHtml);
+            this.projectDiv().html(serviceHtml);
         },
         row: function (table) {
             var rowHtml = '';
+            var serviceName = table.replaceFirstUP();
 
-            var interface = table.replaceFirstUP() + 'Service';
-            var extendsInterface = "ServiceInterface";
-            var show = 'public interface ' + interface + ' extends ' + extendsInterface;
+            rowHtml += '<tr><td class="lable">Create PO:</td><td class="lable">public class</td><td>' +
+                '<input id="serviceDTO" type="text" name="serviceDTO" class="big_200" value="' + serviceName + 'DTO"/></td>';
 
-            rowHtml += '<td>' + table + '</td>';
-            rowHtml += '<td><input id="serviceInterface_' + table + '" type="text" name="serviceInterface" value="' + interface + '" class="big_200" onkeyup="service.show(\'' + table + '\')" onafterpaste="service.show(\'' + table + '\')" onblur="service.show(\'' + table + '\')" /></td>';
-            rowHtml += '<td><span id="serviceText_' + table + '">' + show + '</span></td>';
+            rowHtml += '<td class="lable">Create IDAO:</td><td class="lable">public interface</td><td>' +
+                '<input id="serviceService" type="text" name="serviceService" class="big_200" value="I' + serviceName + 'Service"/></td></tr>';
+
+            rowHtml += '<tr><td class="lable">Create IDAO impl:</td><td class="lable">public class</td><td>' +
+                '<input id="servceServiceImpl" type="text" name="servceServiceImpl" class="big_200" value="' + serviceName + 'Service"/></td>';
+
+            rowHtml += '<tr><td class="lable"></td><td></td></tr>'
+
             return rowHtml;
-        },
-        row1: function (table) {
-            var rowHtml = '';
-
-            var implement = table.replaceFirstUP() + 'ServiceImpl';
-            var interface = table.replaceFirstUP() + 'Service';
-            var extendsSupport = "ServiceSupport";
-            var show = 'public class ' + implement + ' extends ' + extendsSupport + ' implements ' + interface;
-
-            rowHtml += '<td>' + table + '</td>';
-            rowHtml += '<td><input id="serviceImplement_' + table + '" type="text" name="serviceImplement" value="' + implement + '" class="big_200" onkeyup="service.show1(\'' + table + '\')" onafterpaste="service.show1(\'' + table + '\')" onblur="service.show1(\'' + table + '\')" /></td>';
-            rowHtml += '<td><span id="serviceText1_' + table + '">' + show + '</span></td>';
-            return rowHtml;
-        },
-        show: function (table) {
-            var interface = document.getElementById('serviceInterface_' + table).value;
-            var extendsInterface = "ServiceInterface";
-            var show = 'public interface ' + interface + ' extends ' + extendsInterface;
-            jQuery('#serviceText_' + table).html(show);
-
-            this.show1(table)
-        },
-        show1: function (table) {
-            var implement = document.getElementById('serviceImplement_' + table).value;
-            var interface = document.getElementById('serviceInterface_' + table).value;
-            var extendsSupport = "ServiceSupport";
-            var extendsInterface = "ServiceInterface";
-            var show = 'public class ' + implement + ' extends ' + extendsSupport + ' implements ' + interface;
-            jQuery('#serviceText1_' + table).html(show);
         }
     };
 
+</script>
+<script type="text/javascript">
+    var web = {
+        projectDiv: function () {
+            return jQuery('#config_web_div');
+        },
+        webVoPackage: function() {
+            return jQuery('input[name="webVoPackage"]');
+        },
+        webControllerPackage: function() {
+            return jQuery('input[name="webControllerPackage"]');
+        },
+        projectInit: function () {
+            this.loadPackage();
+            this.config();
+        },
+        loadPackage: function() {
+            var tablePack = table.tablePack().val();
+
+            // project pakcage value
+            var pValue = project.pPackage().val() || '';
+
+            var wvValue = pValue + '.data.vo' + (tablePack ? "." + tablePack : "") ;
+            if(wvValue.indexOf(".") === 0 && wvValue.length > 1)
+                wvValue = wvValue.substring(1);
+
+            var wcValue = pValue + '.web.controller' + (tablePack ? "." + tablePack : "");
+            if(wcValue.indexOf(".") === 0 && wcValue.length > 1)
+                wcValue = wcValue.substring(1);
+
+            // set value
+            this.webVoPackage().val(wvValue);
+            this.webControllerPackage().val(wcValue);
+        },
+        config: function() {
+            var tableName = table.tableName().val();
+            if (!tableName)
+                return;
+
+            var webHtml = '<hr />';
+            webHtml += '<table border="0" cellpadding="0" cellspacing="0">';
+            webHtml +=  this.row(tableName)
+            webHtml += '</table>';
+            this.projectDiv().html(webHtml);
+        },
+        row: function(table) {
+            var rowHtml = '';
+            var webName = table.replaceFirstUP();
+
+            rowHtml += '<tr><td class="lable">Create PO:</td><td class="lable">public class</td><td>' +
+                '<input id="webVO" type="text" name="webVO" class="big_200" value="' + webName + 'VO"/></td>';
+
+            rowHtml += '<td class="lable">Create IDAO:</td><td class="lable">public interface</td><td>' +
+                '<input id="webController" type="text" name="webController" class="big_200" value="' + webName + 'Controller"/></td></tr>';
+
+            return rowHtml;
+        }
+    };
 </script>
 <script type="text/javascript">
     var generate = function () {
@@ -787,13 +577,8 @@
     project.module.change = function () {
         provide.loadPackage();
         dao.loadPackage();
-
-        // if (button.provideConfig().attr('data-value') == 1)
-        //     provide.projectFill();
-        // if (button.daoConfig().attr('data-value') == 1)
-        //     dao.projectFill();
-        // if (button.serviceConfig().attr('data-value') == 1)
-        //     service.projectFill();
+        service.loadPackage();
+        web.loadPackage();
     };
 
     $(document).ready(function () {
@@ -801,19 +586,12 @@
             table.change();
         });
 
-        // button.provideConfig().click(function () {
-        //     button.provideConfigValueAlternation();
-        // });
-        // button.daoConfig().click(function () {
-        //     button.daoConfigValueAlternation();
-        // });
-        // button.serviceConfig().click(function () {
-        //     button.serviceConfigValueAlternation();
-        // });
         tableInfo.getInfo(table.tableName().val());
 
         provide.projectInit();
         dao.projectInit();
+        service.projectInit();
+        web.projectInit();
         console.log("Center loaded.")
     });
 </script>
