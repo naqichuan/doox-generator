@@ -1,0 +1,51 @@
+/*
+ * Copyright [(${#dates.format(date, 'yyyy')})] nqcx.org All right reserved. This software is the confidential and proprietary information
+ * of nqcx.org ("Confidential Information"). You shall not disclose such Confidential Information and shall use
+ * it only in accordance with the terms of the license agreement you entered into with nqcx.org.
+ */
+
+package [(${package})];
+[# th:each="import : ${imports}"]
+import [(${import})];
+[/]
+/**
+ * @author [(${author})] [(${#dates.format(date, 'yyyy-MM-dd HH:mm')})]
+ */
+@TestExecutionListeners({TransactionalTestExecutionListener.class, DependencyInjectionTestExecutionListener.class})
+public class [(${name})] extends AutoInject {
+
+    @Autowired
+    private [(${serviceName})] service;
+
+    @Test
+    public void save() {
+    }
+
+    @Test
+    public void saveAll() {
+    }
+
+    @Test
+    public void findById() {
+    }
+
+    @Test
+    public void findAllByIds() {
+    }
+
+    @Test
+    public void listAll() {
+    }
+
+    @Test
+    public void findAll() {
+    }
+
+    @Test
+    public void deleteById() {
+    }
+
+    @Test
+    public void deleteByIds() {
+    }
+}
