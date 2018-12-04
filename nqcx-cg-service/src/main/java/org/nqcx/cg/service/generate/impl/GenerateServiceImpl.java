@@ -56,7 +56,7 @@ public class GenerateServiceImpl implements GenerateService {
     private final static String PROVIDE_TXT_TEMPLATE_NAME = "provide.txt";
     private final static String PO_TXT_TEMPLATE_NAME = "po.txt";
     private final static String MAPPER_TXT_TEMPLATE_NAME = "mapper.txt";
-    private final static String MAPPERXML_TXT_TEMPLATE_NAME = "mapper_xml.txt";
+    private final static String MAPPERXML_TXT_TEMPLATE_NAME = "mapperxml.txt";
     private final static String JPA_TXT_TEMPLATE_NAME = "jpa.txt";
     private final static String DAO_TXT_TEMPLATE_NAME = "dao.txt";
     private final static String DAO_TEST_TXT_TEMPLATE_NAME = "daotest.txt";
@@ -64,6 +64,7 @@ public class GenerateServiceImpl implements GenerateService {
     private final static String DTO_TXT_TEMPLATE_NAME = "dto.txt";
     private final static String SERVICE_TXT_TEMPLATE_NAME = "service.txt";
     private final static String SERVICEIMPL_TXT_TEMPLATE_NAME = "serviceimpl.txt";
+    private final static String SERVICETEST_TXT_TEMPLATE_NAME = "servicetest.txt";
     private final static String VO_TXT_TEMPLATE_NAME = "vo.txt";
     private final static String CONTROLLER_TXT_TEMPLATE_NAME = "controller.txt";
 
@@ -86,10 +87,14 @@ public class GenerateServiceImpl implements GenerateService {
 
     static {
         classMapping.put("Serializable", "java.io.Serializable");
+
         classMapping.put("Integer", "java.lang.Integer");
         classMapping.put("Long", "java.lang.Long");
+
         classMapping.put("Date", "java.util.Date");
         classMapping.put("Arrays", "java.util.Arrays");
+        classMapping.put("ArrayList", "java.util.ArrayList");
+        classMapping.put("List", "java.util.List");
 
         classMapping.put("Entity", "javax.persistence.Entity");
         classMapping.put("Table", "javax.persistence.Table");
@@ -99,15 +104,27 @@ public class GenerateServiceImpl implements GenerateService {
         classMapping.put("GeneratedValue", "javax.persistence.GeneratedValue");
         classMapping.put("Temporal", "javax.persistence.Temporal");
 
-        classMapping.put("IDao", "org.nqcx.commons3.dao.IDao");
-        classMapping.put("IJpa", "org.nqcx.commons3.data.jpa.IJpa");
-        classMapping.put("IMapper", "org.nqcx.commons3.data.mapper.IMapper");
+        classMapping.put("DTO", "org.nqcx.commons3.lang.o.DTO");
+        classMapping.put("NPage", "org.nqcx.commons3.lang.o.NPage");
+        classMapping.put("NSort", "org.nqcx.commons3.lang.o.NSort");
 
-        classMapping.put("JpaSupport", "org.nqcx.commons3.data.jpa.JpaSupport");
+        classMapping.put("IMapper", "org.nqcx.commons3.data.mapper.IMapper");
         classMapping.put("MapperSupport", "org.nqcx.commons3.data.mapper.MapperSupport");
+        classMapping.put("IJpa", "org.nqcx.commons3.data.jpa.IJpa");
+        classMapping.put("JpaSupport", "org.nqcx.commons3.data.jpa.JpaSupport");
+        classMapping.put("IDao", "org.nqcx.commons3.dao.IDao");
         classMapping.put("DaoSupport", "org.nqcx.commons3.dao.DaoSupport");
 
+        classMapping.put("IService", "org.nqcx.commons3.service.IService");
+        classMapping.put("ServiceSupport", "org.nqcx.commons3.service.ServiceSupport");
+
         classMapping.put("stereotype.Service", "org.springframework.stereotype.Service");
+        classMapping.put("Autowired", "org.springframework.beans.factory.annotation.Autowired");
+        classMapping.put("DependencyInjectionTestExecutionListener", "org.springframework.test.context.support.DependencyInjectionTestExecutionListener");
+        classMapping.put("TransactionalTestExecutionListener", "org.springframework.test.context.transaction.TransactionalTestExecutionListener");
+        classMapping.put("TestExecutionListeners", "org.springframework.test.context.TestExecutionListeners");
+
+        classMapping.put("Test", "org.junit.Test");
     }
 
     @Override
@@ -175,7 +192,8 @@ public class GenerateServiceImpl implements GenerateService {
         if (g.getService_().isTrue()) {
             this.generateService(cgLogFile, servicePath, g.getServiceDtoPackage(), g.getServiceDTO(),
                     g.getServiceServicePackage(), g.getServiceService(), g.getServiceServicePackage() + ".impl", g.getServceServiceImpl(),
-                    g.getProvideO(), g.getDaoPO());
+                    g.getProvideO(), g.getProvideProvide(), g.getDaoDAO(),
+                    g.getDaoPO());
         }
 
         classMapping.put(g.getWebVO(), g.getWebVoPackage() + "." + g.getWebVO());
@@ -475,8 +493,8 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.clearVariables();
         imports.clear();
 
-        imports.add(classMapping.get("IMapper"));
-        imports.add(classMapping.get(po));
+        mappingImport(imports, "IMapper");
+        mappingImport(imports, po);
 
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
@@ -571,8 +589,8 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.clearVariables();
         imports.clear();
 
-        imports.add(classMapping.get("IJpa"));
-        imports.add(classMapping.get(po));
+        mappingImport(imports, "IJpa");
+        mappingImport(imports, po);
 
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
@@ -591,7 +609,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.clearVariables();
         imports.clear();
 
-        imports.add(classMapping.get("IDao"));
+        mappingImport(imports, "IDao");
 
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
@@ -607,13 +625,13 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.clearVariables();
         imports.clear();
 
-        imports.add(classMapping.get("DaoSupport"));
-        imports.add(classMapping.get(po));
-        imports.add(classMapping.get(mapper));
-        imports.add(classMapping.get(jpa));
-        imports.add(classMapping.get("IMapper"));
-        imports.add(classMapping.get("IJpa"));
-        imports.add(classMapping.get("stereotype.Service"));
+        mappingImport(imports, "DaoSupport");
+        mappingImport(imports, po);
+        mappingImport(imports, mapper);
+        mappingImport(imports, jpa);
+        mappingImport(imports, "IMapper");
+        mappingImport(imports, "IJpa");
+        mappingImport(imports, "stereotype.Service");
 
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
@@ -634,6 +652,18 @@ public class GenerateServiceImpl implements GenerateService {
         // dao test
         cxt.clearVariables();
         imports.clear();
+
+        mappingImport(imports, "Test");
+        mappingImport(imports, "DTO");
+        mappingImport(imports, "NPage");
+        mappingImport(imports, "NSort");
+        mappingImport(imports, "Autowired");
+        mappingImport(imports, "TestExecutionListeners");
+        mappingImport(imports, "DependencyInjectionTestExecutionListener");
+        mappingImport(imports, "TransactionalTestExecutionListener");
+        mappingImport(imports, "ArrayList");
+        mappingImport(imports, "Arrays");
+        mappingImport(imports, "List");
 
         mappingImport(imports, dao);
         mappingImport(imports, po);
@@ -683,11 +713,13 @@ public class GenerateServiceImpl implements GenerateService {
      * @param serviceImplPackage
      * @param serviceImpl
      * @param oName
+     * @param daoName
+     * @param provideName
      * @param poName
      */
     private void generateService(File logFile, String servicePath, String dtoPackage, String dto,
                                  String servicePackage, String service, String serviceImplPackage, String serviceImpl,
-                                 String oName, String poName) {
+                                 String oName, String provideName, String daoName, String poName) {
 
         Context cxt = new Context();
         Set<String> imports = new HashSet<>();
@@ -712,11 +744,16 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.clearVariables();
         imports.clear();
 
+        mappingImport(imports, "provideName");
+        mappingImport(imports, "IService");
+
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
         cxt.setVariable("package", servicePackage);
         cxt.setVariable("imports", imports);
         cxt.setVariable("name", service);
+
+        cxt.setVariable("provideName", provideName);
 
         this.writeFile(logFile, servicePath + "/" + JAVA_PATH + servicePackage.replace('.', '/'),
                 service, JAVA_EXT_NAME,
@@ -727,7 +764,11 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.clearVariables();
         imports.clear();
 
+        mappingImport(imports, "stereotype.Service");
+        mappingImport(imports, "IDao");
+        mappingImport(imports, daoName);
         mappingImport(imports, service);
+        mappingImport(imports, "ServiceSupport");
 
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
@@ -736,11 +777,37 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("name", serviceImpl);
 
         cxt.setVariable("serviceName", service);
+        cxt.setVariable("daoName", daoName);
+
 
         this.writeFile(logFile, servicePath + "/" + JAVA_PATH + serviceImplPackage.replace('.', '/'),
                 serviceImpl, JAVA_EXT_NAME,
                 process(SERVICEIMPL_TXT_TEMPLATE_NAME, cxt));
         // end of service impl
+
+
+        // service test
+        cxt.clearVariables();
+        imports.clear();
+
+        mappingImport(imports, "Test");
+        mappingImport(imports, "Autowired");
+        mappingImport(imports, "TestExecutionListeners");
+        mappingImport(imports, "DependencyInjectionTestExecutionListener");
+        mappingImport(imports, "TransactionalTestExecutionListener");
+
+        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("date", new Date());
+        cxt.setVariable("package", servicePackage);
+        cxt.setVariable("imports", imports);
+        cxt.setVariable("name", serviceImpl + "Test");
+
+        cxt.setVariable("serviceName", service);
+
+        this.writeFile(logFile, servicePath + "/" + TEST_PATH + servicePackage.replace('.', '/'),
+                serviceImpl + "Test", JAVA_EXT_NAME,
+                process(SERVICETEST_TXT_TEMPLATE_NAME, cxt));
+        // end of service test
     }
 
     /**

@@ -5,19 +5,6 @@
  */
 
 package [(${package})];
-
-import org.junit.Test;
-import org.nqcx.commons3.lang.o.DTO;
-import org.nqcx.commons3.lang.o.NPage;
-import org.nqcx.commons3.lang.o.NSort;
-import org.nqcx.ido.commons.test.AutoInject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 [# th:each="import : ${imports}"]
 import [(${import})];
 [/]

@@ -11,6 +11,17 @@ import [(${import})];
 /**
  * @author [(${author})] [(${#dates.format(date, 'yyyy-MM-dd HH:mm')})]
  */
-public class [(${name})] implements [(${serviceName})] {
+@Service
+public class [(${name})] extends ServiceSupport implements [(${serviceName})] {
 
+    private final [(${daoName})] dao;
+
+    public [(${name})]([(${daoName})] dao) {
+        this.dao = dao;
+    }
+
+    @Override
+    protected IDao getDao() {
+        return dao;
+    }
 }
