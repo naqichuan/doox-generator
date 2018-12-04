@@ -60,6 +60,22 @@ public class Generate implements Serializable {
     private String daoDAOImpl;
     // end of dao field
 
+    // service field
+    private BoolEO service_ = BoolEO.FALSE;
+    private String serviceDtoPackage;
+    private String serviceServicePackage;
+    private String serviceDTO;
+    private String serviceService;
+    private String servceServiceImpl;
+    // end of field
+
+    // web field
+    private BoolEO web_ = BoolEO.FALSE;
+    private String webVoPackage;
+    private String webControllerPackage;
+    private String webVO;
+    private String webController;
+    // end of web field
 
     public String getTableName() {
         return tableName;
@@ -299,5 +315,93 @@ public class Generate implements Serializable {
 
     public void setDaoDAOImpl(String daoDAOImpl) {
         this.daoDAOImpl = daoDAOImpl;
+    }
+
+    public BoolEO getService_() {
+        return service_;
+    }
+
+    public void setService_(BoolEO service_) {
+        this.service_ = service_;
+    }
+
+    public String getServiceDtoPackage() {
+        return serviceDtoPackage;
+    }
+
+    public void setServiceDtoPackage(String serviceDtoPackage) {
+        this.serviceDtoPackage = serviceDtoPackage;
+    }
+
+    public String getServiceServicePackage() {
+        return serviceServicePackage;
+    }
+
+    public void setServiceServicePackage(String serviceServicePackage) {
+        this.serviceServicePackage = serviceServicePackage;
+    }
+
+    public String getServiceDTO() {
+        return serviceDTO;
+    }
+
+    public void setServiceDTO(String serviceDTO) {
+        this.serviceDTO = serviceDTO;
+    }
+
+    public String getServiceService() {
+        return serviceService;
+    }
+
+    public void setServiceService(String serviceService) {
+        this.serviceService = serviceService;
+    }
+
+    public String getServceServiceImpl() {
+        return servceServiceImpl;
+    }
+
+    public void setServceServiceImpl(String servceServiceImpl) {
+        this.servceServiceImpl = servceServiceImpl;
+    }
+
+    public BoolEO getWeb_() {
+        return web_;
+    }
+
+    public void setWeb_(BoolEO web_) {
+        this.web_ = web_;
+    }
+
+    public String getWebVoPackage() {
+        return webVoPackage;
+    }
+
+    public void setWebVoPackage(String webVoPackage) {
+        this.webVoPackage = webVoPackage;
+    }
+
+    public String getWebControllerPackage() {
+        return webControllerPackage;
+    }
+
+    public void setWebControllerPackage(String webControllerPackage) {
+        this.webControllerPackage = webControllerPackage;
+    }
+
+    public String getWebVO() {
+        return webVO;
+    }
+
+    public void setWebVO(String webVO) {
+        this.webVO = webVO;
+    }
+
+    public String getWebController() {
+        return webController;
+    }
+
+    public void setWebController(String webController) {
+        this.webController = webController;
     }
 }

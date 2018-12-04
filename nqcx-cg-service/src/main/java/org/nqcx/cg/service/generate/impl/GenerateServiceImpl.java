@@ -44,11 +44,12 @@ public class GenerateServiceImpl implements GenerateService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final static Pattern TYPE_LENGTH_PATTERN = Pattern.compile(".+\\((\\d+)\\)");
+    private final static Map<String, String> classMapping = new HashMap<>();
 
-    private static String JAVA_PATH = "src/main/java/";
-    private static String TEST_PATH = "src/test/java/";
-    private static String JAVA_EXT_NAME = ".java";
-    private static String XML_EXT_NAME = ".xml";
+    private final static String JAVA_PATH = "src/main/java/";
+    private final static String TEST_PATH = "src/test/java/";
+    private final static String JAVA_EXT_NAME = ".java";
+    private final static String XML_EXT_NAME = ".xml";
 
     private final static String BO_TXT_TEMPLATE_NAME = "bo.txt";
     private final static String O_TXT_TEMPLATE_NAME = "o.txt";
@@ -60,20 +61,16 @@ public class GenerateServiceImpl implements GenerateService {
     private final static String DAO_TXT_TEMPLATE_NAME = "dao.txt";
     private final static String DAO_TEST_TXT_TEMPLATE_NAME = "daotest.txt";
     private final static String DAOIMPL_TXT_TEMPLATE_NAME = "daoimpl.txt";
-
-    //    private final static String ENTITY_TEMPLATE_NAME = "entity.vm";
-//    private final static String MAPPER_JAVA_TEMPLATE_NAME = "mapper_java.vm";
-//    private final static String MAPPER_XML_TEMPLATE_NAME = "mapper_xml.vm";
-    private final static String SERVICE_INTERFACE_TEMPLATE_NAME = "service_interface.vm";
-    private final static String SERVICE_IMPLEMENTS_TEMPLATE_NAME = "service_implements.vm";
+    private final static String DTO_TXT_TEMPLATE_NAME = "dto.txt";
+    private final static String SERVICE_TXT_TEMPLATE_NAME = "service.txt";
+    private final static String SERVICEIMPL_TXT_TEMPLATE_NAME = "serviceimpl.txt";
+    private final static String VO_TXT_TEMPLATE_NAME = "vo.txt";
+    private final static String CONTROLLER_TXT_TEMPLATE_NAME = "controller.txt";
 
     private static String P_PROVIDE_PATH_KEY = "provideModule";
     private static String P_DAO_PATH_KEY = "daoModule";
     private static String P_SERVICE_PATH_KEY = "serviceModule";
     private static String P_WEB_PATH_KEY = "webModule";
-
-    private final static Map<String, String> classMapping = new HashMap<>();
-
 
     @Autowired
     @Qualifier("workspacePath")
@@ -165,6 +162,8 @@ public class GenerateServiceImpl implements GenerateService {
                     table, g.getTableColumns(), g.getProvideFields(), g.getProvideTypes(),
                     g.getProvideBO());
         }
+
+
 //
 //        String daoInterface = mapperInterface;
 //        String daoProjectPackage = mapperProjectPackage;
@@ -329,6 +328,7 @@ public class GenerateServiceImpl implements GenerateService {
     }
 
     /**
+     * @param logFile
      * @param daoPath
      * @param poPackage
      * @param po
@@ -340,9 +340,11 @@ public class GenerateServiceImpl implements GenerateService {
      * @param dao
      * @param daoImplPackage
      * @param daoImpl
+     * @param table
      * @param tableColumns
      * @param fields
      * @param types
+     * @param boName
      */
     private void generateDao(File logFile, String daoPath, String poPackage, String po,
                              String mapperPackage, String mapper,
@@ -659,80 +661,126 @@ public class GenerateServiceImpl implements GenerateService {
                 process(DAO_TEST_TXT_TEMPLATE_NAME, cxt));
     }
 
-    // /**
-    // * @param managerProjectName
-    // * @param managerPath
-    // * @param managerInterface
-    // * @param managerImplement
-    // * // * @param managerProjectPackage
-    // * @param mapperInterface
-    // * @param mapperProjectPackage
-    // */
-    // private void generateManager(String managerProjectName, String managerPath, String managerInterface,
-    // String managerImplement,/* String managerProjectPackage, */String mapperInterface,
-    // String mapperProjectPackage) {
-    //
-    // Map<String, Object> modelInterface = new HashMap<String, Object>();
-    // modelInterface.put("date", new Date());
-    // modelInterface.put("managerInterface", managerInterface);
-    // modelInterface.put("managerProjectPackage", managerProjectPackage);
-    //
-    // this.writeFile(CgFileUtils.formatPath(managerPath + "/" + JAVA_PATH + managerProjectPackage.replace('.', '/'),
-    // false, false), managerInterface + JAVA_EXT_NAME,
-    // mergeTemplateIntoString(MANAGERR_INTERFACE_TEMPLATE_NAME, modelInterface));
-    //
-    // Map<String, Object> modelImplement = new HashMap<String, Object>();
-    // modelImplement.put("date", new Date());
-    // modelImplement.put("managerInterface", managerInterface);
-    // modelImplement.put("managerProjectPackage", managerProjectPackage);
-    // modelImplement.put("managerImplements", managerImplement);
-    // modelImplement.put("managerProjectPackage1", managerProjectPackage + ".impl");
-    // modelImplement.put("mapperInterface", mapperInterface);
-    // modelImplement.put("mapperInterface1", StringUtils.uncapitalize(mapperInterface));
-    // modelImplement.put("mapperProjectPackage", mapperProjectPackage);
-    //
-    // this.writeFile(CgFileUtils.formatPath(
-    // managerPath + "/" + JAVA_PATH + (managerProjectPackage + ".impl").replace('.', '/'), false, false),
-    // managerImplement + JAVA_EXT_NAME,
-    // mergeTemplateIntoString(MANAGERR_IMPLEMENTS_TEMPLATE_NAME, modelImplement));
-    // }
+    /**
+     * @param logFile
+     * @param servicePath
+     * @param dtoPackage
+     * @param dto
+     * @param servicePackage
+     * @param service
+     * @param serviceImplPackage
+     * @param serviceImpl
+     * @param oName
+     * @param poName
+     */
+    private void generateService(File logFile, String servicePath, String dtoPackage, String dto,
+                                 String servicePackage, String service, String serviceImplPackage, String serviceImpl,
+                                 String oName, String poName) {
+
+        Context cxt = new Context();
+        Set<String> imports = new HashSet<>();
+
+        // dto
+        mappingImport(imports, oName);
+
+        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("date", new Date());
+        cxt.setVariable("package", dtoPackage);
+        cxt.setVariable("imports", imports);
+        cxt.setVariable("name", dto);
+
+        cxt.setVariable("oName", oName);
+
+        this.writeFile(logFile, servicePath + "/" + JAVA_PATH + dtoPackage.replace('.', '/'),
+                serviceImpl, JAVA_EXT_NAME,
+                process(DTO_TXT_TEMPLATE_NAME, cxt));
+        // end of dto
+
+        // service
+        cxt.clearVariables();
+        imports.clear();
+
+        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("date", new Date());
+        cxt.setVariable("package", servicePackage);
+        cxt.setVariable("imports", imports);
+        cxt.setVariable("name", service);
+
+        this.writeFile(logFile, servicePath + "/" + JAVA_PATH + servicePackage.replace('.', '/'),
+                serviceImpl, JAVA_EXT_NAME,
+                process(SERVICE_TXT_TEMPLATE_NAME, cxt));
+        // end of service
+
+        // service impl
+        cxt.clearVariables();
+        imports.clear();
+
+        mappingImport(imports, service);
+
+        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("date", new Date());
+        cxt.setVariable("package", serviceImplPackage);
+        cxt.setVariable("imports", imports);
+        cxt.setVariable("name", serviceImpl);
+
+        cxt.setVariable("serviceName", service);
+
+        this.writeFile(logFile, servicePath + "/" + JAVA_PATH + serviceImplPackage.replace('.', '/'),
+                serviceImpl, JAVA_EXT_NAME,
+                process(SERVICEIMPL_TXT_TEMPLATE_NAME, cxt));
+        // end of service impl
+    }
 
     /**
-     * @param serviceProjectName
-     * @param servicePath
-     * @param serviceInterface
-     * @param serviceImplement
-     * @param serviceProjectPackage
-     * @param daoInterface
-     * @param daoProjectPackage
+     * @param logFile
+     * @param webPath
+     * @param voPackage
+     * @param vo
+     * @param controllerPackage
+     * @param controller
+     * @param oName
+     * @param dtoName
      */
-    private void generateService(File logFile, String serviceProjectName, String servicePath, String serviceInterface,
-                                 String serviceImplement, String serviceProjectPackage, String daoInterface, String daoProjectPackage) {
+    private void generateWeb(File logFile, String webPath, String voPackage, String vo,
+                             String controllerPackage, String controller,
+                             String oName, String dtoName) {
 
-//        Map<String, Object> modelInterface = new HashMap<String, Object>();
-//        modelInterface.put("date", new Date());
-//        modelInterface.put("serviceInterface", serviceInterface);
-//        modelInterface.put("serviceProjectPackage", serviceProjectPackage);
-//
-//        this.writeFile(logFile, CgFileUtils.formatPath(servicePath + "/" + JAVA_PATH + serviceProjectPackage.replace('.', '/'),
-//                false, false), serviceInterface, JAVA_EXT_NAME,
-//                mergeTemplateIntoString(SERVICE_INTERFACE_TEMPLATE_NAME, modelInterface));
-//
-//        Map<String, Object> modelImplement = new HashMap<String, Object>();
-//        modelImplement.put("date", new Date());
-//        modelImplement.put("serviceInterface", serviceInterface);
-//        modelImplement.put("serviceImplements", serviceImplement);
-//        modelImplement.put("serviceProjectPackage", serviceProjectPackage);
-//        modelImplement.put("serviceProjectPackage1", serviceProjectPackage + ".impl");
-//        modelImplement.put("daoInterface", daoInterface);
-//        modelImplement.put("daoInterface1", StringUtils.uncapitalize(daoInterface));
-//        modelImplement.put("daoProjectPackage", daoProjectPackage);
-//
-//        this.writeFile(logFile, CgFileUtils.formatPath(
-//                servicePath + "/" + JAVA_PATH + (serviceProjectPackage + ".impl").replace('.', '/'), false, false),
-//                serviceImplement, JAVA_EXT_NAME,
-//                mergeTemplateIntoString(SERVICE_IMPLEMENTS_TEMPLATE_NAME, modelImplement));
+        Context cxt = new Context();
+        Set<String> imports = new HashSet<>();
+
+        // vo
+        mappingImport(imports, dtoName);
+
+        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("date", new Date());
+        cxt.setVariable("package", voPackage);
+        cxt.setVariable("imports", imports);
+        cxt.setVariable("name", vo);
+
+        cxt.setVariable("dtoName", dtoName);
+
+        this.writeFile(logFile, webPath + "/" + JAVA_PATH + voPackage.replace('.', '/'),
+                vo, JAVA_EXT_NAME,
+                process(VO_TXT_TEMPLATE_NAME, cxt));
+        // end of vo
+
+        // controller
+        cxt.clearVariables();
+        imports.clear();
+
+        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("date", new Date());
+        cxt.setVariable("package", controllerPackage);
+        cxt.setVariable("imports", imports);
+        cxt.setVariable("name", controller);
+
+        this.writeFile(logFile, webPath + "/" + JAVA_PATH + controllerPackage.replace('.', '/'),
+                controller, JAVA_EXT_NAME,
+                process(CONTROLLER_TXT_TEMPLATE_NAME, cxt));
+        // end of controller
+
     }
+
 
 //    /**
 //     * @return

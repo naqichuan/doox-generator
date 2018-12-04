@@ -11,8 +11,6 @@ import ma.glasnost.orika.MappingContext;
 import org.nqcx.cg.data.vo.GenerateVO;
 import org.nqcx.cg.provide.o.Generate;
 import org.nqcx.commons3.util.orika.Orika;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,10 +23,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrikaWeb {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(OrikaWeb.class);
-
     static {
-        LOGGER.info("1. Orika 添加 classMap(Generate.class, GenerateVO.class)。");
         Orika.instance().classMap(Generate.class, GenerateVO.class)
                 .byDefault()
                 .customize(new CustomMapper<Generate, GenerateVO>() {
