@@ -97,7 +97,7 @@ public class [(${name})] extends AutoInject {
 
         DTO dtoResult = [(${serviceVeriable})].findAll(dtoRequest);
 
-        if (dtoResult == null || dtoResult.getList() == null) {
+        if (dtoResult != null && dtoResult.getList() != null) {
             dtoResult.getList().forEach(System.out::println);
         }
 
