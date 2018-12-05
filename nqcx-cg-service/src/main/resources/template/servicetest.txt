@@ -5,6 +5,7 @@
  */
 
 package [(${package})];
+import org.nqcx.ido.commons.test.AutoInject;
 [# th:each="import : ${imports}"]
 import [(${import})];
 [/]
@@ -61,25 +62,66 @@ public class [(${name})] extends AutoInject {
 
     @Test
     public void findById() {
+        Optional<[(${dtoName})]> dtoName = [(${serviceVeriable})].findById(1[# th:if="${idType == 'Long'}"]L[/]).orElse(null);
+        System.out.println(dtoName);
     }
 
     @Test
     public void findAllByIds() {
+        List<[(${idType})]> ids = Arrays.asList(2[# th:if="${idType == 'Long'}"]L[/], 3[# th:if="${idType == 'Long'}"]L[/], 4[# th:if="${idType == 'Long'}"]L[/], 5[# th:if="${idType == 'Long'}"]L[/]);
+        List<[(${dtoName})]> list = [(${serviceVeriable})].findAllByIds(ids);
+
+        if (list == null)
+            System.out.println(list);
+
+        list.forEach(System.out::println);
     }
 
     @Test
     public void listAll() {
+        DTO dto = new DTO();
+        List<[(${dtoName})]> list = [(${serviceVeriable})].listAll(dto);
+
+        if (list == null)
+            System.out.println(list);
+
+        list.forEach(System.out::println);
     }
 
     @Test
     public void findAll() {
+        // page and sort
+        // Jpa 排序指定的是 pojo field name，Mybatis 排序需要指定数据库字段名，该问题会在未来的版本中解决
+        DTO dtoRequest = new DTO().setPage(new NPage(1, 20))
+                .setSort(NSort.by(new NSort.NOrder(NSort.NDirection.DESC, "id"),
+                        new NSort.NOrder(NSort.NDirection.ASC, "t_create")));
+
+        DTO dtoResult = [(${serviceVeriable})].findAll(dtoRequest);
+
+        if (dtoResult == null || dtoResult.getList() == null) {
+            dtoResult.getList().forEach(System.out::println);
+        }
+
+        System.out.println(dtoResult);
+    }
+
+    @Test
+    public void getCount() {
+        DTO dtoRequest = new DTO();
+
+        long count = [(${serviceVeriable})].getCount(dtoRequest);
+
+        System.out.println(count);
     }
 
     @Test
     public void deleteById() {
+        [(${serviceVeriable})].deleteById(6[# th:if="${idType == 'Long'}"]L[/]);
     }
 
     @Test
     public void deleteByIds() {
+        List<[(${idType})]> ids = Arrays.asList(7[# th:if="${idType == 'Long'}"]L[/], 8[# th:if="${idType == 'Long'}"]L[/]);
+        [(${serviceVeriable})].deleteByIds(ids);
     }
 }

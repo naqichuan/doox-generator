@@ -21,6 +21,8 @@ public class Column extends ColumnBO {
     private boolean null_ = true;
     private boolean id_ = false;
     private boolean cm_ = false;
+
+    private String idType_;
     // end of pojo
 
     // table extend field
@@ -70,6 +72,14 @@ public class Column extends ColumnBO {
 
     public void setCm_(boolean cm_) {
         this.cm_ = cm_;
+    }
+
+    public String getIdType_() {
+        return idType_ == null ? "Long" : idType_;
+    }
+
+    public void setIdType_(String idType_) {
+        this.idType_ = idType_;
     }
 
     public String getColumnType() {

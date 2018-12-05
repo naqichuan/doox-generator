@@ -94,6 +94,7 @@ public class GenerateServiceImpl implements GenerateService {
         classMapping.put("Arrays", "java.util.Arrays");
         classMapping.put("ArrayList", "java.util.ArrayList");
         classMapping.put("List", "java.util.List");
+        classMapping.put("Optional", "java.util.Optional");
 
         classMapping.put("Entity", "javax.persistence.Entity");
         classMapping.put("Table", "javax.persistence.Table");
@@ -245,7 +246,7 @@ public class GenerateServiceImpl implements GenerateService {
 
             if ("PRI".equalsIgnoreCase(c.getKey()) && StringUtils.containsIgnoreCase(c.getField(), "ID")) {
                 c.setId_(true);
-                c.setType_("INT".equalsIgnoreCase(types[i]) ? "Integer" : "Long");
+                c.setIdType_("INT".equalsIgnoreCase(types[i]) ? "Integer" : "Long");
 
                 c.setMybatisValue("NULL");
             }
@@ -435,9 +436,9 @@ public class GenerateServiceImpl implements GenerateService {
         Set<String> imports = new HashSet<>();
 
         // ID typ
-        String idType = "Long";
+        String idType = "";
         if (table.getIdColumn() != null)
-            idType = table.getIdColumn().getType_();
+            idType = table.getIdColumn().getIdType_();
 
         // po
         mappingImport(imports, boName);
@@ -741,9 +742,9 @@ public class GenerateServiceImpl implements GenerateService {
         Set<String> imports = new HashSet<>();
 
         // ID typ
-        String idType = "Long";
+        String idType = "";
         if (table.getIdColumn() != null)
-            idType = table.getIdColumn().getType_();
+            idType = table.getIdColumn().getIdType_();
 
         // dto
         mappingImport(imports, oName);
@@ -800,7 +801,6 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("serviceName", service);
         cxt.setVariable("daoName", daoName);
 
-
         this.writeFile(logFile, servicePath + "/" + JAVA_PATH + serviceImplPackage.replace('.', '/'),
                 serviceImpl, JAVA_EXT_NAME,
                 process(SERVICEIMPL_TXT_TEMPLATE_NAME, cxt));
@@ -812,6 +812,9 @@ public class GenerateServiceImpl implements GenerateService {
         imports.clear();
 
         mappingImport(imports, "Test");
+        mappingImport(imports, "DTO");
+        mappingImport(imports, "NPage");
+        mappingImport(imports, "NSort");
         mappingImport(imports, "Autowired");
         mappingImport(imports, "TestExecutionListeners");
         mappingImport(imports, "DependencyInjectionTestExecutionListener");
@@ -819,6 +822,7 @@ public class GenerateServiceImpl implements GenerateService {
         mappingImport(imports, "ArrayList");
         mappingImport(imports, "Arrays");
         mappingImport(imports, "List");
+        mappingImport(imports, "Optional");
 
         mappingImport(imports, service);
         mappingImport(imports, dto);
