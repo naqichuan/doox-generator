@@ -5,7 +5,6 @@
  */
 
 package [(${package})];
-import org.nqcx.ido.commons.test.AutoInject;
 [# th:each="import : ${imports}"]
 import [(${import})];
 [/]
@@ -16,7 +15,7 @@ import [(${import})];
 public class [(${name})] extends AutoInject {
 
     @Autowired
-    private [(${serviceName})] [(${serviceVeriable})];
+    private [(${serviceName})]<[(${dtoName})], [(${idType})]> [(${serviceVeriable})];
 
     @Test
     public void save() {
@@ -62,8 +61,8 @@ public class [(${name})] extends AutoInject {
 
     @Test
     public void findById() {
-        Optional<[(${dtoName})]> dtoName = [(${serviceVeriable})].findById(1[# th:if="${idType == 'Long'}"]L[/]).orElse(null);
-        System.out.println(dtoName);
+        Optional<[(${dtoName})]> dto = [(${serviceVeriable})].findById(1[# th:if="${idType == 'Long'}"]L[/]);
+        System.out.println(dto.orElse(null));
     }
 
     @Test

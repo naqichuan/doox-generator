@@ -14,22 +14,22 @@ import [(${import})];
 @Service
 public class [(${name})] extends DaoSupport<[(${poName})], [(${idType})]> implements [(${daoName})]<[(${poName})], [(${idType})]> {
 
-    private final ILocksJpa jpa;
-    private final ILocksMapper mapper;
+    private final [(${jpaName})] [(${jpaVeriable})];
+    private final [(${mapperName})] [(${mapperVeriable})];
 
-    public [(${name})](ILocksJpa jpa, ILocksMapper mapper) {
-        this.jpa = jpa;
-        this.mapper = mapper;
+    public [(${name})]([(${jpaName})] [(${jpaVeriable})], [(${mapperName})] [(${mapperVeriable})]) {
+        this.[(${jpaVeriable})] = [(${jpaVeriable})];
+        this.[(${mapperVeriable})] = [(${mapperVeriable})];
     }
 
     @Override
     protected IMapper<[(${poName})], [(${idType})]> getMapper() {
-        return this.mapper;
+        return this.[(${mapperVeriable})];
     }
 
     @Override
     protected IJpa<[(${poName})], [(${idType})]> getJpa() {
-        return this.jpa;
+        return this.[(${jpaVeriable})];
     }
 
 }

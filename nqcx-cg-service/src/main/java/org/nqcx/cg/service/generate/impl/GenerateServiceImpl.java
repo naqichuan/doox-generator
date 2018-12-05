@@ -668,6 +668,17 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("idType", idType);
         cxt.setVariable("daoName", dao);
 
+        cxt.setVariable("mapperName", mapper);
+        String mapperVeriable = mapper;
+        if (mapperVeriable.startsWith("I"))
+            mapperVeriable = StringUtils.substring(mapperVeriable, 1);
+        cxt.setVariable("mapperVeriable", StringUtils.uncapitalize(mapperVeriable));
+        cxt.setVariable("jpaName", jpa);
+        String jpaVeriable = jpa;
+        if (jpaVeriable.startsWith("I"))
+            jpaVeriable = StringUtils.substring(jpaVeriable, 1);
+        cxt.setVariable("jpaVeriable", StringUtils.uncapitalize(jpaVeriable));
+
         mappingImport(imports, dao);
 
         this.writeFile(logFile, daoPath + "/" + JAVA_PATH + daoImplPackage.replace('.', '/'),
@@ -748,7 +759,7 @@ public class GenerateServiceImpl implements GenerateService {
             idType = table.getIdColumn().getIdType_();
 
         // dto
-        mappingImport(imports, oName);
+        mappingImport(imports, poName);
 
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
@@ -756,7 +767,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("imports", imports);
         cxt.setVariable("name", dto);
 
-        cxt.setVariable("oName", oName);
+        cxt.setVariable("poName", poName);
 
         this.writeFile(logFile, servicePath + "/" + JAVA_PATH + dtoPackage.replace('.', '/'),
                 dto, JAVA_EXT_NAME,
@@ -792,6 +803,8 @@ public class GenerateServiceImpl implements GenerateService {
         mappingImport(imports, daoName);
         mappingImport(imports, service);
         mappingImport(imports, "ServiceSupport");
+        mappingImport(imports, poName);
+        mappingImport(imports, dto);
 
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
@@ -799,8 +812,15 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("imports", imports);
         cxt.setVariable("name", serviceImpl);
 
+        cxt.setVariable("idType", idType);
+        cxt.setVariable("dtoName", dto);
         cxt.setVariable("serviceName", service);
         cxt.setVariable("daoName", daoName);
+        String daoVeriable = daoName;
+        if (daoVeriable.startsWith("I"))
+            daoVeriable = StringUtils.substring(daoVeriable, 1);
+        cxt.setVariable("daoVeriable", StringUtils.uncapitalize(daoVeriable));
+
 
         this.writeFile(logFile, servicePath + "/" + JAVA_PATH + serviceImplPackage.replace('.', '/'),
                 serviceImpl, JAVA_EXT_NAME,
@@ -834,8 +854,8 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("imports", imports);
         cxt.setVariable("name", serviceImpl + "Test");
 
-        cxt.setVariable("dtoName", dto);
         cxt.setVariable("idType", idType);
+        cxt.setVariable("dtoName", dto);
         cxt.setVariable("serviceName", service);
         cxt.setVariable("serviceVeriable", StringUtils.uncapitalize(serviceImpl));
 

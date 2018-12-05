@@ -11,6 +11,6 @@ import [(${import})];
 /**
  * @author [(${author})] [(${#dates.format(date, 'yyyy-MM-dd HH:mm')})]
  */
-public class [(${name})] extends [(${oName})] {
+public class [(${name})] extends [(${poName})] {
 
 }
