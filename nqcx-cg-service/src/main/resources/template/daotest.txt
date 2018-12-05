@@ -27,15 +27,6 @@ public class [(${name})] extends AutoInject {
     }
 
     @Test
-    public void modify() {
-        [(${poName})] po = new [(${poName})]();
-    [# th:each="pg : ${poSetters}"]
-        [(${pg})]
-    [/]
-        [(${daoVeriable})].modify(po);
-    }
-
-    @Test
     public void saveAll() {
         [(${poName})] po;
         List<[(${poName})]> list = new ArrayList<>();
@@ -45,6 +36,15 @@ public class [(${name})] extends AutoInject {
         [(${pg})]
     [/]
         [(${daoVeriable})].saveAll(list);
+    }
+
+    @Test
+    public void modify() {
+        [(${poName})] po = new [(${poName})]();
+    [# th:each="pg : ${poSetters}"]
+        [(${pg})]
+    [/]
+        [(${daoVeriable})].modify(po);
     }
 
     @Test

@@ -15,14 +15,48 @@ import [(${import})];
 public class [(${name})] extends AutoInject {
 
     @Autowired
-    private [(${serviceName})] service;
+    private [(${serviceName})] [(${serviceVeriable})];
 
     @Test
     public void save() {
+       [(${dtoName})] dto = new [(${dtoName})]();
+    [# th:each="dg : ${dtoSetters}"]
+        [(${dg})]
+    [/]
+        [(${serviceVeriable})].save(dto);
     }
 
     @Test
     public void saveAll() {
+        [(${dtoName})] dto;
+        List<[(${dtoName})]> list = new ArrayList<>();
+
+        list.add(dto = new [(${dtoName})]());
+    [# th:each="dg : ${dtoSetters}"]
+        [(${dg})]
+    [/]
+        [(${serviceVeriable})].saveAll(list);
+    }
+
+    @Test
+    public void modify() {
+        [(${dtoName})] dto = new [(${dtoName})]();
+    [# th:each="dg : ${dtoSetters}"]
+        [(${dg})]
+    [/]
+        [(${serviceVeriable})].modify(dto);
+    }
+
+    @Test
+    public void modifyAll() {
+        [(${dtoName})] dto;
+        List<[(${dtoName})]> list = new ArrayList<>();
+
+        list.add(dto = new [(${dtoName})]());
+    [# th:each="dg : ${dtoSetters}"]
+        [(${dg})]
+    [/]
+        [(${serviceVeriable})].modifyAll(list);
     }
 
     @Test

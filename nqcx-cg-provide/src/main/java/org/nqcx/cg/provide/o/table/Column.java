@@ -28,6 +28,10 @@ public class Column extends ColumnBO {
     private String columnLength;
     // end table expand field
 
+    // mybatis field value
+    private String mybatisValue;
+    // end of mybatis field value
+
     public String getField_() {
         return field_;
     }
@@ -84,6 +88,14 @@ public class Column extends ColumnBO {
         this.columnLength = columnLength;
     }
 
+    public String getMybatisValue() {
+        return mybatisValue;
+    }
+
+    public void setMybatisValue(String mybatisValue) {
+        this.mybatisValue = mybatisValue;
+    }
+
     @Override
     public String toString() {
         return "Column{" +
@@ -94,6 +106,7 @@ public class Column extends ColumnBO {
                 ", cm_=" + cm_ +
                 ", columnType='" + columnType + '\'' +
                 ", columnLength='" + columnLength + '\'' +
+                ", mybatisValue='" + mybatisValue + '\'' +
                 "} " + super.toString();
     }
 }

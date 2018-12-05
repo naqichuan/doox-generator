@@ -239,18 +239,29 @@ public class GenerateServiceImpl implements GenerateService {
             c.setType_(types[i]);
             c.setNull_(true);
 
-            if ("NO".equals(c.getIsNull()))
+            if ("NO".equals(c.getIsNull())) {
                 c.setNull_(false);
+            }
 
             if ("PRI".equalsIgnoreCase(c.getKey()) && StringUtils.containsIgnoreCase(c.getField(), "ID")) {
                 c.setId_(true);
                 c.setType_("INT".equalsIgnoreCase(types[i]) ? "Integer" : "Long");
+
+                c.setMybatisValue("NULL");
             }
 
-            if ("DATETIME".equalsIgnoreCase(c.getType()) && StringUtils.containsIgnoreCase(c.getField(), "_create"))
+            if ("DATETIME".equalsIgnoreCase(c.getType())
+                    && StringUtils.containsIgnoreCase(c.getField(), "_create")) {
                 c.setCm_(true);
-            if ("TIMESTAMP".equalsIgnoreCase(c.getType()) && StringUtils.containsIgnoreCase(c.getField(), "_modify"))
+
+                c.setMybatisValue("NOW()");
+            }
+            if ("TIMESTAMP".equalsIgnoreCase(c.getType())
+                    && StringUtils.containsIgnoreCase(c.getField(), "_modify")) {
                 c.setCm_(true);
+
+                c.setMybatisValue("NULL");
+            }
         }
     }
 
@@ -567,12 +578,12 @@ public class GenerateServiceImpl implements GenerateService {
             if (c.isId_()) {
                 resultMap.add("<id property=\"" + c.getField_() + "\" column=\"" + c.getField() + "\" />");
 
-                poInsertFields.add("NULL");
+                poInsertFields.add(c.getMybatisValue());
             } else {
                 resultMap.add("<result property=\"" + c.getField_() + "\" column=\"" + c.getField() + "\" />");
 
                 if (c.isCm_()) {
-                    poInsertFields.add("NULL");
+                    poInsertFields.add(c.getMybatisValue());
                 } else {
                     poInsertFields.add("#{" + c.getField_() + "}");
 
@@ -694,14 +705,12 @@ public class GenerateServiceImpl implements GenerateService {
         mappingImport(imports, "Arrays");
 
         List<String> poSetters = new ArrayList<>();
-
         table.getColumns().forEach(c -> {
             if (c.isCm_())
                 return;
 
             poSetters.add("// po.set" + StringUtils.capitalize(c.getField_()) + "(\"" + c.getField_() + "\");");
         });
-
         cxt.setVariable("poSetters", poSetters);
 
         this.writeFile(logFile, daoPath + "/" + TEST_PATH + daoPackage.replace('.', '/'),
@@ -730,6 +739,11 @@ public class GenerateServiceImpl implements GenerateService {
 
         Context cxt = new Context();
         Set<String> imports = new HashSet<>();
+
+        // ID typ
+        String idType = "Long";
+        if (table.getIdColumn() != null)
+            idType = table.getIdColumn().getType_();
 
         // dto
         mappingImport(imports, oName);
@@ -802,6 +816,12 @@ public class GenerateServiceImpl implements GenerateService {
         mappingImport(imports, "TestExecutionListeners");
         mappingImport(imports, "DependencyInjectionTestExecutionListener");
         mappingImport(imports, "TransactionalTestExecutionListener");
+        mappingImport(imports, "ArrayList");
+        mappingImport(imports, "Arrays");
+        mappingImport(imports, "List");
+
+        mappingImport(imports, service);
+        mappingImport(imports, dto);
 
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
@@ -809,7 +829,19 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("imports", imports);
         cxt.setVariable("name", serviceImpl + "Test");
 
+        cxt.setVariable("dtoName", dto);
+        cxt.setVariable("idType", idType);
         cxt.setVariable("serviceName", service);
+        cxt.setVariable("serviceVeriable", StringUtils.uncapitalize(serviceImpl));
+
+        List<String> dtoSetters = new ArrayList<>();
+        table.getColumns().forEach(c -> {
+            if (c.isCm_())
+                return;
+
+            dtoSetters.add("// dto.set" + StringUtils.capitalize(c.getField_()) + "(\"" + c.getField_() + "\");");
+        });
+        cxt.setVariable("dtoSetters", dtoSetters);
 
         this.writeFile(logFile, servicePath + "/" + TEST_PATH + servicePackage.replace('.', '/'),
                 serviceImpl + "Test", JAVA_EXT_NAME,
