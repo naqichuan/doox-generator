@@ -15,14 +15,13 @@ import [(${import})];
 @Table(name = "[(${tableName})]")
 public class [(${name})] extends [(${boName})] {
 [# th:each="f : ${poFields}"]
-    [(${f})][/]
-[# th:each="gs : ${poGetter}"]
+    [(${f})][/][# th:each="gs : ${poGetter}"]
 [# th:each="an : ${gs.annotations}"]
     [(${an})][/]
     public [(${gs.type})] get[(${gs.name})]() {
         return super.get[(${gs.name})]();
-    }[/]
-[# th:each="gs : ${poGetterAndSetter}"][# th:each="an : ${gs.annotations}"]
+    }[/][# th:each="gs : ${poGetterAndSetter}"]
+[# th:each="an : ${gs.annotations}"]
     [(${an})][/]
     public [(${gs.type})] get[(${gs.name})]() {
         return [(${gs.field})];
@@ -30,6 +29,5 @@ public class [(${name})] extends [(${boName})] {
 
     public void set[(${gs.name})]([(${gs.type})] [(${gs.field})]) {
         this.[(${gs.field})] = [(${gs.field})];
-    }
-[/]
+    }[/]
 }

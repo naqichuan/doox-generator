@@ -6,6 +6,7 @@
 
 package org.nqcx.cg.provide.o;
 
+import org.nqcx.cg.provide.enums.PType;
 import org.nqcx.commons3.lang.enums.BoolEO;
 
 import java.io.Serializable;
@@ -15,21 +16,27 @@ import java.io.Serializable;
  */
 public class Generate implements Serializable {
 
-    // table
-    private String tableName;
-    private String tablePack;
-    // end of table
-
     // project field
     private String pName;
     private String pPath;
     private String pPackage;
-    private String pType;
+    private PType pType;
     private String provideModule;
     private String daoModule;
     private String serviceModule;
     private String webModule;
     // end of project filed
+
+    // table
+    private String tableName;
+    private String tablePack;
+    // end of table
+
+    // pojo
+    String[] pojoColumn;
+    String[] pojoField;
+    String[] pojoType;
+    // end of pojo
 
     // provide field
     private BoolEO provide_ = BoolEO.FALSE;
@@ -40,12 +47,6 @@ public class Generate implements Serializable {
     private String provideO;
     private String provideProvide;
     // end of provide field
-
-    // pojo
-    String[] tableColumns;
-    String[] provideFields;
-    String[] provideTypes;
-    // end of pojo
 
     // dao field
     private BoolEO dao_ = BoolEO.FALSE;
@@ -117,11 +118,11 @@ public class Generate implements Serializable {
         this.pPackage = pPackage;
     }
 
-    public String getpType() {
+    public PType getpType() {
         return pType;
     }
 
-    public void setpType(String pType) {
+    public void setpType(PType pType) {
         this.pType = pType;
     }
 
@@ -213,28 +214,28 @@ public class Generate implements Serializable {
         this.provideProvide = provideProvide;
     }
 
-    public String[] getTableColumns() {
-        return tableColumns;
+    public String[] getPojoColumn() {
+        return pojoColumn;
     }
 
-    public void setTableColumns(String[] tableColumns) {
-        this.tableColumns = tableColumns;
+    public void setPojoColumn(String[] pojoColumn) {
+        this.pojoColumn = pojoColumn;
     }
 
-    public String[] getProvideFields() {
-        return provideFields;
+    public String[] getPojoField() {
+        return pojoField;
     }
 
-    public void setProvideFields(String[] provideFields) {
-        this.provideFields = provideFields;
+    public void setPojoField(String[] pojoField) {
+        this.pojoField = pojoField;
     }
 
-    public String[] getProvideTypes() {
-        return provideTypes;
+    public String[] getPojoType() {
+        return pojoType;
     }
 
-    public void setProvideTypes(String[] provideTypes) {
-        this.provideTypes = provideTypes;
+    public void setPojoType(String[] pojoType) {
+        this.pojoType = pojoType;
     }
 
     public BoolEO getDao_() {

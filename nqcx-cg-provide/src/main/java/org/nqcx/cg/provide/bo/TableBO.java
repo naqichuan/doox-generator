@@ -6,19 +6,22 @@
  * into with nqcx.org.
  */
 
-package org.nqcx.cg.service.generate;
+package org.nqcx.cg.provide.bo;
 
-import org.nqcx.cg.provide.o.Generate;
-import org.nqcx.commons3.lang.o.DTO;
+import java.io.Serializable;
 
 /**
- * @author naqichuan Feb 9, 2014 2:21:48 AM
+ * @author naqichuan Feb 8, 2014 10:48:47 AM
  */
-public interface GenerateService {
+public class TableBO implements Serializable {
 
-    /**
-     * @param generate
-     * @return
-     */
-    DTO generate(Generate generate);
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

@@ -9,18 +9,18 @@
 package org.nqcx.cg.web.controller.generate;
 
 import org.nqcx.cg.data.vo.GenerateVO;
-import org.nqcx.cg.provide.enums.PType;
 import org.nqcx.cg.provide.o.Generate;
 import org.nqcx.cg.service.generate.GenerateService;
 import org.nqcx.cg.web.controller.AbstractController;
-import org.nqcx.commons3.lang.o.DTO;
 import org.nqcx.commons3.util.orika.Orika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -41,37 +41,8 @@ public class GenerateController extends AbstractController {
 
     @RequestMapping(value = "/doit", method = {RequestMethod.GET, RequestMethod.POST}, produces = "application/json")
     @ResponseBody
-    public Map<?, ?> doit(
-            HttpServletRequest request,
-            GenerateVO vo,
-            @RequestParam(value = "tableName", required = true) String tableName,
-            @RequestParam(value = "pName", required = true) String pName,
-            @RequestParam(value = "pType", required = true) String pType,
-            @RequestParam(value = "pPath", required = true) String pPath,
-            @RequestParam(value = "pPackage", required = true) String pPackage,
-            @RequestParam(value = "entityName", required = false) String entityName,
-            @RequestParam(value = "entityProjectName", required = false, defaultValue = "") String entityProjectName,
-            @RequestParam(value = "entityProjectPackage", required = false, defaultValue = "") String entityProjectPackage,
-            @RequestParam(value = "mapperProjectName", required = false, defaultValue = "") String mapperProjectName,
-            @RequestParam(value = "mapperProjectPackage", required = false, defaultValue = "") String mapperProjectPackage,
-            @RequestParam(value = "serviceProjectName", required = false, defaultValue = "") String serviceProjectName,
-            @RequestParam(value = "serviceProjectPackage", required = false, defaultValue = "") String serviceProjectPackage,
-            String[] tableColumns, String[] entityField, String[] entityType,
-            @RequestParam(value = "mapperInterface", required = false, defaultValue = "") String mapperInterface,
-            @RequestParam(value = "serviceInterface", required = false, defaultValue = "") String serviceInterface,
-            @RequestParam(value = "serviceImplement", required = false, defaultValue = "") String serviceImplement) throws ClassNotFoundException {
-
-        PType newPType = PType.get(Integer.parseInt(pType));
-
-        Generate g = Orika.o2o(vo, Generate.class);
-
-        DTO dto = generateService.generate(g, tableName, pName, newPType, pPath, pPackage, entityName, entityProjectName,
-                entityProjectPackage, mapperProjectName,
-                mapperProjectPackage,
-                serviceProjectName, serviceProjectPackage, tableColumns, entityField, entityType, mapperInterface,
-                serviceInterface, serviceImplement);
-
-        return buildResult(dto);
+    public Map<?, ?> doit(GenerateVO vo) {
+        return buildResult(generateService.generate(Orika.o2o(vo, Generate.class)));
     }
 
 }

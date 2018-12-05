@@ -9,7 +9,6 @@
 package org.nqcx.cg.service.generate.impl;
 
 import org.apache.commons.lang3.StringUtils;
-import org.nqcx.cg.provide.enums.PType;
 import org.nqcx.cg.provide.o.CgField;
 import org.nqcx.cg.provide.o.Generate;
 import org.nqcx.cg.provide.o.table.Column;
@@ -43,7 +42,7 @@ public class GenerateServiceImpl implements GenerateService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final static Pattern TYPE_LENGTH_PATTERN = Pattern.compile(".+\\((\\d+)\\)");
+    private final static Pattern TYPE_LENGTH_PATTERN = Pattern.compile("(.+?)(\\(((\\d+?))\\))*?");
     private final static Map<String, String> classMapping = new HashMap<>();
 
     private final static String JAVA_PATH = "src/main/java/";
@@ -127,15 +126,9 @@ public class GenerateServiceImpl implements GenerateService {
         classMapping.put("Test", "org.junit.Test");
     }
 
+
     @Override
-    public DTO generate(Generate g, String tableName, String pName, PType pType, String pPath, String pPackage,
-                        String entityName,
-                        String entityProjectName, String entityProjectPackage,
-                        String mapperProjectName,
-                        String mapperProjectPackage,
-                        String serviceProjectName, String serviceProjectPackage,
-                        String[] tableColumns, String[] provideField, String[] provideType,
-                        String mapperInterface, String serviceInterface, String serviceImplement) {
+    public DTO generate(Generate g) {
 
         if (g == null)
             return new DTO(false).putResult("100", "生成代码失败！");
@@ -148,26 +141,30 @@ public class GenerateServiceImpl implements GenerateService {
         if (cgLogFile.exists())
             this.writeLog(cgLogFile, "");
 
+        // 取表
         DTO trd = tableService.getTable(g.getTableName());
         Table table;
         if (trd == null || !trd.isSuccess() || (table = trd.getObject()) == null)
             return new DTO(false).putResult("102", "表不存在！");
+        fillPojo(table, g.getPojoColumn(), g.getPojoField(), g.getPojoType());
 
-        Map<String, String> pathMap = this.getPathString(workspacePath, pPath, g.getProvideModule(),
+        // 生成 module path
+        Map<String, String> pathMap = this.getPathString(workspacePath, g.getpPath(), g.getProvideModule(),
                 g.getDaoModule(), g.getServiceModule(), g.getWebModule());
 
+        // provide
         classMapping.put(g.getProvideBO(), g.getProvideBOPackage() + "." + g.getProvideBO());
         classMapping.put(g.getProvideO(), g.getProvideOPackage() + "." + g.getProvideO());
         classMapping.put(g.getProvideProvide(), g.getProvideProvidePackage() + "." + g.getProvideProvide());
 
         String providePath = pathMap.get(P_PROVIDE_PATH_KEY);
         if (g.getProvide_().isTrue()) {
-            this.generateProvide(cgLogFile, providePath, g.getProvideBOPackage(), g.getProvideBO(),
+            this.generateProvide(cgLogFile, table, providePath, g.getProvideBOPackage(), g.getProvideBO(),
                     g.getProvideOPackage(), g.getProvideO(),
-                    g.getProvideProvidePackage(), g.getProvideProvide(),
-                    g.getTableColumns(), g.getProvideFields(), g.getProvideTypes());
+                    g.getProvideProvidePackage(), g.getProvideProvide());
         }
 
+        // dao
         classMapping.put(g.getDaoPO(), g.getDaoPOPackage() + "." + g.getDaoPO());
         classMapping.put(g.getDaoMapper(), g.getDaoMapperPackage() + "." + g.getDaoMapper());
         classMapping.put(g.getDaoJpa(), g.getDaoJpaPackage() + "." + g.getDaoJpa());
@@ -176,37 +173,85 @@ public class GenerateServiceImpl implements GenerateService {
 
         String daoPath = pathMap.get(P_DAO_PATH_KEY);
         if (g.getDao_().isTrue()) {
-            this.generateDao(cgLogFile, daoPath, g.getDaoPOPackage(), g.getDaoPO(),
+            this.generateDao(cgLogFile, table, daoPath, g.getDaoPOPackage(), g.getDaoPO(),
                     g.getDaoMapperPackage(), g.getDaoMapper(),
                     g.getDaoJpaPackage(), g.getDaoJpa(),
                     g.getDaoDaoPackage(), g.getDaoDAO(), g.getDaoDaoPackage() + ".impl", g.getDaoDAOImpl(),
-                    table, g.getTableColumns(), g.getProvideFields(), g.getProvideTypes(),
                     g.getProvideBO());
         }
 
+        // service
         classMapping.put(g.getServiceDTO(), g.getServiceDtoPackage() + "." + g.getServiceDTO());
         classMapping.put(g.getServiceService(), g.getServiceServicePackage() + "." + g.getServiceService());
         classMapping.put(g.getServceServiceImpl(), g.getServiceServicePackage() + ".impl." + g.getServceServiceImpl());
 
         String servicePath = pathMap.get(P_SERVICE_PATH_KEY);
         if (g.getService_().isTrue()) {
-            this.generateService(cgLogFile, servicePath, g.getServiceDtoPackage(), g.getServiceDTO(),
+            this.generateService(cgLogFile, table, servicePath, g.getServiceDtoPackage(), g.getServiceDTO(),
                     g.getServiceServicePackage(), g.getServiceService(), g.getServiceServicePackage() + ".impl", g.getServceServiceImpl(),
                     g.getProvideO(), g.getProvideProvide(), g.getDaoDAO(),
                     g.getDaoPO());
         }
 
+        // web
         classMapping.put(g.getWebVO(), g.getWebVoPackage() + "." + g.getWebVO());
         classMapping.put(g.getWebController(), g.getWebControllerPackage() + "." + g.getWebController());
 
         String webPath = pathMap.get(P_WEB_PATH_KEY);
         if (g.getWeb_().isTrue()) {
-            this.generateWeb(cgLogFile, webPath, g.getWebVoPackage(), g.getWebVO(),
+            this.generateWeb(cgLogFile, table, webPath, g.getWebVoPackage(), g.getWebVO(),
                     g.getWebControllerPackage(), g.getWebController(),
                     g.getProvideO(), g.getServiceDTO());
         }
 
         return new DTO(true);
+    }
+
+    /**
+     * @param table
+     * @param columns
+     * @param fields
+     * @param types
+     */
+    private void fillPojo(Table table, String[] columns, String[] fields, String[] types) {
+        if (table == null || table.getColumns() == null
+                || columns == null || table.getColumns().size() != columns.length
+                || fields == null || table.getColumns().size() != fields.length
+                || types == null || table.getColumns().size() != types.length)
+            return;
+
+        Column c;
+        for (int i = 0; i < table.getColumns().size(); i++) {
+            if ((c = table.getColumns().get(i)) == null
+                    || !c.getField().equalsIgnoreCase(columns[i]))
+                continue;
+
+            // column type and length
+            Matcher matcher = TYPE_LENGTH_PATTERN.matcher(c.getType());
+            if (matcher.matches() && matcher.groupCount() == 4) {
+                if (matcher.group(1) != null)
+                    c.setColumnType(matcher.group(1));
+                if (matcher.group(3) != null)
+                    c.setColumnLength(matcher.group(3));
+            }
+
+            c.setField_(fields[i]);
+            c.setType_(types[i]);
+            c.setNull_(true);
+
+            if ("NO".equals(c.getIsNull()))
+                c.setNull_(false);
+
+            if ("PRI".equalsIgnoreCase(c.getKey()) && StringUtils.containsIgnoreCase(c.getField(), "ID")) {
+                c.setId_(true);
+                c.setType_("INT".equalsIgnoreCase(types[i]) ? "Integer" : "Long");
+            }
+
+            if ("DATETIME".equalsIgnoreCase(c.getType()) && StringUtils.containsIgnoreCase(c.getField(), "_create"))
+                c.setCm_(true);
+            if ("TIMESTAMP".equalsIgnoreCase(c.getType()) && StringUtils.containsIgnoreCase(c.getField(), "_modify"))
+                c.setCm_(true);
+        }
     }
 
     /**
@@ -270,6 +315,8 @@ public class GenerateServiceImpl implements GenerateService {
     }
 
     /**
+     * @param logFile
+     * @param table
      * @param providePath
      * @param boPackage
      * @param boName
@@ -277,15 +324,10 @@ public class GenerateServiceImpl implements GenerateService {
      * @param oName
      * @param providePackage
      * @param provideName
-     * @param fields
-     * @param types
      */
-    private void generateProvide(File logFile, String providePath, String boPackage, String boName,
+    private void generateProvide(File logFile, Table table, String providePath, String boPackage, String boName,
                                  String oPackage, String oName,
-                                 String providePackage, String provideName,
-                                 String[] tableColumns,
-                                 String[] fields,
-                                 String[] types) {
+                                 String providePackage, String provideName) {
 
         Context cxt = new Context();
         Set<String> imports = new HashSet<>();
@@ -299,30 +341,29 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("imports", imports);
         cxt.setVariable("name", boName);
 
-        if (fields != null && types != null && tableColumns != null
-                && fields.length == types.length && fields.length == tableColumns.length) {
-            // bo field
-            List<String> boFields = new ArrayList<>();
-            // getter & setter
-            List<CgField> boGetterAndSetters = new ArrayList<>();
-            for (int i = 0; i < fields.length; i++) {
-                if (tableColumns[i].contains("_create") || tableColumns[i].contains("_modify"))
-                    continue;
+        // bo field
+        List<String> boFields = new ArrayList<>();
+        // getter & setter
+        List<CgField> boGetterAndSetters = new ArrayList<>();
 
-                mappingImport(imports, types[i]);
+        table.getColumns().forEach(c -> {
+            if (c.isCm_())
+                return;
 
-                boFields.add(String.format("private %s %s;", types[i], fields[i]));
+            mappingImport(imports, c.getType_());
 
-                CgField field = new CgField();
-                field.setType(types[i]);
-                field.setField(fields[i]);
-                field.setName(StringUtils.capitalize(fields[i]));
+            boFields.add(String.format("private %s %s;", c.getType_(), c.getField_()));
 
-                boGetterAndSetters.add(field);
-            }
-            cxt.setVariable("boFields", boFields);
-            cxt.setVariable("boGetterAndSetter", boGetterAndSetters);
-        }
+            CgField field = new CgField();
+            field.setType(c.getType_());
+            field.setField(c.getField_());
+            field.setName(StringUtils.capitalize(c.getField_()));
+
+            boGetterAndSetters.add(field);
+        });
+
+        cxt.setVariable("boFields", boFields);
+        cxt.setVariable("boGetterAndSetter", boGetterAndSetters);
 
         this.writeFile(logFile, providePath + "/" + JAVA_PATH + boPackage.replace('.', '/'), boName, JAVA_EXT_NAME,
                 process(BO_TXT_TEMPLATE_NAME, cxt));
@@ -359,6 +400,7 @@ public class GenerateServiceImpl implements GenerateService {
 
     /**
      * @param logFile
+     * @param table
      * @param daoPath
      * @param poPackage
      * @param po
@@ -370,28 +412,21 @@ public class GenerateServiceImpl implements GenerateService {
      * @param dao
      * @param daoImplPackage
      * @param daoImpl
-     * @param table
-     * @param tableColumns
-     * @param fields
-     * @param types
      * @param boName
      */
-    private void generateDao(File logFile, String daoPath, String poPackage, String po,
+    private void generateDao(File logFile, Table table, String daoPath, String poPackage, String po,
                              String mapperPackage, String mapper,
                              String jpaPackage, String jpa,
                              String daoPackage, String dao, String daoImplPackage, String daoImpl,
-                             Table table,
-                             String[] tableColumns,
-                             String[] fields,
-                             String[] types,
                              String boName) {
-
 
         Context cxt = new Context();
         Set<String> imports = new HashSet<>();
 
         // ID typ
         String idType = "Long";
+        if (table.getIdColumn() != null)
+            idType = table.getIdColumn().getType_();
 
         // po
         mappingImport(imports, boName);
@@ -408,81 +443,72 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("boName", boName);
         cxt.setVariable("tableName", table.getName());
 
-        if (fields != null && types != null && tableColumns != null && table != null && table.getColumns() != null
-                && fields.length == types.length && fields.length == tableColumns.length && fields.length == table.getColumns().size()) {
-            // bo field
-            List<String> poFields = new ArrayList<>();
-            // po getter
-            List<CgField> poGetter = new ArrayList<>();
-            // getter & setter
-            List<CgField> poGetterAndSetters = new ArrayList<>();
-            for (int i = 0; i < fields.length; i++) {
+        // bo field
+        List<String> poFields = new ArrayList<>();
+        // po getter
+        List<CgField> poGetter = new ArrayList<>();
+        // getter & setter
+        List<CgField> poGetterAndSetters = new ArrayList<>();
+        table.getColumns().forEach(c -> {
+            mappingImport(imports, c.getType_());
 
-                mappingImport(imports, types[i]);
+            CgField field = new CgField();
+            field.setType(c.getType_());
+            field.setField(c.getField_());
+            field.setName(StringUtils.capitalize(c.getField_()));
+            field.setAnnotations(new ArrayList<>());
 
-                CgField field = new CgField();
-                field.setType(types[i]);
-                field.setField(fields[i]);
-                field.setName(StringUtils.capitalize(fields[i]));
-                field.setAnnotations(new ArrayList<>());
+            // annotations
+            if (c.isId_()) {
+                mappingImport(imports, "ID");
+                mappingImport(imports, "GeneratedValue");
+                mappingImport(imports, "GenerationType");
 
-                Column col = table.getColumns().get(i);
-                // annotations
-                if ("PRI".equals(col.getKey()) && col.getField().contains("id")) {
-                    mappingImport(imports, "ID");
-                    mappingImport(imports, "GeneratedValue");
-                    mappingImport(imports, "GenerationType");
-
-                    field.getAnnotations().add("@Id");
-                    field.getAnnotations().add("@GeneratedValue(strategy = GenerationType.IDENTITY)");
-
-                    if ("int".equals(types[i]))
-                        idType = "Integer";
-                }
-
-                String colAnno = "name = \"" + col.getField() + "\"";
-                if ("NO".equals(col.getIsNull()))
-                    colAnno += ", nullable = false";
-                else if ("YES".equals(col.getIsNull()))
-                    colAnno += ", nullable = true";
-
-                Matcher matcher = TYPE_LENGTH_PATTERN.matcher(col.getType());
-                if (matcher.matches() && matcher.groupCount() >= 1 && matcher.group(1) != null)
-                    colAnno += ", length = " + matcher.group(1);
-
-                if (col.getField().contains("_create") || col.getField().contains("_modify")) {
-                    colAnno += ", insertable = false, updatable = false";
-                    String columnDefinition = col.getType().toUpperCase();
-                    if (col.getDefaultValue() != null && col.getDefaultValue().length() > 0) {
-                        if (columnDefinition.length() != 0)
-                            columnDefinition += " ";
-                        columnDefinition += "DEFAULT " + col.getDefaultValue().toUpperCase();
-                    }
-
-                    if (col.getExtra() != null && col.getExtra().length() > 0) {
-                        if (columnDefinition.length() != 0)
-                            columnDefinition += " ";
-
-                        columnDefinition += col.getExtra().toUpperCase();
-                    }
-                    colAnno += ", columnDefinition = \"" + columnDefinition + "\"";
-
-                    poFields.add(String.format("private %s %s;", types[i], fields[i]));
-                    cxt.setVariable("poFields", poFields);
-
-                    cxt.setVariable("poGetterAndSetter", poGetterAndSetters);
-
-                    poGetterAndSetters.add(field);
-                } else {
-                    cxt.setVariable("poGetter", poGetter);
-
-                    poGetter.add(field);
-                }
-
-
-                field.getAnnotations().add("@Column(" + colAnno + ")");
+                field.getAnnotations().add("@Id");
+                field.getAnnotations().add("@GeneratedValue(strategy = GenerationType.IDENTITY)");
             }
-        }
+
+            String colAnno = "name = \"" + c.getField() + "\"";
+            if (c.isNull_())
+                colAnno += ", nullable = true";
+            else
+                colAnno += ", nullable = false";
+
+            if (c.getColumnLength() != null)
+                colAnno += ", length = " + c.getColumnLength();
+
+            if (c.isCm_()) {
+                colAnno += ", insertable = false, updatable = false";
+                String columnDefinition = c.getType_().toUpperCase();
+                if (c.getDefaultValue() != null && c.getDefaultValue().length() > 0) {
+                    if (columnDefinition.length() != 0)
+                        columnDefinition += " ";
+                    columnDefinition += "DEFAULT " + c.getDefaultValue().toUpperCase();
+                }
+
+                if (c.getExtra() != null && c.getExtra().length() > 0) {
+                    if (columnDefinition.length() != 0)
+                        columnDefinition += " ";
+
+                    columnDefinition += c.getExtra().toUpperCase();
+                }
+                colAnno += ", columnDefinition = \"" + columnDefinition + "\"";
+
+                poFields.add(String.format("private %s %s;", c.getType_(), c.getField_()));
+                cxt.setVariable("poFields", poFields);
+
+                cxt.setVariable("poGetterAndSetter", poGetterAndSetters);
+
+                poGetterAndSetters.add(field);
+            } else {
+                cxt.setVariable("poGetter", poGetter);
+
+                poGetter.add(field);
+            }
+
+
+            field.getAnnotations().add("@Column(" + colAnno + ")");
+        });
 
 
         this.writeFile(logFile, daoPath + "/" + JAVA_PATH + poPackage.replace('.', '/'),
@@ -518,67 +544,53 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("tableName", table.getName());
         cxt.setVariable("po", po);
 
-        if (fields != null && types != null && tableColumns != null && table != null && table.getColumns() != null
-                && fields.length == types.length && fields.length == tableColumns.length && fields.length == table.getColumns().size()) {
 
-            List<String> resultMap = new ArrayList<>();
-            List<String> poInsertColumns = new ArrayList<>();
-            List<String> poInsertFields = new ArrayList<>();
+        List<String> resultMap = new ArrayList<>();
+        List<String> poInsertColumns = new ArrayList<>();
+        List<String> poInsertFields = new ArrayList<>();
 
-            List<String> poUpdateColumns = new ArrayList<>();
-            List<String> poUpdateFields = new ArrayList<>();
+        List<String> poUpdateColumns = new ArrayList<>();
+        List<String> poUpdateFields = new ArrayList<>();
 
-            String tableColumnsStr = "";
-            String idColumn = "";
-            String idField = "";
-            String idFieldName = "";
+        final String[] tableColumnsStr = {""};
+        final String[] idColumn = {table.getIdColumn() != null ? table.getIdColumn().getField() : null};
+        final String[] idFieldName = {table.getIdColumn() != null ? table.getIdColumn().getField_() : null};
+        final String[] idField = {table.getIdColumn() != null ? "#{" + table.getIdColumn().getField_() + "}" : null};
 
-            for (int i = 0; i < fields.length; i++) {
-                Column col = table.getColumns().get(i);
+        table.getColumns().forEach(c -> {
+            if (tableColumnsStr[0].length() > 0)
+                tableColumnsStr[0] += ", ";
+            tableColumnsStr[0] += c.getField();
 
-                if (i == 0) {
-                    idColumn = col.getField();
-                    idFieldName = fields[i];
-                    idField = "#{" + fields[i] + "}";
-                }
+            poInsertColumns.add(c.getField());
 
-                if (tableColumnsStr.length() > 0)
-                    tableColumnsStr += ", ";
-                tableColumnsStr += tableColumns[i];
+            if (c.isId_()) {
+                resultMap.add("<id property=\"" + c.getField_() + "\" column=\"" + c.getField() + "\" />");
 
-                poInsertColumns.add(col.getField());
+                poInsertFields.add("NULL");
+            } else {
+                resultMap.add("<result property=\"" + c.getField_() + "\" column=\"" + c.getField() + "\" />");
 
-                if ("PRI".equals(col.getKey()) && col.getField().contains("id")) {
-                    idColumn = col.getField();
-                    idFieldName = fields[i];
-
-                    resultMap.add("<id property=\"" + fields[i] + "\" column=\"" + tableColumns[i] + "\" />");
-
+                if (c.isCm_()) {
                     poInsertFields.add("NULL");
                 } else {
-                    resultMap.add("<result property=\"" + fields[i] + "\" column=\"" + col.getField() + "\" />");
+                    poInsertFields.add("#{" + c.getField_() + "}");
 
-                    if (col.getField().contains("_create") || col.getField().contains("_modify")) {
-                        poInsertFields.add("NULL");
-                    } else {
-                        poInsertFields.add("#{" + fields[i] + "}");
-
-                        poUpdateColumns.add(col.getField());
-                        poUpdateFields.add("#{" + fields[i] + "}");
-                    }
+                    poUpdateColumns.add(c.getField());
+                    poUpdateFields.add("#{" + c.getField_() + "}");
                 }
             }
+        });
 
-            cxt.setVariable("resultMap", resultMap);
-            cxt.setVariable("tableColumnsStr", tableColumnsStr);
-            cxt.setVariable("idColumn", idColumn);
-            cxt.setVariable("idField", idField);
-            cxt.setVariable("idFieldName", idFieldName);
-            cxt.setVariable("poInsertColumns", poInsertColumns);
-            cxt.setVariable("poInsertFields", poInsertFields);
-            cxt.setVariable("poUpdateColumns", poUpdateColumns);
-            cxt.setVariable("poUpdateFields", poUpdateFields);
-        }
+        cxt.setVariable("idColumn", idColumn[0]);
+        cxt.setVariable("idFieldName", idFieldName[0]);
+        cxt.setVariable("idField", idField[0]);
+        cxt.setVariable("resultMap", resultMap);
+        cxt.setVariable("tableColumnsStr", tableColumnsStr[0]);
+        cxt.setVariable("poInsertColumns", poInsertColumns);
+        cxt.setVariable("poInsertFields", poInsertFields);
+        cxt.setVariable("poUpdateColumns", poUpdateColumns);
+        cxt.setVariable("poUpdateFields", poUpdateFields);
 
         this.writeFile(logFile, daoPath + "/" + JAVA_PATH + mapperPackage.replace('.', '/'),
                 mapper, XML_EXT_NAME,
@@ -679,24 +691,18 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("daoName", dao);
         cxt.setVariable("daoVeriable", StringUtils.uncapitalize(daoImpl));
 
-        if (fields != null && types != null && tableColumns != null && table != null && table.getColumns() != null
-                && fields.length == types.length && fields.length == tableColumns.length && fields.length == table.getColumns().size()) {
+        mappingImport(imports, "Arrays");
 
-            mappingImport(imports, "Arrays");
+        List<String> poSetters = new ArrayList<>();
 
-            List<String> poSetters = new ArrayList<>();
+        table.getColumns().forEach(c -> {
+            if (c.isCm_())
+                return;
 
-            for (int i = 0; i < fields.length; i++) {
-                Column col = table.getColumns().get(i);
+            poSetters.add("// po.set" + StringUtils.capitalize(c.getField_()) + "(\"" + c.getField_() + "\");");
+        });
 
-                if (col.getField().contains("_create") || col.getField().contains("_modify"))
-                    continue;
-
-                poSetters.add("// po.set" + StringUtils.capitalize(fields[i]) + "(\"" + fields[i] + "\");");
-            }
-
-            cxt.setVariable("poSetters", poSetters);
-        }
+        cxt.setVariable("poSetters", poSetters);
 
         this.writeFile(logFile, daoPath + "/" + TEST_PATH + daoPackage.replace('.', '/'),
                 daoImpl + "Test", JAVA_EXT_NAME,
@@ -705,6 +711,7 @@ public class GenerateServiceImpl implements GenerateService {
 
     /**
      * @param logFile
+     * @param table
      * @param servicePath
      * @param dtoPackage
      * @param dto
@@ -713,11 +720,11 @@ public class GenerateServiceImpl implements GenerateService {
      * @param serviceImplPackage
      * @param serviceImpl
      * @param oName
-     * @param daoName
      * @param provideName
+     * @param daoName
      * @param poName
      */
-    private void generateService(File logFile, String servicePath, String dtoPackage, String dto,
+    private void generateService(File logFile, Table table, String servicePath, String dtoPackage, String dto,
                                  String servicePackage, String service, String serviceImplPackage, String serviceImpl,
                                  String oName, String provideName, String daoName, String poName) {
 
@@ -820,7 +827,7 @@ public class GenerateServiceImpl implements GenerateService {
      * @param oName
      * @param dtoName
      */
-    private void generateWeb(File logFile, String webPath, String voPackage, String vo,
+    private void generateWeb(File logFile, Table table, String webPath, String voPackage, String vo,
                              String controllerPackage, String controller,
                              String oName, String dtoName) {
 

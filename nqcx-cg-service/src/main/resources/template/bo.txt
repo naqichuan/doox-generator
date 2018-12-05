@@ -13,8 +13,7 @@ import [(${import})];
  */
 public class [(${name})] implements Serializable {
 [# th:each="f : ${boFields}"]
-    [(${f})][/]
-[# th:each="gs : ${boGetterAndSetter}"]
+    [(${f})][/][# th:each="gs : ${boGetterAndSetter}"]
 
     public [(${gs.type})] get[(${gs.name})]() {
         return [(${gs.field})];
@@ -22,6 +21,5 @@ public class [(${name})] implements Serializable {
 
     public void set[(${gs.name})]([(${gs.type})] [(${gs.field})]) {
         this.[(${gs.field})] = [(${gs.field})];
-    }
-[/]
+    }[/]
 }

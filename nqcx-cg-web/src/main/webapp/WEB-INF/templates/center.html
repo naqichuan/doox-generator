@@ -1,19 +1,23 @@
 <form id="generate_form" method="post" action="" xmlns:th="http://www.thymeleaf.org">
-    <table border="1" style="border-color: #6a6a6a;" cellpadding="0" cellspacing="0">
-        <thead>
-        <tr>
-            <th>field</th>
-            <th>type</th>
-            <th>collation</th>
-            <th>isNull</th>
-            <th>key</th>
-            <th>defaultValue</th>
-            <th>extra</th>
-            <th>privileges</th>
-            <th>comment</th>
-        </tr>
-        </thead>
-        <tbody id="tableInfo">
+    <fieldset>
+        <legend>
+            <span style="font-weight: 700;">Table -> POJO</span>
+        </legend>
+        <table border="1" style="border-color: #6a6a6a;" cellpadding="0" cellspacing="0">
+            <thead>
+            <tr>
+                <th>field</th>
+                <th>type</th>
+                <th>collation</th>
+                <th>isNull</th>
+                <th>key</th>
+                <th>defaultValue</th>
+                <th>extra</th>
+                <th>privileges</th>
+                <th>comment</th>
+            </tr>
+            </thead>
+            <tbody id="tableInfo">
             <tr th:each="c : ${table?.columns}">
                 <td th:text="${c.field}"></td>
                 <td th:text="${c.type}"></td>
@@ -25,9 +29,11 @@
                 <td th:text="${c.privileges}"></td>
                 <td th:text="${c.comment}"></td>
             </tr>
-        </tbody>
-    </table>
-    <br/>
+            </tbody>
+        </table>
+        <div id="config_pojo_div"></div>
+    </fieldset>
+    <br/> <br/>
     <fieldset>
         <legend>
             <span style="font-weight: 700;"><input type="checkbox" name="provide_" value="true">Module -> Provide</span>
@@ -52,7 +58,7 @@
                 <td>
                 </td>
             </tr>
-         </table>
+        </table>
         <div id="config_provide_div"></div>
     </fieldset>
     <br/> <br/>
@@ -123,7 +129,8 @@
         <div id="config_web_div"></div>
     </fieldset>
     <br/>
-    <input id="generate_btn" type="button" value="Generate Code" style="width: 150px; height: 32px; background-color: orange;"/>
+    <input id="generate_btn" type="button" value="Generate Code"
+           style="width: 150px; height: 32px; background-color: orange;"/>
 </form>
 
 <script type="text/javascript">
@@ -146,11 +153,11 @@
 </script>
 <script type="text/javascript">
     var tableInfo = {
+        projectDiv: function () {
+            return jQuery('#config_pojo_div');
+        },
         info: function () {
             return jQuery('tbody#tableInfo');
-        },
-        emptyInfo: function () {
-            this.info().html('');
         },
         addInfo: function (column) {
             if (!column)
@@ -168,62 +175,8 @@
             colstr += '</tr>';
             this.info().append(colstr);
         },
-        getInfo: function (tableName) {
-            if (!tableName)
-                return;
-
-            nqcxGet("[(@{'/table/get/'})]" + tableName, {}, function (result) {
-                tableInfo.emptyInfo();
-                if (result.object && result.object.columns) {
-                    for (idx in result.object.columns) {
-                        tableInfo.addInfo(result.object.columns[idx]);
-                    }
-                }
-            });
-        }
-    };
-</script>
-
-<script type="text/javascript">
-    var provide = {
-        projectDiv: function () {
-            return jQuery('#config_provide_div');
-        },
-        provideBOPackage: function () {
-            return jQuery('input[name="provideBOPackage"]');
-        },
-        provideOPackage: function () {
-            return jQuery('input[name="provideOPackage"]');
-        },
-        provideProvidePackage: function () {
-            return jQuery('input[name="provideProvidePackage"]');
-        },
         projectInit: function () {
-            this.loadPackage();
-            this.loadTable();
-        },
-        loadPackage: function() {
-            var tablePack = table.tablePack().val();
-
-            // project pakcage value
-            var pValue = project.pPackage().val() || '';
-
-            var pbValue = pValue + '.provide.bo' + (tablePack ? "." + tablePack : "") ;
-            if(pbValue.indexOf(".") === 0 && pbValue.length > 1)
-                pbValue = pbValue.substring(1);
-
-            var poValue = pValue + '.provide.o' + (tablePack ? "." + tablePack : "");
-            if(poValue.indexOf(".") === 0 && poValue.length > 1)
-                poValue = poValue.substring(1);
-
-            var ppValue = pValue + '.service' + (tablePack ? "." + tablePack : "");
-            if(ppValue.indexOf(".") === 0 && ppValue.length > 1)
-                ppValue = ppValue.substring(1);
-
-            // set value
-            this.provideBOPackage().val(pbValue);
-            this.provideOPackage().val(poValue);
-            this.provideProvidePackage().val(ppValue);
+            this.loadTable()
         },
         loadTable: function () {
             var tableName = table.tableName().val();
@@ -234,39 +187,26 @@
             nqcxGet("[(@{'/table/get/'})]" + tableName, {}, function (result) {
                 if (result.object && result.object.columns) {
                     columns = result.object.columns;
+
+                    for (idx in columns) {
+                        tableInfo.addInfo(columns[idx]);
+                    }
                 }
-                provide.config(columns, tableName);
+                tableInfo.config(columns);
             });
         },
-        config: function (columns, table) {
-            var provideHtml = '<hr />';
-            provideHtml += '<table border="0" cellpadding="0" cellspacing="0">';
-            provideHtml +=  this.row(table);
-            provideHtml += '</table>';
-            provideHtml += '<hr />';
-            provideHtml += '<table border="0" cellpadding="0" cellspacing="0">';
+        config: function (columns) {
+            var tableName = table.tableName().val();
+            if (!tableName)
+                return;
+
+            var tableHtml = '<hr />';
+            tableHtml += '<table border="0" cellpadding="0" cellspacing="0">';
             for (idx in columns) {
-                provideHtml += '<tr>' + this.row1(columns[idx]) + '</tr>';
+                tableHtml += '<tr>' + this.row1(columns[idx]) + '</tr>';
             }
-            provideHtml += '</table>';
-            this.projectDiv().html(provideHtml);
-        },
-        row: function (table) {
-            var rowHtml = '';
-            var provideName = table.replaceFirstUP();
-
-            rowHtml += '<tr><td class="lable">Create BO:</td><td class="lable">public class</td><td>' +
-                    '<input id="privideBO" type="text" name="provideBO" class="big_200" value="' + provideName + 'BO"></td>';
-
-            rowHtml += '<td class="lable">Create O:</td><td class="lable">public class</td><td>' +
-                    '<input id="privideO" type="text" name="provideO" class="big_200" value="' + provideName + '"></td></tr>';
-
-            rowHtml += '<tr><td class="lable">Create Provide:</td><td class="lable">public interface</td><td>' +
-                    '<input id="privideProvide" type="text" name="provideProvide" class="big_200" value="I' + provideName + 'Provide"></td></tr>';
-
-            rowHtml += '<tr><td class="lable"></td><td></td></tr>'
-
-            return rowHtml;
+            tableHtml += '</table>';
+            this.projectDiv().html(tableHtml);
         },
         row1: function (column) {
             var rowHtml = '';
@@ -276,28 +216,28 @@
             var type_ = this.toType(type);
             var show = 'private ' + type_ + ' ' + field_ + ";";
 
-            rowHtml += '<td><input id="tableColumns_' + field + '" type="text" name="tableColumns" class="big_200" value="' + field + '" readonly="true" /></td>';
+            rowHtml += '<td><input id="pojoColumn_' + field + '" type="text" name="pojoColumn" class="big_200" value="' + field + '" readonly="true" /></td>';
             rowHtml += '<td>' + type + '</td>';
-            rowHtml += '<td><input id="provideField_' + field + '" type="text" name="provideFields" class="big_200" value="' + field_ + '" onkeyup="provide.show1(\'' + field + '\')" onafterpaste="provide.show1(\'' + field + '\')" onblur="provide.show1(\'' + field + '\')" /></td>';
-            rowHtml += '<td><input id="provideType_' + field + '" type="text" name="provideTypes" class="big_200" value="' + type_ + '" onkeyup="provide.show1(\'' + field + '\')" onafterpaste="provide.show1(\'' + field + '\')" onblur="provide.show1(\'' + field + '\')" /></td>';
-            rowHtml += '<td><span id="provideText_' + field + '">' + show + '</span></td>';
+            rowHtml += '<td><input id="pojoField_' + field + '" type="text" name="pojoField" class="big_200" value="' + field_ + '" onkeyup="tableInfo.show1(\'' + field + '\')" onafterpaste="tableInfo.show1(\'' + field + '\')" onblur="tableInfo.show1(\'' + field + '\')" /></td>';
+            rowHtml += '<td><input id="pojoType_' + field + '" type="text" name="pojoType" class="big_200" value="' + type_ + '" onkeyup="tableInfo.show1(\'' + field + '\')" onafterpaste="tableInfo.show1(\'' + field + '\')" onblur="tableInfo.show1(\'' + field + '\')" /></td>';
+            rowHtml += '<td><span id="jojoText_' + field + '">' + show + '</span></td>';
 
             return rowHtml;
         },
         show1: function (suffix) {
-            var field_ = document.getElementById('provideField_' + suffix).value;
-            var type_ = document.getElementById('provideType_' + suffix).value;
+            var field_ = document.getElementById('pojoField_' + suffix).value;
+            var type_ = document.getElementById('pojoType_' + suffix).value;
             var show1 = 'private ' + type_ + ' ' + field_ + ";";
-            jQuery('#provideText_' + suffix).html(show1);
+            jQuery('#jojoText_' + suffix).html(show1);
         },
         toField: function (input) {
             var prefix = table.colPrefix().val();
             var ps = prefix.split(',');
-            if(ps != null && ps.length > 0) {
+            if (ps != null && ps.length > 0) {
                 for (idx in ps) {
-                    if(!ps[idx])
+                    if (!ps[idx])
                         continue;
-                    input = input.replace(ps[idx],'');
+                    input = input.replace(ps[idx], '');
                 }
             }
             return input.replaceFirstUP().replaceFirstLow();
@@ -325,6 +265,78 @@
     };
 </script>
 <script type="text/javascript">
+    var provide = {
+        projectDiv: function () {
+            return jQuery('#config_provide_div');
+        },
+        provideBOPackage: function () {
+            return jQuery('input[name="provideBOPackage"]');
+        },
+        provideOPackage: function () {
+            return jQuery('input[name="provideOPackage"]');
+        },
+        provideProvidePackage: function () {
+            return jQuery('input[name="provideProvidePackage"]');
+        },
+        projectInit: function () {
+            this.loadPackage();
+            this.config();
+        },
+        loadPackage: function () {
+            var tablePack = table.tablePack().val();
+
+            // project pakcage value
+            var pValue = project.pPackage().val() || '';
+
+            var pbValue = pValue + '.provide.bo' + (tablePack ? "." + tablePack : "");
+            if (pbValue.indexOf(".") === 0 && pbValue.length > 1)
+                pbValue = pbValue.substring(1);
+
+            var poValue = pValue + '.provide.o' + (tablePack ? "." + tablePack : "");
+            if (poValue.indexOf(".") === 0 && poValue.length > 1)
+                poValue = poValue.substring(1);
+
+            var ppValue = pValue + '.service' + (tablePack ? "." + tablePack : "");
+            if (ppValue.indexOf(".") === 0 && ppValue.length > 1)
+                ppValue = ppValue.substring(1);
+
+            // set value
+            this.provideBOPackage().val(pbValue);
+            this.provideOPackage().val(poValue);
+            this.provideProvidePackage().val(ppValue);
+        },
+        config: function () {
+            var tableName = table.tableName().val();
+            if (!tableName)
+                return;
+
+            var provideHtml = '<hr />';
+            provideHtml += '<table border="0" cellpadding="0" cellspacing="0">';
+            provideHtml += this.row(tableName);
+            provideHtml += '</table>';
+            this.projectDiv().html(provideHtml);
+        },
+        row: function (table) {
+            var rowHtml = '';
+            var provideName = table.replaceFirstUP();
+
+            rowHtml += '<tr><td class="lable">Create BO:</td><td class="lable">public class</td><td>' +
+                '<input id="privideBO" type="text" name="provideBO" class="big_200" value="' + provideName + 'BO"></td>';
+
+            rowHtml += '<td class="lable">Create O:</td><td class="lable">public class</td><td>' +
+                '<input id="privideO" type="text" name="provideO" class="big_200" value="' + provideName + '"></td></tr>';
+
+            rowHtml += '<tr><td class="lable">Create Provide:</td><td class="lable">public interface</td><td>' +
+                '<input id="privideProvide" type="text" name="provideProvide" class="big_200" value="I' + provideName + 'Provide"></td></tr>';
+
+            rowHtml += '<tr><td class="lable"></td><td></td></tr>'
+
+            return rowHtml;
+        },
+
+    };
+</script>
+<script type="text/javascript">
     var dao = {
         projectDiv: function () {
             return jQuery('#config_dao_div');
@@ -345,26 +357,26 @@
             this.loadPackage();
             this.config()
         },
-        loadPackage: function() {
+        loadPackage: function () {
             var tablePack = table.tablePack().val();
 
             // project pakcage value
             var pValue = project.pPackage().val() || '';
 
             var poValue = pValue + '.data.po' + (tablePack ? "." + tablePack : "");
-            if(poValue.indexOf(".") === 0 && poValue.length > 1)
+            if (poValue.indexOf(".") === 0 && poValue.length > 1)
                 poValue = poValue.substring(1);
 
             var mapperValue = pValue + '.data.mapper' + (tablePack ? "." + tablePack : "");
-            if(mapperValue.indexOf(".") === 0 && mapperValue.length > 1)
+            if (mapperValue.indexOf(".") === 0 && mapperValue.length > 1)
                 mapperValue = mapperValue.substring(1);
 
             var jpaValue = pValue + '.data.jpa' + (tablePack ? "." + tablePack : "");
-            if(jpaValue.indexOf(".") === 0 && jpaValue.length > 1)
+            if (jpaValue.indexOf(".") === 0 && jpaValue.length > 1)
                 jpaValue = jpaValue.substring(1);
 
             var daoValue = pValue + '.dao' + (tablePack ? "." + tablePack : "");
-            if(daoValue.indexOf(".") === 0 && daoValue.length > 1)
+            if (daoValue.indexOf(".") === 0 && daoValue.length > 1)
                 daoValue = daoValue.substring(1);
 
             // set value
@@ -380,7 +392,7 @@
 
             var daoHtml = '<hr />';
             daoHtml += '<table border="0" cellpadding="0" cellspacing="0">';
-            daoHtml +=  this.row(tableName)
+            daoHtml += this.row(tableName)
             daoHtml += '</table>';
             this.projectDiv().html(daoHtml);
         },
@@ -424,21 +436,21 @@
             this.loadPackage();
             this.config();
         },
-        loadPackage: function() {
+        loadPackage: function () {
             var tablePack = table.tablePack().val();
 
             // project pakcage value
             var pValue = project.pPackage().val() || '';
 
-            var sdValue = pValue + '.data.dto' + (tablePack ? "." + tablePack : "") ;
-            if(sdValue.indexOf(".") === 0 && sdValue.length > 1)
+            var sdValue = pValue + '.data.dto' + (tablePack ? "." + tablePack : "");
+            if (sdValue.indexOf(".") === 0 && sdValue.length > 1)
                 sdValue = sdValue.substring(1);
 
             var ssValue = pValue + '.service' + (tablePack ? "." + tablePack : "");
-            if(ssValue.indexOf(".") === 0 && ssValue.length > 1)
+            if (ssValue.indexOf(".") === 0 && ssValue.length > 1)
                 ssValue = ssValue.substring(1);
 
-             // set value
+            // set value
             this.serviceDtoPackage().val(sdValue);
             this.serviceServicePackage().val(ssValue);
         },
@@ -449,7 +461,7 @@
 
             var serviceHtml = '<hr />';
             serviceHtml += '<table border="0" cellpadding="0" cellspacing="0">';
-            serviceHtml +=  this.row(tableName)
+            serviceHtml += this.row(tableName)
             serviceHtml += '</table>';
             this.projectDiv().html(serviceHtml);
         },
@@ -478,46 +490,46 @@
         projectDiv: function () {
             return jQuery('#config_web_div');
         },
-        webVoPackage: function() {
+        webVoPackage: function () {
             return jQuery('input[name="webVoPackage"]');
         },
-        webControllerPackage: function() {
+        webControllerPackage: function () {
             return jQuery('input[name="webControllerPackage"]');
         },
         projectInit: function () {
             this.loadPackage();
             this.config();
         },
-        loadPackage: function() {
+        loadPackage: function () {
             var tablePack = table.tablePack().val();
 
             // project pakcage value
             var pValue = project.pPackage().val() || '';
 
-            var wvValue = pValue + '.data.vo' + (tablePack ? "." + tablePack : "") ;
-            if(wvValue.indexOf(".") === 0 && wvValue.length > 1)
+            var wvValue = pValue + '.data.vo' + (tablePack ? "." + tablePack : "");
+            if (wvValue.indexOf(".") === 0 && wvValue.length > 1)
                 wvValue = wvValue.substring(1);
 
             var wcValue = pValue + '.web.controller' + (tablePack ? "." + tablePack : "");
-            if(wcValue.indexOf(".") === 0 && wcValue.length > 1)
+            if (wcValue.indexOf(".") === 0 && wcValue.length > 1)
                 wcValue = wcValue.substring(1);
 
             // set value
             this.webVoPackage().val(wvValue);
             this.webControllerPackage().val(wcValue);
         },
-        config: function() {
+        config: function () {
             var tableName = table.tableName().val();
             if (!tableName)
                 return;
 
             var webHtml = '<hr />';
             webHtml += '<table border="0" cellpadding="0" cellspacing="0">';
-            webHtml +=  this.row(tableName)
+            webHtml += this.row(tableName)
             webHtml += '</table>';
             this.projectDiv().html(webHtml);
         },
-        row: function(table) {
+        row: function (table) {
             var rowHtml = '';
             var webName = table.replaceFirstUP();
 
@@ -536,7 +548,7 @@
         $('#generate_form').form('nqcxSubmit', {
             url: "[(@{'/generate/doit'})]",
             onSubmit: function () {
-                if(button.checkProjectName())
+                if (button.checkProjectName())
                     return $(this).form('validate');
                 return false;
             },
@@ -586,8 +598,7 @@
             table.change();
         });
 
-        tableInfo.getInfo(table.tableName().val());
-
+        tableInfo.projectInit();
         provide.projectInit();
         dao.projectInit();
         service.projectInit();

@@ -6,6 +6,7 @@
 
 package org.nqcx.cg.web.controller;
 
+import org.nqcx.cg.provide.enums.PType;
 import org.nqcx.commons3.lang.enums.BoolEO;
 import org.nqcx.commons3.util.StringUtils;
 import org.nqcx.commons3.web.WebSupport;
@@ -37,6 +38,20 @@ public abstract class AbstractController extends WebSupport {
                 }
 
                 setValue(boolEO);
+            }
+        });
+        binder.registerCustomEditor(PType.class, new PropertiesEditor() {
+            @Override
+            public void setAsText(String text) throws IllegalArgumentException {
+                PType ptype = PType.SINGLE;
+                try {
+                    if (StringUtils.isNotBlank(text))
+                        ptype = PType.valueOf(text.toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    // nothing to do
+                }
+
+                setValue(ptype);
             }
         });
     }
