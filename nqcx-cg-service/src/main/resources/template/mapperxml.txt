@@ -29,7 +29,7 @@
 			[(${idColumn})]=[(${idField})]
 	</update>
 
-	<select id="findById" resultMap="[(${tableName})]_rm" parameterType="long">
+	<select id="findById" resultMap="[(${tableName})]_rm" parameterType="[(${idType})]">
 		SELECT
 			<include refid="[(${tableName})]_columns" />
 		FROM
@@ -81,7 +81,7 @@
 		<include refid="condition" />
 	</select>
 
-	<delete id="deleteById" parameterType="long">
+	<delete id="deleteById" parameterType="[(${idType})]">
 		DELETE FROM
 			[(${tableName})]
 		WHERE

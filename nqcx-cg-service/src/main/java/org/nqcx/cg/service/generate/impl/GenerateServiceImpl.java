@@ -556,6 +556,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("tableName", table.getName());
         cxt.setVariable("po", po);
 
+        cxt.setVariable("idType", idType);
 
         List<String> resultMap = new ArrayList<>();
         List<String> poInsertColumns = new ArrayList<>();
