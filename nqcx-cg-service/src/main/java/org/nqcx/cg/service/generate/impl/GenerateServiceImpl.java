@@ -190,8 +190,7 @@ public class GenerateServiceImpl implements GenerateService {
         if (g.getService_().isTrue()) {
             this.generateService(cgLogFile, table, servicePath, g.getServiceDtoPackage(), g.getServiceDTO(),
                     g.getServiceServicePackage(), g.getServiceService(), g.getServiceServicePackage() + ".impl", g.getServceServiceImpl(),
-                    g.getProvideO(), g.getProvideProvide(), g.getDaoDAO(),
-                    g.getDaoPO());
+                    g.getProvideProvide(), g.getDaoDAO(), g.getDaoPO());
         }
 
         // web
@@ -741,14 +740,13 @@ public class GenerateServiceImpl implements GenerateService {
      * @param service
      * @param serviceImplPackage
      * @param serviceImpl
-     * @param oName
      * @param provideName
      * @param daoName
      * @param poName
      */
     private void generateService(File logFile, Table table, String servicePath, String dtoPackage, String dto,
                                  String servicePackage, String service, String serviceImplPackage, String serviceImpl,
-                                 String oName, String provideName, String daoName, String poName) {
+                                 String provideName, String daoName, String poName) {
 
         Context cxt = new Context();
         Set<String> imports = new HashSet<>();
@@ -814,6 +812,7 @@ public class GenerateServiceImpl implements GenerateService {
 
         cxt.setVariable("idType", idType);
         cxt.setVariable("dtoName", dto);
+        cxt.setVariable("poName", poName);
         cxt.setVariable("serviceName", service);
         cxt.setVariable("daoName", daoName);
         String daoVeriable = daoName;

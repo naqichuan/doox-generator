@@ -12,7 +12,7 @@ import [(${import})];
  * @author [(${author})] [(${#dates.format(date, 'yyyy-MM-dd HH:mm')})]
  */
 @Service
-public class [(${name})] extends ServiceSupport<[(${dtoName})], [(${idType})]> implements [(${serviceName})]<[(${dtoName})], [(${idType})]> {
+public class [(${name})] extends ServiceSupport<[(${dtoName})], [(${poName})], [(${idType})]> implements [(${serviceName})]<[(${dtoName})], [(${idType})]> {
 
     private final [(${daoName})] [(${daoVeriable})];
 
@@ -21,7 +21,7 @@ public class [(${name})] extends ServiceSupport<[(${dtoName})], [(${idType})]> i
     }
 
     @Override
-    protected IDao<[(${dtoName})], [(${idType})]> getDao() {
+    protected IDao<[(${poName})], [(${idType})]> getDao() {
         return [(${daoVeriable})];
     }
 }
