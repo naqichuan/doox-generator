@@ -485,7 +485,7 @@ public class GenerateServiceImpl implements GenerateService {
                 mappingImport(imports, "GeneratedValue");
                 mappingImport(imports, "GenerationType");
 
-                field.getAnnotations().add("@Override)");
+                field.getAnnotations().add("@Override");
                 field.getAnnotations().add("@Id");
                 field.getAnnotations().add("@GeneratedValue(strategy = GenerationType.IDENTITY)");
             }
@@ -525,7 +525,7 @@ public class GenerateServiceImpl implements GenerateService {
             } else {
                 cxt.setVariable("poGetter", poGetter);
 
-                field.getAnnotations().add("@Override)");
+                field.getAnnotations().add("@Override");
 
                 poGetter.add(field);
             }
