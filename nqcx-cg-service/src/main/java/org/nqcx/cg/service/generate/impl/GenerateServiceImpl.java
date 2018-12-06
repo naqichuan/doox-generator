@@ -122,15 +122,15 @@ public class GenerateServiceImpl implements GenerateService {
 
         CLASS_MAPPING.put("stereotype.Service", "org.springframework.stereotype.Service");
         CLASS_MAPPING.put("Autowired", "org.springframework.beans.factory.annotation.Autowired");
-        CLASS_MAPPING.put("DependencyInjectionTestExecutionListener", "org.springframework.test.context.support.DependencyInjectionTestExecutionListener");
-        CLASS_MAPPING.put("TransactionalTestExecutionListener", "org.springframework.test.context.transaction.TransactionalTestExecutionListener");
-        CLASS_MAPPING.put("TestExecutionListeners", "org.springframework.test.context.TestExecutionListeners");
 
         CLASS_MAPPING.put("test.Test", "org.junit.Test");
         CLASS_MAPPING.put("test.RunWith", "org.junit.runner.RunWith");
         CLASS_MAPPING.put("test.TestCase", "junit.framework.TestCase");
         CLASS_MAPPING.put("test.ContextConfiguration", "org.springframework.test.context.ContextConfiguration");
         CLASS_MAPPING.put("test.SpringJUnit4ClassRunner", "org.springframework.test.context.junit4.SpringJUnit4ClassRunner");
+        CLASS_MAPPING.put("test.DependencyInjectionTestExecutionListener", "org.springframework.test.context.support.DependencyInjectionTestExecutionListener");
+        CLASS_MAPPING.put("test.TransactionalTestExecutionListener", "org.springframework.test.context.transaction.TransactionalTestExecutionListener");
+        CLASS_MAPPING.put("test.TestExecutionListeners", "org.springframework.test.context.TestExecutionListeners");
     }
 
     /**
@@ -351,7 +351,7 @@ public class GenerateServiceImpl implements GenerateService {
                                  String providePackage, String provideName) {
 
         Context cxt = new Context();
-        Set<String> imports = new HashSet<>();
+        Set<String> imports = new LinkedHashSet<>();
 
         // bo
         mappingImport(imports, "Serializable");
@@ -442,7 +442,7 @@ public class GenerateServiceImpl implements GenerateService {
                              String boName) {
 
         Context cxt = new Context();
-        Set<String> imports = new HashSet<>();
+        Set<String> imports = new LinkedHashSet<>();
 
         // ID type
         String idType = "";
@@ -722,7 +722,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("date", new Date());
         cxt.setVariable("package", daoPackage);
         cxt.setVariable("imports", imports);
-        cxt.setVariable("name", daoImpl + "test.Test");
+        cxt.setVariable("name", daoImpl + "test");
 
         cxt.setVariable("poName", po);
         cxt.setVariable("idType", idType);
@@ -764,7 +764,7 @@ public class GenerateServiceImpl implements GenerateService {
                                  String provideName, String daoName, String poName) {
 
         Context cxt = new Context();
-        Set<String> imports = new HashSet<>();
+        Set<String> imports = new LinkedHashSet<>();
 
         // ID type
         String idType = "";
@@ -869,7 +869,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("date", new Date());
         cxt.setVariable("package", servicePackage);
         cxt.setVariable("imports", imports);
-        cxt.setVariable("name", serviceImpl + "test.Test");
+        cxt.setVariable("name", serviceImpl + "test");
 
         cxt.setVariable("idType", idType);
         cxt.setVariable("doName", do_);
@@ -906,7 +906,7 @@ public class GenerateServiceImpl implements GenerateService {
                              String oName, String doName) {
 
         Context cxt = new Context();
-        Set<String> imports = new HashSet<>();
+        Set<String> imports = new LinkedHashSet<>();
 
         // vo
         mappingImport(imports, doName);
