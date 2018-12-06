@@ -487,6 +487,7 @@ public class GenerateServiceImpl implements GenerateService {
 
                 field.getAnnotations().add("@Id");
                 field.getAnnotations().add("@GeneratedValue(strategy = GenerationType.IDENTITY)");
+                field.getAnnotations().add("@Override)");
             }
 
             String colAnno = "name = \"" + c.getField() + "\"";
@@ -523,6 +524,8 @@ public class GenerateServiceImpl implements GenerateService {
                 poGetterAndSetters.add(field);
             } else {
                 cxt.setVariable("poGetter", poGetter);
+
+                field.getAnnotations().add("@Override)");
 
                 poGetter.add(field);
             }
