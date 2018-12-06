@@ -722,7 +722,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("date", new Date());
         cxt.setVariable("package", daoPackage);
         cxt.setVariable("imports", imports);
-        cxt.setVariable("name", daoImpl + "test");
+        cxt.setVariable("name", daoImpl + "Test");
 
         cxt.setVariable("poName", po);
         cxt.setVariable("idType", idType);
@@ -741,7 +741,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("poSetters", poSetters);
 
         this.writeFile(logFile, daoPath + "/" + TEST_PATH + daoPackage.replace('.', '/'),
-                daoImpl + "test.Test", JAVA_EXT_NAME,
+                daoImpl + "Test", JAVA_EXT_NAME,
                 process(DAO_TEST_TXT_TEMPLATE_NAME, cxt));
     }
 
@@ -869,7 +869,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("date", new Date());
         cxt.setVariable("package", servicePackage);
         cxt.setVariable("imports", imports);
-        cxt.setVariable("name", serviceImpl + "test");
+        cxt.setVariable("name", serviceImpl + "Test");
 
         cxt.setVariable("idType", idType);
         cxt.setVariable("doName", do_);
@@ -886,7 +886,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("doSetters", doSetters);
 
         this.writeFile(logFile, servicePath + "/" + TEST_PATH + servicePackage.replace('.', '/'),
-                serviceImpl + "test.Test", JAVA_EXT_NAME,
+                serviceImpl + "Test", JAVA_EXT_NAME,
                 process(SERVICETEST_TXT_TEMPLATE_NAME, cxt));
         // end of service test
     }
