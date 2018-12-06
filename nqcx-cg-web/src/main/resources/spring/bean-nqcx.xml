@@ -27,6 +27,6 @@
         <constructor-arg value="${workspace.author}"/>
     </bean>
     <bean id="overwrite" class="java.lang.Boolean">
-        <constructor-arg value="true"/>
+        <constructor-arg value="false"/>
     </bean>
 </beans>
