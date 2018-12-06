@@ -11,8 +11,10 @@ import [(${import})];
 /**
  * @author [(${author})] [(${#dates.format(date, 'yyyy-MM-dd HH:mm')})]
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:beans.xml"})
 @TestExecutionListeners({TransactionalTestExecutionListener.class, DependencyInjectionTestExecutionListener.class})
-public class [(${name})] extends AutoInject {
+public class [(${name})] extends TestCase {
 
     @Autowired
     private [(${daoName})]<[(${poName})], [(${idType})]> [(${daoVeriable})];

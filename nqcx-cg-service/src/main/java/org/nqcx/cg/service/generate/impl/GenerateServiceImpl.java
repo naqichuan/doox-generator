@@ -126,15 +126,18 @@ public class GenerateServiceImpl implements GenerateService {
         CLASS_MAPPING.put("TransactionalTestExecutionListener", "org.springframework.test.context.transaction.TransactionalTestExecutionListener");
         CLASS_MAPPING.put("TestExecutionListeners", "org.springframework.test.context.TestExecutionListeners");
 
-        CLASS_MAPPING.put("Test", "org.junit.Test");
+        CLASS_MAPPING.put("test.Test", "org.junit.Test");
+        CLASS_MAPPING.put("test.RunWith", "org.junit.runner.RunWith");
+        CLASS_MAPPING.put("test.TestCase", "junit.framework.TestCase");
+        CLASS_MAPPING.put("test.ContextConfiguration", "org.springframework.test.context.ContextConfiguration");
+        CLASS_MAPPING.put("test.SpringJUnit4ClassRunner", "org.springframework.test.context.junit4.SpringJUnit4ClassRunner");
     }
-
 
     /**
      * generate code main method
      *
-     * @param g
-     * @return
+     * @param g generate o
+     * @return DTO
      */
     @Override
     public DTO generate(Generate g) {
@@ -695,26 +698,31 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.clearVariables();
         imports.clear();
 
-        mappingImport(imports, "Test");
+        mappingImport(imports, "test.TestCase");
+        mappingImport(imports, "test.Test");
+        mappingImport(imports, "test.RunWith");
         mappingImport(imports, "DTO");
         mappingImport(imports, "NPage");
         mappingImport(imports, "NSort");
         mappingImport(imports, "Autowired");
-        mappingImport(imports, "TestExecutionListeners");
-        mappingImport(imports, "DependencyInjectionTestExecutionListener");
-        mappingImport(imports, "TransactionalTestExecutionListener");
+        mappingImport(imports, "test.ContextConfiguration");
+        mappingImport(imports, "test.TestExecutionListeners");
+        mappingImport(imports, "test.SpringJUnit4ClassRunner");
+        mappingImport(imports, "test.DependencyInjectionTestExecutionListener");
+        mappingImport(imports, "test.TransactionalTestExecutionListener");
+
         mappingImport(imports, "ArrayList");
         mappingImport(imports, "Arrays");
         mappingImport(imports, "List");
 
-        mappingImport(imports, dao);
+//        mappingImport(imports, dao);
         mappingImport(imports, po);
 
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
         cxt.setVariable("package", daoPackage);
         cxt.setVariable("imports", imports);
-        cxt.setVariable("name", daoImpl + "Test");
+        cxt.setVariable("name", daoImpl + "test.Test");
 
         cxt.setVariable("poName", po);
         cxt.setVariable("idType", idType);
@@ -733,7 +741,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("poSetters", poSetters);
 
         this.writeFile(logFile, daoPath + "/" + TEST_PATH + daoPackage.replace('.', '/'),
-                daoImpl + "Test", JAVA_EXT_NAME,
+                daoImpl + "test.Test", JAVA_EXT_NAME,
                 process(DAO_TEST_TXT_TEMPLATE_NAME, cxt));
     }
 
@@ -836,27 +844,32 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.clearVariables();
         imports.clear();
 
-        mappingImport(imports, "Test");
+        mappingImport(imports, "test.TestCase");
+        mappingImport(imports, "test.Test");
+        mappingImport(imports, "test.RunWith");
         mappingImport(imports, "DTO");
         mappingImport(imports, "NPage");
         mappingImport(imports, "NSort");
         mappingImport(imports, "Autowired");
-        mappingImport(imports, "TestExecutionListeners");
-        mappingImport(imports, "DependencyInjectionTestExecutionListener");
-        mappingImport(imports, "TransactionalTestExecutionListener");
+        mappingImport(imports, "test.ContextConfiguration");
+        mappingImport(imports, "test.TestExecutionListeners");
+        mappingImport(imports, "test.SpringJUnit4ClassRunner");
+        mappingImport(imports, "test.DependencyInjectionTestExecutionListener");
+        mappingImport(imports, "test.TransactionalTestExecutionListener");
+
         mappingImport(imports, "ArrayList");
         mappingImport(imports, "Arrays");
         mappingImport(imports, "List");
         mappingImport(imports, "Optional");
 
-        mappingImport(imports, service);
+//        mappingImport(imports, service);
         mappingImport(imports, do_);
 
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
         cxt.setVariable("package", servicePackage);
         cxt.setVariable("imports", imports);
-        cxt.setVariable("name", serviceImpl + "Test");
+        cxt.setVariable("name", serviceImpl + "test.Test");
 
         cxt.setVariable("idType", idType);
         cxt.setVariable("doName", do_);
@@ -873,7 +886,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("doSetters", doSetters);
 
         this.writeFile(logFile, servicePath + "/" + TEST_PATH + servicePackage.replace('.', '/'),
-                serviceImpl + "Test", JAVA_EXT_NAME,
+                serviceImpl + "test.Test", JAVA_EXT_NAME,
                 process(SERVICETEST_TXT_TEMPLATE_NAME, cxt));
         // end of service test
     }
