@@ -485,9 +485,9 @@ public class GenerateServiceImpl implements GenerateService {
                 mappingImport(imports, "GeneratedValue");
                 mappingImport(imports, "GenerationType");
 
+                field.getAnnotations().add("@Override)");
                 field.getAnnotations().add("@Id");
                 field.getAnnotations().add("@GeneratedValue(strategy = GenerationType.IDENTITY)");
-                field.getAnnotations().add("@Override)");
             }
 
             String colAnno = "name = \"" + c.getField() + "\"";
