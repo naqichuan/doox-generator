@@ -477,7 +477,7 @@ public class GenerateServiceImpl implements GenerateService {
             field.setType(c.getType_());
             field.setField(c.getField_());
             field.setName(StringUtils.capitalize(c.getField_()));
-            field.setAnnotations(new ArrayList<>());
+            field.setAnnotations(new LinkedHashSet<>());
 
             // annotations
             if (c.isId_()) {

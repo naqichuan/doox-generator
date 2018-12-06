@@ -7,7 +7,7 @@
 package org.nqcx.cg.provide.o;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author naqichuan 2018/11/29 17:40
@@ -18,7 +18,7 @@ public class CgField implements Serializable {
     private String field;
     private String name;
 
-    private List<String> annotations;
+    private Set<String> annotations;
 
     public String getType() {
         return type;
@@ -44,11 +44,11 @@ public class CgField implements Serializable {
         this.name = name;
     }
 
-    public List<String> getAnnotations() {
+    public Set<String> getAnnotations() {
         return annotations;
     }
 
-    public void setAnnotations(List<String> annotations) {
+    public void setAnnotations(Set<String> annotations) {
         this.annotations = annotations;
     }
 }
