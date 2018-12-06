@@ -29,13 +29,13 @@ public class Generate implements Serializable {
 
     // table
     private String tableName;
-    private String tablePack;
+    private String tablePack; // table package
     // end of table
 
     // pojo
-    String[] pojoColumn;
-    String[] pojoField;
-    String[] pojoType;
+    private String[] pojoColumn;
+    private String[] pojoField;
+    private String[] pojoType;
     // end of pojo
 
     // provide field
@@ -53,7 +53,7 @@ public class Generate implements Serializable {
     private String daoPOPackage;
     private String daoMapperPackage;
     private String daoJpaPackage;
-    private String daoDaoPackage;
+    private String daoDAOPackage;
     private String daoPO;
     private String daoMapper;
     private String daoJpa;
@@ -63,16 +63,16 @@ public class Generate implements Serializable {
 
     // service field
     private BoolEO service_ = BoolEO.FALSE;
-    private String serviceDtoPackage;
+    private String serviceDOPackage;
     private String serviceServicePackage;
-    private String serviceDTO;
+    private String serviceDO;
     private String serviceService;
     private String servceServiceImpl;
     // end of field
 
     // web field
     private BoolEO web_ = BoolEO.FALSE;
-    private String webVoPackage;
+    private String webVOPackage;
     private String webControllerPackage;
     private String webVO;
     private String webController;
@@ -270,12 +270,12 @@ public class Generate implements Serializable {
         this.daoJpaPackage = daoJpaPackage;
     }
 
-    public String getDaoDaoPackage() {
-        return daoDaoPackage;
+    public String getDaoDAOPackage() {
+        return daoDAOPackage;
     }
 
-    public void setDaoDaoPackage(String daoDaoPackage) {
-        this.daoDaoPackage = daoDaoPackage;
+    public void setDaoDAOPackage(String daoDAOPackage) {
+        this.daoDAOPackage = daoDAOPackage;
     }
 
     public String getDaoPO() {
@@ -326,12 +326,12 @@ public class Generate implements Serializable {
         this.service_ = service_;
     }
 
-    public String getServiceDtoPackage() {
-        return serviceDtoPackage;
+    public String getServiceDOPackage() {
+        return serviceDOPackage;
     }
 
-    public void setServiceDtoPackage(String serviceDtoPackage) {
-        this.serviceDtoPackage = serviceDtoPackage;
+    public void setServiceDOPackage(String serviceDOPackage) {
+        this.serviceDOPackage = serviceDOPackage;
     }
 
     public String getServiceServicePackage() {
@@ -342,12 +342,12 @@ public class Generate implements Serializable {
         this.serviceServicePackage = serviceServicePackage;
     }
 
-    public String getServiceDTO() {
-        return serviceDTO;
+    public String getServiceDO() {
+        return serviceDO;
     }
 
-    public void setServiceDTO(String serviceDTO) {
-        this.serviceDTO = serviceDTO;
+    public void setServiceDO(String serviceDO) {
+        this.serviceDO = serviceDO;
     }
 
     public String getServiceService() {
@@ -374,12 +374,12 @@ public class Generate implements Serializable {
         this.web_ = web_;
     }
 
-    public String getWebVoPackage() {
-        return webVoPackage;
+    public String getWebVOPackage() {
+        return webVOPackage;
     }
 
-    public void setWebVoPackage(String webVoPackage) {
-        this.webVoPackage = webVoPackage;
+    public void setWebVOPackage(String webVOPackage) {
+        this.webVOPackage = webVOPackage;
     }
 
     public String getWebControllerPackage() {

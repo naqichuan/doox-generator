@@ -15,11 +15,11 @@ import [(${import})];
 public class [(${name})] extends AutoInject {
 
     @Autowired
-    private [(${serviceName})]<[(${dtoName})], [(${idType})]> [(${serviceVeriable})];
+    private [(${serviceName})]<[(${doName})], [(${idType})]> [(${serviceVeriable})];
 
     @Test
     public void save() {
-       [(${dtoName})] dto = new [(${dtoName})]();
+       [(${doName})] dto = new [(${doName})]();
     [# th:each="dg : ${dtoSetters}"]
         [(${dg})]
     [/]
@@ -28,10 +28,10 @@ public class [(${name})] extends AutoInject {
 
     @Test
     public void saveAll() {
-        [(${dtoName})] dto;
-        List<[(${dtoName})]> list = new ArrayList<>();
+        [(${doName})] dto;
+        List<[(${doName})]> list = new ArrayList<>();
 
-        list.add(dto = new [(${dtoName})]());
+        list.add(dto = new [(${doName})]());
     [# th:each="dg : ${dtoSetters}"]
         [(${dg})]
     [/]
@@ -40,7 +40,7 @@ public class [(${name})] extends AutoInject {
 
     @Test
     public void modify() {
-        [(${dtoName})] dto = new [(${dtoName})]();
+        [(${doName})] dto = new [(${doName})]();
     [# th:each="dg : ${dtoSetters}"]
         [(${dg})]
     [/]
@@ -49,10 +49,10 @@ public class [(${name})] extends AutoInject {
 
     @Test
     public void modifyAll() {
-        [(${dtoName})] dto;
-        List<[(${dtoName})]> list = new ArrayList<>();
+        [(${doName})] dto;
+        List<[(${doName})]> list = new ArrayList<>();
 
-        list.add(dto = new [(${dtoName})]());
+        list.add(dto = new [(${doName})]());
     [# th:each="dg : ${dtoSetters}"]
         [(${dg})]
     [/]
@@ -61,14 +61,14 @@ public class [(${name})] extends AutoInject {
 
     @Test
     public void findById() {
-        Optional<[(${dtoName})]> dto = [(${serviceVeriable})].findById(1[# th:if="${idType == 'Long'}"]L[/]);
+        Optional<[(${doName})]> dto = [(${serviceVeriable})].findById(1[# th:if="${idType == 'Long'}"]L[/]);
         System.out.println(dto.orElse(null));
     }
 
     @Test
     public void findAllByIds() {
         List<[(${idType})]> ids = Arrays.asList(2[# th:if="${idType == 'Long'}"]L[/], 3[# th:if="${idType == 'Long'}"]L[/], 4[# th:if="${idType == 'Long'}"]L[/], 5[# th:if="${idType == 'Long'}"]L[/]);
-        List<[(${dtoName})]> list = [(${serviceVeriable})].findAllByIds(ids);
+        List<[(${doName})]> list = [(${serviceVeriable})].findAllByIds(ids);
 
         if (list == null)
             System.out.println(list);
@@ -79,7 +79,7 @@ public class [(${name})] extends AutoInject {
     @Test
     public void listAll() {
         DTO dto = new DTO();
-        List<[(${dtoName})]> list = [(${serviceVeriable})].listAll(dto);
+        List<[(${doName})]> list = [(${serviceVeriable})].listAll(dto);
 
         if (list == null)
             System.out.println(list);

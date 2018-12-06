@@ -42,8 +42,10 @@ public class GenerateServiceImpl implements GenerateService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    // database type to type and length
     private final static Pattern TYPE_LENGTH_PATTERN = Pattern.compile("(.+?)(\\(((\\d+?))\\))*?");
-    private final static Map<String, String> classMapping = new HashMap<>();
+    // Class name mapping to class reference
+    private final static Map<String, String> CLASS_MAPPING = new HashMap<>();
 
     private final static String JAVA_PATH = "src/main/java/";
     private final static String TEST_PATH = "src/test/java/";
@@ -60,17 +62,17 @@ public class GenerateServiceImpl implements GenerateService {
     private final static String DAO_TXT_TEMPLATE_NAME = "dao.txt";
     private final static String DAO_TEST_TXT_TEMPLATE_NAME = "daotest.txt";
     private final static String DAOIMPL_TXT_TEMPLATE_NAME = "daoimpl.txt";
-    private final static String DTO_TXT_TEMPLATE_NAME = "dto.txt";
+    private final static String DO_TXT_TEMPLATE_NAME = "do.txt";
     private final static String SERVICE_TXT_TEMPLATE_NAME = "service.txt";
     private final static String SERVICEIMPL_TXT_TEMPLATE_NAME = "serviceimpl.txt";
     private final static String SERVICETEST_TXT_TEMPLATE_NAME = "servicetest.txt";
     private final static String VO_TXT_TEMPLATE_NAME = "vo.txt";
     private final static String CONTROLLER_TXT_TEMPLATE_NAME = "controller.txt";
 
-    private static String P_PROVIDE_PATH_KEY = "provideModule";
-    private static String P_DAO_PATH_KEY = "daoModule";
-    private static String P_SERVICE_PATH_KEY = "serviceModule";
-    private static String P_WEB_PATH_KEY = "webModule";
+    private final static String P_PROVIDE_PATH_KEY = "provideModule";
+    private final static String P_DAO_PATH_KEY = "daoModule";
+    private final static String P_SERVICE_PATH_KEY = "serviceModule";
+    private final static String P_WEB_PATH_KEY = "webModule";
 
     @Autowired
     @Qualifier("workspacePath")
@@ -80,57 +82,62 @@ public class GenerateServiceImpl implements GenerateService {
     private String workspaceAuthor;
     @Autowired
     @Qualifier("overwrite")
-    private Boolean overwrite;
+    private Boolean overwrite; // 生成文件是否覆盖原来的文件
     @Autowired
     private TableService tableService;
 
     static {
-        classMapping.put("Serializable", "java.io.Serializable");
+        CLASS_MAPPING.put("Serializable", "java.io.Serializable");
 
-        classMapping.put("Integer", "java.lang.Integer");
-        classMapping.put("Long", "java.lang.Long");
+        CLASS_MAPPING.put("Integer", "java.lang.Integer");
+        CLASS_MAPPING.put("Long", "java.lang.Long");
 
-        classMapping.put("Date", "java.util.Date");
-        classMapping.put("Arrays", "java.util.Arrays");
-        classMapping.put("ArrayList", "java.util.ArrayList");
-        classMapping.put("List", "java.util.List");
-        classMapping.put("Optional", "java.util.Optional");
+        CLASS_MAPPING.put("Date", "java.util.Date");
+        CLASS_MAPPING.put("Arrays", "java.util.Arrays");
+        CLASS_MAPPING.put("ArrayList", "java.util.ArrayList");
+        CLASS_MAPPING.put("List", "java.util.List");
+        CLASS_MAPPING.put("Optional", "java.util.Optional");
 
-        classMapping.put("Entity", "javax.persistence.Entity");
-        classMapping.put("Table", "javax.persistence.Table");
-        classMapping.put("ID", "javax.persistence.Id");
-        classMapping.put("GenerationType", "javax.persistence.GenerationType");
-        classMapping.put("Column", "javax.persistence.Column");
-        classMapping.put("GeneratedValue", "javax.persistence.GeneratedValue");
-        classMapping.put("Temporal", "javax.persistence.Temporal");
+        CLASS_MAPPING.put("Entity", "javax.persistence.Entity");
+        CLASS_MAPPING.put("Table", "javax.persistence.Table");
+        CLASS_MAPPING.put("ID", "javax.persistence.Id");
+        CLASS_MAPPING.put("GenerationType", "javax.persistence.GenerationType");
+        CLASS_MAPPING.put("Column", "javax.persistence.Column");
+        CLASS_MAPPING.put("GeneratedValue", "javax.persistence.GeneratedValue");
+        CLASS_MAPPING.put("Temporal", "javax.persistence.Temporal");
 
-        classMapping.put("DTO", "org.nqcx.commons3.lang.o.DTO");
-        classMapping.put("NPage", "org.nqcx.commons3.lang.o.NPage");
-        classMapping.put("NSort", "org.nqcx.commons3.lang.o.NSort");
+        CLASS_MAPPING.put("DTO", "org.nqcx.commons3.lang.o.DTO");
+        CLASS_MAPPING.put("NPage", "org.nqcx.commons3.lang.o.NPage");
+        CLASS_MAPPING.put("NSort", "org.nqcx.commons3.lang.o.NSort");
 
-        classMapping.put("IMapper", "org.nqcx.commons3.data.mapper.IMapper");
-        classMapping.put("MapperSupport", "org.nqcx.commons3.data.mapper.MapperSupport");
-        classMapping.put("IJpa", "org.nqcx.commons3.data.jpa.IJpa");
-        classMapping.put("JpaSupport", "org.nqcx.commons3.data.jpa.JpaSupport");
-        classMapping.put("IDao", "org.nqcx.commons3.dao.IDao");
-        classMapping.put("DaoSupport", "org.nqcx.commons3.dao.DaoSupport");
+        CLASS_MAPPING.put("IMapper", "org.nqcx.commons3.data.mapper.IMapper");
+        CLASS_MAPPING.put("MapperSupport", "org.nqcx.commons3.data.mapper.MapperSupport");
+        CLASS_MAPPING.put("IJpa", "org.nqcx.commons3.data.jpa.IJpa");
+        CLASS_MAPPING.put("JpaSupport", "org.nqcx.commons3.data.jpa.JpaSupport");
+        CLASS_MAPPING.put("IDao", "org.nqcx.commons3.dao.IDao");
+        CLASS_MAPPING.put("DaoSupport", "org.nqcx.commons3.dao.DaoSupport");
 
-        classMapping.put("IService", "org.nqcx.commons3.service.IService");
-        classMapping.put("ServiceSupport", "org.nqcx.commons3.service.ServiceSupport");
+        CLASS_MAPPING.put("IService", "org.nqcx.commons3.service.IService");
+        CLASS_MAPPING.put("ServiceSupport", "org.nqcx.commons3.service.ServiceSupport");
 
-        classMapping.put("stereotype.Service", "org.springframework.stereotype.Service");
-        classMapping.put("Autowired", "org.springframework.beans.factory.annotation.Autowired");
-        classMapping.put("DependencyInjectionTestExecutionListener", "org.springframework.test.context.support.DependencyInjectionTestExecutionListener");
-        classMapping.put("TransactionalTestExecutionListener", "org.springframework.test.context.transaction.TransactionalTestExecutionListener");
-        classMapping.put("TestExecutionListeners", "org.springframework.test.context.TestExecutionListeners");
+        CLASS_MAPPING.put("stereotype.Service", "org.springframework.stereotype.Service");
+        CLASS_MAPPING.put("Autowired", "org.springframework.beans.factory.annotation.Autowired");
+        CLASS_MAPPING.put("DependencyInjectionTestExecutionListener", "org.springframework.test.context.support.DependencyInjectionTestExecutionListener");
+        CLASS_MAPPING.put("TransactionalTestExecutionListener", "org.springframework.test.context.transaction.TransactionalTestExecutionListener");
+        CLASS_MAPPING.put("TestExecutionListeners", "org.springframework.test.context.TestExecutionListeners");
 
-        classMapping.put("Test", "org.junit.Test");
+        CLASS_MAPPING.put("Test", "org.junit.Test");
     }
 
 
+    /**
+     * generate code main method
+     *
+     * @param g
+     * @return
+     */
     @Override
     public DTO generate(Generate g) {
-
         if (g == null)
             return new DTO(false).putResult("100", "生成代码失败！");
 
@@ -154,9 +161,9 @@ public class GenerateServiceImpl implements GenerateService {
                 g.getDaoModule(), g.getServiceModule(), g.getWebModule());
 
         // provide
-        classMapping.put(g.getProvideBO(), g.getProvideBOPackage() + "." + g.getProvideBO());
-        classMapping.put(g.getProvideO(), g.getProvideOPackage() + "." + g.getProvideO());
-        classMapping.put(g.getProvideProvide(), g.getProvideProvidePackage() + "." + g.getProvideProvide());
+        CLASS_MAPPING.put(g.getProvideBO(), g.getProvideBOPackage() + "." + g.getProvideBO());
+        CLASS_MAPPING.put(g.getProvideO(), g.getProvideOPackage() + "." + g.getProvideO());
+        CLASS_MAPPING.put(g.getProvideProvide(), g.getProvideProvidePackage() + "." + g.getProvideProvide());
 
         String providePath = pathMap.get(P_PROVIDE_PATH_KEY);
         if (g.getProvide_().isTrue()) {
@@ -166,42 +173,42 @@ public class GenerateServiceImpl implements GenerateService {
         }
 
         // dao
-        classMapping.put(g.getDaoPO(), g.getDaoPOPackage() + "." + g.getDaoPO());
-        classMapping.put(g.getDaoMapper(), g.getDaoMapperPackage() + "." + g.getDaoMapper());
-        classMapping.put(g.getDaoJpa(), g.getDaoJpaPackage() + "." + g.getDaoJpa());
-        classMapping.put(g.getDaoDAO(), g.getDaoDaoPackage() + "." + g.getDaoDAO());
-        classMapping.put(g.getDaoDAOImpl(), g.getDaoDaoPackage() + ".impl." + g.getDaoDAOImpl());
+        CLASS_MAPPING.put(g.getDaoPO(), g.getDaoPOPackage() + "." + g.getDaoPO());
+        CLASS_MAPPING.put(g.getDaoMapper(), g.getDaoMapperPackage() + "." + g.getDaoMapper());
+        CLASS_MAPPING.put(g.getDaoJpa(), g.getDaoJpaPackage() + "." + g.getDaoJpa());
+        CLASS_MAPPING.put(g.getDaoDAO(), g.getDaoDAOPackage() + "." + g.getDaoDAO());
+        CLASS_MAPPING.put(g.getDaoDAOImpl(), g.getDaoDAOPackage() + ".impl." + g.getDaoDAOImpl());
 
         String daoPath = pathMap.get(P_DAO_PATH_KEY);
         if (g.getDao_().isTrue()) {
             this.generateDao(cgLogFile, table, daoPath, g.getDaoPOPackage(), g.getDaoPO(),
                     g.getDaoMapperPackage(), g.getDaoMapper(),
                     g.getDaoJpaPackage(), g.getDaoJpa(),
-                    g.getDaoDaoPackage(), g.getDaoDAO(), g.getDaoDaoPackage() + ".impl", g.getDaoDAOImpl(),
+                    g.getDaoDAOPackage(), g.getDaoDAO(), g.getDaoDAOPackage() + ".impl", g.getDaoDAOImpl(),
                     g.getProvideBO());
         }
 
         // service
-        classMapping.put(g.getServiceDTO(), g.getServiceDtoPackage() + "." + g.getServiceDTO());
-        classMapping.put(g.getServiceService(), g.getServiceServicePackage() + "." + g.getServiceService());
-        classMapping.put(g.getServceServiceImpl(), g.getServiceServicePackage() + ".impl." + g.getServceServiceImpl());
+        CLASS_MAPPING.put(g.getServiceDO(), g.getServiceDOPackage() + "." + g.getServiceDO());
+        CLASS_MAPPING.put(g.getServiceService(), g.getServiceServicePackage() + "." + g.getServiceService());
+        CLASS_MAPPING.put(g.getServceServiceImpl(), g.getServiceServicePackage() + ".impl." + g.getServceServiceImpl());
 
         String servicePath = pathMap.get(P_SERVICE_PATH_KEY);
         if (g.getService_().isTrue()) {
-            this.generateService(cgLogFile, table, servicePath, g.getServiceDtoPackage(), g.getServiceDTO(),
+            this.generateService(cgLogFile, table, servicePath, g.getServiceDOPackage(), g.getServiceDO(),
                     g.getServiceServicePackage(), g.getServiceService(), g.getServiceServicePackage() + ".impl", g.getServceServiceImpl(),
                     g.getProvideProvide(), g.getDaoDAO(), g.getDaoPO());
         }
 
         // web
-        classMapping.put(g.getWebVO(), g.getWebVoPackage() + "." + g.getWebVO());
-        classMapping.put(g.getWebController(), g.getWebControllerPackage() + "." + g.getWebController());
+        CLASS_MAPPING.put(g.getWebVO(), g.getWebVOPackage() + "." + g.getWebVO());
+        CLASS_MAPPING.put(g.getWebController(), g.getWebControllerPackage() + "." + g.getWebController());
 
         String webPath = pathMap.get(P_WEB_PATH_KEY);
         if (g.getWeb_().isTrue()) {
-            this.generateWeb(cgLogFile, table, webPath, g.getWebVoPackage(), g.getWebVO(),
+            this.generateWeb(cgLogFile, table, webPath, g.getWebVOPackage(), g.getWebVO(),
                     g.getWebControllerPackage(), g.getWebController(),
-                    g.getProvideO(), g.getServiceDTO());
+                    g.getProvideO(), g.getServiceDO());
         }
 
         return new DTO(true);
@@ -320,7 +327,7 @@ public class GenerateServiceImpl implements GenerateService {
         if (imports == null || className == null)
             return;
 
-        String name = classMapping.get(className);
+        String name = CLASS_MAPPING.get(className);
         if (name != null && name.length() > 0)
             imports.add(name);
     }
@@ -434,7 +441,7 @@ public class GenerateServiceImpl implements GenerateService {
         Context cxt = new Context();
         Set<String> imports = new HashSet<>();
 
-        // ID typ
+        // ID type
         String idType = "";
         if (table.getIdColumn() != null)
             idType = table.getIdColumn().getIdType_();
@@ -735,7 +742,7 @@ public class GenerateServiceImpl implements GenerateService {
      * @param table
      * @param servicePath
      * @param dtoPackage
-     * @param dto
+     * @param do_
      * @param servicePackage
      * @param service
      * @param serviceImplPackage
@@ -744,33 +751,33 @@ public class GenerateServiceImpl implements GenerateService {
      * @param daoName
      * @param poName
      */
-    private void generateService(File logFile, Table table, String servicePath, String dtoPackage, String dto,
+    private void generateService(File logFile, Table table, String servicePath, String dtoPackage, String do_,
                                  String servicePackage, String service, String serviceImplPackage, String serviceImpl,
                                  String provideName, String daoName, String poName) {
 
         Context cxt = new Context();
         Set<String> imports = new HashSet<>();
 
-        // ID typ
+        // ID type
         String idType = "";
         if (table.getIdColumn() != null)
             idType = table.getIdColumn().getIdType_();
 
-        // dto
+        // DO
         mappingImport(imports, poName);
 
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
         cxt.setVariable("package", dtoPackage);
         cxt.setVariable("imports", imports);
-        cxt.setVariable("name", dto);
+        cxt.setVariable("name", do_);
 
         cxt.setVariable("poName", poName);
 
         this.writeFile(logFile, servicePath + "/" + JAVA_PATH + dtoPackage.replace('.', '/'),
-                dto, JAVA_EXT_NAME,
-                process(DTO_TXT_TEMPLATE_NAME, cxt));
-        // end of dto
+                do_, JAVA_EXT_NAME,
+                process(DO_TXT_TEMPLATE_NAME, cxt));
+        // end of DO
 
         // service
         cxt.clearVariables();
@@ -802,7 +809,7 @@ public class GenerateServiceImpl implements GenerateService {
         mappingImport(imports, service);
         mappingImport(imports, "ServiceSupport");
         mappingImport(imports, poName);
-        mappingImport(imports, dto);
+        mappingImport(imports, do_);
 
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
@@ -811,7 +818,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("name", serviceImpl);
 
         cxt.setVariable("idType", idType);
-        cxt.setVariable("dtoName", dto);
+        cxt.setVariable("doName", do_);
         cxt.setVariable("poName", poName);
         cxt.setVariable("serviceName", service);
         cxt.setVariable("daoName", daoName);
@@ -820,12 +827,10 @@ public class GenerateServiceImpl implements GenerateService {
             daoVeriable = StringUtils.substring(daoVeriable, 1);
         cxt.setVariable("daoVeriable", StringUtils.uncapitalize(daoVeriable));
 
-
         this.writeFile(logFile, servicePath + "/" + JAVA_PATH + serviceImplPackage.replace('.', '/'),
                 serviceImpl, JAVA_EXT_NAME,
                 process(SERVICEIMPL_TXT_TEMPLATE_NAME, cxt));
         // end of service impl
-
 
         // service test
         cxt.clearVariables();
@@ -845,7 +850,7 @@ public class GenerateServiceImpl implements GenerateService {
         mappingImport(imports, "Optional");
 
         mappingImport(imports, service);
-        mappingImport(imports, dto);
+        mappingImport(imports, do_);
 
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
@@ -854,7 +859,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("name", serviceImpl + "Test");
 
         cxt.setVariable("idType", idType);
-        cxt.setVariable("dtoName", dto);
+        cxt.setVariable("doName", do_);
         cxt.setVariable("serviceName", service);
         cxt.setVariable("serviceVeriable", StringUtils.uncapitalize(serviceImpl));
 
@@ -881,17 +886,17 @@ public class GenerateServiceImpl implements GenerateService {
      * @param controllerPackage
      * @param controller
      * @param oName
-     * @param dtoName
+     * @param doName
      */
     private void generateWeb(File logFile, Table table, String webPath, String voPackage, String vo,
                              String controllerPackage, String controller,
-                             String oName, String dtoName) {
+                             String oName, String doName) {
 
         Context cxt = new Context();
         Set<String> imports = new HashSet<>();
 
         // vo
-        mappingImport(imports, dtoName);
+        mappingImport(imports, doName);
 
         cxt.setVariable("author", workspaceAuthor);
         cxt.setVariable("date", new Date());
@@ -899,7 +904,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("imports", imports);
         cxt.setVariable("name", vo);
 
-        cxt.setVariable("dtoName", dtoName);
+        cxt.setVariable("doName", doName);
 
         this.writeFile(logFile, webPath + "/" + JAVA_PATH + voPackage.replace('.', '/'),
                 vo, JAVA_EXT_NAME,
