@@ -863,14 +863,14 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("serviceName", service);
         cxt.setVariable("serviceVeriable", StringUtils.uncapitalize(serviceImpl));
 
-        List<String> dtoSetters = new ArrayList<>();
+        List<String> doSetters = new ArrayList<>();
         table.getColumns().forEach(c -> {
             if (c.isCm_())
                 return;
 
-            dtoSetters.add("// dto.set" + StringUtils.capitalize(c.getField_()) + "(\"" + c.getField_() + "\");");
+            doSetters.add("// do_.set" + StringUtils.capitalize(c.getField_()) + "(\"" + c.getField_() + "\");");
         });
-        cxt.setVariable("dtoSetters", dtoSetters);
+        cxt.setVariable("doSetters", doSetters);
 
         this.writeFile(logFile, servicePath + "/" + TEST_PATH + servicePackage.replace('.', '/'),
                 serviceImpl + "Test", JAVA_EXT_NAME,

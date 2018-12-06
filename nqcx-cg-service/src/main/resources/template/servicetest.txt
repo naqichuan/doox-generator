@@ -19,20 +19,20 @@ public class [(${name})] extends AutoInject {
 
     @Test
     public void save() {
-       [(${doName})] dto = new [(${doName})]();
-    [# th:each="dg : ${dtoSetters}"]
+       [(${doName})] do_ = new [(${doName})]();
+    [# th:each="dg : ${doSetters}"]
         [(${dg})]
     [/]
-        [(${serviceVeriable})].save(dto);
+        [(${serviceVeriable})].save(do_);
     }
 
     @Test
     public void saveAll() {
-        [(${doName})] dto;
+        [(${doName})] do_;
         List<[(${doName})]> list = new ArrayList<>();
 
-        list.add(dto = new [(${doName})]());
-    [# th:each="dg : ${dtoSetters}"]
+        list.add(do_ = new [(${doName})]());
+    [# th:each="dg : ${doSetters}"]
         [(${dg})]
     [/]
         [(${serviceVeriable})].saveAll(list);
@@ -40,20 +40,20 @@ public class [(${name})] extends AutoInject {
 
     @Test
     public void modify() {
-        [(${doName})] dto = new [(${doName})]();
-    [# th:each="dg : ${dtoSetters}"]
+        [(${doName})] do_ = new [(${doName})]();
+    [# th:each="dg : ${doSetters}"]
         [(${dg})]
     [/]
-        [(${serviceVeriable})].modify(dto);
+        [(${serviceVeriable})].modify(do_);
     }
 
     @Test
     public void modifyAll() {
-        [(${doName})] dto;
+        [(${doName})] do_;
         List<[(${doName})]> list = new ArrayList<>();
 
-        list.add(dto = new [(${doName})]());
-    [# th:each="dg : ${dtoSetters}"]
+        list.add(do_ = new [(${doName})]());
+    [# th:each="dg : ${doSetters}"]
         [(${dg})]
     [/]
         [(${serviceVeriable})].modifyAll(list);
@@ -61,8 +61,8 @@ public class [(${name})] extends AutoInject {
 
     @Test
     public void findById() {
-        Optional<[(${doName})]> dto = [(${serviceVeriable})].findById(1[# th:if="${idType == 'Long'}"]L[/]);
-        System.out.println(dto.orElse(null));
+        Optional<[(${doName})]> do_ = [(${serviceVeriable})].findById(1[# th:if="${idType == 'Long'}"]L[/]);
+        System.out.println(do_.orElse(null));
     }
 
     @Test
