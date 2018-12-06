@@ -138,16 +138,24 @@
         reloadAll: function () {
             return jQuery('#reloadAll');
         },
-        checkProjectName: function () {
-            if (project.pName().val()) {
-                return true;
-            } else {
+        checkForm: function () {
+            if (!project.pName().val()) {
                 jQuery.messager.show({
                     title: 'Error',
                     msg: 'Please select project.'
                 });
                 return false;
+            } else if (!provide._().is(":checked")
+                && !dao._().is(":checked")
+                && !service._().is(":checked")
+                && !web._().is(":checked")) {
+                jQuery.messager.show({
+                    title: 'Error',
+                    msg: 'Please select modules.'
+                });
+                return false;
             }
+            return true;
         }
     };
 </script>
@@ -269,6 +277,9 @@
         projectDiv: function () {
             return jQuery('#config_provide_div');
         },
+        _: function () {
+            return jQuery('input[name="provide_"]');
+        },
         provideBOPackage: function () {
             return jQuery('input[name="provideBOPackage"]');
         },
@@ -340,6 +351,9 @@
     var dao = {
         projectDiv: function () {
             return jQuery('#config_dao_div');
+        },
+        _: function () {
+            return jQuery('input[name="dao_"]');
         },
         poPackage: function () {
             return jQuery('input[name="daoPOPackage"]');
@@ -426,6 +440,9 @@
         projectDiv: function () {
             return jQuery('#config_service_div');
         },
+        _: function () {
+            return jQuery('input[name="service_"]');
+        },
         serviceDOPackage: function () {
             return jQuery('input[name="serviceDOPackage"]');
         },
@@ -490,6 +507,9 @@
         projectDiv: function () {
             return jQuery('#config_web_div');
         },
+        _: function () {
+            return jQuery('input[name="web_"]');
+        },
         webVOPackage: function () {
             return jQuery('input[name="webVOPackage"]');
         },
@@ -548,7 +568,7 @@
         $('#generate_form').form('nqcxSubmit', {
             url: "[(@{'/generate/doit'})]",
             onSubmit: function () {
-                if (button.checkProjectName())
+                if (button.checkForm())
                     return $(this).form('validate');
                 return false;
             },
