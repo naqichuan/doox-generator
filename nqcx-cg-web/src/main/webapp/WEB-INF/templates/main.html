@@ -609,6 +609,11 @@
             if (project.module.change)
                 project.module.change();
         });
+        table.colPrefix().bind('keyup', function(event) {
+            if (event.keyCode === 13) {
+                table.change(); // 通过 table change 触发，刷新页面
+            }
+        });
         // end of table
 
         // project
