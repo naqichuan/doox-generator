@@ -36,8 +36,7 @@ public class [(${name})] extends TestCase {
         for (int i = 0; i < 1000; i++) {
             list.add(do_ = new [(${doName})]());
         [# th:each="dg : ${doSetters}"]
-            [(${dg})]
-        [/]
+            [(${dg})][/]
         }
 
         [(${serviceVeriable})].saveAll(list);
