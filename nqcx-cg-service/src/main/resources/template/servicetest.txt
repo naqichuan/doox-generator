@@ -21,7 +21,7 @@ public class [(${name})] extends TestCase {
 
     @Test
     public void save() {
-       [(${doName})] do_ = new [(${doName})]();
+        [(${doName})] do_ = new [(${doName})]();
     [# th:each="dg : ${doSetters}"]
         [(${dg})]
     [/]
