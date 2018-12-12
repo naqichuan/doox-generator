@@ -15,11 +15,11 @@ PRGDIR=`cd "$PRGDIR" > /dev/null; pwd`
 
 PROFILE="$1"
 if [[ -z ${PROFILE} ]]; then
-    PROFILE="nqcx"
+    PROFILE="nqc"
 fi
 
 cd ${PRGDIR}
-mvn -U -Pd clean package -Dmaven.test.skip=true
+mvn -U -P${PROFILE} clean package -Dmaven.test.skip=true
 
 /export/bin/cg.stop
 

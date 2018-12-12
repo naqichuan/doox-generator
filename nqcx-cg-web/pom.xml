@@ -160,7 +160,7 @@
 
     <profiles>
         <profile>
-            <id>nqcx</id>
+            <id>nqc</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
