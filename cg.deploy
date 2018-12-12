@@ -13,12 +13,17 @@ done
 PRGDIR=`dirname "$PRG"`
 PRGDIR=`cd "$PRGDIR" > /dev/null; pwd`
 
-cd $PRGDIR
-mvn -U -PNQCX clean package -Dmaven.test.skip=true
+PROFILE="$1"
+if [[ -z ${PROFILE} ]]; then
+    PROFILE="nqcx"
+fi
+
+cd ${PRGDIR}
+mvn -U -Pd clean package -Dmaven.test.skip=true
 
 /export/bin/cg.stop
 
 rm -rf /export/apps/cg/*
-cp -r $PRGDIR/nqcx-cg-web/target/nqcx-cg-web/* /export/apps/cg
+cp -r ${PRGDIR}/nqcx-cg-web/target/nqcx-cg-web/* /export/apps/cg
 
 /export/bin/cg.start

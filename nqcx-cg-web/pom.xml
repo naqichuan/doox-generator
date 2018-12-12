@@ -160,7 +160,7 @@
 
     <profiles>
         <profile>
-            <id>NQCX</id>
+            <id>nqcx</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
@@ -168,7 +168,7 @@
             </properties>
         </profile>
         <profile>
-            <id>YHC</id>
+            <id>yhc</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -177,7 +177,7 @@
             </properties>
         </profile>
         <profile>
-            <id>CA</id>
+            <id>ca</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
