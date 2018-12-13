@@ -22,9 +22,9 @@ public class [(${name})] extends TestCase {
     @Test
     public void save() {
         [(${poName})] po = new [(${poName})]();
-    [# th:each="pg : ${poSetters}"]
-        [(${pg})]
-    [/]
+[# th:each="pg : ${poSetters}"]
+        [(${pg})][/]
+
         [(${daoVeriable})].save(po);
     }
 
@@ -35,7 +35,7 @@ public class [(${name})] extends TestCase {
 
         for (int i = 0; i < 1000; i++) {
             list.add(po = new [(${poName})]());
-        [# th:each="pg : ${poSetters}"]
+[# th:each="pg : ${poSetters}"]
             [(${pg})][/]
         }
 
@@ -45,9 +45,9 @@ public class [(${name})] extends TestCase {
     @Test
     public void modify() {
         [(${poName})] po = new [(${poName})]();
-    [# th:each="pg : ${poSetters}"]
-        [(${pg})]
-    [/]
+[# th:each="pg : ${poSetters}"]
+        [(${pg})][/]
+
         [(${daoVeriable})].modify(po);
     }
 
@@ -57,9 +57,9 @@ public class [(${name})] extends TestCase {
         List<[(${poName})]> list = new ArrayList<>();
 
         list.add(po = new [(${poName})]());
-    [# th:each="pg : ${poSetters}"]
-        [(${pg})]
-    [/]
+[# th:each="pg : ${poSetters}"]
+        [(${pg})][/]
+
         [(${daoVeriable})].modifyAll(list);
     }
 

@@ -22,9 +22,9 @@ public class [(${name})] extends TestCase {
     @Test
     public void save() {
         [(${doName})] do_ = new [(${doName})]();
-    [# th:each="dg : ${doSetters}"]
-        [(${dg})]
-    [/]
+[# th:each="dg : ${doSetters}"]
+        [(${dg})][/]
+
         [(${serviceVeriable})].save(do_);
     }
 
@@ -35,7 +35,7 @@ public class [(${name})] extends TestCase {
 
         for (int i = 0; i < 1000; i++) {
             list.add(do_ = new [(${doName})]());
-        [# th:each="dg : ${doSetters}"]
+[# th:each="dg : ${doSetters}"]
             [(${dg})][/]
         }
 
@@ -45,9 +45,9 @@ public class [(${name})] extends TestCase {
     @Test
     public void modify() {
         [(${doName})] do_ = new [(${doName})]();
-    [# th:each="dg : ${doSetters}"]
-        [(${dg})]
-    [/]
+[# th:each="dg : ${doSetters}"]
+        [(${dg})][/]
+
         [(${serviceVeriable})].modify(do_);
     }
 
@@ -57,9 +57,9 @@ public class [(${name})] extends TestCase {
         List<[(${doName})]> list = new ArrayList<>();
 
         list.add(do_ = new [(${doName})]());
-    [# th:each="dg : ${doSetters}"]
-        [(${dg})]
-    [/]
+[# th:each="dg : ${doSetters}"]
+        [(${dg})][/]
+
         [(${serviceVeriable})].modifyAll(list);
     }
 

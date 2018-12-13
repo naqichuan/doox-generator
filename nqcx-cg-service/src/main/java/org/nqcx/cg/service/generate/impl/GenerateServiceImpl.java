@@ -364,6 +364,8 @@ public class GenerateServiceImpl implements GenerateService {
 
         // bo field
         List<String> boFields = new ArrayList<>();
+        // bo field comment
+        List<String> boFieldComments = new ArrayList<>();
         // getter & setter
         List<CgField> boGetterAndSetters = new ArrayList<>();
 
@@ -373,6 +375,10 @@ public class GenerateServiceImpl implements GenerateService {
 
             mappingImport(imports, c.getType_());
 
+            if(c.getComment() != null && c.getComment().length() > 0)
+                boFieldComments.add("// " + c.getComment());
+            else
+                boFieldComments.add("");
             boFields.add(String.format("private %s %s;", c.getType_(), c.getField_()));
 
             CgField field = new CgField();
@@ -384,6 +390,7 @@ public class GenerateServiceImpl implements GenerateService {
         });
 
         cxt.setVariable("boFields", boFields);
+        cxt.setVariable("boFieldComments", boFieldComments);
         cxt.setVariable("boGetterAndSetter", boGetterAndSetters);
 
         this.writeFile(logFile, providePath + "/" + JAVA_PATH + boPackage.replace('.', '/'), boName, JAVA_EXT_NAME,
