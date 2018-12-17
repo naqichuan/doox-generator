@@ -144,11 +144,13 @@
                     title: 'Error',
                     msg: 'WS not exists.'
                 });
+                return false;
             } else if (!ws.author().val()) {
                 jQuery.messager.show({
                     title: 'Error',
                     msg: 'Please input author.'
                 });
+                return false;
             } else if (!project.pName().val()) {
                 jQuery.messager.show({
                     title: 'Error',
@@ -587,6 +589,7 @@
             addDatas: {
                 tableName: table.tableName().val(),
                 tablePack: table.tablePack().val(),
+                author: ws.author().val(),
                 wsPath: ws.wsPath().val(),
                 pName: project.pName().val(),
                 pPath: project.pPath().val(),
