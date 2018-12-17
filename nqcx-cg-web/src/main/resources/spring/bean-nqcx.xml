@@ -19,9 +19,6 @@
     <util:map id="resultExtends">
     </util:map>
 
-    <bean id="workspaceAuthor" class="java.lang.String">
-        <constructor-arg value="${workspace.author}"/>
-    </bean>
     <bean id="overwrite" class="java.lang.Boolean">
         <constructor-arg value="false"/>
     </bean>

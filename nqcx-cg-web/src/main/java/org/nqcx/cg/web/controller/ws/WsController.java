@@ -32,10 +32,14 @@ import java.util.Map;
 public class WsController extends AbstractController {
 
     @Autowired
+    private WsService wsService;
+
+    @Autowired
     @Qualifier("wsCookie")
     private NqcxCookie wsCookie;
     @Autowired
-    private WsService wsService;
+    @Qualifier("authorCookie")
+    private NqcxCookie authorCookie;
 
     @RequestMapping(value = "/path/load", method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -51,5 +55,20 @@ public class WsController extends AbstractController {
         }
 
         return buildResult(new DTO(true).setObject(ws));
+    }
+
+    @RequestMapping(value = "/author", method = {RequestMethod.POST},
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public Map<?, ?> author(HttpServletResponse response,
+                            @RequestParam("author") String author) {
+
+        if (author != null && author.trim().length() > 0) {
+            String cookieValue = (author = author.trim());
+            // 记录写入 cookie
+            CookieUtils.setCookie(response, authorCookie.getName(), cookieValue);
+        }
+
+        return buildResult(new DTO(true).setObject(author));
     }
 }

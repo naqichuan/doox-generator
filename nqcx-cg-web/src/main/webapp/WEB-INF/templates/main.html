@@ -180,8 +180,22 @@
     </script>
     <script type="text/javascript" th:inline="javascript">
         var ws = {
+            author: function () {
+                return jQuery('input[name="author"]');
+            },
             wsPath: function () {
                 return jQuery('input[name="wsPath"]');
+            },
+            saveAuthor: function () {
+                var author = this.author().val();
+                if (!author)
+                    return;
+
+                nqcxPost("[(@{'/ws/author'})]", {author: author}, function (result) {
+                    if (result.success) {
+                        console.log(result.object);
+                    }
+                });
             },
             loadWsPath: function (callBack, errorCallBack) {
                 var path = decodeURIComponent(this.wsPath().val());
@@ -691,6 +705,14 @@
     <table border="0" cellpadding="0" cellspacing="0">
         <tr height="30">
             <td class="lable">
+                Author:
+            </td>
+            <td>
+                <input type="text" class="big_140" name="author" value=""/>
+            </td>
+        </tr>
+        <tr height="30">
+            <td class="lable">
                 WS:
             </td>
             <td>
@@ -786,6 +808,8 @@
             project.emptyProjects();
             project.clear();
         });
+        // 初始化 autho 相关
+        ws.author().val(/*[[${author}]]*/ '');
 
         // Connect db and load table
         $('.connectDB').keyup(function (event) {
@@ -862,6 +886,11 @@
                 });
             }
         }); // end of ws
+
+        // author
+        ws.author().keyup(function (event) {
+            ws.saveAuthor();
+        });
 
         // project
         project.pName().change(function () {

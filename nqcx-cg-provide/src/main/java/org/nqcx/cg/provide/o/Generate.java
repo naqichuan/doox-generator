@@ -18,6 +18,7 @@ public class Generate implements Serializable {
 
     // project field
     private String wsPath;
+    private String author;
     private String pName;
     private String pPath;
     private String pPackage;
@@ -109,6 +110,14 @@ public class Generate implements Serializable {
 
     public void setWsPath(String wsPath) {
         this.wsPath = wsPath;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public String getpPath() {

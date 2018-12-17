@@ -75,9 +75,6 @@ public class GenerateServiceImpl implements GenerateService {
     private final static String P_WEB_PATH_KEY = "webModule";
 
     @Autowired
-    @Qualifier("workspaceAuthor")
-    private String workspaceAuthor;
-    @Autowired
     @Qualifier("overwrite")
     private Boolean overwrite; // 生成文件是否覆盖原来的文件
     @Autowired
@@ -167,7 +164,7 @@ public class GenerateServiceImpl implements GenerateService {
 
         String providePath = pathMap.get(P_PROVIDE_PATH_KEY);
         if (g.getProvide_().isTrue()) {
-            this.generateProvide(cgLogFile, table, providePath, g.getProvideBOPackage(), g.getProvideBO(),
+            this.generateProvide(cgLogFile, g.getAuthor(), table, providePath, g.getProvideBOPackage(), g.getProvideBO(),
                     g.getProvideOPackage(), g.getProvideO(),
                     g.getProvideProvidePackage(), g.getProvideProvide());
         }
@@ -181,7 +178,7 @@ public class GenerateServiceImpl implements GenerateService {
 
         String daoPath = pathMap.get(P_DAO_PATH_KEY);
         if (g.getDao_().isTrue()) {
-            this.generateDao(cgLogFile, table, daoPath, g.getDaoPOPackage(), g.getDaoPO(),
+            this.generateDao(cgLogFile, g.getAuthor(), table, daoPath, g.getDaoPOPackage(), g.getDaoPO(),
                     g.getDaoMapperPackage(), g.getDaoMapper(),
                     g.getDaoJpaPackage(), g.getDaoJpa(),
                     g.getDaoDAOPackage(), g.getDaoDAO(), g.getDaoDAOPackage() + ".impl", g.getDaoDAOImpl(),
@@ -195,7 +192,7 @@ public class GenerateServiceImpl implements GenerateService {
 
         String servicePath = pathMap.get(P_SERVICE_PATH_KEY);
         if (g.getService_().isTrue()) {
-            this.generateService(cgLogFile, table, servicePath, g.getServiceDOPackage(), g.getServiceDO(),
+            this.generateService(cgLogFile, g.getAuthor(), table, servicePath, g.getServiceDOPackage(), g.getServiceDO(),
                     g.getServiceServicePackage(), g.getServiceService(), g.getServiceServicePackage() + ".impl", g.getServceServiceImpl(),
                     g.getProvideProvide(), g.getDaoDAO(), g.getDaoPO());
         }
@@ -206,7 +203,7 @@ public class GenerateServiceImpl implements GenerateService {
 
         String webPath = pathMap.get(P_WEB_PATH_KEY);
         if (g.getWeb_().isTrue()) {
-            this.generateWeb(cgLogFile, table, webPath, g.getWebVOPackage(), g.getWebVO(),
+            this.generateWeb(cgLogFile, g.getAuthor(), table, webPath, g.getWebVOPackage(), g.getWebVO(),
                     g.getWebControllerPackage(), g.getWebController(),
                     g.getProvideO(), g.getServiceDO());
         }
@@ -334,6 +331,7 @@ public class GenerateServiceImpl implements GenerateService {
 
     /**
      * @param logFile
+     * @param author
      * @param table
      * @param providePath
      * @param boPackage
@@ -343,7 +341,7 @@ public class GenerateServiceImpl implements GenerateService {
      * @param providePackage
      * @param provideName
      */
-    private void generateProvide(File logFile, Table table, String providePath, String boPackage, String boName,
+    private void generateProvide(File logFile, String author, Table table, String providePath, String boPackage, String boName,
                                  String oPackage, String oName,
                                  String providePackage, String provideName) {
 
@@ -353,7 +351,7 @@ public class GenerateServiceImpl implements GenerateService {
         // bo
         mappingImport(imports, "Serializable");
 
-        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("author", author);
         cxt.setVariable("date", new Date());
         cxt.setVariable("package", boPackage);
         cxt.setVariable("imports", imports);
@@ -398,7 +396,7 @@ public class GenerateServiceImpl implements GenerateService {
         imports.clear();
         mappingImport(imports, boName);
 
-        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("author", author);
         cxt.setVariable("date", new Date());
         cxt.setVariable("package", oPackage);
         cxt.setVariable("imports", imports);
@@ -413,7 +411,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.clearVariables();
         imports.clear();
 
-        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("author", author);
         cxt.setVariable("date", new Date());
         cxt.setVariable("package", providePackage);
         cxt.setVariable("imports", imports);
@@ -425,6 +423,7 @@ public class GenerateServiceImpl implements GenerateService {
 
     /**
      * @param logFile
+     * @param author
      * @param table
      * @param daoPath
      * @param poPackage
@@ -439,7 +438,7 @@ public class GenerateServiceImpl implements GenerateService {
      * @param daoImpl
      * @param boName
      */
-    private void generateDao(File logFile, Table table, String daoPath, String poPackage, String po,
+    private void generateDao(File logFile, String author, Table table, String daoPath, String poPackage, String po,
                              String mapperPackage, String mapper,
                              String jpaPackage, String jpa,
                              String daoPackage, String dao, String daoImplPackage, String daoImpl,
@@ -459,7 +458,7 @@ public class GenerateServiceImpl implements GenerateService {
         mappingImport(imports, "Table");
         mappingImport(imports, "Column");
 
-        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("author", author);
         cxt.setVariable("date", new Date());
         cxt.setVariable("package", poPackage);
         cxt.setVariable("imports", imports);
@@ -550,7 +549,7 @@ public class GenerateServiceImpl implements GenerateService {
         mappingImport(imports, "IMapper");
         mappingImport(imports, po);
 
-        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("author", author);
         cxt.setVariable("date", new Date());
         cxt.setVariable("package", mapperPackage);
         cxt.setVariable("imports", imports);
@@ -633,7 +632,7 @@ public class GenerateServiceImpl implements GenerateService {
         mappingImport(imports, "IJpa");
         mappingImport(imports, po);
 
-        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("author", author);
         cxt.setVariable("date", new Date());
         cxt.setVariable("package", jpaPackage);
         cxt.setVariable("imports", imports);
@@ -652,7 +651,7 @@ public class GenerateServiceImpl implements GenerateService {
 
         mappingImport(imports, "IDao");
 
-        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("author", author);
         cxt.setVariable("date", new Date());
         cxt.setVariable("package", daoPackage);
         cxt.setVariable("imports", imports);
@@ -674,7 +673,7 @@ public class GenerateServiceImpl implements GenerateService {
         mappingImport(imports, "IJpa");
         mappingImport(imports, "stereotype.Service");
 
-        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("author", author);
         cxt.setVariable("date", new Date());
         cxt.setVariable("package", daoImplPackage);
         cxt.setVariable("imports", imports);
@@ -725,7 +724,7 @@ public class GenerateServiceImpl implements GenerateService {
 //        mappingImport(imports, dao);
         mappingImport(imports, po);
 
-        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("author", author);
         cxt.setVariable("date", new Date());
         cxt.setVariable("package", daoPackage);
         cxt.setVariable("imports", imports);
@@ -754,6 +753,7 @@ public class GenerateServiceImpl implements GenerateService {
 
     /**
      * @param logFile
+     * @param author
      * @param table
      * @param servicePath
      * @param dtoPackage
@@ -766,7 +766,7 @@ public class GenerateServiceImpl implements GenerateService {
      * @param daoName
      * @param poName
      */
-    private void generateService(File logFile, Table table, String servicePath, String dtoPackage, String do_,
+    private void generateService(File logFile, String author, Table table, String servicePath, String dtoPackage, String do_,
                                  String servicePackage, String service, String serviceImplPackage, String serviceImpl,
                                  String provideName, String daoName, String poName) {
 
@@ -781,7 +781,7 @@ public class GenerateServiceImpl implements GenerateService {
         // DO
         mappingImport(imports, poName);
 
-        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("author", author);
         cxt.setVariable("date", new Date());
         cxt.setVariable("package", dtoPackage);
         cxt.setVariable("imports", imports);
@@ -801,7 +801,7 @@ public class GenerateServiceImpl implements GenerateService {
         mappingImport(imports, "provideName");
         mappingImport(imports, "IService");
 
-        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("author", author);
         cxt.setVariable("date", new Date());
         cxt.setVariable("package", servicePackage);
         cxt.setVariable("imports", imports);
@@ -826,7 +826,7 @@ public class GenerateServiceImpl implements GenerateService {
         mappingImport(imports, poName);
         mappingImport(imports, do_);
 
-        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("author", author);
         cxt.setVariable("date", new Date());
         cxt.setVariable("package", serviceImplPackage);
         cxt.setVariable("imports", imports);
@@ -872,7 +872,7 @@ public class GenerateServiceImpl implements GenerateService {
 //        mappingImport(imports, service);
         mappingImport(imports, do_);
 
-        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("author", author);
         cxt.setVariable("date", new Date());
         cxt.setVariable("package", servicePackage);
         cxt.setVariable("imports", imports);
@@ -900,6 +900,7 @@ public class GenerateServiceImpl implements GenerateService {
 
     /**
      * @param logFile
+     * @param author
      * @param webPath
      * @param voPackage
      * @param vo
@@ -908,7 +909,7 @@ public class GenerateServiceImpl implements GenerateService {
      * @param oName
      * @param doName
      */
-    private void generateWeb(File logFile, Table table, String webPath, String voPackage, String vo,
+    private void generateWeb(File logFile, String author, Table table, String webPath, String voPackage, String vo,
                              String controllerPackage, String controller,
                              String oName, String doName) {
 
@@ -918,7 +919,7 @@ public class GenerateServiceImpl implements GenerateService {
         // vo
         mappingImport(imports, doName);
 
-        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("author", author);
         cxt.setVariable("date", new Date());
         cxt.setVariable("package", voPackage);
         cxt.setVariable("imports", imports);
@@ -935,7 +936,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.clearVariables();
         imports.clear();
 
-        cxt.setVariable("author", workspaceAuthor);
+        cxt.setVariable("author", author);
         cxt.setVariable("date", new Date());
         cxt.setVariable("package", controllerPackage);
         cxt.setVariable("imports", imports);

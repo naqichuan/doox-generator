@@ -153,10 +153,6 @@
         <finalName>nqcx-cg-web</finalName>
     </build>
 
-    <properties>
-        <workspace.author>NaqiChuan</workspace.author>
-    </properties>
-
     <profiles>
         <profile>
             <id>nqc</id>

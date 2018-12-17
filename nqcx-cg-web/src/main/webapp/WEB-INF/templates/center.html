@@ -144,6 +144,11 @@
                     title: 'Error',
                     msg: 'WS not exists.'
                 });
+            } else if (!ws.author().val()) {
+                jQuery.messager.show({
+                    title: 'Error',
+                    msg: 'Please input author.'
+                });
             } else if (!project.pName().val()) {
                 jQuery.messager.show({
                     title: 'Error',

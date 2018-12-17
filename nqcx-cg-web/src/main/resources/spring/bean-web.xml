@@ -32,11 +32,17 @@
         <property name="encrypt" value="true"/>
         <property name="expiry" value="31536000"/>
     </bean>
+    <bean id="authorCookie" parent="_normalCookie">
+        <property name="name" value="author"/>
+        <property name="encrypt" value="true"/>
+        <property name="expiry" value="31536000"/>
+    </bean>
     <bean class="org.nqcx.commons3.web.cookie.CookieUtils">
         <property name="cookieMap">
             <map>
                 <entry key="jdbc" value-ref="jdbcCookie"/>
                 <entry key="ws" value-ref="wsCookie"/>
+                <entry key="author" value-ref="authorCookie"/>
             </map>
         </property>
     </bean>

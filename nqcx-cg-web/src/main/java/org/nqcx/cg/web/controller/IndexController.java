@@ -35,6 +35,9 @@ public class IndexController extends AbstractController {
     @Autowired
     @Qualifier("wsCookie")
     private NqcxCookie wsCookie;
+    @Autowired
+    @Qualifier("authorCookie")
+    private NqcxCookie authorCookie;
 
     @RequestMapping(value = "/", method = {RequestMethod.GET,
             RequestMethod.POST})
@@ -49,6 +52,12 @@ public class IndexController extends AbstractController {
         String wsCookieValue = CookieUtils.getCookieValue(request, wsCookie.getName());
         if (wsCookieValue != null && wsCookieValue.length() > 0)
             mav.addObject("ws", wsService.getWs(wsCookieValue, false));
+
+        String author = "NaqiChuan";
+        String authorCookieValue = CookieUtils.getCookieValue(request, authorCookie.getName());
+        if (authorCookieValue != null && authorCookieValue.length() > 0)
+            author = authorCookieValue;
+        mav.addObject("author", author);
 
         String jdbcUrl = "localhost:3306/nqcx";
         String user = "nqcx";
