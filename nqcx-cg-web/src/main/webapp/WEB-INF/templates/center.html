@@ -135,8 +135,8 @@
 
 <script type="text/javascript">
     var button = {
-        reloadAll: function () {
-            return jQuery('#reloadAll');
+        loadCenter: function () {
+            return jQuery('#loadCenter');
         },
         checkForm: function () {
             if (!project.pName().val()) {
@@ -167,21 +167,26 @@
         info: function () {
             return jQuery('tbody#tableInfo');
         },
-        addInfo: function (column) {
-            if (!column)
+        addInfo: function (columns) {
+            if (!columns && columns.length === 0)
                 return;
-            var colstr = '<tr>';
-            colstr += '<td>' + column.field + '</td>';
-            colstr += '<td>' + column.type + '</td>';
-            colstr += '<td>' + column.collation + '</td>';
-            colstr += '<td>' + column.isNull + '</td>';
-            colstr += '<td>' + column.key + '</td>';
-            colstr += '<td>' + column.defaultValue + '</td>';
-            colstr += '<td>' + column.extra + '</td>';
-            colstr += '<td>' + column.privileges + '</td>';
-            colstr += '<td>' + column.comment + '</td>';
-            colstr += '</tr>';
-            this.info().append(colstr);
+            this.info().html('');
+
+            for (var idx in columns) {
+                var colstr = '<tr>';
+                colstr += '<td>' + columns[idx].field + '</td>';
+                colstr += '<td>' + columns[idx].type + '</td>';
+                colstr += '<td>' + columns[idx].collation + '</td>';
+                colstr += '<td>' + columns[idx].isNull + '</td>';
+                colstr += '<td>' + columns[idx].key + '</td>';
+                colstr += '<td>' + columns[idx].defaultValue + '</td>';
+                colstr += '<td>' + columns[idx].extra + '</td>';
+                colstr += '<td>' + columns[idx].privileges + '</td>';
+                colstr += '<td>' + columns[idx].comment + '</td>';
+                colstr += '</tr>';
+
+                this.info().append(colstr);
+            }
         },
         projectInit: function () {
             this.loadTable()
@@ -195,11 +200,8 @@
             nqcxGet("[(@{'/table/get/'})]" + tableName, {}, function (result) {
                 if (result.object && result.object.columns) {
                     columns = result.object.columns;
-
-                    for (idx in columns) {
-                        tableInfo.addInfo(columns[idx]);
-                    }
                 }
+                tableInfo.addInfo(columns);
                 tableInfo.config(columns);
             });
         },
@@ -612,9 +614,13 @@
         service.loadPackage();
         web.loadPackage();
     };
+    table.colPrefixChange = function () {
+        // 重新加载表
+        tableInfo.loadTable();
+    };
 
     $(document).ready(function () {
-        button.reloadAll().unbind('click').click(function () {
+        button.loadCenter().unbind('click').click(function () {
             table.change();
         });
 

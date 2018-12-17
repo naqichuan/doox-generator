@@ -58,8 +58,8 @@ public class IndexController extends AbstractController {
         }
 
         mav.addObject("jdbcUrl", jdbcUrl);
-        mav.addObject("user", user);
-        mav.addObject("password", password);
+        mav.addObject("jdbcUser", user);
+        mav.addObject("jdbcPassword", password);
 
         return mav;
     }

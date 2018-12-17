@@ -51,8 +51,8 @@ public class ConnectionController extends AbstractController {
     @ResponseBody
     public Map<?, ?> connect(HttpServletResponse response,
                              @RequestParam("jdbcUrl") String jdbcUrl,
-                             @RequestParam("user") String user,
-                             @RequestParam("password") String password) {
+                             @RequestParam("jdbcUser") String user,
+                             @RequestParam("jdbcPassword") String password) {
 
         boolean success = connService.connect(jdbcUrl, user, password);
 

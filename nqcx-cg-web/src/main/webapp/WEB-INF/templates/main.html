@@ -9,16 +9,71 @@
     <meta content="telephone=no" name="format-detection">
     <title th:text="${title?:nqcxValues['defaultTitle']}">Nqcx code generate</title>
     <link th:href="@{'/favicon.ico'}" href="/favicon.ico" rel="icon" type="image/x-icon">
-    <link th:href="@{'/assets/themes/default/easyui.css'}" href="/assets/themes/default/easyui.css" rel="stylesheet" type="text/css">
+    <link th:href="@{'/assets/themes/default/easyui.css'}" href="/assets/themes/default/easyui.css" rel="stylesheet"
+          type="text/css">
     <link th:href="@{'/assets/themes/icon.css'}" href="/assets/themes/icon.css" rel="stylesheet" type="text/css">
     <link th:href="@{'/assets/css/demo.css'}" href="/assets/css/demo.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" th:src="@{'/assets/jquery/jquery.min.js'}" href="/assets/jquery/jquery.min.js"></script>
-    <script type="text/javascript" th:src="@{'/assets/jquery/jquery.easyui.min.js'}" href="/assets/jquery/jquery.easyui.min.js"></script>
-    <script type="text/javascript" th:src="@{'/assets/jquery/jquery.easyui.nqcx.js'}" href="/assets/jquery/jquery.easyui.nqcx.js"></script>
+    <script type="text/javascript" th:src="@{'/assets/jquery/jquery.min.js'}"
+            href="/assets/jquery/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{'/assets/jquery/jquery.easyui.min.js'}"
+            href="/assets/jquery/jquery.easyui.min.js"></script>
+    <script type="text/javascript" th:src="@{'/assets/jquery/jquery.easyui.nqcx.js'}"
+            href="/assets/jquery/jquery.easyui.nqcx.js"></script>
     <style type="text/css">
-        #fileShow {list-style-type: none;margin: 0;padding: 0;}  #fileShow li {line-height: 20px;font-size: 14px;font-weight: 700;}  table td, table th {padding: 0 2px;}  table td.lable {text-align: right;}  input[type="text"] {width: 100px;}  input[type="password"] {width: 100px;}  input[type="text"].big {width: 120px;}  input[type="text"].big_140 {width: 140px;}  input[type="text"].big_200 {width: 200px;}  input[type="text"].middle {width: 80px;}  input[type="text"].small {width: 40px;}
+        #fileShow {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #fileShow li {
+            line-height: 20px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        table td, table th {
+            padding: 0 2px;
+        }
+
+        table td.lable {
+            text-align: right;
+        }
+
+        input[type="text"] {
+            width: 100px;
+        }
+
+        input[type="password"] {
+            width: 100px;
+        }
+
+        input[type="text"].big {
+            width: 120px;
+        }
+
+        input[type="text"].big_140 {
+            width: 140px;
+        }
+
+        input[type="text"].big_200 {
+            width: 200px;
+        }
+
+        input[type="text"].middle {
+            width: 80px;
+        }
+
+        input[type="text"].small {
+            width: 40px;
+        }
+
+        input[type="text"].waring {
+                background-color: #FFFF00;
+        }
     </style>
     <script type="text/javascript" th:inline="javascript">
+        // string
         String.prototype.compare = function (str) {
             return this.toLowerCase() === str.toLowerCase();
         };
@@ -56,41 +111,9 @@
                     return m.toLowerCase();
             });
         };
+        // end of string
     </script>
-    <script type="text/javascript" th:inline="javascript">
-        // db =====================================================================
-        var db = {
-            conn: function (callBack, errorCallBack) {
-                $('#connForm').form('nqcxSubmit', {
-                    url: /*[['/connection/connect']]*/ '',
-                    dataType: 'json',
-                    onSubmit: function () {
-                        return $(this).form('validate');
-                    },
-                    success: function (result) {
-                        if (result.success) {
-                            if (callBack)
-                                callBack();
-                         } else {
-                            if (errorCallBack)
-                                errorCallBack();
-                            jQuery.messager.show({
-                                title: 'Error',
-                                msg: result.errorText
-                            });
-                        }
-                    },
-                    error: function () {
-                        jQuery.messager.show({
-                            title: 'Error',
-                            msg: 'Connect db fail! Please try again later.'
-                        });
-                    }
-                });
-            }
-        };
-        // end of db ==============================================================
-    </script>
+
     <script type="text/javascript" th:inline="javascript">
         var retryTimes = 1;
         var nqcxPost = function (url, data, callBack) {
@@ -157,20 +180,92 @@
         };
     </script>
     <script type="text/javascript" th:inline="javascript">
+        var ws = {
+            wsPath: function () {
+                return jQuery('input[name="wsPath"]');
+            }
+        }
+    </script>
+    <script type="text/javascript" th:inline="javascript">
+        var db = {
+            jdbcUrl: function () {
+                return $('input[name="jdbcUrl"]');
+            },
+            jdbcUser: function () {
+                return $('input[name="jdbcUser"]');
+            },
+            jdbcPassword: function () {
+                return $('input[name="jdbcPassword"]');
+            },
+            conn: function (callBack, errorCallBack) {
+                $('#connForm').form('nqcxSubmit', {
+                    url: /*[['/connection/connect']]*/ '',
+                    dataType: 'json',
+                    onSubmit: function () {
+                        return $(this).form('validate');
+                    },
+                    success: function (result) {
+                        if (result.success) {
+                            if (callBack)
+                                callBack();
+                        } else {
+                            if (errorCallBack)
+                                errorCallBack();
+                            jQuery.messager.show({
+                                title: 'Error',
+                                msg: result.errorText
+                            });
+                        }
+                    },
+                    error: function () {
+                        jQuery.messager.show({
+                            title: 'Error',
+                            msg: 'Connect db fail! Please try again later.'
+                        });
+                    }
+                });
+            }
+        };  // end of db
+
         var table = {
             tableName: function () {
                 return jQuery('select[name="tableName"]');
             },
-            colPrefix: function() {
+            colPrefix: function () {
                 return jQuery('input[name="colPrefix"]');
             },
-            tablePack: function() {
+            tablePack: function () {
                 return jQuery('input[name="tablePack"]');
             },
+            tablePackChanged: false,
+            tablePackTip: function () {
+                if (this.tablePackChanged) {
+                    this.tablePack().removeClass("waring");
+                } else {
+                    this.tablePack().addClass("waring");
+                }
+            },
+            reset: function () {
+                this.tableName().val(this.tableName().attr('t-data'));
+                this.colPrefix().val(this.colPrefix().attr('t-data'));
+                this.tablePack().val(this.tablePack().attr('t-data'));
+            },
+            emptyTables: function () {
+                jQuery('select[name="tableName"] option').each(function () {
+                    if ($(this).val()) {
+                        $(this).remove();
+                    }
+                });
+            },
             listNames: function () {
-                var url = /*[['/table/list']]*/'';
+                // 取当前 table name
+                var tableNameValue = table.tableName().val();
+                var colPrefixValue = table.colPrefix().val();
+                var tablePackValue = table.tablePack().val();
+
+                var url = /*[['/table/list']]*/ '';
                 nqcxGet(url, {}, function (result) {
-                    table.empty();
+                    table.emptyTables();
                     if (result.list) {
                         for (t in result.list) {
                             table.listNamesAppend(result.list[t].name, result.list[t].name);
@@ -180,48 +275,44 @@
                         title: 'Success',
                         msg: 'Table loaded'
                     });
-                    table.change();
-                });
-            },
-            empty: function () {
-                jQuery('select[name="tableName"] option').each(function () {
-                    if ($(this).val()) {
-                        $(this).remove();
-                    }
+
+                    table.change(tableNameValue, colPrefixValue, tablePackValue);
                 });
             },
             listNamesAppend: function (value, text) {
                 jQuery('<option value="' + value + '">' + text + '</option>').appendTo(this.tableName());
             },
-            selected: function () {
-                return this.tableName().val();
-            },
-            change: function () {
+            change: function (lastTableName, lastColPrefixValue, lastTablePack) {
                 var tableNameValue = this.tableName().val();
+                if (!lastTableName && !tableNameValue) {
+                    // 首次加载或选择了空值
+                    tableNameValue = this.tableName().attr('t-data');
+                } else if (lastTableName) {
+                    // 点了 [Connect DB] 或 [>>Load tables>>]
+                    tableNameValue = this.tableName().attr('t-data');
+                    $('select[name="tableName"] option').each(function () {
+                        if ($(this).val() && $(this).val() === lastTableName)
+                            tableNameValue = lastTableName;
+                    });
+                }
+
                 if (!tableNameValue) {
-                    this.clear();
+                    table.reset();
+                    center.clear();
                     return;
-                } else {
+                }
+
+                this.tableName().val(tableNameValue);
+                if (!this.tablePackChanged)
                     this.tablePack().val(tableNameValue.replaceFirstLow());
 
-                    var url = /*[['/center']]*/'';
-                    jQuery.post(url, '', function (result) {
-                        center.load(result);
-                    }, 'html');
-                }
-            },
-            clear: function () {
-                center.clear();
+                jQuery.post(/*[['/center']]*/ '', '', function (result) {
+                    center.load(result);
+                }, 'html');
             }
-        };
+        }; // end of table
     </script>
-    <script type="text/javascript" th:inline="javascript">
-        var ws = {
-            wsPath: function () {
-                return jQuery('input[name="wsPath"]');
-            }
-        }
-    </script>
+
     <script type="text/javascript" th:inline="javascript">
         var project = {
             pName: function () {
@@ -236,9 +327,9 @@
             pType: function () {
                 return jQuery('input[name="pType"]');
             },
-            pPackageChange() {
+            pPackageChange: function () {
                 var ppName = this.pName().val();
-                if(ppName)
+                if (ppName)
                     ppName = ppName.replace("nqcx-", "").toLocaleLowerCase();
                 else
                     ppName = "";
@@ -263,13 +354,13 @@
                 this.pPackageChange();
 
                 // modules
-                 var pTypeValue = this.pType().filter(':checked').val();
+                var pTypeValue = this.pType().filter(':checked').val();
                 if (pTypeValue == 1)
                     this.fecthDirs(this.module.fillAll);
                 else
                     this.module.emptyAll();
 
-                 // file path
+                // file path
                 path.openFile();
             },
             clear: function () {
@@ -309,16 +400,16 @@
                 });
             },
             module: {
-                provide: function() {
+                provide: function () {
                     return jQuery('select[name="provideModuleName"]');
                 },
-                dao: function() {
+                dao: function () {
                     return jQuery('select[name="daoModuleName"]');
                 },
-                service: function() {
+                service: function () {
                     return jQuery('select[name="serviceModuleName"]');
                 },
-                web: function() {
+                web: function () {
                     return jQuery('select[name="webModuleName"]');
                 },
                 fillAll: function (_this) {
@@ -349,7 +440,7 @@
                             jQuery('<option value="' + ml[idx] + '">' + ml[idx] + '</option>').appendTo(select);
                     }
                 },
-                emptyAll: function() {
+                emptyAll: function () {
                     // provide
                     this.empty(this.provide());
                     // dao
@@ -359,7 +450,7 @@
                     // web
                     this.empty(this.web());
                 },
-                empty: function(module) {
+                empty: function (module) {
                     jQuery('option', module).each(function () {
                         if ($(this).val()) {
                             $(this).remove();
@@ -367,7 +458,7 @@
                     });
                 }
             }
-         };
+        };
     </script>
     <script type="text/javascript" th:inline="javascript">
         var path = {
@@ -380,10 +471,9 @@
             setRelativePath: function (value) {
                 this.relativePath().val(value);
             },
-            enterKeyDown: function (e) {
-                var key = e.which;
-                if (key == 13) {
-                    e.preventDefault();
+            enterKeyDown: function (event) {
+                if ((event.keyCode || event.which) === 13) {
+                    event.preventDefault();
 
                     var relativePathValue = this.relativePath().val();
                     var path = '';
@@ -391,7 +481,7 @@
                     if (!relativePathValue)
                         relativePathValue = '/';
 
-                    if (relativePathValue.indexOf('/') == -1)
+                    if (relativePathValue.indexOf('/') === -1)
                         relativePathValue = '/' + relativePathValue;
 
                     if (relativePathValue.length > 1 && relativePathValue.endWith('/'))
@@ -466,33 +556,34 @@
 </head>
 <body class="easyui-layout">
 <div data-options="region:'north',split:true" style="height:75px;padding:5px 5px 0;overflow:hidden;">
-    <form id="connForm" method="post" action="session">
+    <form id="connForm" method="post" action="@{'/session'}">
         <input type="hidden" name="wsPath" th:value="${ws.path}" value="" readonly="true"/>
         <table border="0" cellpadding="0" cellspacing="0">
             <tr height="30px">
                 <td class="lable">jdbc:mysql://</td>
-                <td><input type="text" class="connect big_200" name="jdbcUrl" th:value="${jdbcUrl}" value="jdbcUrl"></td>
+                <td><input type="text" class="connectDB big_200" name="jdbcUrl" value=""></td>
                 <td class="lable">User:</td>
-                <td><input type="text" calss="connect" name="user" th:value="${user}" value="user"/></td>
+                <td><input type="text" class="connectDB" name="jdbcUser" value=""/></td>
                 <td class="lable">Password:</td>
-                <td><input type="password" class="connect small" name="password" th:value="${password}" value="password" autocomplete="off" /></td>
+                <td><input type="password" class="connectDB small" name="jdbcPassword" value="" autocomplete="off"/>
+                </td>
                 <td class="lable">
-                    <input id="reconnect" type="button" value="Connect DB"/>
+                    <input id="connectDB" type="button" value="Connect DB"/>
                 </td>
             </tr>
             <tr height="30px">
                 <td colspan="2">
                     <input id="loadTables" type="button" value=">>Load tables>>"/>
-                    <select name="tableName">
+                    <select name="tableName" t-data="">
                         <option value="">Select Table</option>
                     </select>
                 </td>
                 <td class="lable">Col-prefix:</td>
-                <td><input type="text" name="colPrefix" value="t_" /></td>
+                <td><input type="text" name="colPrefix" value="" t-data="t_,"/></td>
                 <td class="lable">Table-pack:</td>
-                <td><input type="text" name="tablePack" value="" /></td>
+                <td><input type="text" class="waring" name="tablePack" value="" t-data=""/></td>
                 <td class="lable">
-                    <input id="reloadAll" type="button" value="Load Center"/>
+                    <input id="loadCenter" type="button" value="Load Center"/>
                 </td>
             </tr>
         </table>
@@ -502,7 +593,9 @@
 <div data-options="region:'west',split:true" style="width:230px;">
     <table border="0" cellpadding="0" cellspacing="0">
         <tr height="30">
-            <td colspan="2"><th:block th:text="${ws.path}"></th:block></td>
+            <td colspan="2">
+                <th:block th:text="${ws.path}"></th:block>
+            </td>
         </tr>
         <tr height="30">
             <td class="lable">
@@ -511,7 +604,7 @@
             <td>
                 <select name="pName">
                     <option value="">Select Project</option>
-                    <option th:each="cfFile:${ws.cgFileList}" th:value="${cfFile.name}" th:text="${cfFile.name}" />
+                    <option th:each="cfFile:${ws.cgFileList}" th:value="${cfFile.name}" th:text="${cfFile.name}"/>
                 </select>
             </td>
         </tr>
@@ -581,17 +674,44 @@
 <div id="center" data-options="region:'center'" style="padding:5px;background:#eee;"></div>
 <script type="text/javascript" th:inline="javascript">
     $(document).ready(function () {
+        // 初始化 db 相关值
+        db.jdbcUrl().val(/*[[${jdbcUrl}]]*/ '');
+        db.jdbcUser().val(/*[[${jdbcUser}]]*/ '');
+        db.jdbcPassword().val(/*[[${jdbcPassword}]]*/ '');
+
+        table.reset();
+
         // Connect db and load table
-        $('.connect').bind('keyup', function(event) {
-            if (event.keyCode === 13) {
-                db.conn(table.listNames, table.empty);
+        $('.connectDB').bind('keyup', function (event) {
+            if ((event.keyCode || event.which) === 13) {
+                event.preventDefault();
+                table.tablePackChanged = false; // 允许自动生成 table-pack
+                table.tablePackTip();
+
+                db.conn(table.listNames, function () {
+                    table.reset()
+                    table.emptyTables();
+                    table.change();
+                });
             }
         });
-        $('#loadTables').click(function () {
-            db.conn(table.listNames, table.empty);
+        $('#connectDB').click(function () {
+            table.tablePackChanged = false; // 允许自动生成 table-pack
+            table.tablePackTip();
+
+            db.conn(table.listNames, function () {
+                table.reset()
+                table.emptyTables();
+                table.change();
+            });
         });
-        $('#reconnect').click(function () {
-            db.conn(table.listNames, table.empty);
+
+        $('#loadTables').click(function () {
+            db.conn(table.listNames, function () {
+                table.reset()
+                table.emptyTables();
+                table.change();
+            });
         });
         // end of Connect...
 
@@ -599,20 +719,21 @@
         table.tableName().change(function () {
             table.change();
         });
-        table.tablePack().change(function(){
+        table.tablePack().change(function () {
             // child
             if (project.module.change)
                 project.module.change();
         });
-        table.tablePack().keyup(function(){
+        table.tablePack().keyup(function () {
+            table.tablePackChanged = true; // 手动变更，不允许自动生成 table-pack
+            table.tablePackTip();
             // child
             if (project.module.change)
                 project.module.change();
         });
-        table.colPrefix().bind('keyup', function(event) {
-            if (event.keyCode === 13) {
-                table.change(); // 通过 table change 触发，刷新页面
-            }
+        table.colPrefix().keyup(function () {
+            if (table.colPrefixChange)
+                table.colPrefixChange();
         });
         // end of table
 
@@ -631,7 +752,7 @@
             if (project.module.change)
                 project.module.change();
         });
-        project.pPackage().change(function() {
+        project.pPackage().change(function () {
             console.log("Project package changed.")
 
             // child
@@ -649,7 +770,7 @@
         path.relativePath().keydown(function (e) {
             path.enterKeyDown(e);
         });
-     });
+    });
 </script>
 </body>
 </html>

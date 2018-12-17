@@ -40,8 +40,9 @@ public class ConnServiceImpl implements ConnService {
     public boolean connect(String jdbcUrl, String user, String password) {
 
         String url = "jdbc:mysql://" + jdbcUrl;
+        String newInitString = url + "_" + user + "_" + password;
 
-        if (initString.equals(url + "_" + user) && dataSource.isInited() && dataSource.isEnable())
+        if (initString.equals(newInitString) && dataSource.isInited() && dataSource.isEnable())
             return true;
 
         if (dataSource != null) {
@@ -56,7 +57,7 @@ public class ConnServiceImpl implements ConnService {
         dataSource.setPassword(password);
 
         try {
-            initString = url + "_" + user;
+            initString = newInitString;
             dataSource.init();
         } catch (SQLException e) {
             logger.error("", e);
