@@ -19,10 +19,6 @@
     <util:map id="resultExtends">
     </util:map>
 
-
-    <bean id="workspacePath" class="java.lang.String">
-        <constructor-arg value="${workspace.path}"/>
-    </bean>
     <bean id="workspaceAuthor" class="java.lang.String">
         <constructor-arg value="${workspace.author}"/>
     </bean>

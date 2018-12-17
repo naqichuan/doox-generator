@@ -69,7 +69,11 @@
         }
 
         input[type="text"].waring {
-                background-color: #FFFF00;
+            background-color: #FFFF00;
+        }
+
+        input[type="text"].error {
+            background-color: #FF8888;
         }
     </style>
     <script type="text/javascript" th:inline="javascript">
@@ -85,11 +89,7 @@
         String.prototype.endWith = function (str) {
             if (str == null || str === "" || this.length === 0 || str.length > this.length)
                 return false;
-            if (this.substring(this.length - str.length) === str)
-                return true;
-            else
-                return false;
-            return true;
+            return this.substring(this.length - str.length) === str;
         };
         String.prototype.replaceFirstUP = function () {
             if (this.length === 0)
@@ -113,7 +113,6 @@
         };
         // end of string
     </script>
-
     <script type="text/javascript" th:inline="javascript">
         var retryTimes = 1;
         var nqcxPost = function (url, data, callBack) {
@@ -183,6 +182,56 @@
         var ws = {
             wsPath: function () {
                 return jQuery('input[name="wsPath"]');
+            },
+            loadWsPath: function (callBack, errorCallBack) {
+                var path = decodeURIComponent(this.wsPath().val());
+                if (!path)
+                    return;
+
+                nqcxGet("[(@{'/ws/path/load'})]", {"wsPath": path}, function (result) {
+                    if (result.success && result.object) {
+                        var wsdata = result.object;
+                        if (wsdata.exists) {
+                            ws.wsPathExists = true;
+                            ws.wsPathExistsTip();
+
+                            jQuery.messager.show({
+                                title: 'Success',
+                                msg: 'Ws loaded'
+                            });
+
+                            callBack(wsdata);
+                        } else {
+                            $.messager.show({
+                                title: 'Error',
+                                msg: 'WS 不存在！'
+                            });
+                            if (errorCallBack)
+                                errorCallBack();
+                        }
+                    } else {
+                        $.messager.show({
+                            title: 'Error',
+                            msg: '加载 WS 错误！'
+                        });
+                    }
+                });
+            },
+            wsPathExists: false,
+            wsPathExistsTip: function () {
+                if (this.wsPathExists) {
+                    this.wsPath().removeClass("error");
+                } else {
+                    this.wsPath().addClass("error");
+                }
+            },
+            reset: function () {
+                this.wsPathExists = false;
+                this.wsPathExistsTip();
+
+                project.emptyProjects();
+
+                project.change();
             }
         }
     </script>
@@ -196,6 +245,11 @@
             },
             jdbcPassword: function () {
                 return $('input[name="jdbcPassword"]');
+            },
+            reset: function () {
+                this.jdbcUrl().val(/*[[${jdbcUrl}]]*/ '');
+                this.jdbcUser().val(/*[[${jdbcUser}]]*/ '');
+                this.jdbcPassword().val(/*[[${jdbcPassword}]]*/ '');
             },
             conn: function (callBack, errorCallBack) {
                 $('#connForm').form('nqcxSubmit', {
@@ -303,6 +357,8 @@
                 }
 
                 this.tableName().val(tableNameValue);
+                if (!this.colPrefix().val())
+                    this.colPrefix().val(this.colPrefix().attr('t-data'))
                 if (!this.tablePackChanged)
                     this.tablePack().val(tableNameValue.replaceFirstLow());
 
@@ -349,7 +405,6 @@
                 // project path
                 this.pPath().val('/' + pNameValue + '/');
 
-
                 // project package
                 this.pPackageChange();
 
@@ -364,11 +419,35 @@
                 path.openFile();
             },
             clear: function () {
+                this.module.emptyAll();
+
                 this.pPath().val('');
                 this.pPackage().val('');
 
                 path.setRelativePath('');
                 path.loadCgFile('', []);
+            },
+            emptyProjects: function () {
+                jQuery('select[name="pName"] option').each(function () {
+                    if ($(this).val()) {
+                        $(this).remove();
+                    }
+                });
+            },
+            loadProjects: function (wsdata) {
+                this.emptyProjects();
+
+                var select = this.pName();
+                var cList = wsdata.cgFileList;
+                if (cList && cList.length > 0) {
+                    for (var idx in cList) {
+                        $('<option value="' + cList[idx].name + '">' + cList[idx].name + '</option>').appendTo(select);
+                    }
+                    jQuery.messager.show({
+                        title: 'Success',
+                        msg: 'Projects loaded'
+                    });
+                }
             },
             dirList: null,
             fecthDirs: function (callback) {
@@ -376,6 +455,15 @@
 
                 // clear array
                 _this.dirList = [];
+
+                var wsPath = ws.wsPath().val();
+                if (!ws.wsPathExists || !wsPath) {
+                    jQuery.messager.show({
+                        title: 'Error',
+                        msg: 'WS not exists.'
+                    });
+                    return;
+                }
 
                 var pPath = _this.pPath().val();
                 if (!pPath) {
@@ -387,10 +475,10 @@
                 }
 
                 var url = /*[['/project/openFile']]*/'';
-                nqcxPost(url, {pPath: pPath, path: '', name: ''}, function (result) {
+                nqcxPost(url, {wsPath: wsPath, pPath: pPath, path: '', name: ''}, function (result) {
                     if (result.success && result.object.cgFileList) {
                         var cgFileList = result.object.cgFileList;
-                        for (idx in cgFileList) {
+                        for (var idx in cgFileList) {
                             if (!cgFileList[idx].file)
                                 _this.dirList.push(cgFileList[idx].name)
                         }
@@ -491,6 +579,15 @@
                 }
             },
             openFile: function (pathValue, nameValue) {
+                var wsPath = ws.wsPath().val();
+                if (!ws.wsPathExists || !wsPath) {
+                    jQuery.messager.show({
+                        title: 'Error',
+                        msg: 'WS not exists.'
+                    });
+                    return;
+                }
+
                 var pPath = project.pPath().val();
                 if (!pPath) {
                     jQuery.messager.show({
@@ -507,6 +604,7 @@
 
                 var url = /*[['/project/openFile']]*/'';
                 nqcxPost(url, {
+                    wsPath: wsPath,
                     pPath: pPath,
                     path: pathValue,
                     name: nameValue
@@ -529,12 +627,12 @@
             loadCgFile: function (pathValue, cgFileList) {
                 var cgFileHtml = '';
                 if (pathValue)
-                    cgFileHtml += '<li><a href="javascript:void(0);" onclick="javascript:path.openFile(\'' + pathValue + '\',\'\');">..</a></li>';
-                for (idx in cgFileList) {
+                    cgFileHtml += '<li><a href="javascript:void(0);" onclick="path.openFile(\'' + pathValue + '\',\'\');">..</a></li>';
+                for (var idx in cgFileList) {
                     if (cgFileList[idx].file)
                         cgFileHtml += '<li>' + cgFileList[idx].name + '</li>';
                     else
-                        cgFileHtml += '<li><a href="javascript:void(0);" onclick="javascript:path.openFile(\'' + cgFileList[idx].path + '\',\'' + cgFileList[idx].name + '\');">' + cgFileList[idx].name + '</a></li>';
+                        cgFileHtml += '<li><a href="javascript:void(0);" onclick="path.openFile(\'' + cgFileList[idx].path + '\',\'' + cgFileList[idx].name + '\');">' + cgFileList[idx].name + '</a></li>';
                 }
                 this.fileShow().html(cgFileHtml);
             }
@@ -557,7 +655,6 @@
 <body class="easyui-layout">
 <div data-options="region:'north',split:true" style="height:75px;padding:5px 5px 0;overflow:hidden;">
     <form id="connForm" method="post" action="@{'/session'}">
-        <input type="hidden" name="wsPath" th:value="${ws.path}" value="" readonly="true"/>
         <table border="0" cellpadding="0" cellspacing="0">
             <tr height="30px">
                 <td class="lable">jdbc:mysql://</td>
@@ -593,8 +690,11 @@
 <div data-options="region:'west',split:true" style="width:230px;">
     <table border="0" cellpadding="0" cellspacing="0">
         <tr height="30">
-            <td colspan="2">
-                <th:block th:text="${ws.path}"></th:block>
+            <td class="lable">
+                WS:
+            </td>
+            <td>
+                <input type="text" class="error big_140" name="wsPath" value=""/>
             </td>
         </tr>
         <tr height="30">
@@ -604,7 +704,6 @@
             <td>
                 <select name="pName">
                     <option value="">Select Project</option>
-                    <option th:each="cfFile:${ws.cgFileList}" th:value="${cfFile.name}" th:text="${cfFile.name}"/>
                 </select>
             </td>
         </tr>
@@ -675,21 +774,28 @@
 <script type="text/javascript" th:inline="javascript">
     $(document).ready(function () {
         // 初始化 db 相关值
-        db.jdbcUrl().val(/*[[${jdbcUrl}]]*/ '');
-        db.jdbcUser().val(/*[[${jdbcUser}]]*/ '');
-        db.jdbcPassword().val(/*[[${jdbcPassword}]]*/ '');
-
+        db.reset();
+        // 初始化 table 相关的
         table.reset();
+        // 初始化 worksapce 相关
+        ws.wsPath().val(/*[[${ws?.path}]]*/ '');
+        ws.reset();
+        ws.loadWsPath(function (wsdata) {
+            project.loadProjects(wsdata);
+        }, function () {
+            project.emptyProjects();
+            project.clear();
+        });
 
         // Connect db and load table
-        $('.connectDB').bind('keyup', function (event) {
+        $('.connectDB').keyup(function (event) {
             if ((event.keyCode || event.which) === 13) {
                 event.preventDefault();
                 table.tablePackChanged = false; // 允许自动生成 table-pack
                 table.tablePackTip();
 
                 db.conn(table.listNames, function () {
-                    table.reset()
+                    table.reset();
                     table.emptyTables();
                     table.change();
                 });
@@ -700,7 +806,7 @@
             table.tablePackTip();
 
             db.conn(table.listNames, function () {
-                table.reset()
+                table.reset();
                 table.emptyTables();
                 table.change();
             });
@@ -708,7 +814,7 @@
 
         $('#loadTables').click(function () {
             db.conn(table.listNames, function () {
-                table.reset()
+                table.reset();
                 table.emptyTables();
                 table.change();
             });
@@ -736,6 +842,26 @@
                 table.colPrefixChange();
         });
         // end of table
+
+        // ws
+        ws.wsPath().keyup(function (event) {
+            ws.reset();
+
+            // child
+            if (project.module.change)
+                project.module.change();
+
+            if ((event.keyCode || event.which) === 13) {
+                event.preventDefault();
+
+                ws.loadWsPath(function (wsdata) {
+                    project.loadProjects(wsdata);
+                }, function () {
+                    project.emptyProjects();
+                    project.clear();
+                });
+            }
+        }); // end of ws
 
         // project
         project.pName().change(function () {

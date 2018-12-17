@@ -154,7 +154,6 @@
     </build>
 
     <properties>
-        <workspace.path>/Users/nqcx/Works/NQC/projects</workspace.path>
         <workspace.author>NaqiChuan</workspace.author>
     </properties>
 
@@ -173,7 +172,6 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <workspace.path>/Users/nqcx/Works/YHC/projects</workspace.path>
             </properties>
         </profile>
         <profile>
@@ -182,7 +180,6 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <workspace.path>/Users/nqcx/Works/CA/projects</workspace.path>
             </properties>
         </profile>
     </profiles>

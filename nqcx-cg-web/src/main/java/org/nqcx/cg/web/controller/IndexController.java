@@ -32,6 +32,9 @@ public class IndexController extends AbstractController {
     @Autowired
     @Qualifier("jdbcCookie")
     private NqcxCookie jdbcCookie;
+    @Autowired
+    @Qualifier("wsCookie")
+    private NqcxCookie wsCookie;
 
     @RequestMapping(value = "/", method = {RequestMethod.GET,
             RequestMethod.POST})
@@ -43,15 +46,17 @@ public class IndexController extends AbstractController {
     public ModelAndView index(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("main");
 
-        mav.addObject("ws", wsService.getWs(true));
+        String wsCookieValue = CookieUtils.getCookieValue(request, wsCookie.getName());
+        if (wsCookieValue != null && wsCookieValue.length() > 0)
+            mav.addObject("ws", wsService.getWs(wsCookieValue, false));
 
         String jdbcUrl = "localhost:3306/nqcx";
         String user = "nqcx";
         String password = "nqcx";
 
-        String cookieValue = CookieUtils.getCookieValue(request, jdbcCookie.getName());
+        String jdbcCookieValue = CookieUtils.getCookieValue(request, jdbcCookie.getName());
         String[] vals = null;
-        if (cookieValue != null && (vals = cookieValue.split(",")) != null && vals.length == 3) {
+        if (jdbcCookieValue != null && (vals = jdbcCookieValue.split(",")).length == 3) {
             jdbcUrl = vals[0] == null ? jdbcUrl : vals[0];
             user = vals[1] == null ? user : vals[1];
             password = vals[2] == null ? password : vals[2];

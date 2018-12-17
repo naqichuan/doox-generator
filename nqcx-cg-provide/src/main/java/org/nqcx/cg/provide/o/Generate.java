@@ -17,6 +17,7 @@ import java.io.Serializable;
 public class Generate implements Serializable {
 
     // project field
+    private String wsPath;
     private String pName;
     private String pPath;
     private String pPackage;
@@ -100,6 +101,14 @@ public class Generate implements Serializable {
 
     public void setpName(String pName) {
         this.pName = pName;
+    }
+
+    public String getWsPath() {
+        return wsPath;
+    }
+
+    public void setWsPath(String wsPath) {
+        this.wsPath = wsPath;
     }
 
     public String getpPath() {

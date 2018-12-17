@@ -139,7 +139,12 @@
             return jQuery('#loadCenter');
         },
         checkForm: function () {
-            if (!project.pName().val()) {
+            if (!ws.wsPathExists || !ws.wsPath().val()) {
+                jQuery.messager.show({
+                    title: 'Error',
+                    msg: 'WS not exists.'
+                });
+            } else if (!project.pName().val()) {
                 jQuery.messager.show({
                     title: 'Error',
                     msg: 'Please select project.'

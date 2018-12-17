@@ -59,7 +59,6 @@ public class ConnectionController extends AbstractController {
         if (!success)
             return buildResult(new DTO().putResult("12", "Connect fail"));
 
-
         String cookieValue = jdbcUrl + "," + user + "," + password;
         // 记录写入 cookie
         CookieUtils.setCookie(response, jdbcCookie.getName(), cookieValue);

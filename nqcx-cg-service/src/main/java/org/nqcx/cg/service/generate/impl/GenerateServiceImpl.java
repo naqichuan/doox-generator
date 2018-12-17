@@ -75,9 +75,6 @@ public class GenerateServiceImpl implements GenerateService {
     private final static String P_WEB_PATH_KEY = "webModule";
 
     @Autowired
-    @Qualifier("workspacePath")
-    private String workspacePath;
-    @Autowired
     @Qualifier("workspaceAuthor")
     private String workspaceAuthor;
     @Autowired
@@ -144,11 +141,11 @@ public class GenerateServiceImpl implements GenerateService {
         if (g == null)
             return new DTO(false).putResult("100", "生成代码失败！");
 
-        if (!pPathExist(workspacePath, g.getpPath()))
+        if (!pPathExist(g.getWsPath(), g.getpPath()))
             return new DTO(false).putResult("101", "工程路径不存在");
 
         // 写入空行到日志
-        File cgLogFile = new File(workspacePath + g.getpPath() + "/cglog.log");
+        File cgLogFile = new File(g.getWsPath() + g.getpPath() + "/cglog.log");
         if (cgLogFile.exists())
             this.writeLog(cgLogFile, "");
 
@@ -160,7 +157,7 @@ public class GenerateServiceImpl implements GenerateService {
         fillPojo(table, g.getPojoColumn(), g.getPojoField(), g.getPojoType());
 
         // 生成 module path
-        Map<String, String> pathMap = this.getPathString(workspacePath, g.getpPath(), g.getProvideModule(),
+        Map<String, String> pathMap = this.getPathString(g.getWsPath(), g.getpPath(), g.getProvideModule(),
                 g.getDaoModule(), g.getServiceModule(), g.getWebModule());
 
         // provide
@@ -375,7 +372,7 @@ public class GenerateServiceImpl implements GenerateService {
 
             mappingImport(imports, c.getType_());
 
-            if(c.getComment() != null && c.getComment().length() > 0)
+            if (c.getComment() != null && c.getComment().length() > 0)
                 boFieldComments.add("// " + c.getComment());
             else
                 boFieldComments.add("");
