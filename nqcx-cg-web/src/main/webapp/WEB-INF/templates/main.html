@@ -406,9 +406,21 @@
 
                 // project package
                 var pPackageValue = this.pPackage().val();
-                if (!pPackageValue)
+                if (!this.pPackageChanged || !pPackageValue) {
+                    project.pPackageChanged = false; // 允许自动生成 pPackage
+                    project.pPackageTip();
+
                     pPackageValue = 'org.nqcx.' + ppName;
+                }
                 this.pPackage().val(pPackageValue);
+            },
+            pPackageChanged: false,
+            pPackageTip: function () {
+                if (this.pPackageChanged) {
+                    this.pPackage().removeClass("waring");
+                } else {
+                    this.pPackage().addClass("waring");
+                }
             },
             change: function () {
                 var pNameValue = this.pName().val();
@@ -424,7 +436,7 @@
 
                 // modules
                 var pTypeValue = this.pType().filter(':checked').val();
-                if (pTypeValue == 1)
+                if (pTypeValue === "1")
                     this.fecthDirs(this.module.fillAll);
                 else
                     this.module.emptyAll();
@@ -436,7 +448,8 @@
                 this.module.emptyAll();
 
                 this.pPath().val('');
-                this.pPackage().val('');
+                if (!this.pPackageChanged)
+                    this.pPackage().val('');
 
                 path.setRelativePath('');
                 path.loadCgFile('', []);
@@ -736,7 +749,7 @@
         <tr height="30">
             <td class="lable">Package:</td>
             <td>
-                <input type="text" class="big_140" name="pPackage" value="">
+                <input type="text" class="waring big_140" name="pPackage" value="">
             </td>
         </tr>
         <tr height="30">
@@ -815,6 +828,7 @@
         $('.connectDB').keyup(function (event) {
             if ((event.keyCode || event.which) === 13) {
                 event.preventDefault();
+
                 table.tablePackChanged = false; // 允许自动生成 table-pack
                 table.tablePackTip();
 
@@ -869,6 +883,9 @@
 
         // ws
         ws.wsPath().keyup(function (event) {
+            project.pPackageChanged = false; // 允许自动生成 pPackage
+            project.pPackageTip();
+
             ws.reset();
 
             // child
@@ -908,14 +925,13 @@
                 project.module.change();
         });
         project.pPackage().change(function () {
-            console.log("Project package changed.")
-
             // child
             if (project.module.change)
                 project.module.change();
         });
         project.pPackage().keyup(function (e) {
-            console.log("Project package " + e.which + " keyup.")
+            project.pPackageChanged = true; // 手动变更，不允许自动生成 pPackage
+            project.pPackageTip();
 
             if (project.module.change)
                 project.module.change();
