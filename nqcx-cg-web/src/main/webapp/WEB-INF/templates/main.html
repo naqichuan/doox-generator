@@ -202,7 +202,7 @@
                 if (!path)
                     return;
 
-                nqcxGet("[(@{'/ws/path/load'})]", {"wsPath": path}, function (result) {
+                nqcxPost("[(@{'/ws/path/load'})]", {"wsPath": path}, function (result) {
                     if (result.success && result.object) {
                         var wsdata = result.object;
                         if (wsdata.exists) {

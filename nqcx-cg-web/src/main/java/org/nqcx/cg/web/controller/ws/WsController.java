@@ -12,6 +12,8 @@ import org.nqcx.cg.web.controller.AbstractController;
 import org.nqcx.commons3.lang.o.DTO;
 import org.nqcx.commons3.web.cookie.CookieUtils;
 import org.nqcx.commons3.web.cookie.NqcxCookie;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
@@ -31,6 +33,8 @@ import java.util.Map;
 @RequestMapping("/ws")
 public class WsController extends AbstractController {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(WsController.class);
+
     @Autowired
     private WsService wsService;
 
@@ -41,11 +45,14 @@ public class WsController extends AbstractController {
     @Qualifier("authorCookie")
     private NqcxCookie authorCookie;
 
-    @RequestMapping(value = "/path/load", method = {RequestMethod.GET},
+    @RequestMapping(value = "/path/load", method = {RequestMethod.POST},
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public Map<?, ?> loadWsPath(HttpServletResponse response,
                                 @RequestParam("wsPath") String wsPath) {
+
+        LOGGER.info("The wsPath is {}", wsPath);
+
         Ws ws = wsService.getWs(wsPath, true);
 
         if (ws != null && ws.isExists()) {
