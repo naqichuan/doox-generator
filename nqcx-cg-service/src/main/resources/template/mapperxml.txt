@@ -23,7 +23,7 @@
 	<update id="update" parameterType="[(${po})]">
 		UPDATE
 			[(${tableName})]
-		SET [# th:each="c : ${poUpdateColumns}"][# th:if="${cStat.index > 0}"],[/]
+		SET[# th:each="c : ${poUpdateColumns}"][# th:if="${cStat.index > 0}"],[/]
 		    [(${c})]=[(*{poUpdateFields[__${cStat.index}__]})][/]
 		WHERE
 			[(${idColumn})]=[(${idField})]
