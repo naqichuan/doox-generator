@@ -4,98 +4,98 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="[(${namespace})]">
 
-	<resultMap id="[(${tableName})]_rm" type="[(${po})]">[# th:each="f : ${resultMap}"]
-		[(${f})][/]
-	</resultMap>
+    <resultMap id="[(${tableName})]_rm" type="[(${po})]">[# th:each="f : ${resultMap}"]
+        [(${f})][/]
+    </resultMap>
 
-	<sql id="[(${tableName})]_columns">
-		[(${tableColumnsStr})]
-	</sql>
+    <sql id="[(${tableName})]_columns">
+        [(${tableColumnsStr})]
+    </sql>
 
-	<insert id="save" parameterType="[(${po})]" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO [(${tableName})] (
-			<include refid="[(${tableName})]_columns" />
-		) VALUES ([# th:each="c : ${poInsertColumns}"][# th:if="${cStat.index > 0}"],[/]
-		    [(*{poInsertFields[__${cStat.index}__]})][/]
-		)
-	</insert>
+    <insert id="save" parameterType="[(${po})]" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO [(${tableName})] (
+            <include refid="[(${tableName})]_columns" />
+        ) VALUES ([# th:each="c : ${poInsertColumns}"][# th:if="${cStat.index > 0}"],[/]
+            [(*{poInsertFields[__${cStat.index}__]})][/]
+        )
+    </insert>
 
-	<update id="update" parameterType="[(${po})]">
-		UPDATE
-			[(${tableName})]
-		SET[# th:each="c : ${poUpdateColumns}"][# th:if="${cStat.index > 0}"],[/]
-		    [(${c})]=[(*{poUpdateFields[__${cStat.index}__]})][/]
-		WHERE
-			[(${idColumn})]=[(${idField})]
-	</update>
+    <update id="update" parameterType="[(${po})]">
+        UPDATE
+            [(${tableName})]
+        SET[# th:each="c : ${poUpdateColumns}"][# th:if="${cStat.index > 0}"],[/]
+            [(${c})]=[(*{poUpdateFields[__${cStat.index}__]})][/]
+        WHERE
+            [(${idColumn})]=[(${idField})]
+    </update>
 
-	<select id="findById" resultMap="[(${tableName})]_rm" parameterType="[(${idType})]">
-		SELECT
-			<include refid="[(${tableName})]_columns" />
-		FROM
-			[(${tableName})]
-		WHERE
-			[(${idColumn})]=[(${idField})]
-	</select>
+    <select id="findById" resultMap="[(${tableName})]_rm" parameterType="[(${idType})]">
+        SELECT
+            <include refid="[(${tableName})]_columns" />
+        FROM
+            [(${tableName})]
+        WHERE
+            [(${idColumn})]=[(${idField})]
+    </select>
 
-	<select id="findByIds" resultMap="[(${tableName})]_rm">
-		SELECT
-			<include refid="[(${tableName})]_columns" />
-		FROM
-			[(${tableName})]
-		WHERE
-			[(${idColumn})] IN
-			<foreach item="item" index="index" collection="list"
-			         open="(" separator="," close=")">
-				#{item}
-			</foreach>
-	</select>
+    <select id="findByIds" resultMap="[(${tableName})]_rm">
+        SELECT
+            <include refid="[(${tableName})]_columns" />
+        FROM
+            [(${tableName})]
+        WHERE
+            [(${idColumn})] IN
+            <foreach item="item" index="index" collection="list"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+    </select>
 
-	<sql id="condition">
-		<where>
-			<if test="[(${idFieldName})] != null and [(${idFieldName})] != ''">
-				[(${idColumn})]=[(${idField})]
-			</if>
-		</where>
-	</sql>
+    <sql id="condition">
+        <where>
+            <if test="[(${idFieldName})] != null and [(${idFieldName})] != ''">
+                [(${idColumn})]=[(${idField})]
+            </if>
+        </where>
+    </sql>
 
-	<select id="findAll" resultMap="[(${tableName})]_rm" parameterType="map">
-		SELECT
-			<include refid="[(${tableName})]_columns" />
-		FROM
-			[(${tableName})]
-		<include refid="condition" />
-		<if test="_order_ != null and _order_ != ''">
-			${_order_}
-		</if>
-		<if test="_page_ != null and _page_ != ''">
-			${_page_}
-		</if>
-	</select>
+    <select id="findAll" resultMap="[(${tableName})]_rm" parameterType="map">
+        SELECT
+            <include refid="[(${tableName})]_columns" />
+        FROM
+            [(${tableName})]
+        <include refid="condition" />
+        <if test="_order_ != null and _order_ != ''">
+            ${_order_}
+        </if>
+        <if test="_page_ != null and _page_ != ''">
+            ${_page_}
+        </if>
+    </select>
 
-	<select id="getCount" parameterType="map" resultType="long">
-		SELECT
-			count([(${idColumn})])
-		FROM
-			[(${tableName})]
-		<include refid="condition" />
-	</select>
+    <select id="getCount" parameterType="map" resultType="long">
+        SELECT
+            count([(${idColumn})])
+        FROM
+            [(${tableName})]
+        <include refid="condition" />
+    </select>
 
-	<delete id="deleteById" parameterType="[(${idType})]">
-		DELETE FROM
-			[(${tableName})]
-		WHERE
-			[(${idColumn})]=[(${idField})]
-	</delete>
+    <delete id="deleteById" parameterType="[(${idType})]">
+        DELETE FROM
+            [(${tableName})]
+        WHERE
+            [(${idColumn})]=[(${idField})]
+    </delete>
 
-	<delete id="deleteByIds">
-		DELETE FROM
-			[(${tableName})]
-		WHERE
-			[(${idColumn})] IN
-			<foreach item="item" index="index" collection="list"
-			         open="(" separator="," close=")">
-				#{item}
-			</foreach>
-	</delete>
+    <delete id="deleteByIds">
+        DELETE FROM
+            [(${tableName})]
+        WHERE
+            [(${idColumn})] IN
+            <foreach item="item" index="index" collection="list"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+    </delete>
 </mapper>
