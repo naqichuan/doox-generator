@@ -8,6 +8,7 @@
 
 package org.nqcx.cg.provide.o.ws;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.nqcx.cg.provide.o.CgFile;
 
 import java.io.Serializable;
@@ -55,4 +56,8 @@ public class Ws implements Serializable {
         this.cgFileList = cgFileList;
     }
 
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this);
+    }
 }

@@ -8,15 +8,17 @@
 
 package org.nqcx.cg.provide.o.table;
 
-import org.nqcx.cg.provide.bo.TableBO;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author naqichuan Feb 8, 2014 10:48:47 AM
  */
-public class Table extends TableBO {
+public class Table implements Serializable {
 
+    private String name;
     private List<Column> columns;
 
     public Column getIdColumn() {
@@ -29,6 +31,14 @@ public class Table extends TableBO {
         return null;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public List<Column> getColumns() {
         return columns;
     }
@@ -37,4 +47,8 @@ public class Table extends TableBO {
         this.columns = columns;
     }
 
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this);
+    }
 }

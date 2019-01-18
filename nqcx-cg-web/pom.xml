@@ -11,15 +11,10 @@
     <artifactId>nqcx-cg-web</artifactId>
     <packaging>war</packaging>
 
-    <name>nqcx-cg-web Maven Webapp</name>
+    <name>nqcx-cg-web</name>
     <url>http://nqcx.org</url>
 
     <dependencies>
-        <dependency>
-            <groupId>org.nqcx.cg</groupId>
-            <artifactId>nqcx-cg-provide</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.nqcx.cg</groupId>
             <artifactId>nqcx-cg-doox</artifactId>
@@ -28,24 +23,12 @@
 
         <!-- ########## 2nd party library ########## -->
         <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.nqcx.commons3</groupId>
             <artifactId>nqcx-commons3-lang</artifactId>
         </dependency>
         <dependency>
             <groupId>org.nqcx.commons3</groupId>
-            <artifactId>nqcx-commons3-util</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.nqcx.commons3</groupId>
-            <artifactId>nqcx-commons3-dao</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.nqcx.commons3</groupId>
-            <artifactId>nqcx-commons3-service</artifactId>
+            <artifactId>nqcx-commons3-doox</artifactId>
         </dependency>
         <dependency>
             <groupId>org.nqcx.commons3</groupId>
@@ -53,11 +36,15 @@
         </dependency>
 
         <!-- ########## 3rd party library ########## -->
-        <!-- 日志相关依赖 -->
         <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -87,26 +74,26 @@
             <artifactId>disruptor</artifactId>
         </dependency>
 
+        <!-- spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <dependency>
             <groupId>ma.glasnost.orika</groupId>
             <artifactId>orika-core</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>xml-apis</artifactId>
-                    <groupId>xml-apis</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <scope>provided</scope>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
         </dependency>
 
         <dependency>
@@ -136,6 +123,12 @@
             <artifactId>thymeleaf-spring5</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>

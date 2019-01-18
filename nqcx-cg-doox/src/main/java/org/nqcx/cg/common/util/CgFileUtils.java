@@ -6,7 +6,7 @@
  * into with nqcx.org.
  */
 
-package org.nqcx.cg.provide.util;
+package org.nqcx.cg.common.util;
 
 import org.nqcx.cg.provide.o.CgFile;
 

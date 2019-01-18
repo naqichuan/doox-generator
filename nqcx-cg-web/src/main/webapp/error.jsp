@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isErrorPage="true"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isErrorPage="true" %>
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
 <%@ page import="java.io.ByteArrayOutputStream" %>
@@ -17,7 +17,7 @@
         if ((url = getOriginatingRequestUri(request)) == null)
             return false;
 
-        logger.info("Scheme is ["+ request.getScheme() +"], host is ["+ request.getHeader("Host") +"], port is [" + request.getServerPort() + "], context path is [" + request.getContextPath() + "], originating request uri is [" + url + "]");
+        logger.info("Scheme is [" + request.getScheme() + "], host is [" + request.getHeader("Host") + "], port is [" + request.getServerPort() + "], context path is [" + request.getContextPath() + "], originating request uri is [" + url + "]");
 
         for (String u : urls) {
             if (url.startsWith(request.getContextPath() + u))
@@ -97,7 +97,7 @@
                     if (u == -1 || l == -1) {
                         throw new IllegalArgumentException("Invalid encoded sequence \"" + source.substring(i) + "\"");
                     }
-                     bos.write((char) ((u << 4) + l));
+                    bos.write((char) ((u << 4) + l));
                     i += 2;
                     changed = true;
                 } else {
@@ -111,7 +111,7 @@
     }
 %>
 <%
-    if(exception != null) {
+    if (exception != null) {
         StringWriter sw = new StringWriter();
         logger.error("错误跳转页异常", exception);
         try {

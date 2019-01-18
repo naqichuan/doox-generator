@@ -8,12 +8,24 @@
 
 package org.nqcx.cg.provide.o.table;
 
-import org.nqcx.cg.provide.bo.ColumnBO;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+
+import java.io.Serializable;
 
 /**
  * @author naqichuan Feb 8, 2014 9:49:43 PM
  */
-public class Column extends ColumnBO {
+public class Column implements Serializable {
+
+    private String field;
+    private String type;
+    private String collation;
+    private String isNull;
+    private String key;
+    private String defaultValue;
+    private String extra;
+    private String privileges;
+    private String comment;
 
     // pojo field from page commit
     private String field_;
@@ -33,6 +45,78 @@ public class Column extends ColumnBO {
     // mybatis field value
     private String mybatisValue;
     // end of mybatis field value
+
+    public String getField() {
+        return field;
+    }
+
+    public void setField(String field) {
+        this.field = field;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getCollation() {
+        return collation;
+    }
+
+    public void setCollation(String collation) {
+        this.collation = collation;
+    }
+
+    public String getIsNull() {
+        return isNull;
+    }
+
+    public void setIsNull(String isNull) {
+        this.isNull = isNull;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    public String getExtra() {
+        return extra;
+    }
+
+    public void setExtra(String extra) {
+        this.extra = extra;
+    }
+
+    public String getPrivileges() {
+        return privileges;
+    }
+
+    public void setPrivileges(String privileges) {
+        this.privileges = privileges;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 
     public String getField_() {
         return field_;
@@ -108,15 +192,6 @@ public class Column extends ColumnBO {
 
     @Override
     public String toString() {
-        return "Column{" +
-                "field_='" + field_ + '\'' +
-                ", type_='" + type_ + '\'' +
-                ", null_=" + null_ +
-                ", id_=" + id_ +
-                ", cm_=" + cm_ +
-                ", columnType='" + columnType + '\'' +
-                ", columnLength='" + columnLength + '\'' +
-                ", mybatisValue='" + mybatisValue + '\'' +
-                "} " + super.toString();
+        return ReflectionToStringBuilder.toString(this);
     }
 }

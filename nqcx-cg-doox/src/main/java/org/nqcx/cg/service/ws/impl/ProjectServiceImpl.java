@@ -8,7 +8,7 @@
 
 package org.nqcx.cg.service.ws.impl;
 
-import org.nqcx.cg.provide.util.CgFileUtils;
+import org.nqcx.cg.common.util.CgFileUtils;
 import org.nqcx.cg.service.ws.ProjectService;
 import org.nqcx.commons3.lang.o.DTO;
 import org.springframework.stereotype.Service;

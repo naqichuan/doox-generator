@@ -8,7 +8,7 @@
 
 package org.nqcx.cg.provide.o;
 
-import org.nqcx.cg.provide.util.CgFileUtils;
+import org.nqcx.cg.common.util.CgFileUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
