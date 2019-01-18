@@ -22,7 +22,7 @@
         </dependency>
         <dependency>
             <groupId>org.nqcx.cg</groupId>
-            <artifactId>nqcx-cg-service</artifactId>
+            <artifactId>nqcx-cg-doox</artifactId>
             <version>${project.version}</version>
         </dependency>
 

@@ -18,8 +18,7 @@
     <url>http://nqcx.org</url>
 
     <modules>
-        <module>nqcx-cg-provide</module>
-        <module>nqcx-cg-service</module>
+        <module>nqcx-cg-doox</module>
         <module>nqcx-cg-web</module>
     </modules>
 
