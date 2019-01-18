@@ -573,6 +573,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.clearVariables();
         imports.clear();
 
+        mappingImport(imports, "IMapper");
         mappingImport(imports, po);
 
         cxt.setVariable("author", author);
@@ -655,6 +656,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.clearVariables();
         imports.clear();
 
+        mappingImport(imports, "IJpa");
         mappingImport(imports, po);
 
         cxt.setVariable("author", author);
@@ -686,17 +688,8 @@ public class GenerateServiceImpl implements GenerateService {
                 dao, JAVA_EXT_NAME,
                 process(DAO_TXT_TEMPLATE_NAME, cxt));
 
-        // dao impl
+        // mapp&jpa impl
         cxt.clearVariables();
-        imports.clear();
-
-//        mappingImport(imports, "DaoSupport");
-        mappingImport(imports, po);
-        mappingImport(imports, mapper);
-        mappingImport(imports, jpa);
-        mappingImport(imports, "IMapper");
-        mappingImport(imports, "IJpa");
-        mappingImport(imports, "stereotype.Service");
 
         cxt.setVariable("author", author);
         cxt.setVariable("date", new Date());
@@ -707,7 +700,6 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("idType", idType);
         cxt.setVariable("daoName", dao);
 
-        mappingImport(imports, dao);
 
         cxt.setVariable("mapperName", mapper);
         String mapperVeriable = mapper;
@@ -715,14 +707,18 @@ public class GenerateServiceImpl implements GenerateService {
             mapperVeriable = StringUtils.substring(mapperVeriable, 1);
         cxt.setVariable("mapperVeriable", StringUtils.uncapitalize(mapperVeriable));
 
+        imports.clear();
         mappingImport(imports, "MapperSupport");
+        mappingImport(imports, po);
+        mappingImport(imports, mapper);
+        mappingImport(imports, dao);
+        mappingImport(imports, "stereotype.Service");
 
         cxt.setVariable("name", mapperVeriable);
         this.writeFile(logFile, daoPath + "/" + JAVA_PATH + daoImplPackage.replace('.', '/'),
                 mapperVeriable, JAVA_EXT_NAME,
                 process(DAOMAPPERIMPL_TXT_TEMPLATE_NAME, cxt));
 
-        imports.remove("MapperSupport");
 
         cxt.setVariable("jpaName", jpa);
         String jpaVeriable = jpa;
@@ -730,7 +726,12 @@ public class GenerateServiceImpl implements GenerateService {
             jpaVeriable = StringUtils.substring(jpaVeriable, 1);
         cxt.setVariable("jpaVeriable", StringUtils.uncapitalize(jpaVeriable));
 
+        imports.clear();
         mappingImport(imports, "JpaSupport");
+        mappingImport(imports, po);
+        mappingImport(imports, jpa);
+        mappingImport(imports, dao);
+        mappingImport(imports, "stereotype.Service");
 
         cxt.setVariable("name", jpaVeriable);
         this.writeFile(logFile, daoPath + "/" + JAVA_PATH + daoImplPackage.replace('.', '/'),
