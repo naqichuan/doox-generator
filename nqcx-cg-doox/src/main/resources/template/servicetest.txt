@@ -14,25 +14,25 @@ import [(${import})];
 public class [(${name})] extends BaseServiceTest {
 
     @Autowired
-    private [(${serviceName})]<[(${doName})], [(${idType})]> [(${serviceVeriable})];
+    private [(${serviceName})] [(${serviceVeriable})];
 
     @Test
     public void save() {
-        [(${doName})] do_ = new [(${doName})]();
-[# th:each="dg : ${doSetters}"]
+        [(${poName})] po = new [(${poName})]();
+[# th:each="dg : ${poSetters}"]
         [(${dg})][/]
 
-        [(${serviceVeriable})].save(do_);
+        [(${serviceVeriable})].save(po);
     }
 
     @Test
     public void saveAll() {
-        [(${doName})] do_;
-        List<[(${doName})]> list = new ArrayList<>();
+        [(${poName})] po;
+        List<[(${poName})]> list = new ArrayList<>();
 
         for (int i = 0; i < 1000; i++) {
-            list.add(do_ = new [(${doName})]());
-[# th:each="dg : ${doSetters}"]
+            list.add(po = new [(${poName})]());
+[# th:each="dg : ${poSetters}"]
             [(${dg})][/]
         }
 
@@ -41,20 +41,20 @@ public class [(${name})] extends BaseServiceTest {
 
     @Test
     public void modify() {
-        [(${doName})] do_ = new [(${doName})]();
-[# th:each="dg : ${doSetters}"]
+        [(${poName})] po = new [(${poName})]();
+[# th:each="dg : ${poSetters}"]
         [(${dg})][/]
 
-        [(${serviceVeriable})].modify(do_);
+        [(${serviceVeriable})].modify(po);
     }
 
     @Test
     public void modifyAll() {
-        [(${doName})] do_;
-        List<[(${doName})]> list = new ArrayList<>();
+        [(${poName})] po;
+        List<[(${poName})]> list = new ArrayList<>();
 
-        list.add(do_ = new [(${doName})]());
-[# th:each="dg : ${doSetters}"]
+        list.add(po = new [(${poName})]());
+[# th:each="dg : ${poSetters}"]
         [(${dg})][/]
 
         [(${serviceVeriable})].modifyAll(list);
@@ -62,14 +62,14 @@ public class [(${name})] extends BaseServiceTest {
 
     @Test
     public void findById() {
-        Optional<[(${doName})]> do_ = [(${serviceVeriable})].findById(1[# th:if="${idType == 'Long'}"]L[/]);
-        System.out.println(do_.orElse(null));
+        Optional<[(${poName})]> po = [(${serviceVeriable})].findById(1[# th:if="${idType == 'Long'}"]L[/]);
+        System.out.println(po.orElse(null));
     }
 
     @Test
     public void findAllByIds() {
         List<[(${idType})]> ids = Arrays.asList(2[# th:if="${idType == 'Long'}"]L[/], 3[# th:if="${idType == 'Long'}"]L[/], 4[# th:if="${idType == 'Long'}"]L[/], 5[# th:if="${idType == 'Long'}"]L[/]);
-        List<[(${doName})]> list = [(${serviceVeriable})].findAllByIds(ids);
+        List<[(${poName})]> list = [(${serviceVeriable})].findAllByIds(ids);
 
         if (list == null)
             System.out.println(list);
@@ -80,7 +80,7 @@ public class [(${name})] extends BaseServiceTest {
     @Test
     public void listAll() {
         DTO dto = new DTO();
-        List<[(${doName})]> list = [(${serviceVeriable})].listAll(dto);
+        List<[(${poName})]> list = [(${serviceVeriable})].listAll(dto);
 
         if (list == null)
             System.out.println(list);

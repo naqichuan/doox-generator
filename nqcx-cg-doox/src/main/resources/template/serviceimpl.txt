@@ -12,16 +12,9 @@ import [(${import})];
  * @author [(${author})] [(${#dates.format(date, 'yyyy-MM-dd HH:mm')})]
  */
 @Service
-public class [(${name})] extends ServiceSupport<[(${doName})], [(${poName})], [(${idType})]> implements [(${serviceName})]<[(${doName})], [(${idType})]> {
-
-    private final [(${daoName})] [(${daoVeriable})];
+public class [(${name})] extends ServiceSupport<[(${daoName})], [(${poName})], [(${idType})]> implements [(${serviceName})] {
 
     public [(${name})]([(${daoName})] [(${daoVeriable})]) {
-        this.[(${daoVeriable})] = [(${daoVeriable})];
-    }
-
-    @Override
-    protected IDAO<[(${poName})], [(${idType})]> getDao() {
-        return [(${daoVeriable})];
+        super([(${daoVeriable})]);
     }
 }
