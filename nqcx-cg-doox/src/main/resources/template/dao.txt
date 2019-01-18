@@ -11,6 +11,6 @@ import [(${import})];
 /**
  * @author [(${author})] [(${#dates.format(date, 'yyyy-MM-dd HH:mm')})]
  */
-public interface [(${name})]<PO, ID> extends IDAO<PO, ID>  {
+public interface [(${name})] extends IDAO<[(${poName})], [(${idType})]> {
 
 }

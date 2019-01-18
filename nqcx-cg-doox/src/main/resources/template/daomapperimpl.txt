@@ -12,7 +12,7 @@ import [(${import})];
  * @author [(${author})] [(${#dates.format(date, 'yyyy-MM-dd HH:mm')})]
  */
 @Service
-public class [(${name})] extends MapperSupport<[(${poName})], [(${idType})]> implements [(${daoName})]<[(${poName})], [(${idType})]> {
+public class [(${name})] extends MapperSupport<[(${poName})], [(${idType})]> implements [(${daoName})] {
 
     public [(${name})]([(${mapperName})] [(${mapperVeriable})]) {
         super([(${mapperVeriable})]);

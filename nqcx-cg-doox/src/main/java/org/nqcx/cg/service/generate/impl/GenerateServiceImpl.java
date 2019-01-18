@@ -110,7 +110,6 @@ public class GenerateServiceImpl implements GenerateService {
         CLASS_MAPPING.put("IJpa", "org.nqcx.commons3.data.jpa.IJpa");
         CLASS_MAPPING.put("JpaSupport", "org.nqcx.commons3.data.jpa.JpaSupport");
         CLASS_MAPPING.put("IDAO", "org.nqcx.commons3.dao.IDAO");
-//        CLASS_MAPPING.put("DaoSupport", "org.nqcx.commons3.dao.DaoSupport");
 
         CLASS_MAPPING.put("IService", "org.nqcx.commons3.service.IService");
         CLASS_MAPPING.put("ServiceSupport", "org.nqcx.commons3.service.ServiceSupport");
@@ -120,13 +119,6 @@ public class GenerateServiceImpl implements GenerateService {
         CLASS_MAPPING.put("Qualifier", "org.springframework.beans.factory.annotation.Qualifier");
 
         CLASS_MAPPING.put("test.Test", "org.junit.Test");
-//        CLASS_MAPPING.put("test.RunWith", "org.junit.runner.RunWith");
-//        CLASS_MAPPING.put("test.TestCase", "junit.framework.TestCase");
-//        CLASS_MAPPING.put("test.ContextConfiguration", "org.springframework.test.context.ContextConfiguration");
-//        CLASS_MAPPING.put("test.SpringJUnit4ClassRunner", "org.springframework.test.context.junit4.SpringJUnit4ClassRunner");
-//        CLASS_MAPPING.put("test.DependencyInjectionTestExecutionListener", "org.springframework.test.context.support.DependencyInjectionTestExecutionListener");
-//        CLASS_MAPPING.put("test.TransactionalTestExecutionListener", "org.springframework.test.context.transaction.TransactionalTestExecutionListener");
-//        CLASS_MAPPING.put("test.TestExecutionListeners", "org.springframework.test.context.TestExecutionListeners");
     }
 
     /**
@@ -296,7 +288,7 @@ public class GenerateServiceImpl implements GenerateService {
                                               String daoModuleName,
                                               String serviceModuleName,
                                               String webModuleName) {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
 
         String provideModulePath = wsPath + pPath + provideModuleName;
         if (new File(provideModulePath).exists())
@@ -346,49 +338,6 @@ public class GenerateServiceImpl implements GenerateService {
 
         Context cxt = new Context();
         Set<String> imports = new LinkedHashSet<>();
-
-//        // bo
-//        mappingImport(imports, "Serializable");
-//
-//        cxt.setVariable("author", author);
-//        cxt.setVariable("date", new Date());
-//        cxt.setVariable("package", boPackage);
-//        cxt.setVariable("imports", imports);
-//        cxt.setVariable("name", boName);
-//
-//        // bo field
-//        List<String> boFields = new ArrayList<>();
-//        // bo field comment
-//        List<String> boFieldComments = new ArrayList<>();
-//        // getter & setter
-//        List<CgField> boGetterAndSetters = new ArrayList<>();
-//
-//        table.getColumns().forEach(c -> {
-//            if (c.isCm_())
-//                return;
-//
-//            mappingImport(imports, c.getType_());
-//
-//            if (c.getComment() != null && c.getComment().length() > 0)
-//                boFieldComments.add("// " + c.getComment());
-//            else
-//                boFieldComments.add("");
-//            boFields.add(String.format("private %s %s;", c.getType_(), c.getField_()));
-//
-//            CgField field = new CgField();
-//            field.setType(c.getType_());
-//            field.setField(c.getField_());
-//            field.setName(StringUtils.capitalize(c.getField_()));
-//
-//            boGetterAndSetters.add(field);
-//        });
-//
-//        cxt.setVariable("boFields", boFields);
-//        cxt.setVariable("boFieldComments", boFieldComments);
-//        cxt.setVariable("boGetterAndSetter", boGetterAndSetters);
-//
-//        this.writeFile(logFile, providePath + "/" + JAVA_PATH + boPackage.replace('.', '/'), boName, JAVA_EXT_NAME,
-//                process(BO_TXT_TEMPLATE_NAME, cxt));
 
         // o
         cxt.clearVariables();
@@ -492,9 +441,6 @@ public class GenerateServiceImpl implements GenerateService {
 
         // po field
         List<String> poFields = new ArrayList<>();
-//        // po getter
-//        List<CgField> poGetter = new ArrayList<>();
-        // getter & setter
         List<CgField> poGetterAndSetters = new ArrayList<>();
         table.getColumns().forEach(c -> {
             mappingImport(imports, c.getType_());
@@ -540,23 +486,9 @@ public class GenerateServiceImpl implements GenerateService {
                     columnDefinition += c.getExtra().toUpperCase();
                 }
                 colAnno += ", columnDefinition = \"" + columnDefinition + "\"";
-
-//                poFields.add(String.format("private %s %s;", c.getType_(), c.getField_()));
-//                cxt.setVariable("poFields", poFields);
-
-//                cxt.setVariable("poGetterAndSetter", poGetterAndSetters);
-
-//                poGetterAndSetters.add(field);
             }
             field.getAnnotations().add("@Column(" + colAnno + ")");
 
-//            else {
-//                cxt.setVariable("poGetter", poGetter);
-//
-//                field.getAnnotations().add("@Override");
-//
-//                poGetter.add(field);
-//            }
             poFields.add(String.format("private %s %s;", c.getType_(), c.getField_()));
             cxt.setVariable("poFields", poFields);
 
@@ -676,6 +608,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.clearVariables();
         imports.clear();
 
+        mappingImport(imports, po);
         mappingImport(imports, "IDAO");
 
         cxt.setVariable("author", author);
@@ -683,6 +616,9 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("package", daoPackage);
         cxt.setVariable("imports", imports);
         cxt.setVariable("name", dao);
+
+        cxt.setVariable("poName", po);
+        cxt.setVariable("idType", idType);
 
         this.writeFile(logFile, daoPath + "/" + JAVA_PATH + daoPackage.replace('.', '/'),
                 dao, JAVA_EXT_NAME,
@@ -699,7 +635,6 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("poName", po);
         cxt.setVariable("idType", idType);
         cxt.setVariable("daoName", dao);
-
 
         cxt.setVariable("mapperName", mapper);
         String mapperVeriable = mapper;
@@ -742,25 +677,17 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.clearVariables();
         imports.clear();
 
-//            mappingImport(imports, "test.TestCase");
         mappingImport(imports, "test.Test");
-//            mappingImport(imports, "test.RunWith");
         mappingImport(imports, "DTO");
         mappingImport(imports, "NPage");
         mappingImport(imports, "NSort");
         mappingImport(imports, "Autowired");
         mappingImport(imports, "Qualifier");
-//            mappingImport(imports, "test.ContextConfiguration");
-//            mappingImport(imports, "test.TestExecutionListeners");
-//            mappingImport(imports, "test.SpringJUnit4ClassRunner");
-//            mappingImport(imports, "test.DependencyInjectionTestExecutionListener");
-//            mappingImport(imports, "test.TransactionalTestExecutionListener");
 
         mappingImport(imports, "ArrayList");
         mappingImport(imports, "Arrays");
         mappingImport(imports, "List");
 
-//        mappingImport(imports, dao);
         mappingImport(imports, po);
 
         String daoImpl = StringUtils.substring(dao, 1);
@@ -771,11 +698,12 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("imports", imports);
         cxt.setVariable("name", daoImpl + "Test");
 
-        cxt.setVariable("poName", po);
-        cxt.setVariable("idType", idType);
         cxt.setVariable("daoName", dao);
         cxt.setVariable("mapperVeriable", StringUtils.uncapitalize(mapperVeriable));
         cxt.setVariable("jpaVeriable", StringUtils.uncapitalize(jpaVeriable));
+
+        cxt.setVariable("poName", po);
+        cxt.setVariable("idType", idType);
 
         mappingImport(imports, "Arrays");
         mappingImport(imports, "BaseDAOTest");
