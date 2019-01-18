@@ -10,9 +10,7 @@
         <entry key="defaultTitle" value="Code generate"/>
     </util:map>
     <bean id="nqcxValues" class="org.nqcx.commons3.web.values.NqcxValues">
-        <property name="values">
-            <ref bean="_nqcxValues"/>
-        </property>
+        <property name="values" ref="_nqcxValues"/>
     </bean>
 
     <!-- 用于注入 bean-commons-result.xml 中 ResultBuilder 的 resultExtends 属性 -->
