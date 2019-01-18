@@ -120,13 +120,13 @@ public class GenerateServiceImpl implements GenerateService {
         CLASS_MAPPING.put("Qualifier", "org.springframework.beans.factory.annotation.Qualifier");
 
         CLASS_MAPPING.put("test.Test", "org.junit.Test");
-        CLASS_MAPPING.put("test.RunWith", "org.junit.runner.RunWith");
-        CLASS_MAPPING.put("test.TestCase", "junit.framework.TestCase");
-        CLASS_MAPPING.put("test.ContextConfiguration", "org.springframework.test.context.ContextConfiguration");
-        CLASS_MAPPING.put("test.SpringJUnit4ClassRunner", "org.springframework.test.context.junit4.SpringJUnit4ClassRunner");
-        CLASS_MAPPING.put("test.DependencyInjectionTestExecutionListener", "org.springframework.test.context.support.DependencyInjectionTestExecutionListener");
-        CLASS_MAPPING.put("test.TransactionalTestExecutionListener", "org.springframework.test.context.transaction.TransactionalTestExecutionListener");
-        CLASS_MAPPING.put("test.TestExecutionListeners", "org.springframework.test.context.TestExecutionListeners");
+//        CLASS_MAPPING.put("test.RunWith", "org.junit.runner.RunWith");
+//        CLASS_MAPPING.put("test.TestCase", "junit.framework.TestCase");
+//        CLASS_MAPPING.put("test.ContextConfiguration", "org.springframework.test.context.ContextConfiguration");
+//        CLASS_MAPPING.put("test.SpringJUnit4ClassRunner", "org.springframework.test.context.junit4.SpringJUnit4ClassRunner");
+//        CLASS_MAPPING.put("test.DependencyInjectionTestExecutionListener", "org.springframework.test.context.support.DependencyInjectionTestExecutionListener");
+//        CLASS_MAPPING.put("test.TransactionalTestExecutionListener", "org.springframework.test.context.transaction.TransactionalTestExecutionListener");
+//        CLASS_MAPPING.put("test.TestExecutionListeners", "org.springframework.test.context.TestExecutionListeners");
     }
 
     /**
@@ -756,19 +756,19 @@ public class GenerateServiceImpl implements GenerateService {
             cxt.clearVariables();
             imports.clear();
 
-            mappingImport(imports, "test.TestCase");
+//            mappingImport(imports, "test.TestCase");
             mappingImport(imports, "test.Test");
-            mappingImport(imports, "test.RunWith");
+//            mappingImport(imports, "test.RunWith");
             mappingImport(imports, "DTO");
             mappingImport(imports, "NPage");
             mappingImport(imports, "NSort");
             mappingImport(imports, "Autowired");
             mappingImport(imports, "Qualifier");
-            mappingImport(imports, "test.ContextConfiguration");
-            mappingImport(imports, "test.TestExecutionListeners");
-            mappingImport(imports, "test.SpringJUnit4ClassRunner");
-            mappingImport(imports, "test.DependencyInjectionTestExecutionListener");
-            mappingImport(imports, "test.TransactionalTestExecutionListener");
+//            mappingImport(imports, "test.ContextConfiguration");
+//            mappingImport(imports, "test.TestExecutionListeners");
+//            mappingImport(imports, "test.SpringJUnit4ClassRunner");
+//            mappingImport(imports, "test.DependencyInjectionTestExecutionListener");
+//            mappingImport(imports, "test.TransactionalTestExecutionListener");
 
             mappingImport(imports, "ArrayList");
             mappingImport(imports, "Arrays");
