@@ -11,13 +11,19 @@ import [(${import})];
 /**
  * @author [(${author})] [(${#dates.format(date, 'yyyy-MM-dd HH:mm')})]
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:beans.xml"})
-@TestExecutionListeners({TransactionalTestExecutionListener.class, DependencyInjectionTestExecutionListener.class})
-public class [(${name})] extends TestCase {
+public class [(${name})] extends BaseDAOTest {
 
     @Autowired
-    private [(${daoName})]<[(${poName})], [(${idType})]> [(${daoVeriable})];
+    @Qualifier("[(${mapperVeriable})]")
+    private [(${daoName})]<[(${poName})], [(${idType})]> [(${mapperVeriable})];
+    @Autowired
+    @Qualifier("[(${jpaVeriable})]")
+    private [(${daoName})]<[(${poName})], [(${idType})]> [(${jpaVeriable})];
+
+    protected [(${daoName})]<[(${poName})], [(${idType})]> getDao() {
+        return [(${mapperVeriable})];
+        // return [(${jpaVeriable})];
+    }
 
     @Test
     public void save() {
@@ -25,7 +31,7 @@ public class [(${name})] extends TestCase {
 [# th:each="pg : ${poSetters}"]
         [(${pg})][/]
 
-        [(${daoVeriable})].save(po);
+        getDao().save(po);
     }
 
     @Test
@@ -39,7 +45,7 @@ public class [(${name})] extends TestCase {
             [(${pg})][/]
         }
 
-        [(${daoVeriable})].saveAll(list);
+        getDao().saveAll(list);
     }
 
     @Test
@@ -48,7 +54,7 @@ public class [(${name})] extends TestCase {
 [# th:each="pg : ${poSetters}"]
         [(${pg})][/]
 
-        [(${daoVeriable})].modify(po);
+        getDao().modify(po);
     }
 
     @Test
@@ -60,19 +66,19 @@ public class [(${name})] extends TestCase {
 [# th:each="pg : ${poSetters}"]
         [(${pg})][/]
 
-        [(${daoVeriable})].modifyAll(list);
+        getDao().modifyAll(list);
     }
 
     @Test
     public void findById() {
-        [(${poName})] poName = [(${daoVeriable})].findById(1[# th:if="${idType == 'Long'}"]L[/]).orElse(null);
+        [(${poName})] poName = getDao().findById(1[# th:if="${idType == 'Long'}"]L[/]).orElse(null);
         System.out.println(poName);
     }
 
     @Test
     public void findAllByIds() {
         List<[(${idType})]> ids = Arrays.asList(2[# th:if="${idType == 'Long'}"]L[/], 3[# th:if="${idType == 'Long'}"]L[/], 4[# th:if="${idType == 'Long'}"]L[/], 5[# th:if="${idType == 'Long'}"]L[/]);
-        List<[(${poName})]> list = [(${daoVeriable})].findAllByIds(ids);
+        List<[(${poName})]> list = getDao().findAllByIds(ids);
 
         if (list == null)
             System.out.println(list);
@@ -83,7 +89,7 @@ public class [(${name})] extends TestCase {
     @Test
     public void listAll() {
         DTO dto = new DTO();
-        List<[(${poName})]> list = [(${daoVeriable})].listAll(dto);
+        List<[(${poName})]> list = getDao().listAll(dto);
 
         if (list == null)
             System.out.println(list);
@@ -99,7 +105,7 @@ public class [(${name})] extends TestCase {
                 .setSort(NSort.by(new NSort.NOrder(NSort.NDirection.DESC, "id"),
                         new NSort.NOrder(NSort.NDirection.ASC, "t_create")));
 
-        DTO dtoResult = [(${daoVeriable})].findAll(dtoRequest);
+        DTO dtoResult = getDao().findAll(dtoRequest);
 
         if (dtoResult != null && dtoResult.getList() != null) {
             dtoResult.getList().forEach(System.out::println);
@@ -112,19 +118,19 @@ public class [(${name})] extends TestCase {
     public void getCount() {
         DTO dtoRequest = new DTO();
 
-        long count = [(${daoVeriable})].getCount(dtoRequest);
+        long count = getDao().getCount(dtoRequest);
 
         System.out.println(count);
     }
 
     @Test
     public void deleteById() {
-        [(${daoVeriable})].deleteById(6[# th:if="${idType == 'Long'}"]L[/]);
+        getDao().deleteById(6[# th:if="${idType == 'Long'}"]L[/]);
     }
 
     @Test
     public void deleteByIds() {
         List<[(${idType})]> ids = Arrays.asList(7[# th:if="${idType == 'Long'}"]L[/], 8[# th:if="${idType == 'Long'}"]L[/]);
-        [(${daoVeriable})].deleteByIds(ids);
+        getDao().deleteByIds(ids);
     }
 }

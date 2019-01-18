@@ -42,10 +42,10 @@ public class Generate implements Serializable {
 
     // provide field
     private BoolEO provide_ = BoolEO.FALSE;
-    private String provideBOPackage;
+//    private String provideBOPackage;
     private String provideOPackage;
     private String provideProvidePackage;
-    private String provideBO;
+//    private String provideBO;
     private String provideO;
     private String provideProvide;
     // end of provide field
@@ -58,9 +58,10 @@ public class Generate implements Serializable {
     private String daoDAOPackage;
     private String daoPO;
     private String daoMapper;
+    private String daoMapperImpl;
     private String daoJpa;
+    private String daoJpaImpl;
     private String daoDAO;
-    private String daoDAOImpl;
     // end of dao field
 
     // service field
@@ -184,13 +185,13 @@ public class Generate implements Serializable {
         this.provide_ = provide_;
     }
 
-    public String getProvideBOPackage() {
-        return provideBOPackage;
-    }
-
-    public void setProvideBOPackage(String provideBOPackage) {
-        this.provideBOPackage = provideBOPackage;
-    }
+//    public String getProvideBOPackage() {
+//        return provideBOPackage;
+//    }
+//
+//    public void setProvideBOPackage(String provideBOPackage) {
+//        this.provideBOPackage = provideBOPackage;
+//    }
 
     public String getProvideOPackage() {
         return provideOPackage;
@@ -208,13 +209,13 @@ public class Generate implements Serializable {
         this.provideProvidePackage = provideProvidePackage;
     }
 
-    public String getProvideBO() {
-        return provideBO;
-    }
-
-    public void setProvideBO(String provideBO) {
-        this.provideBO = provideBO;
-    }
+//    public String getProvideBO() {
+//        return provideBO;
+//    }
+//
+//    public void setProvideBO(String provideBO) {
+//        this.provideBO = provideBO;
+//    }
 
     public String getProvideO() {
         return provideO;
@@ -312,12 +313,28 @@ public class Generate implements Serializable {
         this.daoMapper = daoMapper;
     }
 
+    public String getDaoMapperImpl() {
+        return daoMapperImpl;
+    }
+
+    public void setDaoMapperImpl(String daoMapperImpl) {
+        this.daoMapperImpl = daoMapperImpl;
+    }
+
     public String getDaoJpa() {
         return daoJpa;
     }
 
     public void setDaoJpa(String daoJpa) {
         this.daoJpa = daoJpa;
+    }
+
+    public String getDaoJpaImpl() {
+        return daoJpaImpl;
+    }
+
+    public void setDaoJpaImpl(String daoJpaImpl) {
+        this.daoJpaImpl = daoJpaImpl;
     }
 
     public String getDaoDAO() {
@@ -328,13 +345,6 @@ public class Generate implements Serializable {
         this.daoDAO = daoDAO;
     }
 
-    public String getDaoDAOImpl() {
-        return daoDAOImpl;
-    }
-
-    public void setDaoDAOImpl(String daoDAOImpl) {
-        this.daoDAOImpl = daoDAOImpl;
-    }
 
     public BoolEO getService_() {
         return service_;

@@ -11,6 +11,16 @@ import [(${import})];
 /**
  * @author [(${author})] [(${#dates.format(date, 'yyyy-MM-dd HH:mm')})]
  */
-public class [(${name})] extends [(${boName})] {
+public class [(${name})] implements Serializable {
+[# th:each="f : ${oFields}"][# th:if="${oFieldComments[__${fStat.index}__] != ''}"]
+    [(*{oFieldComments[__${fStat.index}__]})][/]
+    [(${f})][/][# th:each="gs : ${oGetterAndSetter}"]
 
+    public [(${gs.type})] get[(${gs.name})]() {
+        return [(${gs.field})];
+    }
+
+    public void set[(${gs.name})]([(${gs.type})] [(${gs.field})]) {
+        this.[(${gs.field})] = [(${gs.field})];
+    }[/]
 }

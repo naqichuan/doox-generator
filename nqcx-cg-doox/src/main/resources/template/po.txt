@@ -13,14 +13,9 @@ import [(${import})];
  */
 @Entity
 @Table(name = "[(${tableName})]")
-public class [(${name})] extends [(${boName})] {
+public class [(${name})] {
 [# th:each="f : ${poFields}"]
-    [(${f})][/][# th:each="gs : ${poGetter}"]
-[# th:each="an : ${gs.annotations}"]
-    [(${an})][/]
-    public [(${gs.type})] get[(${gs.name})]() {
-        return super.get[(${gs.name})]();
-    }[/][# th:each="gs : ${poGetterAndSetter}"]
+    [(${f})][/][# th:each="gs : ${poGetterAndSetter}"]
 [# th:each="an : ${gs.annotations}"]
     [(${an})][/]
     public [(${gs.type})] get[(${gs.name})]() {

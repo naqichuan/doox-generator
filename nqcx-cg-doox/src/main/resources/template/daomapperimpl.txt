@@ -12,16 +12,11 @@ import [(${import})];
  * @author [(${author})] [(${#dates.format(date, 'yyyy-MM-dd HH:mm')})]
  */
 @Service
-public class [(${name})] extends ServiceSupport<[(${doName})], [(${poName})], [(${idType})]> implements [(${serviceName})]<[(${doName})], [(${idType})]> {
+public class [(${name})] extends MapperSupport<[(${poName})], [(${idType})]> implements [(${daoName})]<[(${poName})], [(${idType})]> {
 
-    private final [(${daoName})] [(${daoVeriable})];
+    private final [(${mapperName})]<[(${poName})], [(${idType})]> [(${mapperVeriable})];
 
-    public [(${name})]([(${daoName})] [(${daoVeriable})]) {
-        this.[(${daoVeriable})] = [(${daoVeriable})];
-    }
-
-    @Override
-    protected IDAO<[(${poName})], [(${idType})]> getDao() {
-        return [(${daoVeriable})];
+    public [(${name})]([(${mapperName})]<[(${poName})], [(${idType})]> [(${mapperVeriable})]) {
+        this.[(${mapperVeriable})] = [(${mapperVeriable})];
     }
 }

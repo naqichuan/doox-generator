@@ -12,7 +12,7 @@
         [(${tableColumnsStr})]
     </sql>
 
-    <insert id="save" parameterType="[(${po})]" useGeneratedKeys="true" keyProperty="id">
+    <insert id="save_" parameterType="[(${po})]" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO [(${tableName})] (
             <include refid="[(${tableName})]_columns" />
         ) VALUES ([# th:each="c : ${poInsertColumns}"][# th:if="${cStat.index > 0}"],[/]
@@ -20,7 +20,7 @@
         )
     </insert>
 
-    <update id="update" parameterType="[(${po})]">
+    <update id="modify_" parameterType="[(${po})]">
         UPDATE
             [(${tableName})]
         SET[# th:each="c : ${poUpdateColumns}"][# th:if="${cStat.index > 0}"],[/]
@@ -29,7 +29,7 @@
             [(${idColumn})]=[(${idField})]
     </update>
 
-    <select id="findById" resultMap="[(${tableName})]_rm" parameterType="[(${idType})]">
+    <select id="findById_" resultMap="[(${tableName})]_rm" parameterType="[(${idType})]">
         SELECT
             <include refid="[(${tableName})]_columns" />
         FROM
@@ -38,7 +38,7 @@
             [(${idColumn})]=[(${idField})]
     </select>
 
-    <select id="findByIds" resultMap="[(${tableName})]_rm">
+    <select id="findByIds_" resultMap="[(${tableName})]_rm">
         SELECT
             <include refid="[(${tableName})]_columns" />
         FROM
@@ -59,7 +59,7 @@
         </where>
     </sql>
 
-    <select id="findAll" resultMap="[(${tableName})]_rm" parameterType="map">
+    <select id="findAll_" resultMap="[(${tableName})]_rm" parameterType="map">
         SELECT
             <include refid="[(${tableName})]_columns" />
         FROM
@@ -73,7 +73,7 @@
         </if>
     </select>
 
-    <select id="getCount" parameterType="map" resultType="long">
+    <select id="getCount_" parameterType="map" resultType="long">
         SELECT
             count([(${idColumn})])
         FROM
@@ -81,14 +81,14 @@
         <include refid="condition" />
     </select>
 
-    <delete id="deleteById" parameterType="[(${idType})]">
+    <delete id="deleteById_" parameterType="[(${idType})]">
         DELETE FROM
             [(${tableName})]
         WHERE
             [(${idColumn})]=[(${idField})]
     </delete>
 
-    <delete id="deleteByIds">
+    <delete id="deleteByIds_">
         DELETE FROM
             [(${tableName})]
         WHERE

@@ -61,7 +61,8 @@ public class GenerateServiceImpl implements GenerateService {
     private final static String JPA_TXT_TEMPLATE_NAME = "jpa.txt";
     private final static String DAO_TXT_TEMPLATE_NAME = "dao.txt";
     private final static String DAO_TEST_TXT_TEMPLATE_NAME = "daotest.txt";
-    private final static String DAOIMPL_TXT_TEMPLATE_NAME = "daoimpl.txt";
+    private final static String DAOMAPPERIMPL_TXT_TEMPLATE_NAME = "daomapperimpl.txt";
+    private final static String DAOJPAIMPL_TXT_TEMPLATE_NAME = "daojpaimpl.txt";
     private final static String DO_TXT_TEMPLATE_NAME = "do.txt";
     private final static String SERVICE_TXT_TEMPLATE_NAME = "service.txt";
     private final static String SERVICEIMPL_TXT_TEMPLATE_NAME = "serviceimpl.txt";
@@ -108,14 +109,15 @@ public class GenerateServiceImpl implements GenerateService {
         CLASS_MAPPING.put("MapperSupport", "org.nqcx.commons3.data.mapper.MapperSupport");
         CLASS_MAPPING.put("IJpa", "org.nqcx.commons3.data.jpa.IJpa");
         CLASS_MAPPING.put("JpaSupport", "org.nqcx.commons3.data.jpa.JpaSupport");
-        CLASS_MAPPING.put("IDao", "org.nqcx.commons3.dao.IDao");
-        CLASS_MAPPING.put("DaoSupport", "org.nqcx.commons3.dao.DaoSupport");
+        CLASS_MAPPING.put("IDAO", "org.nqcx.commons3.dao.IDAO");
+//        CLASS_MAPPING.put("DaoSupport", "org.nqcx.commons3.dao.DaoSupport");
 
         CLASS_MAPPING.put("IService", "org.nqcx.commons3.service.IService");
         CLASS_MAPPING.put("ServiceSupport", "org.nqcx.commons3.service.ServiceSupport");
 
         CLASS_MAPPING.put("stereotype.Service", "org.springframework.stereotype.Service");
         CLASS_MAPPING.put("Autowired", "org.springframework.beans.factory.annotation.Autowired");
+        CLASS_MAPPING.put("Qualifier", "org.springframework.beans.factory.annotation.Qualifier");
 
         CLASS_MAPPING.put("test.Test", "org.junit.Test");
         CLASS_MAPPING.put("test.RunWith", "org.junit.runner.RunWith");
@@ -158,13 +160,12 @@ public class GenerateServiceImpl implements GenerateService {
                 g.getDaoModule(), g.getServiceModule(), g.getWebModule());
 
         // provide
-        CLASS_MAPPING.put(g.getProvideBO(), g.getProvideBOPackage() + "." + g.getProvideBO());
         CLASS_MAPPING.put(g.getProvideO(), g.getProvideOPackage() + "." + g.getProvideO());
         CLASS_MAPPING.put(g.getProvideProvide(), g.getProvideProvidePackage() + "." + g.getProvideProvide());
 
         String providePath = pathMap.get(P_PROVIDE_PATH_KEY);
         if (g.getProvide_().isTrue()) {
-            this.generateProvide(cgLogFile, g.getAuthor(), table, providePath, g.getProvideBOPackage(), g.getProvideBO(),
+            this.generateProvide(cgLogFile, g.getAuthor(), table, providePath,
                     g.getProvideOPackage(), g.getProvideO(),
                     g.getProvideProvidePackage(), g.getProvideProvide());
         }
@@ -174,15 +175,18 @@ public class GenerateServiceImpl implements GenerateService {
         CLASS_MAPPING.put(g.getDaoMapper(), g.getDaoMapperPackage() + "." + g.getDaoMapper());
         CLASS_MAPPING.put(g.getDaoJpa(), g.getDaoJpaPackage() + "." + g.getDaoJpa());
         CLASS_MAPPING.put(g.getDaoDAO(), g.getDaoDAOPackage() + "." + g.getDaoDAO());
-        CLASS_MAPPING.put(g.getDaoDAOImpl(), g.getDaoDAOPackage() + ".impl." + g.getDaoDAOImpl());
+        CLASS_MAPPING.put(g.getDaoMapperImpl(), g.getDaoDAOPackage() + ".impl." + g.getDaoMapperImpl());
+        CLASS_MAPPING.put(g.getDaoJpaImpl(), g.getDaoDAOPackage() + ".impl." + g.getDaoJpaImpl());
+        CLASS_MAPPING.put("BaseDAOTest", g.getpPackage() + ".dao." + "BaseDAOTest");
+
 
         String daoPath = pathMap.get(P_DAO_PATH_KEY);
         if (g.getDao_().isTrue()) {
             this.generateDao(cgLogFile, g.getAuthor(), table, daoPath, g.getDaoPOPackage(), g.getDaoPO(),
                     g.getDaoMapperPackage(), g.getDaoMapper(),
                     g.getDaoJpaPackage(), g.getDaoJpa(),
-                    g.getDaoDAOPackage(), g.getDaoDAO(), g.getDaoDAOPackage() + ".impl", g.getDaoDAOImpl(),
-                    g.getProvideBO());
+                    g.getDaoDAOPackage(), g.getDaoDAO(),
+                    g.getDaoDAOPackage() + ".impl", g.getDaoMapperImpl(), g.getDaoJpaImpl());
         }
 
         // service
@@ -334,35 +338,78 @@ public class GenerateServiceImpl implements GenerateService {
      * @param author
      * @param table
      * @param providePath
-     * @param boPackage
-     * @param boName
      * @param oPackage
      * @param oName
      * @param providePackage
      * @param provideName
      */
-    private void generateProvide(File logFile, String author, Table table, String providePath, String boPackage, String boName,
+    private void generateProvide(File logFile, String author, Table table, String providePath,
                                  String oPackage, String oName,
                                  String providePackage, String provideName) {
 
         Context cxt = new Context();
         Set<String> imports = new LinkedHashSet<>();
 
-        // bo
+//        // bo
+//        mappingImport(imports, "Serializable");
+//
+//        cxt.setVariable("author", author);
+//        cxt.setVariable("date", new Date());
+//        cxt.setVariable("package", boPackage);
+//        cxt.setVariable("imports", imports);
+//        cxt.setVariable("name", boName);
+//
+//        // bo field
+//        List<String> boFields = new ArrayList<>();
+//        // bo field comment
+//        List<String> boFieldComments = new ArrayList<>();
+//        // getter & setter
+//        List<CgField> boGetterAndSetters = new ArrayList<>();
+//
+//        table.getColumns().forEach(c -> {
+//            if (c.isCm_())
+//                return;
+//
+//            mappingImport(imports, c.getType_());
+//
+//            if (c.getComment() != null && c.getComment().length() > 0)
+//                boFieldComments.add("// " + c.getComment());
+//            else
+//                boFieldComments.add("");
+//            boFields.add(String.format("private %s %s;", c.getType_(), c.getField_()));
+//
+//            CgField field = new CgField();
+//            field.setType(c.getType_());
+//            field.setField(c.getField_());
+//            field.setName(StringUtils.capitalize(c.getField_()));
+//
+//            boGetterAndSetters.add(field);
+//        });
+//
+//        cxt.setVariable("boFields", boFields);
+//        cxt.setVariable("boFieldComments", boFieldComments);
+//        cxt.setVariable("boGetterAndSetter", boGetterAndSetters);
+//
+//        this.writeFile(logFile, providePath + "/" + JAVA_PATH + boPackage.replace('.', '/'), boName, JAVA_EXT_NAME,
+//                process(BO_TXT_TEMPLATE_NAME, cxt));
+
+        // o
+        cxt.clearVariables();
+        imports.clear();
         mappingImport(imports, "Serializable");
 
         cxt.setVariable("author", author);
         cxt.setVariable("date", new Date());
-        cxt.setVariable("package", boPackage);
+        cxt.setVariable("package", oPackage);
         cxt.setVariable("imports", imports);
-        cxt.setVariable("name", boName);
+        cxt.setVariable("name", oName);
 
-        // bo field
-        List<String> boFields = new ArrayList<>();
-        // bo field comment
-        List<String> boFieldComments = new ArrayList<>();
+        // o field
+        List<String> oFields = new ArrayList<>();
+        // o field comment
+        List<String> oFieldComments = new ArrayList<>();
         // getter & setter
-        List<CgField> boGetterAndSetters = new ArrayList<>();
+        List<CgField> oGetterAndSetters = new ArrayList<>();
 
         table.getColumns().forEach(c -> {
             if (c.isCm_())
@@ -371,38 +418,22 @@ public class GenerateServiceImpl implements GenerateService {
             mappingImport(imports, c.getType_());
 
             if (c.getComment() != null && c.getComment().length() > 0)
-                boFieldComments.add("// " + c.getComment());
+                oFieldComments.add("// " + c.getComment());
             else
-                boFieldComments.add("");
-            boFields.add(String.format("private %s %s;", c.getType_(), c.getField_()));
+                oFieldComments.add("");
+            oFields.add(String.format("private %s %s;", c.getType_(), c.getField_()));
 
             CgField field = new CgField();
             field.setType(c.getType_());
             field.setField(c.getField_());
             field.setName(StringUtils.capitalize(c.getField_()));
 
-            boGetterAndSetters.add(field);
+            oGetterAndSetters.add(field);
         });
 
-        cxt.setVariable("boFields", boFields);
-        cxt.setVariable("boFieldComments", boFieldComments);
-        cxt.setVariable("boGetterAndSetter", boGetterAndSetters);
-
-        this.writeFile(logFile, providePath + "/" + JAVA_PATH + boPackage.replace('.', '/'), boName, JAVA_EXT_NAME,
-                process(BO_TXT_TEMPLATE_NAME, cxt));
-
-        // o
-        cxt.clearVariables();
-        imports.clear();
-        mappingImport(imports, boName);
-
-        cxt.setVariable("author", author);
-        cxt.setVariable("date", new Date());
-        cxt.setVariable("package", oPackage);
-        cxt.setVariable("imports", imports);
-        cxt.setVariable("name", oName);
-
-        cxt.setVariable("boName", boName);
+        cxt.setVariable("oFields", oFields);
+        cxt.setVariable("oFieldComments", oFieldComments);
+        cxt.setVariable("oGetterAndSetter", oGetterAndSetters);
 
         this.writeFile(logFile, providePath + "/" + JAVA_PATH + oPackage.replace('.', '/'), oName, JAVA_EXT_NAME,
                 process(O_TXT_TEMPLATE_NAME, cxt));
@@ -435,14 +466,13 @@ public class GenerateServiceImpl implements GenerateService {
      * @param daoPackage
      * @param dao
      * @param daoImplPackage
-     * @param daoImpl
-     * @param boName
+     * @param daoMapperImpl
+     * @param daoJpaImpl
      */
     private void generateDao(File logFile, String author, Table table, String daoPath, String poPackage, String po,
                              String mapperPackage, String mapper,
                              String jpaPackage, String jpa,
-                             String daoPackage, String dao, String daoImplPackage, String daoImpl,
-                             String boName) {
+                             String daoPackage, String dao, String daoImplPackage, String daoMapperImpl, String daoJpaImpl) {
 
         Context cxt = new Context();
         Set<String> imports = new LinkedHashSet<>();
@@ -453,7 +483,6 @@ public class GenerateServiceImpl implements GenerateService {
             idType = table.getIdColumn().getIdType_();
 
         // po
-        mappingImport(imports, boName);
         mappingImport(imports, "Entity");
         mappingImport(imports, "Table");
         mappingImport(imports, "Column");
@@ -464,13 +493,12 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("imports", imports);
         cxt.setVariable("name", po);
 
-        cxt.setVariable("boName", boName);
         cxt.setVariable("tableName", table.getName());
 
-        // bo field
+        // po field
         List<String> poFields = new ArrayList<>();
-        // po getter
-        List<CgField> poGetter = new ArrayList<>();
+//        // po getter
+//        List<CgField> poGetter = new ArrayList<>();
         // getter & setter
         List<CgField> poGetterAndSetters = new ArrayList<>();
         table.getColumns().forEach(c -> {
@@ -519,24 +547,29 @@ public class GenerateServiceImpl implements GenerateService {
                 }
                 colAnno += ", columnDefinition = \"" + columnDefinition + "\"";
 
-                poFields.add(String.format("private %s %s;", c.getType_(), c.getField_()));
-                cxt.setVariable("poFields", poFields);
+//                poFields.add(String.format("private %s %s;", c.getType_(), c.getField_()));
+//                cxt.setVariable("poFields", poFields);
 
-                cxt.setVariable("poGetterAndSetter", poGetterAndSetters);
+//                cxt.setVariable("poGetterAndSetter", poGetterAndSetters);
 
-                poGetterAndSetters.add(field);
-            } else {
-                cxt.setVariable("poGetter", poGetter);
-
-                field.getAnnotations().add("@Override");
-
-                poGetter.add(field);
+//                poGetterAndSetters.add(field);
             }
-
-
             field.getAnnotations().add("@Column(" + colAnno + ")");
-        });
 
+//            else {
+//                cxt.setVariable("poGetter", poGetter);
+//
+//                field.getAnnotations().add("@Override");
+//
+//                poGetter.add(field);
+//            }
+            poFields.add(String.format("private %s %s;", c.getType_(), c.getField_()));
+            cxt.setVariable("poFields", poFields);
+
+
+            poGetterAndSetters.add(field);
+            cxt.setVariable("poGetterAndSetter", poGetterAndSetters);
+        });
 
         this.writeFile(logFile, daoPath + "/" + JAVA_PATH + poPackage.replace('.', '/'),
                 po, JAVA_EXT_NAME,
@@ -649,7 +682,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.clearVariables();
         imports.clear();
 
-        mappingImport(imports, "IDao");
+        mappingImport(imports, "IDAO");
 
         cxt.setVariable("author", author);
         cxt.setVariable("date", new Date());
@@ -665,7 +698,7 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.clearVariables();
         imports.clear();
 
-        mappingImport(imports, "DaoSupport");
+//        mappingImport(imports, "DaoSupport");
         mappingImport(imports, po);
         mappingImport(imports, mapper);
         mappingImport(imports, jpa);
@@ -677,78 +710,103 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("date", new Date());
         cxt.setVariable("package", daoImplPackage);
         cxt.setVariable("imports", imports);
-        cxt.setVariable("name", daoImpl);
 
         cxt.setVariable("poName", po);
         cxt.setVariable("idType", idType);
         cxt.setVariable("daoName", dao);
-
-        cxt.setVariable("mapperName", mapper);
-        String mapperVeriable = mapper;
-        if (mapperVeriable.startsWith("I"))
-            mapperVeriable = StringUtils.substring(mapperVeriable, 1);
-        cxt.setVariable("mapperVeriable", StringUtils.uncapitalize(mapperVeriable));
-        cxt.setVariable("jpaName", jpa);
-        String jpaVeriable = jpa;
-        if (jpaVeriable.startsWith("I"))
-            jpaVeriable = StringUtils.substring(jpaVeriable, 1);
-        cxt.setVariable("jpaVeriable", StringUtils.uncapitalize(jpaVeriable));
 
         mappingImport(imports, dao);
 
-        this.writeFile(logFile, daoPath + "/" + JAVA_PATH + daoImplPackage.replace('.', '/'),
-                daoImpl, JAVA_EXT_NAME,
-                process(DAOIMPL_TXT_TEMPLATE_NAME, cxt));
+        String mapperVeriable = mapper;
+        if (daoMapperImpl == null || daoMapperImpl.length() == 0) {
+            cxt.setVariable("mapperName", mapper);
+            mapperVeriable = mapper;
+            if (mapperVeriable.startsWith("I"))
+                mapperVeriable = StringUtils.substring(mapperVeriable, 1);
+            cxt.setVariable("mapperVeriable", StringUtils.uncapitalize(mapperVeriable));
 
-        // dao test
-        cxt.clearVariables();
-        imports.clear();
+            mappingImport(imports, "MapperSupport");
 
-        mappingImport(imports, "test.TestCase");
-        mappingImport(imports, "test.Test");
-        mappingImport(imports, "test.RunWith");
-        mappingImport(imports, "DTO");
-        mappingImport(imports, "NPage");
-        mappingImport(imports, "NSort");
-        mappingImport(imports, "Autowired");
-        mappingImport(imports, "test.ContextConfiguration");
-        mappingImport(imports, "test.TestExecutionListeners");
-        mappingImport(imports, "test.SpringJUnit4ClassRunner");
-        mappingImport(imports, "test.DependencyInjectionTestExecutionListener");
-        mappingImport(imports, "test.TransactionalTestExecutionListener");
+            cxt.setVariable("name", daoMapperImpl);
+            this.writeFile(logFile, daoPath + "/" + JAVA_PATH + daoImplPackage.replace('.', '/'),
+                    daoMapperImpl, JAVA_EXT_NAME,
+                    process(DAOMAPPERIMPL_TXT_TEMPLATE_NAME, cxt));
 
-        mappingImport(imports, "ArrayList");
-        mappingImport(imports, "Arrays");
-        mappingImport(imports, "List");
+            imports.remove("MapperSupport");
+        }
+
+        String jpaVeriable = jpa;
+        if (daoJpaImpl == null || daoJpaImpl.length() == 0) {
+            cxt.setVariable("jpaName", jpa);
+            jpaVeriable = jpa;
+            if (jpaVeriable.startsWith("I"))
+                jpaVeriable = StringUtils.substring(jpaVeriable, 1);
+            cxt.setVariable("jpaVeriable", StringUtils.uncapitalize(jpaVeriable));
+
+            mappingImport(imports, "JpaSupport");
+
+            cxt.setVariable("name", daoJpaImpl);
+            this.writeFile(logFile, daoPath + "/" + JAVA_PATH + daoImplPackage.replace('.', '/'),
+                    daoJpaImpl, JAVA_EXT_NAME,
+                    process(DAOJPAIMPL_TXT_TEMPLATE_NAME, cxt));
+        }
+
+        if (dao != null && dao.length() > 0) {
+            // dao test
+            cxt.clearVariables();
+            imports.clear();
+
+            mappingImport(imports, "test.TestCase");
+            mappingImport(imports, "test.Test");
+            mappingImport(imports, "test.RunWith");
+            mappingImport(imports, "DTO");
+            mappingImport(imports, "NPage");
+            mappingImport(imports, "NSort");
+            mappingImport(imports, "Autowired");
+            mappingImport(imports, "Qualifier");
+            mappingImport(imports, "test.ContextConfiguration");
+            mappingImport(imports, "test.TestExecutionListeners");
+            mappingImport(imports, "test.SpringJUnit4ClassRunner");
+            mappingImport(imports, "test.DependencyInjectionTestExecutionListener");
+            mappingImport(imports, "test.TransactionalTestExecutionListener");
+
+            mappingImport(imports, "ArrayList");
+            mappingImport(imports, "Arrays");
+            mappingImport(imports, "List");
 
 //        mappingImport(imports, dao);
-        mappingImport(imports, po);
+            mappingImport(imports, po);
 
-        cxt.setVariable("author", author);
-        cxt.setVariable("date", new Date());
-        cxt.setVariable("package", daoPackage);
-        cxt.setVariable("imports", imports);
-        cxt.setVariable("name", daoImpl + "Test");
+            String daoImpl = StringUtils.substring(dao, 1);
 
-        cxt.setVariable("poName", po);
-        cxt.setVariable("idType", idType);
-        cxt.setVariable("daoName", dao);
-        cxt.setVariable("daoVeriable", StringUtils.uncapitalize(daoImpl));
+            cxt.setVariable("author", author);
+            cxt.setVariable("date", new Date());
+            cxt.setVariable("package", daoPackage);
+            cxt.setVariable("imports", imports);
+            cxt.setVariable("name", daoImpl + "Test");
 
-        mappingImport(imports, "Arrays");
+            cxt.setVariable("poName", po);
+            cxt.setVariable("idType", idType);
+            cxt.setVariable("daoName", dao);
+            cxt.setVariable("mapperVeriable", StringUtils.uncapitalize(mapperVeriable));
+            cxt.setVariable("jpaVeriable", StringUtils.uncapitalize(jpaVeriable));
 
-        List<String> poSetters = new ArrayList<>();
-        table.getColumns().forEach(c -> {
-            if (c.isCm_())
-                return;
+            mappingImport(imports, "Arrays");
+            mappingImport(imports, "BaseDAOTest");
 
-            poSetters.add("// po.set" + StringUtils.capitalize(c.getField_()) + "(\"" + c.getField_() + "\");");
-        });
-        cxt.setVariable("poSetters", poSetters);
+            List<String> poSetters = new ArrayList<>();
+            table.getColumns().forEach(c -> {
+                if (c.isCm_())
+                    return;
 
-        this.writeFile(logFile, daoPath + "/" + TEST_PATH + daoPackage.replace('.', '/'),
-                daoImpl + "Test", JAVA_EXT_NAME,
-                process(DAO_TEST_TXT_TEMPLATE_NAME, cxt));
+                poSetters.add("// po.set" + StringUtils.capitalize(c.getField_()) + "(\"" + c.getField_() + "\");");
+            });
+            cxt.setVariable("poSetters", poSetters);
+
+            this.writeFile(logFile, daoPath + "/" + TEST_PATH + daoPackage.replace('.', '/'),
+                    daoImpl + "Test", JAVA_EXT_NAME,
+                    process(DAO_TEST_TXT_TEMPLATE_NAME, cxt));
+        }
     }
 
     /**

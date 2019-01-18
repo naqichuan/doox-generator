@@ -40,10 +40,10 @@
         </legend>
         <table border="0" cellpadding="0" cellspacing="0">
             <tr>
-                <td class="lable">BO package:</td>
-                <td>
-                    <input type="text" name="provideBOPackage" class="big_200" value="">
-                </td>
+                <!--<td class="lable">BO package:</td>-->
+                <!--<td>-->
+                    <!--<input type="text" name="provideBOPackage" class="big_200" value="">-->
+                <!--</td>-->
                 <td class="lable">O package:</td>
                 <td>
                     <input type="text" name="provideOPackage" class="big_200" value="">
@@ -54,9 +54,9 @@
                 <td>
                     <input type="text" name="provideProvidePackage" class="big_200" value="">
                 </td>
-                <td class="lable"></td>
-                <td>
-                </td>
+                <!--<td class="lable"></td>-->
+                <!--<td>-->
+                <!--</td>-->
             </tr>
         </table>
         <div id="config_provide_div"></div>
@@ -294,9 +294,9 @@
         _: function () {
             return jQuery('input[name="provide_"]');
         },
-        provideBOPackage: function () {
-            return jQuery('input[name="provideBOPackage"]');
-        },
+        // provideBOPackage: function () {
+        //     return jQuery('input[name="provideBOPackage"]');
+        // },
         provideOPackage: function () {
             return jQuery('input[name="provideOPackage"]');
         },
@@ -313,9 +313,9 @@
             // project pakcage value
             var pValue = project.pPackage().val() || '';
 
-            var pbValue = pValue + '.provide.bo' + (tablePack ? "." + tablePack : "");
-            if (pbValue.indexOf(".") === 0 && pbValue.length > 1)
-                pbValue = pbValue.substring(1);
+            // var pbValue = pValue + '.provide.bo' + (tablePack ? "." + tablePack : "");
+            // if (pbValue.indexOf(".") === 0 && pbValue.length > 1)
+            //     pbValue = pbValue.substring(1);
 
             var poValue = pValue + '.provide.o' + (tablePack ? "." + tablePack : "");
             if (poValue.indexOf(".") === 0 && poValue.length > 1)
@@ -326,7 +326,7 @@
                 ppValue = ppValue.substring(1);
 
             // set value
-            this.provideBOPackage().val(pbValue);
+            // this.provideBOPackage().val(pbValue);
             this.provideOPackage().val(poValue);
             this.provideProvidePackage().val(ppValue);
         },
@@ -345,16 +345,16 @@
             var rowHtml = '';
             var provideName = table.replaceFirstUP();
 
-            rowHtml += '<tr><td class="lable">Create BO:</td><td class="lable">public class</td><td>' +
-                '<input id="privideBO" type="text" name="provideBO" class="big_200" value="' + provideName + 'BO"></td>';
+            // rowHtml += '<tr><td class="lable">Create BO:</td><td class="lable">public class</td><td>' +
+            //     '<input id="privideBO" type="text" name="provideBO" class="big_200" value="' + provideName + 'BO"></td>';
 
-            rowHtml += '<td class="lable">Create O:</td><td class="lable">public class</td><td>' +
+            rowHtml += '<tr><td class="lable">Create O:</td><td class="lable">public class</td><td>' +
                 '<input id="privideO" type="text" name="provideO" class="big_200" value="' + provideName + '"></td></tr>';
 
             rowHtml += '<tr><td class="lable">Create Provide:</td><td class="lable">public interface</td><td>' +
                 '<input id="privideProvide" type="text" name="provideProvide" class="big_200" value="I' + provideName + 'Provide"></td></tr>';
 
-            rowHtml += '<tr><td class="lable"></td><td></td></tr>'
+            // rowHtml += '<tr><td class="lable"></td><td></td></tr>'
 
             return rowHtml;
         },
