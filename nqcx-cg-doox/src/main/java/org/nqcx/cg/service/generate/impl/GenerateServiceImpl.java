@@ -175,10 +175,7 @@ public class GenerateServiceImpl implements GenerateService {
         CLASS_MAPPING.put(g.getDaoMapper(), g.getDaoMapperPackage() + "." + g.getDaoMapper());
         CLASS_MAPPING.put(g.getDaoJpa(), g.getDaoJpaPackage() + "." + g.getDaoJpa());
         CLASS_MAPPING.put(g.getDaoDAO(), g.getDaoDAOPackage() + "." + g.getDaoDAO());
-        CLASS_MAPPING.put(g.getDaoMapperImpl(), g.getDaoDAOPackage() + ".impl." + g.getDaoMapperImpl());
-        CLASS_MAPPING.put(g.getDaoJpaImpl(), g.getDaoDAOPackage() + ".impl." + g.getDaoJpaImpl());
         CLASS_MAPPING.put("BaseDAOTest", g.getpPackage() + ".dao." + "BaseDAOTest");
-
 
         String daoPath = pathMap.get(P_DAO_PATH_KEY);
         if (g.getDao_().isTrue()) {
@@ -186,7 +183,7 @@ public class GenerateServiceImpl implements GenerateService {
                     g.getDaoMapperPackage(), g.getDaoMapper(),
                     g.getDaoJpaPackage(), g.getDaoJpa(),
                     g.getDaoDAOPackage(), g.getDaoDAO(),
-                    g.getDaoDAOPackage() + ".impl", g.getDaoMapperImpl(), g.getDaoJpaImpl());
+                    g.getDaoDAOPackage() + ".impl");
         }
 
         // service
@@ -466,13 +463,11 @@ public class GenerateServiceImpl implements GenerateService {
      * @param daoPackage
      * @param dao
      * @param daoImplPackage
-     * @param daoMapperImpl
-     * @param daoJpaImpl
      */
     private void generateDao(File logFile, String author, Table table, String daoPath, String poPackage, String po,
                              String mapperPackage, String mapper,
                              String jpaPackage, String jpa,
-                             String daoPackage, String dao, String daoImplPackage, String daoMapperImpl, String daoJpaImpl) {
+                             String daoPackage, String dao, String daoImplPackage) {
 
         Context cxt = new Context();
         Set<String> imports = new LinkedHashSet<>();
@@ -516,7 +511,6 @@ public class GenerateServiceImpl implements GenerateService {
                 mappingImport(imports, "GeneratedValue");
                 mappingImport(imports, "GenerationType");
 
-                field.getAnnotations().add("@Override");
                 field.getAnnotations().add("@Id");
                 field.getAnnotations().add("@GeneratedValue(strategy = GenerationType.IDENTITY)");
             }
@@ -579,7 +573,6 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.clearVariables();
         imports.clear();
 
-        mappingImport(imports, "IMapper");
         mappingImport(imports, po);
 
         cxt.setVariable("author", author);
@@ -662,7 +655,6 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.clearVariables();
         imports.clear();
 
-        mappingImport(imports, "IJpa");
         mappingImport(imports, po);
 
         cxt.setVariable("author", author);
@@ -717,96 +709,88 @@ public class GenerateServiceImpl implements GenerateService {
 
         mappingImport(imports, dao);
 
+        cxt.setVariable("mapperName", mapper);
         String mapperVeriable = mapper;
-        if (daoMapperImpl == null || daoMapperImpl.length() == 0) {
-            cxt.setVariable("mapperName", mapper);
-            mapperVeriable = mapper;
-            if (mapperVeriable.startsWith("I"))
-                mapperVeriable = StringUtils.substring(mapperVeriable, 1);
-            cxt.setVariable("mapperVeriable", StringUtils.uncapitalize(mapperVeriable));
+        if (mapperVeriable.startsWith("I"))
+            mapperVeriable = StringUtils.substring(mapperVeriable, 1);
+        cxt.setVariable("mapperVeriable", StringUtils.uncapitalize(mapperVeriable));
 
-            mappingImport(imports, "MapperSupport");
+        mappingImport(imports, "MapperSupport");
 
-            cxt.setVariable("name", daoMapperImpl);
-            this.writeFile(logFile, daoPath + "/" + JAVA_PATH + daoImplPackage.replace('.', '/'),
-                    daoMapperImpl, JAVA_EXT_NAME,
-                    process(DAOMAPPERIMPL_TXT_TEMPLATE_NAME, cxt));
+        cxt.setVariable("name", mapperVeriable);
+        this.writeFile(logFile, daoPath + "/" + JAVA_PATH + daoImplPackage.replace('.', '/'),
+                mapperVeriable, JAVA_EXT_NAME,
+                process(DAOMAPPERIMPL_TXT_TEMPLATE_NAME, cxt));
 
-            imports.remove("MapperSupport");
-        }
+        imports.remove("MapperSupport");
 
+        cxt.setVariable("jpaName", jpa);
         String jpaVeriable = jpa;
-        if (daoJpaImpl == null || daoJpaImpl.length() == 0) {
-            cxt.setVariable("jpaName", jpa);
-            jpaVeriable = jpa;
-            if (jpaVeriable.startsWith("I"))
-                jpaVeriable = StringUtils.substring(jpaVeriable, 1);
-            cxt.setVariable("jpaVeriable", StringUtils.uncapitalize(jpaVeriable));
+        if (jpaVeriable.startsWith("I"))
+            jpaVeriable = StringUtils.substring(jpaVeriable, 1);
+        cxt.setVariable("jpaVeriable", StringUtils.uncapitalize(jpaVeriable));
 
-            mappingImport(imports, "JpaSupport");
+        mappingImport(imports, "JpaSupport");
 
-            cxt.setVariable("name", daoJpaImpl);
-            this.writeFile(logFile, daoPath + "/" + JAVA_PATH + daoImplPackage.replace('.', '/'),
-                    daoJpaImpl, JAVA_EXT_NAME,
-                    process(DAOJPAIMPL_TXT_TEMPLATE_NAME, cxt));
-        }
+        cxt.setVariable("name", jpaVeriable);
+        this.writeFile(logFile, daoPath + "/" + JAVA_PATH + daoImplPackage.replace('.', '/'),
+                jpaVeriable, JAVA_EXT_NAME,
+                process(DAOJPAIMPL_TXT_TEMPLATE_NAME, cxt));
 
-        if (dao != null && dao.length() > 0) {
-            // dao test
-            cxt.clearVariables();
-            imports.clear();
+        // dao test
+        cxt.clearVariables();
+        imports.clear();
 
 //            mappingImport(imports, "test.TestCase");
-            mappingImport(imports, "test.Test");
+        mappingImport(imports, "test.Test");
 //            mappingImport(imports, "test.RunWith");
-            mappingImport(imports, "DTO");
-            mappingImport(imports, "NPage");
-            mappingImport(imports, "NSort");
-            mappingImport(imports, "Autowired");
-            mappingImport(imports, "Qualifier");
+        mappingImport(imports, "DTO");
+        mappingImport(imports, "NPage");
+        mappingImport(imports, "NSort");
+        mappingImport(imports, "Autowired");
+        mappingImport(imports, "Qualifier");
 //            mappingImport(imports, "test.ContextConfiguration");
 //            mappingImport(imports, "test.TestExecutionListeners");
 //            mappingImport(imports, "test.SpringJUnit4ClassRunner");
 //            mappingImport(imports, "test.DependencyInjectionTestExecutionListener");
 //            mappingImport(imports, "test.TransactionalTestExecutionListener");
 
-            mappingImport(imports, "ArrayList");
-            mappingImport(imports, "Arrays");
-            mappingImport(imports, "List");
+        mappingImport(imports, "ArrayList");
+        mappingImport(imports, "Arrays");
+        mappingImport(imports, "List");
 
 //        mappingImport(imports, dao);
-            mappingImport(imports, po);
+        mappingImport(imports, po);
 
-            String daoImpl = StringUtils.substring(dao, 1);
+        String daoImpl = StringUtils.substring(dao, 1);
 
-            cxt.setVariable("author", author);
-            cxt.setVariable("date", new Date());
-            cxt.setVariable("package", daoPackage);
-            cxt.setVariable("imports", imports);
-            cxt.setVariable("name", daoImpl + "Test");
+        cxt.setVariable("author", author);
+        cxt.setVariable("date", new Date());
+        cxt.setVariable("package", daoPackage);
+        cxt.setVariable("imports", imports);
+        cxt.setVariable("name", daoImpl + "Test");
 
-            cxt.setVariable("poName", po);
-            cxt.setVariable("idType", idType);
-            cxt.setVariable("daoName", dao);
-            cxt.setVariable("mapperVeriable", StringUtils.uncapitalize(mapperVeriable));
-            cxt.setVariable("jpaVeriable", StringUtils.uncapitalize(jpaVeriable));
+        cxt.setVariable("poName", po);
+        cxt.setVariable("idType", idType);
+        cxt.setVariable("daoName", dao);
+        cxt.setVariable("mapperVeriable", StringUtils.uncapitalize(mapperVeriable));
+        cxt.setVariable("jpaVeriable", StringUtils.uncapitalize(jpaVeriable));
 
-            mappingImport(imports, "Arrays");
-            mappingImport(imports, "BaseDAOTest");
+        mappingImport(imports, "Arrays");
+        mappingImport(imports, "BaseDAOTest");
 
-            List<String> poSetters = new ArrayList<>();
-            table.getColumns().forEach(c -> {
-                if (c.isCm_())
-                    return;
+        List<String> poSetters = new ArrayList<>();
+        table.getColumns().forEach(c -> {
+            if (c.isCm_())
+                return;
 
-                poSetters.add("// po.set" + StringUtils.capitalize(c.getField_()) + "(\"" + c.getField_() + "\");");
-            });
-            cxt.setVariable("poSetters", poSetters);
+            poSetters.add("// po.set" + StringUtils.capitalize(c.getField_()) + "(\"" + c.getField_() + "\");");
+        });
+        cxt.setVariable("poSetters", poSetters);
 
-            this.writeFile(logFile, daoPath + "/" + TEST_PATH + daoPackage.replace('.', '/'),
-                    daoImpl + "Test", JAVA_EXT_NAME,
-                    process(DAO_TEST_TXT_TEMPLATE_NAME, cxt));
-        }
+        this.writeFile(logFile, daoPath + "/" + TEST_PATH + daoPackage.replace('.', '/'),
+                daoImpl + "Test", JAVA_EXT_NAME,
+                process(DAO_TEST_TXT_TEMPLATE_NAME, cxt));
     }
 
     /**

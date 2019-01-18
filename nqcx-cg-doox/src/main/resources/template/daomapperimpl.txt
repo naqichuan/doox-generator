@@ -14,9 +14,7 @@ import [(${import})];
 @Service
 public class [(${name})] extends MapperSupport<[(${poName})], [(${idType})]> implements [(${daoName})]<[(${poName})], [(${idType})]> {
 
-    private final [(${mapperName})]<[(${poName})], [(${idType})]> [(${mapperVeriable})];
-
-    public [(${name})]([(${mapperName})]<[(${poName})], [(${idType})]> [(${mapperVeriable})]) {
-        this.[(${mapperVeriable})] = [(${mapperVeriable})];
+    public [(${name})]([(${mapperName})] [(${mapperVeriable})]) {
+        super([(${mapperVeriable})]);
     }
 }
