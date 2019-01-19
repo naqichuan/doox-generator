@@ -14,7 +14,8 @@ import [(${import})];
 @Service
 public class [(${name})] extends ServiceSupport<[(${daoName})], [(${poName})], [(${idType})]> implements [(${serviceName})] {
 
-    public [(${name})]([(${daoName})] [(${daoVeriable})]) {
-        super([(${daoVeriable})]);
+    public [(${name})](@Qualifier("[(${mapperVeriable})]") [(${daoName})] [(${mapperVeriable})],
+                       @Qualifier("[(${jpaVeriable})]") [(${daoName})] [(${jpaVeriable})]) {
+        super([(${mapperVeriable})]);
     }
 }

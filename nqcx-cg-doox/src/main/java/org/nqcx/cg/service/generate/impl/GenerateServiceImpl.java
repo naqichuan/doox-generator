@@ -188,7 +188,7 @@ public class GenerateServiceImpl implements GenerateService {
         if (g.getService_().isTrue()) {
             this.generateService(cgLogFile, g.getAuthor(), table, servicePath, g.getServiceDOPackage(), g.getServiceDO(),
                     g.getServiceServicePackage(), g.getServiceService(), g.getServiceServicePackage() + ".impl", g.getServceServiceImpl(),
-                    g.getProvideProvide(), g.getDaoDAO(), g.getDaoPO());
+                    g.getProvideProvide(), g.getDaoDAO(), g.getDaoMapper(), g.getDaoJpa(), g.getDaoPO());
         }
 
         // web
@@ -737,12 +737,13 @@ public class GenerateServiceImpl implements GenerateService {
      * @param serviceImplPackage
      * @param serviceImpl
      * @param provideName
-     * @param daoName
+     * @param mapperName
+     * @param jpaName
      * @param poName
      */
     private void generateService(File logFile, String author, Table table, String servicePath, String dtoPackage, String do_,
                                  String servicePackage, String service, String serviceImplPackage, String serviceImpl,
-                                 String provideName, String daoName, String poName) {
+                                 String provideName, String daoName, String mapperName, String jpaName, String poName) {
 
         Context cxt = new Context();
         Set<String> imports = new LinkedHashSet<>();
@@ -795,12 +796,13 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.clearVariables();
         imports.clear();
 
-        mappingImport(imports, "stereotype.Service");
-        mappingImport(imports, "IDao");
         mappingImport(imports, daoName);
+        mappingImport(imports, mapperName);
+        mappingImport(imports, poName);
         mappingImport(imports, service);
         mappingImport(imports, "ServiceSupport");
-        mappingImport(imports, poName);
+        mappingImport(imports, "Qualifier");
+        mappingImport(imports, "stereotype.Service");
 
         cxt.setVariable("author", author);
         cxt.setVariable("date", new Date());
@@ -812,10 +814,14 @@ public class GenerateServiceImpl implements GenerateService {
         cxt.setVariable("poName", poName);
         cxt.setVariable("serviceName", service);
         cxt.setVariable("daoName", daoName);
-        String daoVeriable = daoName;
-        if (daoVeriable.startsWith("I"))
-            daoVeriable = StringUtils.substring(daoVeriable, 1);
-        cxt.setVariable("daoVeriable", StringUtils.uncapitalize(daoVeriable));
+        String mapperVeriable = mapperName;
+        if (mapperVeriable.startsWith("I"))
+            mapperVeriable = StringUtils.substring(mapperVeriable, 1);
+        cxt.setVariable("mapperVeriable", StringUtils.uncapitalize(mapperVeriable));
+        String jpaVeriable = jpaName;
+        if (jpaVeriable.startsWith("I"))
+            jpaVeriable = StringUtils.substring(jpaVeriable, 1);
+        cxt.setVariable("jpaVeriable", StringUtils.uncapitalize(jpaVeriable));
 
         this.writeFile(logFile, servicePath + "/" + JAVA_PATH + serviceImplPackage.replace('.', '/'),
                 serviceImpl, JAVA_EXT_NAME,
