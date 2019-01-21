@@ -656,7 +656,9 @@ public class GenerateServiceImpl implements GenerateService {
                     package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoJpaPackage()),
                     g.getDaoJpa(), JAVA_EXT_NAME,
                     process(JPA_TXT_TEMPLATE_NAME, cxt));
+        }
 
+        if (g.getDaoDAO_().isTrue()) {
             // dao
             baseVariable(cxt, imports, g.getAuthor(), g.getDaoDAOPackage(), g.getDaoDAO());
 
