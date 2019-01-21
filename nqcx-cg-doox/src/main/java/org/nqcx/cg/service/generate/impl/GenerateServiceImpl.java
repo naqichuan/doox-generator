@@ -358,6 +358,8 @@ public class GenerateServiceImpl implements GenerateService {
 
         CLASS_MAPPING.put(g.getWebVO(), g.getWebVOReference());
         CLASS_MAPPING.put(g.getWebController(), g.getWebControllerReference());
+
+        CLASS_MAPPING.put(g.getWebAbstractController(), g.getWebAbstractControllerReference());
     }
 
     /**
