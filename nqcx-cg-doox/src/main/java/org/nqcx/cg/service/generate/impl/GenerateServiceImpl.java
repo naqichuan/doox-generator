@@ -722,6 +722,7 @@ public class GenerateServiceImpl implements GenerateService {
             baseTestImport(imports);
 
             mappingImport(imports, "Qualifier");
+            mappingImport(imports, g.getDaoPO());
             mappingImport(imports, g.getDaoBaseTest());
 
             cxt.setVariable("daoName", g.getDaoDAO());
@@ -753,8 +754,6 @@ public class GenerateServiceImpl implements GenerateService {
         mappingImport(imports, "ArrayList");
         mappingImport(imports, "Arrays");
         mappingImport(imports, "List");
-
-        mappingImport(imports, "Optional");
     }
 
     /**
@@ -831,6 +830,7 @@ public class GenerateServiceImpl implements GenerateService {
 
             baseTestImport(imports);
 
+            mappingImport(imports, "Optional");
             mappingImport(imports, g.getDaoPO());
             mappingImport(imports, g.getServiceBaseTest());
 
