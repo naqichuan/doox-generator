@@ -724,6 +724,7 @@ public class GenerateServiceImpl implements GenerateService {
             mappingImport(imports, "Qualifier");
             mappingImport(imports, g.getDaoPO());
             mappingImport(imports, g.getDaoBaseTest());
+            mappingImport(imports, g.getDaoDAO());
 
             cxt.setVariable("daoName", g.getDaoDAO());
             cxt.setVariable("mapperVeriable", g.getDaoMapperVeriable());
