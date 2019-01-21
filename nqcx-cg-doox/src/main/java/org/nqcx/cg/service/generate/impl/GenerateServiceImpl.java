@@ -466,6 +466,7 @@ public class GenerateServiceImpl implements GenerateService {
      */
     private String package2path(String modulePath, String resoucesPath, String _package) {
         return StringUtils.trimToEmpty(modulePath)
+                + "/"
                 + StringUtils.trimToEmpty(resoucesPath)
                 + _package.replace('.', '/');
     }
