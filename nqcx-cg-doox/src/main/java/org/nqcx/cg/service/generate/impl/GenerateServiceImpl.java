@@ -299,8 +299,8 @@ public class GenerateServiceImpl implements GenerateService {
         g.setDaoBaseTestPackage(g.getpPackage() + ".dao");
         g.setDaoBaseTest("BaseDAOTest");
         g.setDaoBaseTestReference(g.getDaoBaseTestPackage() + "." + g.getDaoBaseTest());
-        g.setDaoDAOTestPackage(g.getDaoDAOPackage());
-        g.setDaoDAOTest(g.getDaoDAO() + "Test");
+        g.setDaoDAOTestPackage(g.getDaoDAOTestPackage());
+        g.setDaoDAOTest(g.getDaoDAOTest());
 
         g.setServiceDOReference(g.getServiceDOPackage() + "." + g.getServiceDO());
         g.setServiceDOVeriable(StringUtils.uncapitalize(g.getServiceDO()));
@@ -311,8 +311,8 @@ public class GenerateServiceImpl implements GenerateService {
         g.setServiceBaseTestPackage(g.getpPackage() + ".service");
         g.setServiceBaseTest("BaseServiceTest");
         g.setServiceBaseTestReference(g.getServiceBaseTestPackage() + "." + g.getServiceBaseTest());
-        g.setServiceServiceTestPackage(g.getServiceServicePackage());
-        g.setServiceServiceTest(g.getServiceService() + "Test");
+        g.setServiceServiceTestPackage(g.getServiceServiceTestPackage());
+        g.setServiceServiceTest(g.getServiceServiceTest());
 
         g.setWebVOReference(g.getWebVOPackage() + "." + g.getWebVO());
         g.setWebVOVeriable(StringUtils.uncapitalize(g.getWebVO()));
