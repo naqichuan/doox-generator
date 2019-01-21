@@ -42,21 +42,28 @@
             <tr>
                 <!--<td class="lable">BO package:</td>-->
                 <!--<td>-->
-                    <!--<input type="text" name="provideBOPackage" class="big_200" value="">-->
+                <!--<input type="text" name="provideBOPackage" class="big_200" value="">-->
                 <!--</td>-->
-                <td class="lable">O package:</td>
+                <td class="lable"><input type="checkbox" name="provideO_" value="true"></td>
+                <td class="lable">Create O:</td>
                 <td>
-                    <input type="text" name="provideOPackage" class="big_200" value="">
+                    <input type="text" name="provideOPackage" class="big_240 right" value="">
+                </td>
+                <td class="lable">.</td>
+                <td>
+                    <input type="text" name="provideO" class="big_200" value="">
                 </td>
             </tr>
             <tr>
-                <td class="lable">Module provide package:</td>
+                <td class="lable"><input type="checkbox" name="provideProvide_" value="true"></td>
+                <td class="lable">Create Provide:</td>
                 <td>
-                    <input type="text" name="provideProvidePackage" class="big_200" value="">
+                    <input type="text" name="provideProvidePackage" class="big_240 right" value="">
                 </td>
-                <!--<td class="lable"></td>-->
-                <!--<td>-->
-                <!--</td>-->
+                <td class="lable">.</td>
+                <td>
+                    <input type="text" name="provideProvide" class="big_200" value="">
+                </td>
             </tr>
         </table>
         <div id="config_provide_div"></div>
@@ -241,7 +248,7 @@
             rowHtml += '<td><input id="pojoColumn_' + field + '" type="text" name="pojoColumn" class="big_200" value="' + field + '" readonly="true" /></td>';
             rowHtml += '<td>' + type + '</td>';
             rowHtml += '<td><input id="pojoField_' + field + '" type="text" name="pojoField" class="big_200" value="' + field_ + '" onkeyup="tableInfo.show1(\'' + field + '\')" onafterpaste="tableInfo.show1(\'' + field + '\')" onblur="tableInfo.show1(\'' + field + '\')" /></td>';
-            rowHtml += '<td><input id="pojoType_' + field + '" type="text" name="pojoType" class="big_200" value="' + type_ + '" onkeyup="tableInfo.show1(\'' + field + '\')" onafterpaste="tableInfo.show1(\'' + field + '\')" onblur="tableInfo.show1(\'' + field + '\')" /></td>';
+            rowHtml += '<td><input id="pojoType_' + field + '" type="text" name="pojoType" class="big" value="' + type_ + '" onkeyup="tableInfo.show1(\'' + field + '\')" onafterpaste="tableInfo.show1(\'' + field + '\')" onblur="tableInfo.show1(\'' + field + '\')" /></td>';
             rowHtml += '<td><span id="jojoText_' + field + '">' + show + '</span></td>';
 
             return rowHtml;
@@ -298,20 +305,34 @@
         //     return jQuery('input[name="provideBOPackage"]');
         // },
         provideOPackage: function () {
-            return jQuery('input[name="provideOPackage"]');
+            return $('input[name="provideOPackage"]');
+        },
+        provideO: function () {
+            return $('input[name="provideO"]');
         },
         provideProvidePackage: function () {
-            return jQuery('input[name="provideProvidePackage"]');
+            return $('input[name="provideProvidePackage"]');
+        },
+        provideProvide: function () {
+            return $('input[name="provideProvide"]');
         },
         projectInit: function () {
             this.loadPackage();
-            this.config();
+            // this.config();
         },
         loadPackage: function () {
+            // project package value
+            var pValue = project.pPackage().val() || '';
+
             var tablePack = table.tablePack().val();
 
-            // project pakcage value
-            var pValue = project.pPackage().val() || '';
+            var tableName = table.tableName().val();
+            if (!tableName)
+                return;
+
+            var provideName = tableName.replaceFirstUP();
+            var provideO = provideName;
+            var provideProvide = 'I' + provideName + 'Provide';
 
             // var pbValue = pValue + '.provide.bo' + (tablePack ? "." + tablePack : "");
             // if (pbValue.indexOf(".") === 0 && pbValue.length > 1)
@@ -328,36 +349,45 @@
             // set value
             // this.provideBOPackage().val(pbValue);
             this.provideOPackage().val(poValue);
+            this.provideO().val(provideO);
+
             this.provideProvidePackage().val(ppValue);
+            this.provideProvide().val(provideProvide);
         },
-        config: function () {
-            var tableName = table.tableName().val();
-            if (!tableName)
-                return;
-
-            var provideHtml = '<hr />';
-            provideHtml += '<table border="0" cellpadding="0" cellspacing="0">';
-            provideHtml += this.row(tableName);
-            provideHtml += '</table>';
-            this.projectDiv().html(provideHtml);
-        },
-        row: function (table) {
-            var rowHtml = '';
-            var provideName = table.replaceFirstUP();
-
-            // rowHtml += '<tr><td class="lable">Create BO:</td><td class="lable">public class</td><td>' +
-            //     '<input id="privideBO" type="text" name="provideBO" class="big_200" value="' + provideName + 'BO"></td>';
-
-            rowHtml += '<tr><td class="lable">Create O:</td><td class="lable">public class</td><td>' +
-                '<input id="privideO" type="text" name="provideO" class="big_200" value="' + provideName + '"></td></tr>';
-
-            rowHtml += '<tr><td class="lable">Create Provide:</td><td class="lable">public interface</td><td>' +
-                '<input id="privideProvide" type="text" name="provideProvide" class="big_200" value="I' + provideName + 'Provide"></td></tr>';
-
-            // rowHtml += '<tr><td class="lable"></td><td></td></tr>'
-
-            return rowHtml;
-        },
+        // config: function () {
+        //     var tableName = table.tableName().val();
+        //     if (!tableName)
+        //         return;
+        //
+        //     var provideHtml = '<hr />';
+        //     provideHtml += '<table border="0" cellpadding="0" cellspacing="0">';
+        //     provideHtml += this.row(tableName);
+        //     provideHtml += '</table>';
+        //     this.projectDiv().html(provideHtml);
+        // },
+        // row: function (table) {
+        //     // var rowHtml = '';
+        //     var provideName = table.replaceFirstUP();
+        //     var provideO = provideName;
+        //     var provideProvide = 'I' + provideName + 'Provide';
+        //
+        //     this.provideO().val(provideO);
+        //     this.provideProvide().val(provideProvide);
+        //
+        //
+        //     // // rowHtml += '<tr><td class="lable">Create BO:</td><td class="lable">public class</td><td>' +
+        //     // //     '<input id="provideBO" type="text" name="provideBO" class="big_200" value="' + provideName + 'BO"></td>';
+        //     //
+        //     // rowHtml += '<tr><td class="lable">Create O:</td><td class="lable">public class</td><td>' +
+        //     //     '<input id="provideO" type="text" name="provideO" class="big_200" value="' + provideName + '"></td></tr>';
+        //     //
+        //     // rowHtml += '<tr><td class="lable">Create Provide:</td><td class="lable">public interface</td><td>' +
+        //     //     '<input id="provideProvide" type="text" name="provideProvide" class="big_200" value="I' + provideName + 'Provide"></td></tr>';
+        //     //
+        //     // // rowHtml += '<tr><td class="lable"></td><td></td></tr>'
+        //     //
+        //     // return rowHtml;
+        // },
 
     };
 </script>
