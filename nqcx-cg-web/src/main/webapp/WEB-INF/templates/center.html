@@ -144,17 +144,50 @@
         </legend>
         <table border="0" cellpadding="0" cellspacing="0">
             <tr>
-                <td class="lable">DTO package:</td>
+                <td class="lable"><input type="checkbox" name="serviceDO_" value="true"></td>
+                <td class="lable">Create DO:</td>
                 <td>
-                    <input type="text" name="serviceDOPackage" class="big_200" value="">
+                    <input type="text" name="serviceDOPackage" class="big_240 right" value="">
                 </td>
-                <td class="lable">Service package:</td>
+                <td class="lable">.</td>
                 <td>
-                    <input type="text" name="serviceServicePackage" class="big_200" value="">
+                    <input type="text" name="serviceDO" class="big_200" value="">
+                </td>
+            </tr>
+            <tr>
+                <td class="lable"><input type="checkbox" name="serviceService_" value="true"></td>
+                <td class="lable">Create Service:</td>
+                <td>
+                    <input type="text" name="serviceServicePackage" class="big_240 right" value="">
+                </td>
+                <td class="lable">.</td>
+                <td>
+                    <input type="text" name="serviceService" class="big_200" value="">
+                </td>
+            </tr>
+            <tr>
+                <td class="lable"><input type="checkbox" name="serviceServiceImpl_" value="true"></td>
+                <td class="lable">Create ServiceImpl:</td>
+                <td>
+                    <input type="text" name="serviceServiceImplPackage" class="big_240 right" value="">
+                </td>
+                <td class="lable">.</td>
+                <td>
+                    <input type="text" name="serviceServiceImpl" class="big_200" value="">
+                </td>
+            </tr>
+            <tr>
+                <td class="lable"><input type="checkbox" name="serviceServiceTest_" value="true"></td>
+                <td class="lable">Create ServiceTest:</td>
+                <td>
+                    <input type="text" name="serviceServiceTestPackage" class="big_240 right" value="">
+                </td>
+                <td class="lable">.</td>
+                <td>
+                    <input type="text" name="serviceServiceTest" class="big_200" value="">
                 </td>
             </tr>
         </table>
-        <div id="config_service_div"></div>
     </fieldset>
     <br/> <br/>
     <fieldset>
@@ -352,7 +385,6 @@
         },
         projectInit: function () {
             this.loadPackage();
-            // this.config();
         },
         loadPackage: function () {
             // project package value
@@ -445,7 +477,7 @@
             var daoJpa = 'I' + daoName + 'Jpa';
             var daoDao = 'I' + daoName + 'DAO';
             var daoDaoImpl = daoName + 'DAO';
-            var daoTest = daoName + 'DAOTest';
+            var daoTest = daoDaoImpl + 'Test';
 
             var poValue = pValue + '.data.po' + (tablePack ? "." + tablePack : "");
             if (poValue.indexOf(".") === 0 && poValue.length > 1)
@@ -489,27 +521,52 @@
 </script>
 <script type="text/javascript">
     var service = {
-        projectDiv: function () {
-            return jQuery('#config_service_div');
-        },
         _: function () {
             return jQuery('input[name="service_"]');
         },
         serviceDOPackage: function () {
             return jQuery('input[name="serviceDOPackage"]');
         },
+        serviceDO: function () {
+            return jQuery('input[name="serviceDO"]');
+        },
         serviceServicePackage: function () {
             return jQuery('input[name="serviceServicePackage"]');
         },
+        serviceService: function () {
+            return jQuery('input[name="serviceService"]');
+        },
+        serviceImplPackage: function () {
+            return jQuery('input[name="serviceServiceImplPackage"]');
+        },
+        serviceImpl: function () {
+            return jQuery('input[name="serviceServiceImpl"]');
+        },
+        serviceTestPackage: function () {
+            return jQuery('input[name="serviceServiceTestPackage"]');
+        },
+        serviceTest: function () {
+            return jQuery('input[name="serviceServiceTest"]');
+        },
         projectInit: function () {
             this.loadPackage();
-            this.config();
+            // this.config();
         },
         loadPackage: function () {
-            var tablePack = table.tablePack().val();
-
             // project pakcage value
             var pValue = project.pPackage().val() || '';
+
+            var tablePack = table.tablePack().val();
+
+            var tableName = table.tableName().val();
+            if (!tableName)
+                return;
+
+            var serviceName = tableName.replaceFirstUP();
+            var serviceDO = serviceName + "DO";
+            var serviceService = 'I' + serviceName + "Service";
+            var serviceServiceImpl = serviceName + "Service"
+            var serviceServiceTest = serviceServiceImpl + "Test"
 
             var sdValue = pValue + '.data.do_' + (tablePack ? "." + tablePack : "");
             if (sdValue.indexOf(".") === 0 && sdValue.length > 1)
@@ -519,37 +576,23 @@
             if (ssValue.indexOf(".") === 0 && ssValue.length > 1)
                 ssValue = ssValue.substring(1);
 
+            var ssiValue = ssValue + '.impl';
+            if (ssiValue.indexOf(".") === 0 && ssiValue.length > 1)
+                ssiValue = ssiValue.substring(1);
+
+            var sstValue = pValue + '.service' + (tablePack ? "." + tablePack : "");
+            if (sstValue.indexOf(".") === 0 && sstValue.length > 1)
+                sstValue = sstValue.substring(1);
+
             // set value
             this.serviceDOPackage().val(sdValue);
+            this.serviceDO().val(serviceDO);
             this.serviceServicePackage().val(ssValue);
-        },
-        config: function () {
-            var tableName = table.tableName().val();
-            if (!tableName)
-                return;
-
-            var serviceHtml = '<hr />';
-            serviceHtml += '<table border="0" cellpadding="0" cellspacing="0">';
-            serviceHtml += this.row(tableName)
-            serviceHtml += '</table>';
-            this.projectDiv().html(serviceHtml);
-        },
-        row: function (table) {
-            var rowHtml = '';
-            var serviceName = table.replaceFirstUP();
-
-            rowHtml += '<tr><td class="lable">Create DO:</td><td class="lable">public class</td><td>' +
-                '<input id="serviceDO" type="text" name="serviceDO" class="big_200" value="' + serviceName + 'DO"/></td>';
-
-            rowHtml += '<td class="lable">Create IService:</td><td class="lable">public interface</td><td>' +
-                '<input id="serviceService" type="text" name="serviceService" class="big_200" value="I' + serviceName + 'Service"/></td></tr>';
-
-            rowHtml += '<tr><td class="lable">Create IService impl:</td><td class="lable">public class</td><td>' +
-                '<input id="serviceServiceImpl" type="text" name="serviceServiceImpl" class="big_200" value="' + serviceName + 'Service"/></td>';
-
-            rowHtml += '<tr><td class="lable"></td><td></td></tr>'
-
-            return rowHtml;
+            this.serviceService().val(serviceService);
+            this.serviceImplPackage().val(ssiValue);
+            this.serviceImpl().val(serviceServiceImpl);
+            this.serviceTestPackage().val(sstValue);
+            this.serviceTest().val(serviceServiceTest);
         }
     };
 

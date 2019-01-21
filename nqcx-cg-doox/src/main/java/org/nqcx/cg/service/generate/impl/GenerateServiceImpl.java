@@ -843,7 +843,7 @@ public class GenerateServiceImpl implements GenerateService {
             this.testSetter(g, cxt);
 
             this.writeFile(g.getLogFile(),
-                    package2path(g.getServiceModuleFile().getPath(), JAVA_PATH, g.getServiceServiceTestPackage()),
+                    package2path(g.getServiceModuleFile().getPath(), TEST_PATH, g.getServiceServiceTestPackage()),
                     g.getServiceServiceTest(), JAVA_EXT_NAME,
                     process(SERVICETEST_TXT_TEMPLATE_NAME, cxt));
             // end of service test
