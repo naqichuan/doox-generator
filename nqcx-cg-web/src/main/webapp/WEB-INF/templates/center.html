@@ -196,17 +196,28 @@
         </legend>
         <table border="0" cellpadding="0" cellspacing="0">
             <tr>
-                <td class="lable">VO package:</td>
+                <td class="lable"><input type="checkbox" name="webVO_" value="true"></td>
+                <td class="lable">Create VO:</td>
                 <td>
-                    <input type="text" name="webVOPackage" class="big_200" value="">
+                    <input type="text" name="webVOPackage" class="big_240 right" value="">
                 </td>
-                <td class="lable">Controller package:</td>
+                <td class="lable">.</td>
                 <td>
-                    <input type="text" name="webControllerPackage" class="big_200" value="">
+                    <input type="text" name="webVO" class="big_200" value="">
+                </td>
+            </tr>
+            <tr>
+                <td class="lable"><input type="checkbox" name="webController_" value="true"></td>
+                <td class="lable">Create Controller:</td>
+                <td>
+                    <input type="text" name="webControllerPackage" class="big_240 right" value="">
+                </td>
+                <td class="lable">.</td>
+                <td>
+                    <input type="text" name="webController" class="big_200" value="">
                 </td>
             </tr>
         </table>
-        <div id="config_web_div"></div>
     </fieldset>
     <br/>
     <input id="generate_btn" type="button" value="Generate Code"
@@ -599,27 +610,38 @@
 </script>
 <script type="text/javascript">
     var web = {
-        projectDiv: function () {
-            return jQuery('#config_web_div');
-        },
         _: function () {
             return jQuery('input[name="web_"]');
         },
         webVOPackage: function () {
             return jQuery('input[name="webVOPackage"]');
         },
+        webVO: function () {
+            return jQuery('input[name="webVO"]');
+        },
         webControllerPackage: function () {
             return jQuery('input[name="webControllerPackage"]');
+        },
+        webController: function () {
+            return jQuery('input[name="webController"]');
         },
         projectInit: function () {
             this.loadPackage();
             this.config();
         },
         loadPackage: function () {
-            var tablePack = table.tablePack().val();
-
             // project pakcage value
             var pValue = project.pPackage().val() || '';
+
+            var tablePack = table.tablePack().val();
+
+            var tableName = table.tableName().val();
+            if (!tableName)
+                return;
+
+            var webName = tableName.replaceFirstUP();
+            var webVO = webName + "VO";
+            var webController = webName + "Controller";
 
             var wvValue = pValue + '.data.vo' + (tablePack ? "." + tablePack : "");
             if (wvValue.indexOf(".") === 0 && wvValue.length > 1)
@@ -631,30 +653,9 @@
 
             // set value
             this.webVOPackage().val(wvValue);
+            this.webVO().val(webVO);
             this.webControllerPackage().val(wcValue);
-        },
-        config: function () {
-            var tableName = table.tableName().val();
-            if (!tableName)
-                return;
-
-            var webHtml = '<hr />';
-            webHtml += '<table border="0" cellpadding="0" cellspacing="0">';
-            webHtml += this.row(tableName)
-            webHtml += '</table>';
-            this.projectDiv().html(webHtml);
-        },
-        row: function (table) {
-            var rowHtml = '';
-            var webName = table.replaceFirstUP();
-
-            rowHtml += '<tr><td class="lable">Create VO:</td><td class="lable">public class</td><td>' +
-                '<input id="webVO" type="text" name="webVO" class="big_200" value="' + webName + 'VO"/></td>';
-
-            rowHtml += '<td class="lable">Create Controller:</td><td class="lable">public interface</td><td>' +
-                '<input id="webController" type="text" name="webController" class="big_200" value="' + webName + 'Controller"/></td></tr>';
-
-            return rowHtml;
+            this.webController().val(webController);
         }
     };
 </script>
