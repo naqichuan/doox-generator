@@ -263,7 +263,7 @@
             var prefix = table.colPrefix().val();
             var ps = prefix.split(',');
             if (ps != null && ps.length > 0) {
-                for (idx in ps) {
+                for (var idx in ps) {
                     if (!ps[idx])
                         continue;
                     input = input.replace(ps[idx], '');
@@ -537,7 +537,7 @@
                 '<input id="serviceService" type="text" name="serviceService" class="big_200" value="I' + serviceName + 'Service"/></td></tr>';
 
             rowHtml += '<tr><td class="lable">Create IService impl:</td><td class="lable">public class</td><td>' +
-                '<input id="servceServiceImpl" type="text" name="servceServiceImpl" class="big_200" value="' + serviceName + 'Service"/></td>';
+                '<input id="serviceServiceImpl" type="text" name="serviceServiceImpl" class="big_200" value="' + serviceName + 'Service"/></td>';
 
             rowHtml += '<tr><td class="lable"></td><td></td></tr>'
 

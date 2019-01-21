@@ -52,7 +52,6 @@ public class GenerateServiceImpl implements GenerateService {
     private final static String JAVA_EXT_NAME = ".java";
     private final static String XML_EXT_NAME = ".xml";
 
-    private final static String BO_TXT_TEMPLATE_NAME = "bo.txt";
     private final static String O_TXT_TEMPLATE_NAME = "o.txt";
     private final static String PROVIDE_TXT_TEMPLATE_NAME = "provide.txt";
     private final static String PO_TXT_TEMPLATE_NAME = "po.txt";
@@ -70,10 +69,10 @@ public class GenerateServiceImpl implements GenerateService {
     private final static String VO_TXT_TEMPLATE_NAME = "vo.txt";
     private final static String CONTROLLER_TXT_TEMPLATE_NAME = "controller.txt";
 
-    private final static String P_PROVIDE_PATH_KEY = "provideModule";
-    private final static String P_DAO_PATH_KEY = "daoModule";
-    private final static String P_SERVICE_PATH_KEY = "serviceModule";
-    private final static String P_WEB_PATH_KEY = "webModule";
+//    private final static String P_PROVIDE_PATH_KEY = "provideModule";
+//    private final static String P_DAO_PATH_KEY = "daoModule";
+//    private final static String P_SERVICE_PATH_KEY = "serviceModule";
+//    private final static String P_WEB_PATH_KEY = "webModule";
 
     @Autowired
     @Qualifier("overwrite")
@@ -132,84 +131,71 @@ public class GenerateServiceImpl implements GenerateService {
         if (g == null)
             return new DTO(false).putResult("100", "生成代码失败！");
 
-        if (!pPathExist(g.getWsPath(), g.getpPath()))
+        if (!pathExist(g.getWsPath() + g.getpPath()))
             return new DTO(false).putResult("101", "工程路径不存在");
-
-        // 写入空行到日志
-        File cgLogFile = new File(g.getWsPath() + g.getpPath() + "/cglog.log");
-        if (cgLogFile.exists())
-            this.writeLog(cgLogFile, "");
 
         // 取表
         DTO trd = tableService.getTable(g.getTableName());
         Table table;
         if (trd == null || !trd.isSuccess() || (table = trd.getObject()) == null)
             return new DTO(false).putResult("102", "表不存在！");
-        fillPojo(table, g.getPojoColumn(), g.getPojoField(), g.getPojoType());
+        g.setTable(table);
 
-        // 生成 module path
-        Map<String, String> pathMap = this.getPathString(g.getWsPath(), g.getpPath(), g.getProvideModule(),
-                g.getDaoModule(), g.getServiceModule(), g.getWebModule());
+        // 初始化
+        if (!this.generateInit(g))
+            return new DTO(false).putResult("100", "生成代码失败！");
+
+        // 写入空行到日志
+        this.writeLog(g.getLogFile(), "");
 
         // provide
-        CLASS_MAPPING.put(g.getProvideO(), g.getProvideOPackage() + "." + g.getProvideO());
-        CLASS_MAPPING.put(g.getProvideProvide(), g.getProvideProvidePackage() + "." + g.getProvideProvide());
-
-        String providePath = pathMap.get(P_PROVIDE_PATH_KEY);
-        if (g.getProvide_().isTrue()) {
-            this.generateProvide(cgLogFile, g.getAuthor(), table, providePath,
-                    g.getProvideOPackage(), g.getProvideO(),
-                    g.getProvideProvidePackage(), g.getProvideProvide());
-        }
+        if (g.getProvide_().isTrue())
+            this.generateProvide(g);
 
         // dao
-        CLASS_MAPPING.put(g.getDaoPO(), g.getDaoPOPackage() + "." + g.getDaoPO());
-        CLASS_MAPPING.put(g.getDaoMapper(), g.getDaoMapperPackage() + "." + g.getDaoMapper());
-        CLASS_MAPPING.put(g.getDaoJpa(), g.getDaoJpaPackage() + "." + g.getDaoJpa());
-        CLASS_MAPPING.put(g.getDaoDAO(), g.getDaoDAOPackage() + "." + g.getDaoDAO());
-        CLASS_MAPPING.put("BaseDAOTest", g.getpPackage() + ".dao." + "BaseDAOTest");
-        CLASS_MAPPING.put("BaseServiceTest", g.getpPackage() + ".service." + "BaseServiceTest");
-
-        String daoPath = pathMap.get(P_DAO_PATH_KEY);
-        if (g.getDao_().isTrue()) {
-            this.generateDao(cgLogFile, g.getAuthor(), table, daoPath, g.getDaoPOPackage(), g.getDaoPO(),
-                    g.getDaoMapperPackage(), g.getDaoMapper(),
-                    g.getDaoJpaPackage(), g.getDaoJpa(),
-                    g.getDaoDAOPackage(), g.getDaoDAO(),
-                    g.getDaoDAOPackage() + ".impl");
-        }
+        if (g.getDao_().isTrue())
+            this.generateDao(g);
 
         // service
-        CLASS_MAPPING.put(g.getServiceDO(), g.getServiceDOPackage() + "." + g.getServiceDO());
-        CLASS_MAPPING.put(g.getServiceService(), g.getServiceServicePackage() + "." + g.getServiceService());
-        CLASS_MAPPING.put(g.getServceServiceImpl(), g.getServiceServicePackage() + ".impl." + g.getServceServiceImpl());
-
-        String servicePath = pathMap.get(P_SERVICE_PATH_KEY);
         if (g.getService_().isTrue()) {
-            this.generateService(cgLogFile, g.getAuthor(), table, servicePath, g.getServiceDOPackage(), g.getServiceDO(),
-                    g.getServiceServicePackage(), g.getServiceService(), g.getServiceServicePackage() + ".impl", g.getServceServiceImpl(),
-                    g.getProvideProvide(), g.getDaoDAO(), g.getDaoMapper(), g.getDaoJpa(), g.getDaoPO());
+            this.generateService(g);
         }
 
         // web
-        CLASS_MAPPING.put(g.getWebVO(), g.getWebVOPackage() + "." + g.getWebVO());
-        CLASS_MAPPING.put(g.getWebController(), g.getWebControllerPackage() + "." + g.getWebController());
-
-        String webPath = pathMap.get(P_WEB_PATH_KEY);
-        if (g.getWeb_().isTrue()) {
-            this.generateWeb(cgLogFile, g.getAuthor(), table, webPath, g.getWebVOPackage(), g.getWebVO(),
-                    g.getWebControllerPackage(), g.getWebController(),
-                    g.getProvideO(), g.getServiceDO());
-        }
+        if (g.getWeb_().isTrue())
+            this.generateWeb(g);
 
         return new DTO(true);
     }
 
+    private boolean generateInit(Generate g) {
+        if (g == null || g.getTable() == null)
+            return false;
+
+        // 日志
+        g.setLogFile(new File(g.getWsPath() + g.getpPath() + "/cglog.log"));
+
+        // module path
+        this.modulePath(g);
+
+        // 表信息
+        this.fillPojo(g.getTable(), g.getPojoColumn(), g.getPojoField(), g.getPojoType());
+
+        // idType
+        this.idType(g);
+
+        // 类信息
+        this.fillClass(g);
+
+
+        return true;
+    }
+
     /**
-     * @param table
-     * @param columns
-     * @param fields
-     * @param types
+     * @param table   table
+     * @param columns columns
+     * @param fields  fields
+     * @param types   types
      */
     private void fillPojo(Table table, String[] columns, String[] fields, String[] types) {
         if (table == null || table.getColumns() == null
@@ -254,6 +240,7 @@ public class GenerateServiceImpl implements GenerateService {
 
                 c.setMybatisValue("NOW()");
             }
+
             if ("TIMESTAMP".equalsIgnoreCase(c.getType())
                     && StringUtils.containsIgnoreCase(c.getField(), "_modify")) {
                 c.setCm_(true);
@@ -264,50 +251,125 @@ public class GenerateServiceImpl implements GenerateService {
     }
 
     /**
-     * @param wsPath
-     * @param pPath
-     * @return
+     * @param g g
      */
-    private boolean pPathExist(String wsPath, String pPath) {
-        File file = new File(wsPath + pPath);
-        if (!file.exists())
+    private void idType(Generate g) {
+        if (g == null)
+            return;
+
+        g.setIdType("");
+
+        if (g.getTable() != null && g.getTable().getIdColumn() != null)
+            g.setIdType(g.getTable().getIdColumn().getIdType_());
+    }
+
+    /**
+     * @param g g
+     */
+    private void fillClass(Generate g) {
+        if (g == null)
+            return;
+
+        // name & reference & veriable
+        this.nrv(g);
+
+        // class mapping
+        this.classMapping(g);
+    }
+
+    /**
+     * name & reference & veriable
+     *
+     * @param g g
+     */
+    private void nrv(Generate g) {
+        if (g == null)
+            return;
+
+        g.setProvideOReference(g.getProvideOPackage() + "." + g.getProvideO());
+        g.setProvideOVeriable(StringUtils.uncapitalize(g.getProvideO()));
+        g.setProvideProvideReference(g.getProvideProvidePackage() + "." + g.getProvideProvide());
+        g.setProvideProvideVeriable(StringUtils.uncapitalize(StringUtils.substring(g.getProvideProvide(), 1)));
+
+        g.setDaoPOReference(g.getDaoPOPackage() + "." + g.getDaoPO());
+        g.setDaoPOVeriable(StringUtils.uncapitalize(g.getDaoPO()));
+        g.setDaoMapperReference(g.getDaoMapperPackage() + "." + g.getDaoMapper());
+        g.setDaoMapperVeriable(StringUtils.uncapitalize(StringUtils.substring(g.getDaoMapper(), 1)));
+        g.setDaoJpaReference(g.getDaoJpaPackage() + "." + g.getDaoJpa());
+        g.setDaoJpaVeriable(StringUtils.uncapitalize(StringUtils.substring(g.getDaoJpa(), 1)));
+        g.setDaoDAOReference(g.getDaoDAOPackage() + "." + g.getDaoDAO());
+        g.setDaoDAOVeriable(StringUtils.uncapitalize(StringUtils.substring(g.getDaoDAO(), 1)));
+        g.setDaoDAOImplReference(g.getDaoDAOImplPackage() + "." + g.getDaoDAOImpl());
+
+        g.setDaoBaseTestPackage(g.getpPackage() + ".dao");
+        g.setDaoBaseTest("BaseDAOTest");
+        g.setDaoBaseTestReference(g.getDaoBaseTestPackage() + "." + g.getDaoBaseTest());
+        g.setDaoDAOTestPackage(g.getDaoDAOPackage());
+        g.setDaoDAOTest(g.getDaoDAO() + "Test");
+
+        g.setServiceDOReference(g.getServiceDOPackage() + "." + g.getServiceDO());
+        g.setServiceDOVeriable(StringUtils.uncapitalize(g.getServiceDO()));
+        g.setServiceServiceReference(g.getServiceServicePackage() + "." + g.getServiceService());
+        g.setServiceServiceVeriable(StringUtils.uncapitalize(StringUtils.substring(g.getServiceService(), 1)));
+        g.setServiceServiceImplReference(g.getServiceServiceImplPackage() + "." + g.getServiceServiceImpl());
+
+        g.setServiceBaseTestPackage(g.getpPackage() + ".service");
+        g.setServiceBaseTest("BaseServiceTest");
+        g.setServiceBaseTestReference(g.getServiceBaseTestPackage() + "." + g.getServiceBaseTest());
+        g.setServiceServiceTestPackage(g.getServiceServicePackage());
+        g.setServiceServiceTest(g.getServiceService() + "Test");
+
+        g.setWebVOReference(g.getWebVOPackage() + "." + g.getWebVO());
+        g.setWebVOVeriable(StringUtils.uncapitalize(g.getWebVO()));
+        g.setWebControllerReference(g.getWebControllerPackage() + "." + g.getWebController());
+        g.setWebControllerVeriable(StringUtils.uncapitalize(StringUtils.substring(g.getWebController(), 1)));
+    }
+
+    /**
+     * @param g g
+     */
+    private void classMapping(Generate g) {
+        if (g == null)
+            return;
+
+        CLASS_MAPPING.put(g.getProvideO(), g.getProvideOReference());
+        CLASS_MAPPING.put(g.getProvideProvide(), g.getProvideProvideReference());
+
+        CLASS_MAPPING.put(g.getDaoPO(), g.getDaoPOReference());
+        CLASS_MAPPING.put(g.getDaoMapper(), g.getDaoMapperReference());
+        CLASS_MAPPING.put(g.getDaoJpa(), g.getDaoJpaReference());
+        CLASS_MAPPING.put(g.getDaoDAO(), g.getDaoDAOReference());
+        CLASS_MAPPING.put(g.getDaoDAOImpl(), g.getDaoDAOImplReference());
+        CLASS_MAPPING.put(g.getDaoBaseTest(), g.getDaoBaseTestReference());
+
+        CLASS_MAPPING.put(g.getServiceDO(), g.getServiceDOReference());
+        CLASS_MAPPING.put(g.getServiceService(), g.getServiceServiceReference());
+        CLASS_MAPPING.put(g.getServiceServiceImpl(), g.getServiceServiceImplReference());
+        CLASS_MAPPING.put(g.getServiceBaseTest(), g.getServiceBaseTestReference());
+
+        CLASS_MAPPING.put(g.getWebVO(), g.getWebVOReference());
+        CLASS_MAPPING.put(g.getWebController(), g.getWebControllerReference());
+    }
+
+    /**
+     * @return boolean
+     */
+    private boolean pathExist(String path) {
+        if (!new File(path).exists())
             return false;
         return true;
     }
 
     /**
-     * @param wsPath
-     * @param pPath
-     * @param provideModuleName
-     * @param daoModuleName
-     * @param serviceModuleName
-     * @param webModuleName
-     * @return
+     * @param g g
      */
-    private Map<String, String> getPathString(String wsPath, String pPath,
-                                              String provideModuleName,
-                                              String daoModuleName,
-                                              String serviceModuleName,
-                                              String webModuleName) {
-        Map<String, String> map = new HashMap<>();
+    private void modulePath(Generate g) {
+        String path = g.getWsPath() + g.getpPath();
 
-        String provideModulePath = wsPath + pPath + provideModuleName;
-        if (new File(provideModulePath).exists())
-            map.put(P_PROVIDE_PATH_KEY, provideModulePath);
-
-        String daoModulePath = wsPath + pPath + daoModuleName;
-        if (new File(daoModulePath).exists())
-            map.put(P_DAO_PATH_KEY, daoModulePath);
-
-        String serviceModulePath = wsPath + pPath + serviceModuleName;
-        if ((new File(serviceModulePath)).exists())
-            map.put(P_SERVICE_PATH_KEY, serviceModulePath);
-
-        String webModulePath = wsPath + pPath + webModuleName;
-        if ((new File(webModulePath)).exists())
-            map.put(P_WEB_PATH_KEY, webModulePath);
-
-        return map;
+        g.setProvideModuleFile(new File(path + g.getProvideModule()));
+        g.setDaoModuleFile(new File(path + g.getDaoModule()));
+        g.setServiceModuleFile(new File(path + g.getServiceModule()));
+        g.setWebModuleFile(new File(path + g.getWebModule()));
     }
 
     /**
@@ -324,514 +386,366 @@ public class GenerateServiceImpl implements GenerateService {
     }
 
     /**
-     * @param logFile
-     * @param author
-     * @param table
-     * @param providePath
-     * @param oPackage
-     * @param oName
-     * @param providePackage
-     * @param provideName
+     * @param cxt      cxt
+     * @param imports  imports
+     * @param author   author
+     * @param _package package
+     * @param name     name
      */
-    private void generateProvide(File logFile, String author, Table table, String providePath,
-                                 String oPackage, String oName,
-                                 String providePackage, String provideName) {
+    private void baseVariable(Context cxt, Set<String> imports,
+                              String author, String _package, String name) {
+        cxt.clearVariables();
+        imports.clear();
+
+        cxt.setVariable("imports", imports);
+        cxt.setVariable("date", new Date());
+        cxt.setVariable("author", author);
+
+        cxt.setVariable("package", _package);
+        cxt.setVariable("name", name);
+    }
+
+    /**
+     * @param g g
+     */
+    private void generateProvide(Generate g) {
 
         Context cxt = new Context();
         Set<String> imports = new LinkedHashSet<>();
 
         // o
-        cxt.clearVariables();
-        imports.clear();
-        mappingImport(imports, "Serializable");
+        if (g.getProvideO_().isTrue()) {
+            baseVariable(cxt, imports, g.getAuthor(), g.getProvideOPackage(), g.getProvideO());
+            mappingImport(imports, "Serializable");
 
-        cxt.setVariable("author", author);
-        cxt.setVariable("date", new Date());
-        cxt.setVariable("package", oPackage);
-        cxt.setVariable("imports", imports);
-        cxt.setVariable("name", oName);
+            List<String> oFields = new ArrayList<>();
+            List<String> oFieldComments = new ArrayList<>();
+            List<CgField> oGetterAndSetters = new ArrayList<>();
 
-        // o field
-        List<String> oFields = new ArrayList<>();
-        // o field comment
-        List<String> oFieldComments = new ArrayList<>();
-        // getter & setter
-        List<CgField> oGetterAndSetters = new ArrayList<>();
+            g.getTable().getColumns().forEach(c -> {
+                if (c.isCm_())
+                    return;
 
-        table.getColumns().forEach(c -> {
-            if (c.isCm_())
-                return;
+                mappingImport(imports, c.getType_());
 
-            mappingImport(imports, c.getType_());
+                if (c.getComment() != null && c.getComment().length() > 0)
+                    oFieldComments.add("// " + c.getComment());
+                else
+                    oFieldComments.add("");
+                oFields.add(String.format("private %s %s;", c.getType_(), c.getField_()));
 
-            if (c.getComment() != null && c.getComment().length() > 0)
-                oFieldComments.add("// " + c.getComment());
-            else
-                oFieldComments.add("");
-            oFields.add(String.format("private %s %s;", c.getType_(), c.getField_()));
+                oGetterAndSetters.add(cgField(c));
+            });
 
-            CgField field = new CgField();
-            field.setType(c.getType_());
-            field.setField(c.getField_());
-            field.setName(StringUtils.capitalize(c.getField_()));
+            cxt.setVariable("oFields", oFields);
+            cxt.setVariable("oFieldComments", oFieldComments);
+            cxt.setVariable("oGetterAndSetter", oGetterAndSetters);
 
-            oGetterAndSetters.add(field);
-        });
+            this.writeFile(g.getLogFile(),
+                    package2path(g.getProvideModuleFile().getPath(), JAVA_PATH, g.getProvideOPackage()),
+                    g.getProvideO(), JAVA_EXT_NAME,
+                    process(O_TXT_TEMPLATE_NAME, cxt));
+        }
 
-        cxt.setVariable("oFields", oFields);
-        cxt.setVariable("oFieldComments", oFieldComments);
-        cxt.setVariable("oGetterAndSetter", oGetterAndSetters);
+        if (g.getProvideProvide_().isTrue()) {
+            // provide
+            baseVariable(cxt, imports, g.getAuthor(), g.getProvideProvidePackage(), g.getProvideProvide());
 
-        this.writeFile(logFile, providePath + "/" + JAVA_PATH + oPackage.replace('.', '/'), oName, JAVA_EXT_NAME,
-                process(O_TXT_TEMPLATE_NAME, cxt));
-
-        // provide
-        cxt.clearVariables();
-        imports.clear();
-
-        cxt.setVariable("author", author);
-        cxt.setVariable("date", new Date());
-        cxt.setVariable("package", providePackage);
-        cxt.setVariable("imports", imports);
-        cxt.setVariable("name", provideName);
-
-        this.writeFile(logFile, providePath + "/" + JAVA_PATH + providePackage.replace('.', '/'), provideName, JAVA_EXT_NAME,
-                process(PROVIDE_TXT_TEMPLATE_NAME, cxt));
+            this.writeFile(g.getLogFile(),
+                    package2path(g.getProvideModuleFile().getPath(), JAVA_PATH, g.getProvideProvidePackage()),
+                    g.getProvideProvide(), JAVA_EXT_NAME,
+                    process(PROVIDE_TXT_TEMPLATE_NAME, cxt));
+        }
     }
 
     /**
-     * @param logFile
-     * @param author
-     * @param table
-     * @param daoPath
-     * @param poPackage
-     * @param po
-     * @param mapperPackage
-     * @param mapper
-     * @param jpaPackage
-     * @param jpa
-     * @param daoPackage
-     * @param dao
-     * @param daoImplPackage
+     * @param resoucesPath modulePath
+     * @param resoucesPath resoucesPath
+     * @param _package     _package
+     * @return
      */
-    private void generateDao(File logFile, String author, Table table, String daoPath, String poPackage, String po,
-                             String mapperPackage, String mapper,
-                             String jpaPackage, String jpa,
-                             String daoPackage, String dao, String daoImplPackage) {
+    private String package2path(String modulePath, String resoucesPath, String _package) {
+        return StringUtils.trimToEmpty(modulePath)
+                + StringUtils.trimToEmpty(resoucesPath)
+                + _package.replace('.', '/');
+    }
+
+    /**
+     * @param c c
+     */
+    private CgField cgField(Column c) {
+        CgField field = new CgField();
+
+        if (c == null)
+            return field;
+
+        field.setType(c.getType_());
+        field.setField(c.getField_());
+        field.setName(StringUtils.capitalize(c.getField_()));
+
+        return field;
+    }
+
+
+    /**
+     * @param g g
+     */
+    private void generateDao(Generate g) {
 
         Context cxt = new Context();
         Set<String> imports = new LinkedHashSet<>();
 
-        // ID type
-        String idType = "";
-        if (table.getIdColumn() != null)
-            idType = table.getIdColumn().getIdType_();
+        if (g.getDaoPO_().isTrue()) {
+            // po
+            baseVariable(cxt, imports, g.getAuthor(), g.getDaoPOPackage(), g.getDaoPO());
 
-        // po
-        mappingImport(imports, "Entity");
-        mappingImport(imports, "Table");
-        mappingImport(imports, "Column");
+            mappingImport(imports, "Entity");
+            mappingImport(imports, "Table");
+            mappingImport(imports, "Column");
 
-        cxt.setVariable("author", author);
-        cxt.setVariable("date", new Date());
-        cxt.setVariable("package", poPackage);
-        cxt.setVariable("imports", imports);
-        cxt.setVariable("name", po);
+            // po field
+            List<String> poFields = new ArrayList<>();
+            List<CgField> poGetterAndSetters = new ArrayList<>();
 
-        cxt.setVariable("tableName", table.getName());
+            g.getTable().getColumns().forEach(c -> {
+                mappingImport(imports, c.getType_());
 
-        // po field
-        List<String> poFields = new ArrayList<>();
-        List<CgField> poGetterAndSetters = new ArrayList<>();
-        table.getColumns().forEach(c -> {
-            mappingImport(imports, c.getType_());
+                CgField field = cgField(c);
+                field.setAnnotations(new LinkedHashSet<>());
 
-            CgField field = new CgField();
-            field.setType(c.getType_());
-            field.setField(c.getField_());
-            field.setName(StringUtils.capitalize(c.getField_()));
-            field.setAnnotations(new LinkedHashSet<>());
+                // annotations
+                if (c.isId_()) {
+                    mappingImport(imports, "ID");
+                    mappingImport(imports, "GeneratedValue");
+                    mappingImport(imports, "GenerationType");
 
-            // annotations
-            if (c.isId_()) {
-                mappingImport(imports, "ID");
-                mappingImport(imports, "GeneratedValue");
-                mappingImport(imports, "GenerationType");
-
-                field.getAnnotations().add("@Id");
-                field.getAnnotations().add("@GeneratedValue(strategy = GenerationType.IDENTITY)");
-            }
-
-            String colAnno = "name = \"" + c.getField() + "\"";
-            if (c.isNull_())
-                colAnno += ", nullable = true";
-            else
-                colAnno += ", nullable = false";
-
-            if (c.getColumnLength() != null)
-                colAnno += ", length = " + c.getColumnLength();
-
-            if (c.isCm_()) {
-                colAnno += ", insertable = false, updatable = false";
-                String columnDefinition = c.getType_().toUpperCase();
-                if (c.getDefaultValue() != null && c.getDefaultValue().length() > 0) {
-                    if (columnDefinition.length() != 0)
-                        columnDefinition += " ";
-                    columnDefinition += "DEFAULT " + c.getDefaultValue().toUpperCase();
+                    field.getAnnotations().add("@Id");
+                    field.getAnnotations().add("@GeneratedValue(strategy = GenerationType.IDENTITY)");
                 }
 
-                if (c.getExtra() != null && c.getExtra().length() > 0) {
-                    if (columnDefinition.length() != 0)
-                        columnDefinition += " ";
+                String colAnno = "name = \"" + c.getField() + "\"";
+                if (c.isNull_())
+                    colAnno += ", nullable = true";
+                else
+                    colAnno += ", nullable = false";
 
-                    columnDefinition += c.getExtra().toUpperCase();
-                }
-                colAnno += ", columnDefinition = \"" + columnDefinition + "\"";
-            }
-            field.getAnnotations().add("@Column(" + colAnno + ")");
-
-            poFields.add(String.format("private %s %s;", c.getType_(), c.getField_()));
-            cxt.setVariable("poFields", poFields);
-
-
-            poGetterAndSetters.add(field);
-            cxt.setVariable("poGetterAndSetter", poGetterAndSetters);
-        });
-
-        this.writeFile(logFile, daoPath + "/" + JAVA_PATH + poPackage.replace('.', '/'),
-                po, JAVA_EXT_NAME,
-                process(PO_TXT_TEMPLATE_NAME, cxt));
-
-        // mapper
-        cxt.clearVariables();
-        imports.clear();
-
-        mappingImport(imports, "IMapper");
-        mappingImport(imports, po);
-
-        cxt.setVariable("author", author);
-        cxt.setVariable("date", new Date());
-        cxt.setVariable("package", mapperPackage);
-        cxt.setVariable("imports", imports);
-        cxt.setVariable("name", mapper);
-
-        cxt.setVariable("poName", po);
-        cxt.setVariable("idType", idType);
-
-        this.writeFile(logFile, daoPath + "/" + JAVA_PATH + mapperPackage.replace('.', '/'),
-                mapper, JAVA_EXT_NAME,
-                process(MAPPER_TXT_TEMPLATE_NAME, cxt));
-        // end of mapper
-
-        // mapper xml
-        cxt.clearVariables();
-        imports.clear();
-
-        cxt.setVariable("namespace", mapperPackage + "." + mapper);
-        cxt.setVariable("tableName", table.getName());
-        cxt.setVariable("po", po);
-
-        cxt.setVariable("idType", idType);
-
-        List<String> resultMap = new ArrayList<>();
-        List<String> poInsertColumns = new ArrayList<>();
-        List<String> poInsertFields = new ArrayList<>();
-
-        List<String> poUpdateColumns = new ArrayList<>();
-        List<String> poUpdateFields = new ArrayList<>();
-
-        final String[] tableColumnsStr = {""};
-        final String[] idColumn = {table.getIdColumn() != null ? table.getIdColumn().getField() : null};
-        final String[] idFieldName = {table.getIdColumn() != null ? table.getIdColumn().getField_() : null};
-        final String[] idField = {table.getIdColumn() != null ? "#{" + table.getIdColumn().getField_() + "}" : null};
-
-        table.getColumns().forEach(c -> {
-            if (tableColumnsStr[0].length() > 0)
-                tableColumnsStr[0] += ", ";
-            tableColumnsStr[0] += c.getField();
-
-            poInsertColumns.add(c.getField());
-
-            if (c.isId_()) {
-                resultMap.add("<id property=\"" + c.getField_() + "\" column=\"" + c.getField() + "\" />");
-
-                poInsertFields.add(c.getMybatisValue());
-            } else {
-                resultMap.add("<result property=\"" + c.getField_() + "\" column=\"" + c.getField() + "\" />");
+                if (c.getColumnLength() != null)
+                    colAnno += ", length = " + c.getColumnLength();
 
                 if (c.isCm_()) {
+                    colAnno += ", insertable = false, updatable = false";
+                    String columnDefinition = c.getType_().toUpperCase();
+                    if (c.getDefaultValue() != null && c.getDefaultValue().length() > 0) {
+                        if (columnDefinition.length() != 0)
+                            columnDefinition += " ";
+                        columnDefinition += "DEFAULT " + c.getDefaultValue().toUpperCase();
+                    }
+
+                    if (c.getExtra() != null && c.getExtra().length() > 0) {
+                        if (columnDefinition.length() != 0)
+                            columnDefinition += " ";
+
+                        columnDefinition += c.getExtra().toUpperCase();
+                    }
+                    colAnno += ", columnDefinition = \"" + columnDefinition + "\"";
+                }
+                field.getAnnotations().add("@Column(" + colAnno + ")");
+
+                poFields.add(String.format("private %s %s;", c.getType_(), c.getField_()));
+                cxt.setVariable("poFields", poFields);
+
+                poGetterAndSetters.add(field);
+                cxt.setVariable("poGetterAndSetter", poGetterAndSetters);
+            });
+
+            cxt.setVariable("tableName", g.getTable().getName());
+
+            this.writeFile(g.getLogFile(),
+                    package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoPOPackage()),
+                    g.getDaoPO(), JAVA_EXT_NAME,
+                    process(PO_TXT_TEMPLATE_NAME, cxt));
+        }
+
+        if (g.getDaoMapper_().isTrue()) {
+            // mapper
+            baseVariable(cxt, imports, g.getAuthor(), g.getDaoMapperPackage(), g.getDaoMapper());
+
+            mappingImport(imports, "IMapper");
+            mappingImport(imports, g.getDaoPO());
+
+            cxt.setVariable("poName", g.getDaoPO());
+            cxt.setVariable("idType", g.getIdType());
+
+            this.writeFile(g.getLogFile(),
+                    package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoMapperPackage()),
+                    g.getDaoMapper(), JAVA_EXT_NAME,
+                    process(MAPPER_TXT_TEMPLATE_NAME, cxt));
+            // end of mapper
+
+            // mapper xml
+            baseVariable(cxt, imports, g.getAuthor(), g.getDaoMapperPackage(), g.getDaoMapper());
+
+            List<String> resultMap = new ArrayList<>();
+            List<String> poInsertColumns = new ArrayList<>();
+            List<String> poInsertFields = new ArrayList<>();
+
+            List<String> poUpdateColumns = new ArrayList<>();
+            List<String> poUpdateFields = new ArrayList<>();
+
+            Column idc = g.getTable().getIdColumn();
+            final String[] tableColumnsStr = {""};
+            final String[] idColumn = {idc != null ? idc.getField() : null};
+            final String[] idFieldName = {idc != null ? idc.getField_() : null};
+            final String[] idField = {idc != null ? "#{" + idc.getField_() + "}" : null};
+
+            g.getTable().getColumns().forEach(c -> {
+                if (tableColumnsStr[0].length() > 0)
+                    tableColumnsStr[0] += ", ";
+                tableColumnsStr[0] += c.getField();
+
+                poInsertColumns.add(c.getField());
+
+                if (c.isId_()) {
+                    resultMap.add("<id property=\"" + c.getField_() + "\" column=\"" + c.getField() + "\" />");
+
                     poInsertFields.add(c.getMybatisValue());
                 } else {
-                    poInsertFields.add("#{" + c.getField_() + "}");
+                    resultMap.add("<result property=\"" + c.getField_() + "\" column=\"" + c.getField() + "\" />");
 
-                    poUpdateColumns.add(c.getField());
-                    poUpdateFields.add("#{" + c.getField_() + "}");
+                    if (c.isCm_()) {
+                        poInsertFields.add(c.getMybatisValue());
+                    } else {
+                        poInsertFields.add("#{" + c.getField_() + "}");
+
+                        poUpdateColumns.add(c.getField());
+                        poUpdateFields.add("#{" + c.getField_() + "}");
+                    }
                 }
-            }
-        });
+            });
 
-        cxt.setVariable("idColumn", idColumn[0]);
-        cxt.setVariable("idFieldName", idFieldName[0]);
-        cxt.setVariable("idField", idField[0]);
-        cxt.setVariable("resultMap", resultMap);
-        cxt.setVariable("tableColumnsStr", tableColumnsStr[0]);
-        cxt.setVariable("poInsertColumns", poInsertColumns);
-        cxt.setVariable("poInsertFields", poInsertFields);
-        cxt.setVariable("poUpdateColumns", poUpdateColumns);
-        cxt.setVariable("poUpdateFields", poUpdateFields);
+            cxt.setVariable("tableName", g.getTable().getName());
+            cxt.setVariable("namespace", g.getDaoMapperReference());
 
-        this.writeFile(logFile, daoPath + "/" + JAVA_PATH + mapperPackage.replace('.', '/'),
-                mapper, XML_EXT_NAME,
-                process(MAPPERXML_TXT_TEMPLATE_NAME, cxt));
-        // end of mapper xml
+            cxt.setVariable("poName", g.getDaoPO());
+            cxt.setVariable("idType", g.getIdType());
 
-        // jpa
-        cxt.clearVariables();
-        imports.clear();
+            cxt.setVariable("idColumn", idColumn[0]);
+            cxt.setVariable("idFieldName", idFieldName[0]);
+            cxt.setVariable("idField", idField[0]);
+            cxt.setVariable("resultMap", resultMap);
+            cxt.setVariable("tableColumnsStr", tableColumnsStr[0]);
+            cxt.setVariable("poInsertColumns", poInsertColumns);
+            cxt.setVariable("poInsertFields", poInsertFields);
+            cxt.setVariable("poUpdateColumns", poUpdateColumns);
+            cxt.setVariable("poUpdateFields", poUpdateFields);
 
-        mappingImport(imports, "IJpa");
-        mappingImport(imports, po);
+            this.writeFile(g.getLogFile(),
+                    package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoMapperPackage()),
+                    g.getDaoMapper(), XML_EXT_NAME,
+                    process(MAPPERXML_TXT_TEMPLATE_NAME, cxt));
+            // end of mapper xml
+        }
 
-        cxt.setVariable("author", author);
-        cxt.setVariable("date", new Date());
-        cxt.setVariable("package", jpaPackage);
-        cxt.setVariable("imports", imports);
-        cxt.setVariable("name", jpa);
+        if (g.getDaoJpa_().isTrue()) {
+            // jpa
+            baseVariable(cxt, imports, g.getAuthor(), g.getDaoJpaPackage(), g.getDaoJpa());
 
-        cxt.setVariable("poName", po);
-        cxt.setVariable("idType", idType);
+            mappingImport(imports, "IJpa");
+            mappingImport(imports, g.getDaoPO());
 
-        this.writeFile(logFile, daoPath + "/" + JAVA_PATH + jpaPackage.replace('.', '/'),
-                jpa, JAVA_EXT_NAME,
-                process(JPA_TXT_TEMPLATE_NAME, cxt));
+            cxt.setVariable("poName", g.getDaoPO());
+            cxt.setVariable("idType", g.getIdType());
 
-        // dao
-        cxt.clearVariables();
-        imports.clear();
+            this.writeFile(g.getLogFile(),
+                    package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoJpaPackage()),
+                    g.getDaoJpa(), JAVA_EXT_NAME,
+                    process(JPA_TXT_TEMPLATE_NAME, cxt));
 
-        mappingImport(imports, po);
-        mappingImport(imports, "IDAO");
+            // dao
+            baseVariable(cxt, imports, g.getAuthor(), g.getDaoDAOPackage(), g.getDaoDAO());
 
-        cxt.setVariable("author", author);
-        cxt.setVariable("date", new Date());
-        cxt.setVariable("package", daoPackage);
-        cxt.setVariable("imports", imports);
-        cxt.setVariable("name", dao);
+            mappingImport(imports, "IDAO");
+            mappingImport(imports, g.getDaoPO());
 
-        cxt.setVariable("poName", po);
-        cxt.setVariable("idType", idType);
+            cxt.setVariable("poName", g.getDaoPO());
+            cxt.setVariable("idType", g.getIdType());
 
-        this.writeFile(logFile, daoPath + "/" + JAVA_PATH + daoPackage.replace('.', '/'),
-                dao, JAVA_EXT_NAME,
-                process(DAO_TXT_TEMPLATE_NAME, cxt));
+            this.writeFile(g.getLogFile(),
+                    package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoDAOPackage()),
+                    g.getDaoDAO(), JAVA_EXT_NAME,
+                    process(DAO_TXT_TEMPLATE_NAME, cxt));
+        }
 
-        // mapp&jpa impl
-        cxt.clearVariables();
+        if (g.getDaoDAO_().isTrue()) {
+            // dao mapper&jpa impl
+            baseVariable(cxt, imports, g.getAuthor(), g.getDaoDAOImplPackage(), g.getDaoDAOImpl());
 
-        cxt.setVariable("author", author);
-        cxt.setVariable("date", new Date());
-        cxt.setVariable("package", daoImplPackage);
-        cxt.setVariable("imports", imports);
+            cxt.setVariable("poName", g.getDaoPO());
+            cxt.setVariable("idType", g.getIdType());
 
-        cxt.setVariable("poName", po);
-        cxt.setVariable("idType", idType);
-        cxt.setVariable("daoName", dao);
+            cxt.setVariable("daoName", g.getDaoDAO());
+            cxt.setVariable("mapperName", g.getDaoMapper());
+            cxt.setVariable("jpaName", g.getDaoJpa());
 
-        cxt.setVariable("mapperName", mapper);
-        String mapperVeriable = mapper;
-        if (mapperVeriable.startsWith("I"))
-            mapperVeriable = StringUtils.substring(mapperVeriable, 1);
-        cxt.setVariable("mapperVeriable", StringUtils.uncapitalize(mapperVeriable));
+            cxt.setVariable("mapperVeriable", g.getDaoMapperVeriable());
+            cxt.setVariable("jpaVeriable", g.getDaoJpaVeriable());
 
-        imports.clear();
-        mappingImport(imports, mapper);
-        mappingImport(imports, "MapperSupport");
-        mappingImport(imports, po);
-        mappingImport(imports, mapper);
-        mappingImport(imports, dao);
-        mappingImport(imports, "stereotype.Service");
+            imports.clear();
+            mappingImport(imports, g.getDaoMapper());
+            mappingImport(imports, "MapperSupport");
+            mappingImport(imports, g.getDaoPO());
+            mappingImport(imports, g.getDaoDAO());
+            mappingImport(imports, "stereotype.Service");
 
-        cxt.setVariable("name", mapperVeriable);
-        this.writeFile(logFile, daoPath + "/" + JAVA_PATH + daoImplPackage.replace('.', '/'),
-                mapperVeriable, JAVA_EXT_NAME,
-                process(DAOMAPPERIMPL_TXT_TEMPLATE_NAME, cxt));
+            cxt.setVariable("name", StringUtils.capitalize(g.getDaoMapperVeriable()));
+            this.writeFile(g.getLogFile(),
+                    package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoDAOImplPackage()),
+                    StringUtils.capitalize(g.getDaoMapperVeriable()), JAVA_EXT_NAME,
+                    process(DAOMAPPERIMPL_TXT_TEMPLATE_NAME, cxt));
 
+            imports.clear();
+            mappingImport(imports, g.getDaoJpa());
+            mappingImport(imports, "JpaSupport");
+            mappingImport(imports, g.getDaoPO());
+            mappingImport(imports, g.getDaoDAO());
+            mappingImport(imports, "stereotype.Service");
 
-        cxt.setVariable("jpaName", jpa);
-        String jpaVeriable = jpa;
-        if (jpaVeriable.startsWith("I"))
-            jpaVeriable = StringUtils.substring(jpaVeriable, 1);
-        cxt.setVariable("jpaVeriable", StringUtils.uncapitalize(jpaVeriable));
+            cxt.setVariable("name", StringUtils.capitalize(g.getDaoJpaVeriable()));
+            this.writeFile(g.getLogFile(),
+                    package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoDAOImplPackage()),
+                    StringUtils.capitalize(g.getDaoJpaVeriable()), JAVA_EXT_NAME,
+                    process(DAOJPAIMPL_TXT_TEMPLATE_NAME, cxt));
+        }
 
-        imports.clear();
-        mappingImport(imports, jpa);
-        mappingImport(imports, "JpaSupport");
-        mappingImport(imports, po);
-        mappingImport(imports, jpa);
-        mappingImport(imports, dao);
-        mappingImport(imports, "stereotype.Service");
+        if (g.getDaoDAOTest_().isTrue()) {
+            // dao test
+            baseVariable(cxt, imports, g.getAuthor(), g.getDaoDAOTestPackage(), g.getDaoDAOTest());
 
-        cxt.setVariable("name", jpaVeriable);
-        this.writeFile(logFile, daoPath + "/" + JAVA_PATH + daoImplPackage.replace('.', '/'),
-                jpaVeriable, JAVA_EXT_NAME,
-                process(DAOJPAIMPL_TXT_TEMPLATE_NAME, cxt));
+            baseTestImport(imports);
 
-        // dao test
-        cxt.clearVariables();
-        imports.clear();
+            mappingImport(imports, "Qualifier");
+            mappingImport(imports, g.getDaoBaseTest());
 
-        mappingImport(imports, "test.Test");
-        mappingImport(imports, "DTO");
-        mappingImport(imports, "NPage");
-        mappingImport(imports, "NSort");
-        mappingImport(imports, "Autowired");
-        mappingImport(imports, "Qualifier");
+            cxt.setVariable("daoName", g.getDaoDAO());
+            cxt.setVariable("mapperVeriable", g.getDaoMapperVeriable());
+            cxt.setVariable("jpaVeriable", g.getDaoJpaVeriable());
 
-        mappingImport(imports, "ArrayList");
-        mappingImport(imports, "Arrays");
-        mappingImport(imports, "List");
+            cxt.setVariable("poName", g.getDaoPO());
+            cxt.setVariable("idType", g.getIdType());
 
-        mappingImport(imports, po);
+            this.testSetter(g, cxt);
 
-        String daoImpl = StringUtils.substring(dao, 1);
-
-        cxt.setVariable("author", author);
-        cxt.setVariable("date", new Date());
-        cxt.setVariable("package", daoPackage);
-        cxt.setVariable("imports", imports);
-        cxt.setVariable("name", daoImpl + "Test");
-
-        cxt.setVariable("daoName", dao);
-        cxt.setVariable("mapperVeriable", StringUtils.uncapitalize(mapperVeriable));
-        cxt.setVariable("jpaVeriable", StringUtils.uncapitalize(jpaVeriable));
-
-        cxt.setVariable("poName", po);
-        cxt.setVariable("idType", idType);
-
-        mappingImport(imports, "Arrays");
-        mappingImport(imports, "BaseDAOTest");
-
-        List<String> poSetters = new ArrayList<>();
-        table.getColumns().forEach(c -> {
-            if (c.isCm_())
-                return;
-
-            poSetters.add("// po.set" + StringUtils.capitalize(c.getField_()) + "(\"" + c.getField_() + "\");");
-        });
-        cxt.setVariable("poSetters", poSetters);
-
-        this.writeFile(logFile, daoPath + "/" + TEST_PATH + daoPackage.replace('.', '/'),
-                daoImpl + "Test", JAVA_EXT_NAME,
-                process(DAO_TEST_TXT_TEMPLATE_NAME, cxt));
+            this.writeFile(g.getLogFile(),
+                    package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoDAOTestPackage()),
+                    g.getDaoDAOTest(), JAVA_EXT_NAME,
+                    process(DAO_TEST_TXT_TEMPLATE_NAME, cxt));
+        }
     }
 
     /**
-     * @param logFile
-     * @param author
-     * @param table
-     * @param servicePath
-     * @param dtoPackage
-     * @param do_
-     * @param servicePackage
-     * @param service
-     * @param serviceImplPackage
-     * @param serviceImpl
-     * @param provideName
-     * @param mapperName
-     * @param jpaName
-     * @param poName
+     * @param imports imports
      */
-    private void generateService(File logFile, String author, Table table, String servicePath, String dtoPackage, String do_,
-                                 String servicePackage, String service, String serviceImplPackage, String serviceImpl,
-                                 String provideName, String daoName, String mapperName, String jpaName, String poName) {
-
-        Context cxt = new Context();
-        Set<String> imports = new LinkedHashSet<>();
-
-        // ID type
-        String idType = "";
-        if (table.getIdColumn() != null)
-            idType = table.getIdColumn().getIdType_();
-
-        // DO
-        mappingImport(imports, poName);
-
-        cxt.setVariable("author", author);
-        cxt.setVariable("date", new Date());
-        cxt.setVariable("package", dtoPackage);
-        cxt.setVariable("imports", imports);
-        cxt.setVariable("name", do_);
-
-        cxt.setVariable("poName", poName);
-
-        this.writeFile(logFile, servicePath + "/" + JAVA_PATH + dtoPackage.replace('.', '/'),
-                do_, JAVA_EXT_NAME,
-                process(DO_TXT_TEMPLATE_NAME, cxt));
-        // end of DO
-
-        // service
-        cxt.clearVariables();
-        imports.clear();
-
-        mappingImport(imports, "provideName");
-        mappingImport(imports, poName);
-        mappingImport(imports, "IService");
-
-        cxt.setVariable("author", author);
-        cxt.setVariable("date", new Date());
-        cxt.setVariable("package", servicePackage);
-        cxt.setVariable("imports", imports);
-        cxt.setVariable("name", service);
-
-        cxt.setVariable("idType", idType);
-        cxt.setVariable("poName", poName);
-        cxt.setVariable("provideName", provideName);
-
-        this.writeFile(logFile, servicePath + "/" + JAVA_PATH + servicePackage.replace('.', '/'),
-                service, JAVA_EXT_NAME,
-                process(SERVICE_TXT_TEMPLATE_NAME, cxt));
-        // end of service
-
-        // service impl
-        cxt.clearVariables();
-        imports.clear();
-
-        mappingImport(imports, daoName);
-        mappingImport(imports, mapperName);
-        mappingImport(imports, poName);
-        mappingImport(imports, service);
-        mappingImport(imports, "ServiceSupport");
-        mappingImport(imports, "Qualifier");
-        mappingImport(imports, "stereotype.Service");
-
-        cxt.setVariable("author", author);
-        cxt.setVariable("date", new Date());
-        cxt.setVariable("package", serviceImplPackage);
-        cxt.setVariable("imports", imports);
-        cxt.setVariable("name", serviceImpl);
-
-        cxt.setVariable("idType", idType);
-        cxt.setVariable("poName", poName);
-        cxt.setVariable("serviceName", service);
-        cxt.setVariable("daoName", daoName);
-        String mapperVeriable = mapperName;
-        if (mapperVeriable.startsWith("I"))
-            mapperVeriable = StringUtils.substring(mapperVeriable, 1);
-        cxt.setVariable("mapperVeriable", StringUtils.uncapitalize(mapperVeriable));
-        String jpaVeriable = jpaName;
-        if (jpaVeriable.startsWith("I"))
-            jpaVeriable = StringUtils.substring(jpaVeriable, 1);
-        cxt.setVariable("jpaVeriable", StringUtils.uncapitalize(jpaVeriable));
-
-        this.writeFile(logFile, servicePath + "/" + JAVA_PATH + serviceImplPackage.replace('.', '/'),
-                serviceImpl, JAVA_EXT_NAME,
-                process(SERVICEIMPL_TXT_TEMPLATE_NAME, cxt));
-        // end of service impl
-
-        // service test
-        cxt.clearVariables();
-        imports.clear();
-
+    private void baseTestImport(Set<String> imports) {
         mappingImport(imports, "test.Test");
         mappingImport(imports, "DTO");
         mappingImport(imports, "NPage");
@@ -841,122 +755,151 @@ public class GenerateServiceImpl implements GenerateService {
         mappingImport(imports, "ArrayList");
         mappingImport(imports, "Arrays");
         mappingImport(imports, "List");
+
         mappingImport(imports, "Optional");
+    }
 
-        mappingImport(imports, poName);
-        mappingImport(imports, "BaseServiceTest");
+    /**
+     * @param g g
+     */
+    private void generateService(Generate g) {
 
-        cxt.setVariable("author", author);
-        cxt.setVariable("date", new Date());
-        cxt.setVariable("package", servicePackage);
-        cxt.setVariable("imports", imports);
-        cxt.setVariable("name", serviceImpl + "Test");
+        Context cxt = new Context();
+        Set<String> imports = new LinkedHashSet<>();
 
-        cxt.setVariable("idType", idType);
-        cxt.setVariable("poName", poName);
-        cxt.setVariable("serviceName", service);
-        cxt.setVariable("serviceVeriable", StringUtils.uncapitalize(serviceImpl));
+        if (g.getServiceDO_().isTrue()) {
+            // DO
+            baseVariable(cxt, imports, g.getAuthor(), g.getServiceDOPackage(), g.getServiceDO());
 
+            mappingImport(imports, g.getDaoPO());
+
+            cxt.setVariable("poName", g.getDaoPO());
+
+            this.writeFile(g.getLogFile(),
+                    package2path(g.getServiceModuleFile().getPath(), JAVA_PATH, g.getServiceDOPackage()),
+                    g.getServiceDO(), JAVA_EXT_NAME,
+                    process(DO_TXT_TEMPLATE_NAME, cxt));
+            // end of DO
+        }
+
+        if (g.getServiceService_().isTrue()) {
+            // service
+            baseVariable(cxt, imports, g.getAuthor(), g.getServiceServicePackage(), g.getServiceService());
+
+            mappingImport(imports, "IService");
+            mappingImport(imports, g.getDaoPO());
+            mappingImport(imports, "provideName");
+
+            cxt.setVariable("poName", g.getDaoPO());
+            cxt.setVariable("idType", g.getIdType());
+            cxt.setVariable("provideName", g.getProvideProvide());
+
+            this.writeFile(g.getLogFile(),
+                    package2path(g.getServiceModuleFile().getPath(), JAVA_PATH, g.getServiceServicePackage()),
+                    g.getServiceService(), JAVA_EXT_NAME,
+                    process(SERVICE_TXT_TEMPLATE_NAME, cxt));
+            // end of service
+        }
+
+        if (g.getServiceServiceImpl_().isTrue()) {
+            // service impl
+            baseVariable(cxt, imports, g.getAuthor(), g.getServiceServiceImplPackage(), g.getServiceServiceImpl());
+
+            mappingImport(imports, g.getDaoDAO());
+            mappingImport(imports, g.getDaoPO());
+            mappingImport(imports, g.getServiceService());
+            mappingImport(imports, "ServiceSupport");
+            mappingImport(imports, "Qualifier");
+            mappingImport(imports, "stereotype.Service");
+
+            cxt.setVariable("poName", g.getDaoPO());
+            cxt.setVariable("idType", g.getIdType());
+            cxt.setVariable("daoName", g.getDaoDAO());
+            cxt.setVariable("serviceName", g.getServiceService());
+
+            cxt.setVariable("mapperVeriable", g.getDaoMapperVeriable());
+            cxt.setVariable("jpaVeriable", g.getDaoJpaVeriable());
+
+            this.writeFile(g.getLogFile(),
+                    package2path(g.getServiceModuleFile().getPath(), JAVA_PATH, g.getServiceServiceImplPackage()),
+                    g.getServiceServiceImpl(), JAVA_EXT_NAME,
+                    process(SERVICEIMPL_TXT_TEMPLATE_NAME, cxt));
+            // end of service impl
+        }
+
+        if (g.getServiceServiceTest_().isTrue()) {
+            // service test
+            baseVariable(cxt, imports, g.getAuthor(), g.getServiceServiceTestPackage(), g.getServiceServiceTest());
+
+            baseTestImport(imports);
+
+            mappingImport(imports, g.getDaoPO());
+            mappingImport(imports, g.getServiceBaseTest());
+
+            cxt.setVariable("poName", g.getDaoPO());
+            cxt.setVariable("idType", g.getIdType());
+            cxt.setVariable("serviceName", g.getServiceService());
+            cxt.setVariable("serviceVeriable", g.getServiceServiceVeriable());
+
+            this.testSetter(g, cxt);
+
+            this.writeFile(g.getLogFile(),
+                    package2path(g.getServiceModuleFile().getPath(), JAVA_PATH, g.getServiceServiceTestPackage()),
+                    g.getServiceServiceTest(), JAVA_EXT_NAME,
+                    process(SERVICETEST_TXT_TEMPLATE_NAME, cxt));
+            // end of service test
+        }
+    }
+
+    /**
+     * @param g   g
+     * @param cxt cxt
+     */
+    private void testSetter(Generate g, Context cxt) {
         List<String> poSetters = new ArrayList<>();
-        table.getColumns().forEach(c -> {
+        g.getTable().getColumns().forEach(c -> {
             if (c.isCm_())
                 return;
 
             poSetters.add("// po.set" + StringUtils.capitalize(c.getField_()) + "(\"" + c.getField_() + "\");");
         });
         cxt.setVariable("poSetters", poSetters);
-
-        this.writeFile(logFile, servicePath + "/" + TEST_PATH + servicePackage.replace('.', '/'),
-                serviceImpl + "Test", JAVA_EXT_NAME,
-                process(SERVICETEST_TXT_TEMPLATE_NAME, cxt));
-        // end of service test
     }
 
     /**
-     * @param logFile
-     * @param author
-     * @param webPath
-     * @param voPackage
-     * @param vo
-     * @param controllerPackage
-     * @param controller
-     * @param oName
-     * @param doName
+     * @param g g
      */
-    private void generateWeb(File logFile, String author, Table table, String webPath, String voPackage, String vo,
-                             String controllerPackage, String controller,
-                             String oName, String doName) {
+    private void generateWeb(Generate g) {
 
         Context cxt = new Context();
         Set<String> imports = new LinkedHashSet<>();
 
-        // vo
-        mappingImport(imports, doName);
+        if (g.getWebVO_().isTrue()) {
+            // vo
+            baseVariable(cxt, imports, g.getAuthor(), g.getWebVOPackage(), g.getWebVO());
 
-        cxt.setVariable("author", author);
-        cxt.setVariable("date", new Date());
-        cxt.setVariable("package", voPackage);
-        cxt.setVariable("imports", imports);
-        cxt.setVariable("name", vo);
+            mappingImport(imports, g.getServiceDO());
 
-        cxt.setVariable("doName", doName);
+            cxt.setVariable("doName", g.getServiceDO());
 
-        this.writeFile(logFile, webPath + "/" + JAVA_PATH + voPackage.replace('.', '/'),
-                vo, JAVA_EXT_NAME,
-                process(VO_TXT_TEMPLATE_NAME, cxt));
-        // end of vo
+            this.writeFile(g.getLogFile(),
+                    package2path(g.getWebModuleFile().getPath(), JAVA_PATH, g.getWebVOPackage()),
+                    g.getWebVO(), JAVA_EXT_NAME,
+                    process(VO_TXT_TEMPLATE_NAME, cxt));
+            // end of vo
+        }
 
-        // controller
-        cxt.clearVariables();
-        imports.clear();
+        if (g.getWebController_().isTrue()) {
+            // controller
+            baseVariable(cxt, imports, g.getAuthor(), g.getWebControllerPackage(), g.getWebController());
 
-        cxt.setVariable("author", author);
-        cxt.setVariable("date", new Date());
-        cxt.setVariable("package", controllerPackage);
-        cxt.setVariable("imports", imports);
-        cxt.setVariable("name", controller);
-
-        this.writeFile(logFile, webPath + "/" + JAVA_PATH + controllerPackage.replace('.', '/'),
-                controller, JAVA_EXT_NAME,
-                process(CONTROLLER_TXT_TEMPLATE_NAME, cxt));
-        // end of controller
-
+            this.writeFile(g.getLogFile(),
+                    package2path(g.getWebModuleFile().getPath(), JAVA_PATH, g.getWebControllerPackage()),
+                    g.getWebController(), JAVA_EXT_NAME,
+                    process(CONTROLLER_TXT_TEMPLATE_NAME, cxt));
+            // end of controller
+        }
     }
-
-
-//    /**
-//     * @return
-//     * @throws Exception
-//     */
-//    private VelocityEngine velocityEngine() {
-//        Properties properties = new Properties();
-//        properties.setProperty("input.encoding", "UTF-8");
-//        properties.setProperty("output.encoding", "UTF-8");
-//
-//        properties.setProperty("resource.loader", "file");
-//        properties.setProperty("file.resource.loader.cache", "true");
-//        properties.setProperty("file.resource.loader.path", "classpath:/template/");
-//
-//        properties.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
-//        VelocityEngine velocityEngine = new VelocityEngine(properties);
-//        return velocityEngine;
-//    }
-//
-//    /**
-//     * @param templateLocation
-//     * @param model
-//     * @return
-//     */
-//    private String mergeTemplateIntoString(String templateLocation, Map<String, Object> model) {
-//        VelocityEngine velocityEngine = velocityEngine();
-//
-//        VelocityContext context = new VelocityContext(model);
-//
-//        StringWriter stringWriter = new StringWriter();
-//        velocityEngine.mergeTemplate(templateLocation, "UTF-8", context, stringWriter);
-//
-//        return stringWriter.toString();
-//    }
 
     private String process(String template, IContext context) {
         return templateEngine().process(template, context);

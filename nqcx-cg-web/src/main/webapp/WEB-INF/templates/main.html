@@ -444,7 +444,7 @@
 
                 // modules
                 var pTypeValue = this.pType().filter(':checked').val();
-                if (pTypeValue === "1")
+                if (pTypeValue === "Multiple")
                     this.fecthDirs(this.module.fillAll);
                 else
                     this.module.emptyAll();
@@ -763,8 +763,8 @@
         <tr height="30">
             <td class="lable">Type:</td>
             <td nowrap>
-                <input type="radio" name="pType" value="0"/>Single <input type="radio" name="pType" value="1"
-                                                                          checked="checked"/>Multiple
+                <input type="radio" name="pType" value="Single"/>Single
+                <input type="radio" name="pType" value="Multiple" checked="checked"/>Multiple
             </td>
         </tr>
         <tr height="30">
