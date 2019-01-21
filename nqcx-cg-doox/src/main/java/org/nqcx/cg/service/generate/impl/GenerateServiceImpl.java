@@ -672,7 +672,7 @@ public class GenerateServiceImpl implements GenerateService {
                     process(DAO_TXT_TEMPLATE_NAME, cxt));
         }
 
-        if (g.getDaoDAO_().isTrue()) {
+        if (g.getDaoDAOImpl_().isTrue()) {
             // dao mapper&jpa impl
             baseVariable(cxt, imports, g.getAuthor(), g.getDaoDAOImplPackage(), g.getDaoDAOImpl());
 
