@@ -69,11 +69,6 @@ public class GenerateServiceImpl implements GenerateService {
     private final static String VO_TXT_TEMPLATE_NAME = "vo.txt";
     private final static String CONTROLLER_TXT_TEMPLATE_NAME = "controller.txt";
 
-//    private final static String P_PROVIDE_PATH_KEY = "provideModule";
-//    private final static String P_DAO_PATH_KEY = "daoModule";
-//    private final static String P_SERVICE_PATH_KEY = "serviceModule";
-//    private final static String P_WEB_PATH_KEY = "webModule";
-
     @Autowired
     @Qualifier("overwrite")
     private Boolean overwrite; // 生成文件是否覆盖原来的文件
