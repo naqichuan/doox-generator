@@ -734,7 +734,7 @@ public class GenerateServiceImpl implements GenerateService {
             this.testSetter(g, cxt);
 
             this.writeFile(g.getLogFile(),
-                    package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoDAOTestPackage()),
+                    package2path(g.getDaoModuleFile().getPath(), TEST_PATH, g.getDaoDAOTestPackage()),
                     g.getDaoDAOTest(), JAVA_EXT_NAME,
                     process(DAO_TEST_TXT_TEMPLATE_NAME, cxt));
         }
