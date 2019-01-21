@@ -11,6 +11,135 @@ import [(${import})];
 /**
  * @author [(${author})] [(${#dates.format(date, 'yyyy-MM-dd HH:mm')})]
  */
-public class [(${name})] {
+@Controller
+@RequestMapping("/[(${tableName})]")
+public class [(${name})] extends AbstractController {
 
+    private final [(${serviceName})] [(${serviceVeriable})];
+
+    public [(${name})]([(${serviceName})] [(${serviceVeriable})]) {
+        this.[(${serviceVeriable})] = [(${serviceVeriable})];
+    }
+
+    /**
+     * index
+     *
+     * @return ModelAndView
+     */
+    @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
+    public ModelAndView index() {
+        return new ModelAndView("/[(${tableName})]/[(${tableName})]");
+    }
+
+    /**
+     * list
+     *
+     * @param page     page
+     * @param pageSize pageSize
+     * @return Map
+     */
+    @RequestMapping(value = "/list", method = {RequestMethod.GET, RequestMethod.POST},
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public Map<?, ?> list(@RequestParam(value = "page", required = false, defaultValue = "1") long page,
+                          @RequestParam(value = "pageSize", required = false, defaultValue = "20") long pageSize) {
+
+        DTO dtoRequest = new DTO().setPage(new NPage(page, pageSize));
+
+        DTO result = [(${serviceVeriable})].findAll(dtoRequest);
+
+        return buildResult(result);
+    }
+
+    /**
+     * add
+     *
+     * @param [(${webVOVeriable})] [(${webVOVeriable})]
+     * @return Map
+     */
+    @RequestMapping(value = "/add", method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public Map<?, ?> add([(${webVO})] [(${webVOVeriable})]) {
+        DTO dto = checkForm([(${webVOVeriable})], false);
+        if (dto == null || !dto.isSuccess())
+            return buildResult(dto);
+
+        return buildResult(new DTO(true).setObject([(${serviceVeriable})].save([(${webVOVeriable})])));
+    }
+
+    /**
+     * 详细
+     *
+     * @param id id
+     * @return Map
+     */
+    @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public Map<?, ?> detail(@PathVariable("id") [(${idType})] id) {
+        return edit(id);
+    }
+
+    /**
+     * edit
+     *
+     * @param id id
+     * @return Map
+     */
+    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public Map<?, ?> edit(@PathVariable("id") [(${idType})] id) {
+        return buildResult(new DTO(true).setObject([(${serviceVeriable})].findById(id)));
+    }
+
+    /**
+     * modify
+     *
+     * @param [(${webVOVeriable})] [(${webVOVeriable})]
+     * @return Map
+     */
+    @RequestMapping(value = "/modify", method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public Map<?, ?> modify([(${webVO})] [(${webVOVeriable})]) {
+        DTO dto = checkForm([(${webVOVeriable})], true);
+        if (dto == null || !dto.isSuccess())
+            return buildResult(dto);
+
+        return buildResult(new DTO(true).setObject([(${serviceVeriable})].modify([(${webVOVeriable})])));
+    }
+
+    /**
+     * check from
+     *
+     * @return DTO
+     */
+    private DTO checkForm([(${webVO})] [(${webVOVeriable})], boolean isModify) {
+        DTO dto = new DTO();
+
+        if ([(${webVOVeriable})] == null)
+            return dto.putResult("10", "操作数据出错"); //操作数据出错
+        if (isModify && [(${webVOVeriable})].getId() == 0)
+            return dto.putResult("11", "操作的数据不存在"); //操作的数据不存在
+
+        return dto.setSuccess(true);
+    }
+
+    /**
+     * delete
+     *
+     * @param ids ids
+     * @return Map
+     */
+    @RequestMapping(value = "/delete", method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public Map<?, ?> delete(@RequestParam(value = "ids[]") [(${idType})][] ids) {
+        if (ids != null && ids.length > 0)
+            [(${serviceVeriable})].deleteByIds(ids);
+
+        return buildResult(new DTO(true));
+    }
 }

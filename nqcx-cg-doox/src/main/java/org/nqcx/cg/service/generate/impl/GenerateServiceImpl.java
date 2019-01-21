@@ -86,6 +86,7 @@ public class GenerateServiceImpl implements GenerateService {
         CLASS_MAPPING.put("ArrayList", "java.util.ArrayList");
         CLASS_MAPPING.put("List", "java.util.List");
         CLASS_MAPPING.put("Optional", "java.util.Optional");
+        CLASS_MAPPING.put("Map", "java.util.Map");
 
         CLASS_MAPPING.put("Entity", "javax.persistence.Entity");
         CLASS_MAPPING.put("Table", "javax.persistence.Table");
@@ -111,6 +112,15 @@ public class GenerateServiceImpl implements GenerateService {
         CLASS_MAPPING.put("stereotype.Service", "org.springframework.stereotype.Service");
         CLASS_MAPPING.put("Autowired", "org.springframework.beans.factory.annotation.Autowired");
         CLASS_MAPPING.put("Qualifier", "org.springframework.beans.factory.annotation.Qualifier");
+
+        CLASS_MAPPING.put("MediaType", "org.springframework.http.MediaType");
+        CLASS_MAPPING.put("Controller", "org.springframework.stereotype.Controller");
+        CLASS_MAPPING.put("PathVariable", "org.springframework.web.bind.annotation.PathVariable");
+        CLASS_MAPPING.put("RequestMapping", "org.springframework.web.bind.annotation.RequestMapping");
+        CLASS_MAPPING.put("RequestMethod", "org.springframework.web.bind.annotation.RequestMethod");
+        CLASS_MAPPING.put("RequestParam", "org.springframework.web.bind.annotation.RequestParam");
+        CLASS_MAPPING.put("ResponseBody", "org.springframework.web.bind.annotation.ResponseBody");
+        CLASS_MAPPING.put("ModelAndView", "org.springframework.web.servlet.ModelAndView");
 
         CLASS_MAPPING.put("test.Test", "org.junit.Test");
     }
@@ -318,6 +328,10 @@ public class GenerateServiceImpl implements GenerateService {
         g.setWebVOVeriable(StringUtils.uncapitalize(g.getWebVO()));
         g.setWebControllerReference(g.getWebControllerPackage() + "." + g.getWebController());
         g.setWebControllerVeriable(StringUtils.uncapitalize(StringUtils.substring(g.getWebController(), 1)));
+
+        g.setWebAbstractControllerPackage(g.getpPackage() + ".web.controller");
+        g.setWebAbstractController("AbstractController");
+        g.setWebAbstractControllerReference(g.getWebAbstractControllerPackage() + "." + g.getWebAbstractController());
     }
 
     /**
@@ -891,6 +905,32 @@ public class GenerateServiceImpl implements GenerateService {
         if (g.getWebController_().isTrue()) {
             // controller
             baseVariable(cxt, imports, g.getAuthor(), g.getWebControllerPackage(), g.getWebController());
+
+            mappingImport(imports, "DTO");
+            mappingImport(imports, "NPage");
+            mappingImport(imports, "NSort");
+
+            mappingImport(imports, "MediaType");
+            mappingImport(imports, "Controller");
+            mappingImport(imports, "PathVariable");
+            mappingImport(imports, "RequestMapping");
+            mappingImport(imports, "RequestMethod");
+            mappingImport(imports, "RequestParam");
+            mappingImport(imports, "ResponseBody");
+            mappingImport(imports, "ModelAndView");
+
+            mappingImport(imports, "Map");
+
+            mappingImport(imports, g.getWebVO());
+            mappingImport(imports, g.getServiceService());
+            mappingImport(imports, g.getWebAbstractController());
+
+            cxt.setVariable("idType", g.getIdType());
+            cxt.setVariable("tableName", g.getTable().getName());
+            cxt.setVariable("serviceName", g.getServiceService());
+            cxt.setVariable("serviceVeriable", g.getServiceServiceVeriable());
+            cxt.setVariable("webVO", g.getWebVO());
+            cxt.setVariable("webVOVeriable", g.getWebVOVeriable());
 
             this.writeFile(g.getLogFile(),
                     package2path(g.getWebModuleFile().getPath(), JAVA_PATH, g.getWebControllerPackage()),

@@ -54,48 +54,48 @@ public class Generate implements Serializable {
 
     // dao field
     private BoolEO dao_ = BoolEO.FALSE;
-    private BoolEO daoPO_= BoolEO.FALSE;
+    private BoolEO daoPO_ = BoolEO.FALSE;
     private String daoPOPackage;
     private String daoPO;
-    private BoolEO daoMapper_= BoolEO.FALSE;
+    private BoolEO daoMapper_ = BoolEO.FALSE;
     private String daoMapperPackage;
     private String daoMapper;
-    private BoolEO daoJpa_= BoolEO.FALSE;
+    private BoolEO daoJpa_ = BoolEO.FALSE;
     private String daoJpaPackage;
     private String daoJpa;
-    private BoolEO daoDAO_= BoolEO.FALSE;
+    private BoolEO daoDAO_ = BoolEO.FALSE;
     private String daoDAOPackage;
     private String daoDAO;
-    private BoolEO daoDAOImpl_= BoolEO.FALSE;
+    private BoolEO daoDAOImpl_ = BoolEO.FALSE;
     private String daoDAOImplPackage;
     private String daoDAOImpl;
-    private BoolEO daoDAOTest_= BoolEO.FALSE;
+    private BoolEO daoDAOTest_ = BoolEO.FALSE;
     private String daoDAOTestPackage;
     private String daoDAOTest;
     // end of dao field
 
     // service field
     private BoolEO service_ = BoolEO.FALSE;
-    private BoolEO serviceDO_= BoolEO.FALSE;
+    private BoolEO serviceDO_ = BoolEO.FALSE;
     private String serviceDOPackage;
     private String serviceDO;
-    private BoolEO serviceService_= BoolEO.FALSE;
+    private BoolEO serviceService_ = BoolEO.FALSE;
     private String serviceServicePackage;
     private String serviceService;
-    private BoolEO serviceServiceImpl_= BoolEO.FALSE;
+    private BoolEO serviceServiceImpl_ = BoolEO.FALSE;
     private String serviceServiceImplPackage;
     private String serviceServiceImpl;
-    private BoolEO serviceServiceTest_= BoolEO.FALSE;
+    private BoolEO serviceServiceTest_ = BoolEO.FALSE;
     private String serviceServiceTestPackage;
     private String serviceServiceTest;
     // end of field
 
     // web field
     private BoolEO web_ = BoolEO.FALSE;
-    private BoolEO webVO_= BoolEO.FALSE;
+    private BoolEO webVO_ = BoolEO.FALSE;
     private String webVOPackage;
     private String webVO;
-    private BoolEO webController_= BoolEO.FALSE;
+    private BoolEO webController_ = BoolEO.FALSE;
     private String webControllerPackage;
     private String webController;
     // end of web field
@@ -143,6 +143,9 @@ public class Generate implements Serializable {
     private String webVOVeriable;
     private String webControllerReference;
     private String webControllerVeriable;
+    private String webAbstractControllerPackage;
+    private String webAbstractController;
+    private String webAbstractControllerReference;
 
     public String getTableName() {
         return tableName;
@@ -914,5 +917,29 @@ public class Generate implements Serializable {
 
     public void setWebControllerVeriable(String webControllerVeriable) {
         this.webControllerVeriable = webControllerVeriable;
+    }
+
+    public String getWebAbstractControllerPackage() {
+        return webAbstractControllerPackage;
+    }
+
+    public void setWebAbstractControllerPackage(String webAbstractControllerPackage) {
+        this.webAbstractControllerPackage = webAbstractControllerPackage;
+    }
+
+    public String getWebAbstractController() {
+        return webAbstractController;
+    }
+
+    public void setWebAbstractController(String webAbstractController) {
+        this.webAbstractController = webAbstractController;
+    }
+
+    public String getWebAbstractControllerReference() {
+        return webAbstractControllerReference;
+    }
+
+    public void setWebAbstractControllerReference(String webAbstractControllerReference) {
+        this.webAbstractControllerReference = webAbstractControllerReference;
     }
 }
