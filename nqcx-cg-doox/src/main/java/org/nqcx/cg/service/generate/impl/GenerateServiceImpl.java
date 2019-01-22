@@ -802,9 +802,11 @@ public class GenerateServiceImpl implements GenerateService {
 
             mappingImport(imports, "IService");
             mappingImport(imports, g.getDaoPO());
-            mappingImport(imports, "provideName");
+            mappingImport(imports, g.getServiceDO());
+            mappingImport(imports, g.getProvideProvide());
 
             cxt.setVariable("poName", g.getDaoPO());
+            cxt.setVariable("doName", g.getServiceDO());
             cxt.setVariable("idType", g.getIdType());
             cxt.setVariable("provideName", g.getProvideProvide());
 
@@ -821,12 +823,14 @@ public class GenerateServiceImpl implements GenerateService {
 
             mappingImport(imports, g.getDaoDAO());
             mappingImport(imports, g.getDaoPO());
+            mappingImport(imports, g.getServiceDO());
             mappingImport(imports, g.getServiceService());
             mappingImport(imports, "ServiceSupport");
             mappingImport(imports, "Qualifier");
             mappingImport(imports, "stereotype.Service");
 
             cxt.setVariable("poName", g.getDaoPO());
+            cxt.setVariable("doName", g.getServiceDO());
             cxt.setVariable("idType", g.getIdType());
             cxt.setVariable("daoName", g.getDaoDAO());
             cxt.setVariable("serviceName", g.getServiceService());
@@ -849,9 +853,11 @@ public class GenerateServiceImpl implements GenerateService {
 
             mappingImport(imports, "Optional");
             mappingImport(imports, g.getDaoPO());
+            mappingImport(imports, g.getServiceDO());
             mappingImport(imports, g.getServiceBaseTest());
 
             cxt.setVariable("poName", g.getDaoPO());
+            cxt.setVariable("doName", g.getServiceDO());
             cxt.setVariable("idType", g.getIdType());
             cxt.setVariable("serviceName", g.getServiceService());
             cxt.setVariable("serviceVeriable", g.getServiceServiceVeriable());
