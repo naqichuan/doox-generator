@@ -21,9 +21,9 @@ fi
 cd ${PRGDIR}
 mvn -U -P${PROFILE} clean package -Dmaven.test.skip=true
 
-/export/bin/cg.stop
+/export/bin/generator.stop
 
-rm -rf /export/apps/cg/*
+rm -rf /export/apps/doox-generator/*
 cp -r ${PRGDIR}/doox-generator-web/target/doox-generator-web/* /export/apps/doox-generator
 
-/export/bin/cg.start
+/export/bin/generator.start
