@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- url -->
+    <bean id="_homeUrl" class="org.nqcx.doox.commons.lang.url.UrlBuilder"/>
+
+    <bean id="cookieCipherTools" class="org.nqcx.doox.commons.web.cookie.CookieCipherTools">
+        <property name="charsetName" value="UTF-8"/>
+    </bean>
+
+    <bean id="_nqcxCookie" class="org.nqcx.doox.commons.web.cookie.NqcxCookie"
+          abstract="true">
+        <property name="cookieCipherTools" ref="cookieCipherTools"/>
+    </bean>
+
+    <bean id="_normalCookie" parent="_nqcxCookie" abstract="true">
+        <property name="path" value="/"/>
+        <property name="domain" value=""/>
+        <property name="key" value="kVgKySMDePHOwrGtTJqA9CfSCrh81wEo"/>
+    </bean>
+
+    <bean id="jdbcCookie" parent="_normalCookie">
+        <property name="name" value="jdbc"/>
+        <property name="encrypt" value="true"/>
+        <property name="expiry" value="31536000"/>
+    </bean>
+    <bean id="wsCookie" parent="_normalCookie">
+        <property name="name" value="ws"/>
+        <property name="encrypt" value="true"/>
+        <property name="expiry" value="31536000"/>
+    </bean>
+    <bean id="authorCookie" parent="_normalCookie">
+        <property name="name" value="author"/>
+        <property name="encrypt" value="true"/>
+        <property name="expiry" value="31536000"/>
+    </bean>
+    <bean class="org.nqcx.doox.commons.web.cookie.CookieUtils">
+        <property name="cookieMap">
+            <map>
+                <entry key="jdbc" value-ref="jdbcCookie"/>
+                <entry key="ws" value-ref="wsCookie"/>
+                <entry key="author" value-ref="authorCookie"/>
+            </map>
+        </property>
+    </bean>
+</beans>

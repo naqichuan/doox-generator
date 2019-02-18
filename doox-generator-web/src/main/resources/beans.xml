@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- enable component scanning (beware that this does not enable mapper scanning!) -->
+    <context:component-scan base-package="org.nqcx.generator.service"/>
+
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:config/config.properties</value>
+                <value>classpath:config/nqcx.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="useCodeAsDefaultMessage" value="false"/>
+        <property name="basenames">
+            <list>
+                <value>gmsg.gmsg</value>
+                <value>gmsg.0000_CG</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 该配置文件是 nqcx-commons-web 包下 -->
+    <import resource="classpath:spring/bean-commons-result.xml"/>
+
+    <!-- 打包时，以下配置文件不进行占位符${}过滤和值替换 -->
+    <import resource="spring/bean-nqcx.xml"/>
+    <import resource="spring/bean-data.xml"/>
+    <import resource="spring/bean-web.xml"/>
+</beans>

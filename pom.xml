@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.nqcx</groupId>
-        <artifactId>nqcx-parent</artifactId>
-        <version>1.1.0-SNAPSHOT</version>
-        <relativePath>../../projects/nqcx-parent</relativePath>
+        <groupId>org.nqcx.doox</groupId>
+        <artifactId>parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.nqcx.cg</groupId>
-    <artifactId>nqcx-cg</artifactId>
+    <groupId>org.nqcx.generator</groupId>
+    <artifactId>doox-generator</artifactId>
     <version>2.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>nqcx-cg</name>
+    <name>doox-generator</name>
     <url>http://nqcx.org</url>
 
     <modules>
-        <module>nqcx-cg-doox</module>
-        <module>nqcx-cg-web</module>
+        <module>doox-generator-core</module>
+        <module>doox-generator-web</module>
     </modules>
 
     <distributionManagement>
@@ -36,9 +36,9 @@
     </distributionManagement>
 
     <scm>
-        <connection>scm:git@github.com:naqichuan/nqcx-cg.git</connection>
-        <developerConnection>scm:git@github.com:naqichuan/nqcx-cg.git</developerConnection>
-        <url>https://github.com/naqichuan/nqcx-cg/tree/${project.scm.tag}</url>
+        <connection>scm:git@github.com:naqichuan/doox-generator.git</connection>
+        <developerConnection>scm:git@github.com:naqichuan/doox-generator.git</developerConnection>
+        <url>https://github.com/naqichuan/doox-generator/tree/${project.scm.tag}</url>
         <tag>master</tag>
     </scm>
 
