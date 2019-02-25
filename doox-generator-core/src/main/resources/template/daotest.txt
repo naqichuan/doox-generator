@@ -16,9 +16,9 @@ public class [(${name})] extends BaseDAOTest {
     @Autowired
     @Qualifier("[(${mapperVeriable})]")
     private [(${daoName})] [(${mapperVeriable})];
-    @Autowired
-    @Qualifier("[(${jpaVeriable})]")
-    private [(${daoName})] [(${jpaVeriable})];
+    // @Autowired
+    // @Qualifier("[(${jpaVeriable})]")
+    // private [(${daoName})] [(${jpaVeriable})];
 
     protected [(${daoName})] getDao() {
         return [(${mapperVeriable})];
