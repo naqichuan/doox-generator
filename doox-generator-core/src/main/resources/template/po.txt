@@ -14,7 +14,8 @@ import [(${import})];
 @Entity
 @Table(name = "[(${tableName})]")
 public class [(${name})] {
-[# th:each="f : ${poFields}"]
+[# th:each="f : ${poFields}"][# th:if="${poFieldComments[__${fStat.index}__] != ''}"]
+    [(*{poFieldComments[__${fStat.index}__]})][/]
     [(${f})][/][# th:each="gs : ${poGetterAndSetter}"]
 [# th:each="an : ${gs.annotations}"]
     [(${an})][/]

@@ -429,8 +429,8 @@ public class GenerateServiceImpl implements GenerateService {
             baseVariable(cxt, imports, g.getAuthor(), g.getProvideOPackage(), g.getProvideO());
             mappingImport(imports, "Serializable");
 
-            List<String> oFields = new ArrayList<>();
             List<String> oFieldComments = new ArrayList<>();
+            List<String> oFields = new ArrayList<>();
             List<CgField> oGetterAndSetters = new ArrayList<>();
 
             g.getTable().getColumns().forEach(c -> {
@@ -443,13 +443,14 @@ public class GenerateServiceImpl implements GenerateService {
                     oFieldComments.add("// " + c.getComment());
                 else
                     oFieldComments.add("");
+
                 oFields.add(String.format("private %s %s;", c.getType_(), c.getField_()));
 
                 oGetterAndSetters.add(cgField(c));
             });
 
-            cxt.setVariable("oFields", oFields);
             cxt.setVariable("oFieldComments", oFieldComments);
+            cxt.setVariable("oFields", oFields);
             cxt.setVariable("oGetterAndSetter", oGetterAndSetters);
 
             this.writeFile(g.getLogFile(),
@@ -517,6 +518,7 @@ public class GenerateServiceImpl implements GenerateService {
 
             // po field
             List<String> poFields = new ArrayList<>();
+            List<String> poFieldComments = new ArrayList<>();
             List<CgField> poGetterAndSetters = new ArrayList<>();
 
             g.getTable().getColumns().forEach(c -> {
@@ -524,6 +526,11 @@ public class GenerateServiceImpl implements GenerateService {
 
                 CgField field = cgField(c);
                 field.setAnnotations(new LinkedHashSet<>());
+
+                if (c.getComment() != null && c.getComment().length() > 0)
+                    poFieldComments.add("// " + c.getComment());
+                else
+                    poFieldComments.add("");
 
                 // annotations
                 if (c.isId_()) {
@@ -564,13 +571,14 @@ public class GenerateServiceImpl implements GenerateService {
                 field.getAnnotations().add("@Column(" + colAnno + ")");
 
                 poFields.add(String.format("private %s %s;", c.getType_(), c.getField_()));
-                cxt.setVariable("poFields", poFields);
 
                 poGetterAndSetters.add(field);
-                cxt.setVariable("poGetterAndSetter", poGetterAndSetters);
             });
-
             cxt.setVariable("tableName", g.getTable().getName());
+
+            cxt.setVariable("poFields", poFields);
+            cxt.setVariable("poGetterAndSetter", poGetterAndSetters);
+            cxt.setVariable("poFieldComments", poFieldComments);
 
             this.writeFile(g.getLogFile(),
                     package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoPOPackage()),
