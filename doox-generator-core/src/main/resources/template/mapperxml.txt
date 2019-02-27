@@ -55,7 +55,10 @@
         <where>
             <if test="[(${idFieldName})] != null and [(${idFieldName})] != ''">
                 [(${idColumn})]=[(${idField})]
-            </if>
+            </if>[# th:each="c : ${poConditionFields}"]
+            <if test="[(${c})] != null and [(${c})] != ''">
+                AND [(*{poConditionColumns[__${cStat.index}__]})]=#{[(${c})]}
+            </if>[/]
         </where>
     </sql>
 

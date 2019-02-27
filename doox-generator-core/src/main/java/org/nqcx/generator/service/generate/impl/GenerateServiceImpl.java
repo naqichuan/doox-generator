@@ -10,6 +10,7 @@ package org.nqcx.generator.service.generate.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.nqcx.doox.commons.lang.o.DTO;
+import org.nqcx.doox.commons.util.date.DateUtils;
 import org.nqcx.generator.provide.o.CgField;
 import org.nqcx.generator.provide.o.Generate;
 import org.nqcx.generator.provide.o.table.Column;
@@ -33,6 +34,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static org.nqcx.doox.commons.util.date.DateFormatUtils.NQCX_TIME_FORMAT;
 
 /**
  * @author naqichuan Feb 9, 2014 2:18:27 AM
@@ -152,6 +155,7 @@ public class GenerateServiceImpl implements GenerateService {
 
         // 写入空行到日志
         this.writeLog(g.getLogFile(), "");
+        this.writeLog(g.getLogFile(), NQCX_TIME_FORMAT.format(DateUtils.date()));
 
         // provide
         if (g.getProvide_().isTrue())
@@ -612,6 +616,9 @@ public class GenerateServiceImpl implements GenerateService {
             List<String> poUpdateColumns = new ArrayList<>();
             List<String> poUpdateFields = new ArrayList<>();
 
+            List<String> poConditionColumns = new ArrayList<>();
+            List<String> poConditionFields = new ArrayList<>();
+
             Column idc = g.getTable().getIdColumn();
             final String[] tableColumnsStr = {""};
             final String[] idColumn = {idc != null ? idc.getField() : null};
@@ -639,6 +646,9 @@ public class GenerateServiceImpl implements GenerateService {
 
                         poUpdateColumns.add(c.getField());
                         poUpdateFields.add("#{" + c.getField_() + "}");
+
+                        poConditionColumns.add(c.getField());
+                        poConditionFields.add(c.getField_());
                     }
                 }
             });
@@ -658,6 +668,8 @@ public class GenerateServiceImpl implements GenerateService {
             cxt.setVariable("poInsertFields", poInsertFields);
             cxt.setVariable("poUpdateColumns", poUpdateColumns);
             cxt.setVariable("poUpdateFields", poUpdateFields);
+            cxt.setVariable("poConditionColumns", poConditionColumns);
+            cxt.setVariable("poConditionFields", poConditionFields);
 
             this.writeFile(g.getLogFile(),
                     package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoMapperPackage()),
