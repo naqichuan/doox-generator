@@ -12,7 +12,7 @@
         [(${tableColumnsStr})]
     </sql>
 
-    <insert id="save" parameterType="[(${poName})]" useGeneratedKeys="true" keyProperty="[(${idField})]">
+    <insert id="save" parameterType="[(${poName})]" useGeneratedKeys="true" keyProperty="[(${idFieldName})]">
         INSERT INTO [(${tableName})] (
             <include refid="[(${tableName})]_columns" />
         ) VALUES ([# th:each="c : ${poInsertColumns}"][# th:if="${cStat.index > 0}"],[/]
