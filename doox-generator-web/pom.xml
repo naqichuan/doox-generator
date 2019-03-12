@@ -147,23 +147,7 @@
         <profile>
             <id>nqc</id>
             <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-            </properties>
-        </profile>
-        <profile>
-            <id>yhc</id>
-            <activation>
                 <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-            </properties>
-        </profile>
-        <profile>
-            <id>ca</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
             </properties>
