@@ -62,8 +62,8 @@ public class [(${name})] extends BaseServiceTest {
 
     @Test
     public void findById() {
-        Optional<[(${doName})]> do_ = [(${serviceVeriable})].findById(1[# th:if="${idType == 'Long'}"]L[/]);
-        System.out.println(do_.orElse(null));
+        [(${doName})] do_ = [(${serviceVeriable})].findById(1[# th:if="${idType == 'Long'}"]L[/]);
+        System.out.println(do_);
     }
 
     @Test

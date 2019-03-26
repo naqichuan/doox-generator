@@ -88,7 +88,6 @@ public class GenerateServiceImpl implements GenerateService {
         CLASS_MAPPING.put("Arrays", "java.util.Arrays");
         CLASS_MAPPING.put("ArrayList", "java.util.ArrayList");
         CLASS_MAPPING.put("List", "java.util.List");
-        CLASS_MAPPING.put("Optional", "java.util.Optional");
         CLASS_MAPPING.put("Map", "java.util.Map");
 
         CLASS_MAPPING.put("Entity", "javax.persistence.Entity");
@@ -871,7 +870,6 @@ public class GenerateServiceImpl implements GenerateService {
 
             baseTestImport(imports);
 
-            mappingImport(imports, "Optional");
             mappingImport(imports, g.getDaoPO());
             mappingImport(imports, g.getServiceDO());
             mappingImport(imports, g.getServiceBaseTest());
