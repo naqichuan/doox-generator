@@ -71,7 +71,7 @@ public class [(${name})] extends BaseDAOTest {
 
     @Test
     public void findById() {
-        [(${poName})] poName = getDao().findById(1[# th:if="${idType == 'Long'}"]L[/]).orElse(null);
+        [(${poName})] poName = getDao().findById(1[# th:if="${idType == 'Long'}"]L[/]);
         System.out.println(poName);
     }
 
