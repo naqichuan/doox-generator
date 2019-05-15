@@ -350,7 +350,7 @@
                 for (var idx in ps) {
                     if (!ps[idx])
                         continue;
-                    input = input.replace(ps[idx], '');
+                    input = input.replace(new RegExp('^' + ps[idx], 'g'), '');
                 }
             }
             return input.replaceFirstUP().replaceFirstLow();
@@ -371,7 +371,7 @@
             else if (input.startWith('datetime') || input.startWith('date') || input.startWith('timestamp'))
                 return "Date";
             else if (input.startWith('blob'))
-                return "byte[]"
+                return "byte[]";
             else
                 return input;
         }
