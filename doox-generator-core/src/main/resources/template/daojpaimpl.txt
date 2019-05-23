@@ -14,7 +14,10 @@ import [(${import})];
 @Service
 public class [(${name})] extends JpaSupport<[(${jpaName})], [(${poName})], [(${idType})]> implements [(${daoName})] {
 
-    public [(${name})]([(${jpaName})] [(${jpaVeriable})]) {
+    private final [(${mapperName})] [(${mapperVeriable})];
+
+    public [(${name})]([(${jpaName})] [(${jpaVeriable})], [(${mapperName})] [(${mapperVeriable})]) {
         super([(${jpaVeriable})]);
+        this.[(${mapperVeriable})] = [(${mapperVeriable})];
     }
 }

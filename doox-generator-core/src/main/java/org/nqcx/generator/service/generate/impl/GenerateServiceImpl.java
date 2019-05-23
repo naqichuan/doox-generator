@@ -725,6 +725,7 @@ public class GenerateServiceImpl implements GenerateService {
 
             imports.clear();
             mappingImport(imports, g.getDaoMapper());
+            mappingImport(imports, g.getDaoJpa());
             mappingImport(imports, "MapperSupport");
             mappingImport(imports, g.getDaoPO());
             mappingImport(imports, g.getDaoDAO());
@@ -738,6 +739,7 @@ public class GenerateServiceImpl implements GenerateService {
 
             imports.clear();
             mappingImport(imports, g.getDaoJpa());
+            mappingImport(imports, g.getDaoMapper());
             mappingImport(imports, "JpaSupport");
             mappingImport(imports, g.getDaoPO());
             mappingImport(imports, g.getDaoDAO());
