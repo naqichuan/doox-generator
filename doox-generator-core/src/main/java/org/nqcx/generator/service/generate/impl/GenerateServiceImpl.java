@@ -35,7 +35,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.nqcx.doox.commons.util.date.DateFormatUtils.NQCX_TIME_FORMAT;
+import static org.nqcx.doox.commons.util.date.DateFormatUtils.TIME;
 
 /**
  * @author naqichuan Feb 9, 2014 2:18:27 AM
@@ -154,7 +154,7 @@ public class GenerateServiceImpl implements GenerateService {
 
         // 写入空行到日志
         this.writeLog(g.getLogFile(), "");
-        this.writeLog(g.getLogFile(), NQCX_TIME_FORMAT.format(DateUtils.date()));
+        this.writeLog(g.getLogFile(), TIME.format(DateUtils.date()));
 
         // provide
         if (g.getProvide_().isTrue())
@@ -724,6 +724,7 @@ public class GenerateServiceImpl implements GenerateService {
             cxt.setVariable("jpaVeriable", g.getDaoJpaVeriable());
 
             imports.clear();
+            mappingImport(imports, "Qualifier");
             mappingImport(imports, g.getDaoMapper());
             mappingImport(imports, g.getDaoJpa());
             mappingImport(imports, "MapperSupport");
@@ -738,6 +739,7 @@ public class GenerateServiceImpl implements GenerateService {
                     process(DAOMAPPERIMPL_TXT_TEMPLATE_NAME, cxt));
 
             imports.clear();
+            mappingImport(imports, "Qualifier");
             mappingImport(imports, g.getDaoJpa());
             mappingImport(imports, g.getDaoMapper());
             mappingImport(imports, "JpaSupport");
