@@ -17,7 +17,7 @@ public class [(${name})] extends JpaSupport<[(${jpaName})], [(${poName})], [(${i
     private final [(${daoName})] [(${mapperVeriable})];
 
     public [(${name})]([(${jpaName})] [(${jpaVeriable})],
-                       @Qualifier("[(${mapperVeriable})]") [(${daoName})] [(${mapperVeriable})]) {
+                        @Qualifier("[(${mapperVeriable})]") [(${daoName})] [(${mapperVeriable})]) {
         super([(${jpaVeriable})]);
         this.[(${mapperVeriable})] = [(${mapperVeriable})];
     }
