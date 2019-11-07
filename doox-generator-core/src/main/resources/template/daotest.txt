@@ -14,14 +14,14 @@ import [(${import})];
 public class [(${name})] extends BaseDAOTest {
 
     @Autowired
-    @Qualifier("[(${mapperVeriable})]")
-    private [(${daoName})] [(${mapperVeriable})];
+    @Qualifier("[(${daoVeriable})]")
+    private [(${daoName})] [(${daoVeriable})];
     // @Autowired
     // @Qualifier("[(${jpaVeriable})]")
     // private [(${daoName})] [(${jpaVeriable})];
 
     protected [(${daoName})] getDao() {
-        return [(${mapperVeriable})];
+        return [(${daoVeriable})];
         // return [(${jpaVeriable})];
     }
 
@@ -82,8 +82,8 @@ public class [(${name})] extends BaseDAOTest {
 
         if (list == null)
             System.out.println(list);
-
-        list.forEach(System.out::println);
+        else
+            list.forEach(System.out::println);
     }
 
     @Test
@@ -93,8 +93,8 @@ public class [(${name})] extends BaseDAOTest {
 
         if (list == null)
             System.out.println(list);
-
-        list.forEach(System.out::println);
+        else
+            list.forEach(System.out::println);
     }
 
     @Test
@@ -107,9 +107,8 @@ public class [(${name})] extends BaseDAOTest {
 
         DTO dtoResult = getDao().findAll(dtoRequest);
 
-        if (dtoResult != null && dtoResult.getList() != null) {
+        if (dtoResult != null && dtoResult.getList() != null)
             dtoResult.getList().forEach(System.out::println);
-        }
 
         System.out.println(dtoResult);
     }

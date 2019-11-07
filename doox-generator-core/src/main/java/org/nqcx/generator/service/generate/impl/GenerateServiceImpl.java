@@ -542,10 +542,10 @@ public class GenerateServiceImpl implements GenerateService {
                 }
 
                 String colAnno = "name = \"" + c.getField() + "\"";
-                if (c.isNull_())
-                    colAnno += ", nullable = true";
-                else
+                if (!c.isNull_())
                     colAnno += ", nullable = false";
+//                else
+//                    colAnno += ", nullable = true";
 
                 if (c.getColumnLength() != null)
                     colAnno += ", length = " + c.getColumnLength();
@@ -761,7 +761,7 @@ public class GenerateServiceImpl implements GenerateService {
             mappingImport(imports, g.getDaoDAO());
 
             cxt.setVariable("daoName", g.getDaoDAO());
-            cxt.setVariable("mapperVeriable", g.getDaoMapperVeriable());
+            cxt.setVariable("daoVeriable", g.getDaoDAOVeriable());
             cxt.setVariable("jpaVeriable", g.getDaoJpaVeriable());
 
             cxt.setVariable("poName", g.getDaoPO());
