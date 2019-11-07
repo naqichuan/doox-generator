@@ -252,7 +252,7 @@ public class GenerateServiceImpl implements GenerateService {
                     && StringUtils.containsIgnoreCase(c.getField(), "_modify")) {
                 c.setCm_(true);
 
-                c.setMybatisValue("NULL");
+                c.setMybatisValue("CURRENT_TIMESTAMP()");
             }
         }
     }
