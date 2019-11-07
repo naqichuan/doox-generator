@@ -73,8 +73,8 @@ public class [(${name})] extends BaseServiceTest {
 
         if (list == null)
             System.out.println(list);
-
-        list.forEach(System.out::println);
+        else
+            list.forEach(System.out::println);
     }
 
     @Test
@@ -84,8 +84,8 @@ public class [(${name})] extends BaseServiceTest {
 
         if (list == null)
             System.out.println(list);
-
-        list.forEach(System.out::println);
+        else
+            list.forEach(System.out::println);
     }
 
     @Test
@@ -98,9 +98,8 @@ public class [(${name})] extends BaseServiceTest {
 
         DTO dtoResult = [(${serviceVeriable})].findAll(dtoRequest);
 
-        if (dtoResult != null && dtoResult.getList() != null) {
+        if (dtoResult != null && dtoResult.getList() != null)
             dtoResult.getList().forEach(System.out::println);
-        }
 
         System.out.println(dtoResult);
     }
