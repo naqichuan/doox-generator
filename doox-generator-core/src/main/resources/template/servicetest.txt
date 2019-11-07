@@ -62,14 +62,14 @@ public class [(${name})] extends BaseServiceTest {
 
     @Test
     public void findById() {
-        [(${doName})] do_ = [(${serviceVeriable})].findById(1[# th:if="${idType == 'Long'}"]L[/]);
-        System.out.println(do_);
+        [(${poName})] po = [(${serviceVeriable})].findById(1[# th:if="${idType == 'Long'}"]L[/]);
+        System.out.println(po);
     }
 
     @Test
     public void findAllByIds() {
         List<[(${idType})]> ids = Arrays.asList(2[# th:if="${idType == 'Long'}"]L[/], 3[# th:if="${idType == 'Long'}"]L[/], 4[# th:if="${idType == 'Long'}"]L[/], 5[# th:if="${idType == 'Long'}"]L[/]);
-        List<[(${doName})]> list = [(${serviceVeriable})].findAllByIds(ids);
+        List<[(${poName})]> list = [(${serviceVeriable})].findAllByIds(ids);
 
         if (list == null)
             System.out.println(list);
@@ -80,7 +80,7 @@ public class [(${name})] extends BaseServiceTest {
     @Test
     public void listAll() {
         DTO dto = new DTO();
-        List<[(${doName})]> list = [(${serviceVeriable})].listAll(dto);
+        List<[(${poName})]> list = [(${serviceVeriable})].listAll(dto);
 
         if (list == null)
             System.out.println(list);

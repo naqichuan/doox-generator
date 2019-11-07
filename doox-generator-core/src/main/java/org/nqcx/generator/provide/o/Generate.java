@@ -78,7 +78,7 @@ public class Generate implements Serializable {
     private BoolEO service_ = BoolEO.FALSE;
     private BoolEO serviceDO_ = BoolEO.FALSE;
     private String serviceDOPackage;
-    private String serviceDO;
+//    private String serviceDO;
     private BoolEO serviceService_ = BoolEO.FALSE;
     private String serviceServicePackage;
     private String serviceService;
@@ -129,8 +129,8 @@ public class Generate implements Serializable {
     private String daoBaseTest;
     private String daoBaseTestReference;
 
-    private String serviceDOReference;
-    private String serviceDOVeriable;
+//    private String serviceDOReference;
+//    private String serviceDOVeriable;
     private String serviceServiceReference;
     private String serviceServiceVeriable;
     private String serviceServiceImplReference;
@@ -508,13 +508,13 @@ public class Generate implements Serializable {
         this.serviceServicePackage = serviceServicePackage;
     }
 
-    public String getServiceDO() {
-        return serviceDO;
-    }
-
-    public void setServiceDO(String serviceDO) {
-        this.serviceDO = serviceDO;
-    }
+//    public String getServiceDO() {
+//        return serviceDO;
+//    }
+//
+//    public void setServiceDO(String serviceDO) {
+//        this.serviceDO = serviceDO;
+//    }
 
     public BoolEO getServiceService_() {
         return serviceService_;
@@ -823,21 +823,21 @@ public class Generate implements Serializable {
         this.daoBaseTestReference = daoBaseTestReference;
     }
 
-    public String getServiceDOReference() {
-        return serviceDOReference;
-    }
-
-    public void setServiceDOReference(String serviceDOReference) {
-        this.serviceDOReference = serviceDOReference;
-    }
-
-    public String getServiceDOVeriable() {
-        return serviceDOVeriable;
-    }
-
-    public void setServiceDOVeriable(String serviceDOVeriable) {
-        this.serviceDOVeriable = serviceDOVeriable;
-    }
+//    public String getServiceDOReference() {
+//        return serviceDOReference;
+//    }
+//
+//    public void setServiceDOReference(String serviceDOReference) {
+//        this.serviceDOReference = serviceDOReference;
+//    }
+//
+//    public String getServiceDOVeriable() {
+//        return serviceDOVeriable;
+//    }
+//
+//    public void setServiceDOVeriable(String serviceDOVeriable) {
+//        this.serviceDOVeriable = serviceDOVeriable;
+//    }
 
     public String getServiceServiceReference() {
         return serviceServiceReference;

@@ -143,17 +143,17 @@
             <span style="font-weight: 700;"><input type="checkbox" name="service_" value="true">Module -> Service</span>
         </legend>
         <table border="0" cellpadding="0" cellspacing="0">
-            <tr>
-                <td class="lable"><input type="checkbox" name="serviceDO_" value="true"></td>
-                <td class="lable">Create DO:</td>
-                <td>
-                    <input type="text" name="serviceDOPackage" class="big_240 right" value="">
-                </td>
-                <td class="lable">.</td>
-                <td>
-                    <input type="text" name="serviceDO" class="big_200" value="">
-                </td>
-            </tr>
+            <!--<tr>-->
+                <!--<td class="lable"><input type="checkbox" name="serviceDO_" value="true"></td>-->
+                <!--<td class="lable">Create DO:</td>-->
+                <!--<td>-->
+                    <!--<input type="text" name="serviceDOPackage" class="big_240 right" value="">-->
+                <!--</td>-->
+                <!--<td class="lable">.</td>-->
+                <!--<td>-->
+                    <!--<input type="text" name="serviceDO" class="big_200" value="">-->
+                <!--</td>-->
+            <!--</tr>-->
             <tr>
                 <td class="lable"><input type="checkbox" name="serviceService_" value="true"></td>
                 <td class="lable">Create Service:</td>
@@ -535,12 +535,12 @@
         _: function () {
             return jQuery('input[name="service_"]');
         },
-        serviceDOPackage: function () {
-            return jQuery('input[name="serviceDOPackage"]');
-        },
-        serviceDO: function () {
-            return jQuery('input[name="serviceDO"]');
-        },
+        // serviceDOPackage: function () {
+        //     return jQuery('input[name="serviceDOPackage"]');
+        // },
+        // serviceDO: function () {
+        //     return jQuery('input[name="serviceDO"]');
+        // },
         serviceServicePackage: function () {
             return jQuery('input[name="serviceServicePackage"]');
         },
@@ -573,14 +573,14 @@
                 return;
 
             var serviceName = tableName.replaceFirstUP();
-            var serviceDO = serviceName + "DO";
+            // var serviceDO = serviceName + "DO";
             var serviceService = 'I' + serviceName + "Service";
             var serviceServiceImpl = serviceName + "Service"
             var serviceServiceTest = serviceServiceImpl + "Test"
 
-            var sdValue = pValue + '.data.do_' + (tablePack ? "." + tablePack : "");
-            if (sdValue.indexOf(".") === 0 && sdValue.length > 1)
-                sdValue = sdValue.substring(1);
+            // var sdValue = pValue + '.data.do_' + (tablePack ? "." + tablePack : "");
+            // if (sdValue.indexOf(".") === 0 && sdValue.length > 1)
+            //     sdValue = sdValue.substring(1);
 
             var ssValue = pValue + '.service' + (tablePack ? "." + tablePack : "");
             if (ssValue.indexOf(".") === 0 && ssValue.length > 1)
@@ -595,8 +595,8 @@
                 sstValue = sstValue.substring(1);
 
             // set value
-            this.serviceDOPackage().val(sdValue);
-            this.serviceDO().val(serviceDO);
+            // this.serviceDOPackage().val(sdValue);
+            // this.serviceDO().val(serviceDO);
             this.serviceServicePackage().val(ssValue);
             this.serviceService().val(serviceService);
             this.serviceImplPackage().val(ssiValue);

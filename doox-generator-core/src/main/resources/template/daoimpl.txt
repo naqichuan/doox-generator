@@ -11,6 +11,10 @@ import [(${import})];
 /**
  * @author [(${author})] [(${#dates.format(date, 'yyyy-MM-dd HH:mm')})]
  */
-public class [(${name})] extends [(${poName})] {
+@Service
+public class [(${name})] extends MapperSupport<[(${mapperName})], [(${poName})], [(${idType})]> implements [(${daoName})] {
 
+    public [(${name})]([(${mapperName})] [(${mapperVeriable})]) {
+        super([(${mapperVeriable})]);
+    }
 }

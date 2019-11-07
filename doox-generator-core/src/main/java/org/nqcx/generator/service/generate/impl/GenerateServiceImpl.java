@@ -63,9 +63,8 @@ public class GenerateServiceImpl implements GenerateService {
     private final static String JPA_TXT_TEMPLATE_NAME = "jpa.txt";
     private final static String DAO_TXT_TEMPLATE_NAME = "dao.txt";
     private final static String DAO_TEST_TXT_TEMPLATE_NAME = "daotest.txt";
-    private final static String DAOMAPPERIMPL_TXT_TEMPLATE_NAME = "daomapperimpl.txt";
+    private final static String DAOIMPL_TXT_TEMPLATE_NAME = "daoimpl.txt";
     private final static String DAOJPAIMPL_TXT_TEMPLATE_NAME = "daojpaimpl.txt";
-    private final static String DO_TXT_TEMPLATE_NAME = "do.txt";
     private final static String SERVICE_TXT_TEMPLATE_NAME = "service.txt";
     private final static String SERVICEIMPL_TXT_TEMPLATE_NAME = "serviceimpl.txt";
     private final static String SERVICETEST_TXT_TEMPLATE_NAME = "servicetest.txt";
@@ -315,8 +314,6 @@ public class GenerateServiceImpl implements GenerateService {
         g.setDaoDAOTestPackage(g.getDaoDAOTestPackage());
         g.setDaoDAOTest(g.getDaoDAOTest());
 
-        g.setServiceDOReference(g.getServiceDOPackage() + "." + g.getServiceDO());
-        g.setServiceDOVeriable(StringUtils.uncapitalize(g.getServiceDO()));
         g.setServiceServiceReference(g.getServiceServicePackage() + "." + g.getServiceService());
         g.setServiceServiceVeriable(StringUtils.uncapitalize(StringUtils.substring(g.getServiceService(), 1)));
         g.setServiceServiceImplReference(g.getServiceServiceImplPackage() + "." + g.getServiceServiceImpl());
@@ -354,7 +351,6 @@ public class GenerateServiceImpl implements GenerateService {
         CLASS_MAPPING.put(g.getDaoDAOImpl(), g.getDaoDAOImplReference());
         CLASS_MAPPING.put(g.getDaoBaseTest(), g.getDaoBaseTestReference());
 
-        CLASS_MAPPING.put(g.getServiceDO(), g.getServiceDOReference());
         CLASS_MAPPING.put(g.getServiceService(), g.getServiceServiceReference());
         CLASS_MAPPING.put(g.getServiceServiceImpl(), g.getServiceServiceImplReference());
         CLASS_MAPPING.put(g.getServiceBaseTest(), g.getServiceBaseTestReference());
@@ -710,7 +706,7 @@ public class GenerateServiceImpl implements GenerateService {
         }
 
         if (g.getDaoDAOImpl_().isTrue()) {
-            // dao mapper&jpa impl
+            // dao defalt & jpa impl
             baseVariable(cxt, imports, g.getAuthor(), g.getDaoDAOImplPackage(), g.getDaoDAOImpl());
 
             cxt.setVariable("poName", g.getDaoPO());
@@ -720,23 +716,22 @@ public class GenerateServiceImpl implements GenerateService {
             cxt.setVariable("mapperName", g.getDaoMapper());
             cxt.setVariable("jpaName", g.getDaoJpa());
 
+            cxt.setVariable("daoVeriable", g.getDaoDAOVeriable());
             cxt.setVariable("mapperVeriable", g.getDaoMapperVeriable());
             cxt.setVariable("jpaVeriable", g.getDaoJpaVeriable());
 
             imports.clear();
-            mappingImport(imports, "Qualifier");
             mappingImport(imports, g.getDaoMapper());
-            mappingImport(imports, g.getDaoJpa());
             mappingImport(imports, "MapperSupport");
             mappingImport(imports, g.getDaoPO());
             mappingImport(imports, g.getDaoDAO());
             mappingImport(imports, "stereotype.Service");
 
-            cxt.setVariable("name", StringUtils.capitalize(g.getDaoMapperVeriable()));
+            cxt.setVariable("name", StringUtils.capitalize(g.getDaoDAOVeriable()));
             this.writeFile(g.getLogFile(),
                     package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoDAOImplPackage()),
-                    StringUtils.capitalize(g.getDaoMapperVeriable()), JAVA_EXT_NAME,
-                    process(DAOMAPPERIMPL_TXT_TEMPLATE_NAME, cxt));
+                    StringUtils.capitalize(g.getDaoDAOVeriable()), JAVA_EXT_NAME,
+                    process(DAOIMPL_TXT_TEMPLATE_NAME, cxt));
 
             imports.clear();
             mappingImport(imports, "Qualifier");
@@ -804,32 +799,15 @@ public class GenerateServiceImpl implements GenerateService {
         Context cxt = new Context();
         Set<String> imports = new LinkedHashSet<>();
 
-        if (g.getServiceDO_().isTrue()) {
-            // DO
-            baseVariable(cxt, imports, g.getAuthor(), g.getServiceDOPackage(), g.getServiceDO());
-
-            mappingImport(imports, g.getDaoPO());
-
-            cxt.setVariable("poName", g.getDaoPO());
-
-            this.writeFile(g.getLogFile(),
-                    package2path(g.getServiceModuleFile().getPath(), JAVA_PATH, g.getServiceDOPackage()),
-                    g.getServiceDO(), JAVA_EXT_NAME,
-                    process(DO_TXT_TEMPLATE_NAME, cxt));
-            // end of DO
-        }
-
         if (g.getServiceService_().isTrue()) {
             // service
             baseVariable(cxt, imports, g.getAuthor(), g.getServiceServicePackage(), g.getServiceService());
 
             mappingImport(imports, "IService");
             mappingImport(imports, g.getDaoPO());
-            mappingImport(imports, g.getServiceDO());
             mappingImport(imports, g.getProvideProvide());
 
             cxt.setVariable("poName", g.getDaoPO());
-            cxt.setVariable("doName", g.getServiceDO());
             cxt.setVariable("idType", g.getIdType());
             cxt.setVariable("provideName", g.getProvideProvide());
 
@@ -846,18 +824,17 @@ public class GenerateServiceImpl implements GenerateService {
 
             mappingImport(imports, g.getDaoDAO());
             mappingImport(imports, g.getDaoPO());
-            mappingImport(imports, g.getServiceDO());
             mappingImport(imports, g.getServiceService());
             mappingImport(imports, "ServiceSupport");
             mappingImport(imports, "Qualifier");
             mappingImport(imports, "stereotype.Service");
 
             cxt.setVariable("poName", g.getDaoPO());
-            cxt.setVariable("doName", g.getServiceDO());
             cxt.setVariable("idType", g.getIdType());
             cxt.setVariable("daoName", g.getDaoDAO());
             cxt.setVariable("serviceName", g.getServiceService());
 
+            cxt.setVariable("daoVeriable", g.getDaoDAOVeriable());
             cxt.setVariable("mapperVeriable", g.getDaoMapperVeriable());
             cxt.setVariable("jpaVeriable", g.getDaoJpaVeriable());
 
@@ -875,11 +852,9 @@ public class GenerateServiceImpl implements GenerateService {
             baseTestImport(imports);
 
             mappingImport(imports, g.getDaoPO());
-            mappingImport(imports, g.getServiceDO());
             mappingImport(imports, g.getServiceBaseTest());
 
             cxt.setVariable("poName", g.getDaoPO());
-            cxt.setVariable("doName", g.getServiceDO());
             cxt.setVariable("idType", g.getIdType());
             cxt.setVariable("serviceName", g.getServiceService());
             cxt.setVariable("serviceVeriable", g.getServiceServiceVeriable());
@@ -921,9 +896,9 @@ public class GenerateServiceImpl implements GenerateService {
             // vo
             baseVariable(cxt, imports, g.getAuthor(), g.getWebVOPackage(), g.getWebVO());
 
-            mappingImport(imports, g.getServiceDO());
+            mappingImport(imports, g.getDaoPO());
 
-            cxt.setVariable("doName", g.getServiceDO());
+            cxt.setVariable("poName", g.getDaoPO());
 
             this.writeFile(g.getLogFile(),
                     package2path(g.getWebModuleFile().getPath(), JAVA_PATH, g.getWebVOPackage()),
