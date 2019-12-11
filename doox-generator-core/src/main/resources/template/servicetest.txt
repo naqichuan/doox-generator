@@ -72,7 +72,7 @@ public class [(${name})] extends BaseServiceTest {
         List<[(${poName})]> list = [(${serviceVeriable})].findAllByIds(ids);
 
         if (list == null)
-            System.out.println(list);
+            System.out.println(null);
         else
             list.forEach(System.out::println);
     }
@@ -83,7 +83,7 @@ public class [(${name})] extends BaseServiceTest {
         List<[(${poName})]> list = [(${serviceVeriable})].listAll(dto);
 
         if (list == null)
-            System.out.println(list);
+            System.out.println(null);
         else
             list.forEach(System.out::println);
     }

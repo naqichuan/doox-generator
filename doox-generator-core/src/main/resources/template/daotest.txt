@@ -81,7 +81,7 @@ public class [(${name})] extends BaseDAOTest {
         List<[(${poName})]> list = getDao().findAllByIds(ids);
 
         if (list == null)
-            System.out.println(list);
+            System.out.println(null);
         else
             list.forEach(System.out::println);
     }
@@ -92,7 +92,7 @@ public class [(${name})] extends BaseDAOTest {
         List<[(${poName})]> list = getDao().listAll(dto);
 
         if (list == null)
-            System.out.println(list);
+            System.out.println(null);
         else
             list.forEach(System.out::println);
     }
