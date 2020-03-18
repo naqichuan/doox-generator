@@ -80,10 +80,8 @@ public class [(${name})] extends BaseDAOTest {
         List<[(${idType})]> ids = Arrays.asList(2[# th:if="${idType == 'Long'}"]L[/], 3[# th:if="${idType == 'Long'}"]L[/], 4[# th:if="${idType == 'Long'}"]L[/], 5[# th:if="${idType == 'Long'}"]L[/]);
         List<[(${poName})]> list = getDao().findAllByIds(ids);
 
-        if (list == null)
-            System.out.println(null);
-        else
-            list.forEach(System.out::println);
+        Optional.ofNullable(list)
+                .ifPresent(l -> l.forEach(System.out::println));
     }
 
     @Test
@@ -91,10 +89,8 @@ public class [(${name})] extends BaseDAOTest {
         DTO dto = new DTO();
         List<[(${poName})]> list = getDao().listAll(dto);
 
-        if (list == null)
-            System.out.println(null);
-        else
-            list.forEach(System.out::println);
+        Optional.ofNullable(list)
+                .ifPresent(l -> l.forEach(System.out::println));
     }
 
     @Test
