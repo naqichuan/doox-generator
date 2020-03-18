@@ -46,7 +46,7 @@ public class GenerateServiceImpl implements GenerateService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     // database type to type and length
-    private final static Pattern TYPE_LENGTH_PATTERN = Pattern.compile("(.+?)(\\(((\\d+?))\\))*?");
+    private final static Pattern TYPE_LENGTH_PATTERN = Pattern.compile("(.+?)(\\((\\d+?)\\))*?");
     // Class name mapping to class reference
     private final static Map<String, String> CLASS_MAPPING = new HashMap<>();
 
@@ -71,11 +71,8 @@ public class GenerateServiceImpl implements GenerateService {
     private final static String VO_TXT_TEMPLATE_NAME = "vo.txt";
     private final static String CONTROLLER_TXT_TEMPLATE_NAME = "controller.txt";
 
-    @Autowired
-    @Qualifier("overwrite")
-    private Boolean overwrite; // 生成文件是否覆盖原来的文件
-    @Autowired
-    private TableService tableService;
+    private final Boolean overwrite; // 生成文件是否覆盖原来的文件
+    private final TableService tableService;
 
     static {
         CLASS_MAPPING.put("Serializable", "java.io.Serializable");
@@ -88,6 +85,7 @@ public class GenerateServiceImpl implements GenerateService {
         CLASS_MAPPING.put("ArrayList", "java.util.ArrayList");
         CLASS_MAPPING.put("List", "java.util.List");
         CLASS_MAPPING.put("Map", "java.util.Map");
+        CLASS_MAPPING.put("Optional", "java.util.Optional");
 
         CLASS_MAPPING.put("Entity", "javax.persistence.Entity");
         CLASS_MAPPING.put("Table", "javax.persistence.Table");
@@ -124,6 +122,12 @@ public class GenerateServiceImpl implements GenerateService {
         CLASS_MAPPING.put("ModelAndView", "org.springframework.web.servlet.ModelAndView");
 
         CLASS_MAPPING.put("test.Test", "org.junit.Test");
+    }
+
+    @Autowired
+    public GenerateServiceImpl(@Qualifier("overwrite") Boolean overwrite, TableService tableService) {
+        this.overwrite = overwrite;
+        this.tableService = tableService;
     }
 
     /**
@@ -219,7 +223,7 @@ public class GenerateServiceImpl implements GenerateService {
 
             // column type and length
             Matcher matcher = TYPE_LENGTH_PATTERN.matcher(c.getType());
-            if (matcher.matches() && matcher.groupCount() == 4) {
+            if (matcher.matches() && matcher.groupCount() == 3) {
                 if (matcher.group(1) != null)
                     c.setColumnType(matcher.group(1));
                 if (matcher.group(3) != null)
@@ -365,9 +369,7 @@ public class GenerateServiceImpl implements GenerateService {
      * @return boolean
      */
     private boolean pathExist(String path) {
-        if (!new File(path).exists())
-            return false;
-        return true;
+        return new File(path).exists();
     }
 
     /**
@@ -383,8 +385,8 @@ public class GenerateServiceImpl implements GenerateService {
     }
 
     /**
-     * @param imports
-     * @param className
+     * @param imports set
+     * @param className string
      */
     private void mappingImport(Set<String> imports, String className) {
         if (imports == null || className == null)
@@ -470,10 +472,10 @@ public class GenerateServiceImpl implements GenerateService {
     }
 
     /**
-     * @param resoucesPath modulePath
+     * @param modulePath modulePath
      * @param resoucesPath resoucesPath
      * @param _package     _package
-     * @return
+     * @return sting
      */
     private String package2path(String modulePath, String resoucesPath, String _package) {
         return StringUtils.trimToEmpty(modulePath)
@@ -789,6 +791,7 @@ public class GenerateServiceImpl implements GenerateService {
         mappingImport(imports, "ArrayList");
         mappingImport(imports, "Arrays");
         mappingImport(imports, "List");
+        mappingImport(imports, "Optional");
     }
 
     /**
@@ -950,7 +953,7 @@ public class GenerateServiceImpl implements GenerateService {
     }
 
 
-    public TemplateEngine templateEngine() {
+    private TemplateEngine templateEngine() {
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
 
         templateResolver.setTemplateMode(TemplateMode.TEXT);
@@ -966,8 +969,8 @@ public class GenerateServiceImpl implements GenerateService {
     }
 
     /**
-     * @param pPath
-     * @param content
+     * @param pPath string
+     * @param content string
      */
     private void writeFile(File logFile, String pPath, String name, String ext, String content) {
         if (isBlank(pPath))
@@ -976,8 +979,8 @@ public class GenerateServiceImpl implements GenerateService {
             content = "";
 
         File pathFile = new File(pPath);
-        if (!pathFile.exists())
-            pathFile.mkdirs();
+        if (!pathFile.exists() && !pathFile.mkdirs())
+           return;
 
         String fileName = pPath + "/" + name + ext;
         File file = new File(fileName);
@@ -1007,8 +1010,8 @@ public class GenerateServiceImpl implements GenerateService {
     }
 
     /**
-     * @param logFile
-     * @param line
+     * @param logFile file
+     * @param line string
      */
     private void writeLog(File logFile, String line) {
         FileWriter fw = null;
@@ -1030,8 +1033,8 @@ public class GenerateServiceImpl implements GenerateService {
     }
 
     /**
-     * @param str
-     * @return
+     * @param str string
+     * @return boolean
      */
     private boolean isBlank(String str) {
         return StringUtils.isBlank(str);
