@@ -14,7 +14,7 @@ import [(${import})];
 @Service
 public class [(${name})] extends JpaSupport<[(${jpaName})], [(${poName})], [(${idType})]> implements [(${daoName})] {
 
-    public [(${name})]([(${jpaName})] [(${jpaVeriable})) {
+    public [(${name})]([(${jpaName})] [(${jpaVeriable})]) {
         super([(${jpaVeriable})]);
     }
 }

@@ -723,6 +723,7 @@ public class GenerateServiceImpl implements GenerateService {
             cxt.setVariable("jpaVeriable", g.getDaoJpaVeriable());
 
             imports.clear();
+            mappingImport(imports, "Qualifier");
             mappingImport(imports, g.getDaoMapper());
             mappingImport(imports, "MapperSupport");
             mappingImport(imports, g.getDaoPO());
@@ -736,9 +737,7 @@ public class GenerateServiceImpl implements GenerateService {
                     process(DAOIMPL_TXT_TEMPLATE_NAME, cxt));
 
             imports.clear();
-            mappingImport(imports, "Qualifier");
             mappingImport(imports, g.getDaoJpa());
-            mappingImport(imports, g.getDaoMapper());
             mappingImport(imports, "JpaSupport");
             mappingImport(imports, g.getDaoPO());
             mappingImport(imports, g.getDaoDAO());
