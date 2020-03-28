@@ -71,6 +71,8 @@ public class GenerateServiceImpl implements GenerateService {
     private final static String VO_TXT_TEMPLATE_NAME = "vo.txt";
     private final static String CONTROLLER_TXT_TEMPLATE_NAME = "controller.txt";
 
+    private final static String CACHEKEY_TXT_TEMPLATE_NAME = "cachekey.txt";
+
     private final Boolean overwrite; // 生成文件是否覆盖原来的文件
     private final TableService tableService;
 
@@ -122,6 +124,12 @@ public class GenerateServiceImpl implements GenerateService {
         CLASS_MAPPING.put("ModelAndView", "org.springframework.web.servlet.ModelAndView");
 
         CLASS_MAPPING.put("test.Test", "org.junit.Test");
+
+        CLASS_MAPPING.put("LoggerConst", "org.nqcx.doox.commons.lang.consts.LoggerConst");
+        CLASS_MAPPING.put("Logger", "org.slf4j.Logger");
+        CLASS_MAPPING.put("LoggerFactory", "org.slf4j.LoggerFactory");
+
+        CLASS_MAPPING.put("JedisCluster", "redis.clients.jedis.JedisCluster");
     }
 
     @Autowired
