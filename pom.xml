@@ -24,14 +24,14 @@
 
     <distributionManagement>
         <repository>
-            <id>chineseall-releases</id>
+            <id>doox-releases</id>
             <name>Nexus Release Repository</name>
-            <url>http://nexus.chineseall.cn:90/content/repositories/releases/</url>
+            <url>http://nqcx.net/wedo/nexus/repository/maven-releases/</url>
         </repository>
         <snapshotRepository>
-            <id>chineseall-snapshots</id>
+            <id>doox-snapshots</id>
             <name>Nexus Snapshot Repository</name>
-            <url>http://nexus.chineseall.cn:90/content/repositories/snapshots/</url>
+            <url>http://nqcx.net/wedo/nexus/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 

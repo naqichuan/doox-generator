@@ -14,11 +14,7 @@ import [(${import})];
 @Service
 public class [(${name})] extends JpaSupport<[(${jpaName})], [(${poName})], [(${idType})]> implements [(${daoName})] {
 
-    private final [(${daoName})] [(${daoVeriable})];
-
-    public [(${name})]([(${jpaName})] [(${jpaVeriable})],
-                        @Qualifier("[(${daoVeriable})]") [(${daoName})] [(${daoVeriable})]) {
+    public [(${name})]([(${jpaName})] [(${jpaVeriable})) {
         super([(${jpaVeriable})]);
-        this.[(${daoVeriable})] = [(${daoVeriable})];
     }
 }

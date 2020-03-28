@@ -39,7 +39,7 @@ public class [(${name})] extends AbstractController {
      * @return Map
      */
     @RequestMapping(value = "/list", method = {RequestMethod.GET, RequestMethod.POST},
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+            produces = "application/json")
     @ResponseBody
     public Map<?, ?> list(@RequestParam(value = "page", required = false, defaultValue = "1") long page,
                           @RequestParam(value = "pageSize", required = false, defaultValue = "20") long pageSize) {
@@ -58,7 +58,7 @@ public class [(${name})] extends AbstractController {
      * @return Map
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+            produces = "application/json")
     @ResponseBody
     public Map<?, ?> add([(${webVO})] [(${webVOVeriable})]) {
         DTO dto = checkForm([(${webVOVeriable})], false);
@@ -75,7 +75,7 @@ public class [(${name})] extends AbstractController {
      * @return Map
      */
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+            produces = "application/json")
     @ResponseBody
     public Map<?, ?> detail(@PathVariable("id") [(${idType})] id) {
         return edit(id);
@@ -88,7 +88,7 @@ public class [(${name})] extends AbstractController {
      * @return Map
      */
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+            produces = "application/json")
     @ResponseBody
     public Map<?, ?> edit(@PathVariable("id") [(${idType})] id) {
         return buildResult(new DTO(true).setObject([(${serviceVeriable})].findById(id)));
@@ -101,7 +101,7 @@ public class [(${name})] extends AbstractController {
      * @return Map
      */
     @RequestMapping(value = "/modify", method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+            produces = "application/json")
     @ResponseBody
     public Map<?, ?> modify([(${webVO})] [(${webVOVeriable})]) {
         DTO dto = checkForm([(${webVOVeriable})], true);
@@ -134,7 +134,7 @@ public class [(${name})] extends AbstractController {
      * @return Map
      */
     @RequestMapping(value = "/delete", method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+            produces = "application/json")
     @ResponseBody
     public Map<?, ?> delete(@RequestParam(value = "ids[]") [(${idType})][] ids) {
         if (ids != null && ids.length > 0)

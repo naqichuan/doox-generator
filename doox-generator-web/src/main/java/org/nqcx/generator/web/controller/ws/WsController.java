@@ -46,7 +46,7 @@ public class WsController extends AbstractController {
     private NqcxCookie authorCookie;
 
     @RequestMapping(value = "/path/load", method = {RequestMethod.POST},
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+            produces = "application/json")
     @ResponseBody
     public Map<?, ?> loadWsPath(HttpServletResponse response,
                                 @RequestParam("wsPath") String wsPath) {
@@ -65,7 +65,7 @@ public class WsController extends AbstractController {
     }
 
     @RequestMapping(value = "/author", method = {RequestMethod.POST},
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+            produces = "application/json")
     @ResponseBody
     public Map<?, ?> author(HttpServletResponse response,
                             @RequestParam("author") String author) {

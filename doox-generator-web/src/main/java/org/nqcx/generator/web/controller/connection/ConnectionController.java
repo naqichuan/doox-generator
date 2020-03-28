@@ -47,7 +47,7 @@ public class ConnectionController extends AbstractController {
      * @return
      */
     @RequestMapping(value = "/connect", method = {RequestMethod.POST},
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+            produces = "application/json")
     @ResponseBody
     public Map<?, ?> connect(HttpServletResponse response,
                              @RequestParam("jdbcUrl") String jdbcUrl,
@@ -72,7 +72,7 @@ public class ConnectionController extends AbstractController {
      * @return
      */
     @RequestMapping(value = "/destroy", method = {RequestMethod.GET},
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+            produces = "application/json")
     @ResponseBody
     public Map<?, ?> destroy(HttpServletRequest request, HttpServletResponse response) {
         connService.destroy();
