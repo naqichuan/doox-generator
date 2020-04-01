@@ -145,7 +145,7 @@
 
     <profiles>
         <profile>
-            <id>nqc</id>
+            <id>nqcx</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
