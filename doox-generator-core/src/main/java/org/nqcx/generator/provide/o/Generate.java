@@ -63,6 +63,9 @@ public class Generate implements Serializable {
     private BoolEO daoJpa_ = BoolEO.FALSE;
     private String daoJpaPackage;
     private String daoJpa;
+    private BoolEO daoCacheSupport_ = BoolEO.FALSE;
+    private String daoCacheSupportPackage;
+    private String daoCacheSupport;
     private BoolEO daoDAO_ = BoolEO.FALSE;
     private String daoDAOPackage;
     private String daoDAO;
@@ -78,7 +81,6 @@ public class Generate implements Serializable {
     private BoolEO service_ = BoolEO.FALSE;
     private BoolEO serviceDO_ = BoolEO.FALSE;
     private String serviceDOPackage;
-//    private String serviceDO;
     private BoolEO serviceService_ = BoolEO.FALSE;
     private String serviceServicePackage;
     private String serviceService;
@@ -109,6 +111,7 @@ public class Generate implements Serializable {
     private File webModuleFile;
 
     private String idType;
+    private String idName;
 
     private String provideOReference;
     private String provideOVeriable;
@@ -121,6 +124,7 @@ public class Generate implements Serializable {
     private String daoMapperVeriable;
     private String daoJpaReference;
     private String daoJpaVeriable;
+    private String daoCacheSupportReference;
     private String daoDAOReference;
     private String daoDAOVeriable;
     private String daoDAOImplReference;
@@ -129,8 +133,6 @@ public class Generate implements Serializable {
     private String daoBaseTest;
     private String daoBaseTestReference;
 
-//    private String serviceDOReference;
-//    private String serviceDOVeriable;
     private String serviceServiceReference;
     private String serviceServiceVeriable;
     private String serviceServiceImplReference;
@@ -409,6 +411,31 @@ public class Generate implements Serializable {
 
     public void setDaoJpa(String daoJpa) {
         this.daoJpa = daoJpa;
+    }
+
+
+    public BoolEO getDaoCacheSupport_() {
+        return daoCacheSupport_;
+    }
+
+    public void setDaoCacheSupport_(BoolEO daoCacheSupport_) {
+        this.daoCacheSupport_ = daoCacheSupport_;
+    }
+
+    public String getDaoCacheSupportPackage() {
+        return daoCacheSupportPackage;
+    }
+
+    public void setDaoCacheSupportPackage(String daoCacheSupportPackage) {
+        this.daoCacheSupportPackage = daoCacheSupportPackage;
+    }
+
+    public String getDaoCacheSupport() {
+        return daoCacheSupport;
+    }
+
+    public void setDaoCacheSupport(String daoCacheSupport) {
+        this.daoCacheSupport = daoCacheSupport;
     }
 
     public BoolEO getDaoDAO_() {
@@ -695,6 +722,14 @@ public class Generate implements Serializable {
         this.idType = idType;
     }
 
+    public String getIdName() {
+        return idName;
+    }
+
+    public void setIdName(String idName) {
+        this.idName = idName;
+    }
+
     public String getProvideOReference() {
         return provideOReference;
     }
@@ -773,6 +808,14 @@ public class Generate implements Serializable {
 
     public void setDaoJpaVeriable(String daoJpaVeriable) {
         this.daoJpaVeriable = daoJpaVeriable;
+    }
+
+    public String getDaoCacheSupportReference() {
+        return daoCacheSupportReference;
+    }
+
+    public void setDaoCacheSupportReference(String daoCacheSupportReference) {
+        this.daoCacheSupportReference = daoCacheSupportReference;
     }
 
     public String getDaoDAOReference() {

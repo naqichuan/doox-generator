@@ -1,0 +1,40 @@
+/*
+ * Copyright [(${#dates.format(date, 'yyyy')})] nqcx.org All right reserved. This software is the confidential and proprietary information
+ * of nqcx.org ("Confidential Information"). You shall not disclose such Confidential Information and shall use
+ * it only in accordance with the terms of the license agreement you entered into with nqcx.org.
+ */
+
+package [(${package})];
+[# th:each="import : ${imports}"]
+import [(${import})];
+[/]
+/**
+ * 关于 key 键的说明
+ * <p>
+ * 1.建议全部大写
+ * 2.key不能太长也不能太短,键名越长越占资源，太短可读性太差
+ * 3.key 单词与单词之间以  ： 分开
+ * 4.redis使用的时候注意命名空间，一个项目一个命名空间，项目内业务不同命名空间也不同。
+ * <p>
+ * 一般情况下：
+ * 1) 第一段放置项目名或缩写 如 project
+ * 1) 第二段把表名转换为key前缀 如, user:
+ * 2) 第三段放置用于区分区key的字段,对应mysql中的主键的列名,如userid
+ * 3) 第四段放置主键值,如18,16
+ * <p>
+ * 结合起来  PRO:USER:UID:18
+ * <p>
+ * 常见的设置登录token
+ * <p>
+ * key：  PRO:USER:LOGINNAME:373166324
+ * value：12kd-dsj5ce-d4445-h4sd472
+ *
+ * @author [(${author})] [(${#dates.format(date, 'yyyy-MM-dd HH:mm')})]
+ */
+public class [(${name})] {
+
+    // key name space
+    public final static String NS_SCHEMA = "[(${nsSchema})]";
+    // key expire
+    public final static int EXPIRE = PeriodConst.ONE_HOUR;
+}

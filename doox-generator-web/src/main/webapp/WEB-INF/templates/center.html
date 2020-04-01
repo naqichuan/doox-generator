@@ -103,6 +103,17 @@
                 </td>
             </tr>
             <tr>
+                <td class="lable"><input type="checkbox" name="daoCacheSupport_" value="true"></td>
+                <td class="lable">Create CacheSupport:</td>
+                <td>
+                    <input type="text" name="daoCacheSupportPackage" class="big_240 right" value="">
+                </td>
+                <td class="lable">.</td>
+                <td>
+                    <input type="text" name="daoCacheSupport" class="big_200" value="">
+                </td>
+            </tr>
+            <tr>
                 <td class="lable"><input type="checkbox" name="daoDAO_" value="true"></td>
                 <td class="lable">Create DAO:</td>
                 <td>
@@ -143,17 +154,6 @@
             <span style="font-weight: 700;"><input type="checkbox" name="service_" value="true">Module -> Service</span>
         </legend>
         <table border="0" cellpadding="0" cellspacing="0">
-            <!--<tr>-->
-                <!--<td class="lable"><input type="checkbox" name="serviceDO_" value="true"></td>-->
-                <!--<td class="lable">Create DO:</td>-->
-                <!--<td>-->
-                    <!--<input type="text" name="serviceDOPackage" class="big_240 right" value="">-->
-                <!--</td>-->
-                <!--<td class="lable">.</td>-->
-                <!--<td>-->
-                    <!--<input type="text" name="serviceDO" class="big_200" value="">-->
-                <!--</td>-->
-            <!--</tr>-->
             <tr>
                 <td class="lable"><input type="checkbox" name="serviceService_" value="true"></td>
                 <td class="lable">Create Service:</td>
@@ -451,6 +451,12 @@
         jpa: function () {
             return jQuery('input[name="daoJpa"]');
         },
+        daoCacheSupportPackage: function () {
+            return jQuery('input[name="daoCacheSupportPackage"]');
+        },
+        daoCacheSupport: function () {
+            return jQuery('input[name="daoCacheSupport"]');
+        },
         daoPackage: function () {
             return jQuery('input[name="daoDAOPackage"]');
         },
@@ -486,6 +492,7 @@
             var daoPO = daoName + "PO";
             var daoMapper = 'I' + daoName + 'Mapper';
             var daoJpa = 'I' + daoName + 'Jpa';
+            var daoCacheSupport = 'CacheSupport';
             var daoDao = 'I' + daoName + 'DAO';
             var daoDaoImpl = daoName + 'DAO';
             var daoTest = daoDaoImpl + 'Test';
@@ -501,6 +508,10 @@
             var jpaValue = pValue + '.data.jpa' + (tablePack ? "." + tablePack : "");
             if (jpaValue.indexOf(".") === 0 && jpaValue.length > 1)
                 jpaValue = jpaValue.substring(1);
+
+            var cacheValue = pValue + '.data.cache';
+            if (cacheValue.indexOf(".") === 0 && cacheValue.length > 1)
+                cacheValue = cacheValue.substring(1);
 
             var daoValue = pValue + '.dao' + (tablePack ? "." + tablePack : "");
             if (daoValue.indexOf(".") === 0 && daoValue.length > 1)
@@ -521,6 +532,8 @@
             this.mapper().val(daoMapper);
             this.jpaPackage().val(jpaValue);
             this.jpa().val(daoJpa);
+            this.daoCacheSupportPackage().val(cacheValue);
+            this.daoCacheSupport().val(daoCacheSupport);
             this.daoPackage().val(daoValue);
             this.dao().val(daoDao);
             this.daoImplPackage().val(daoImplValue);

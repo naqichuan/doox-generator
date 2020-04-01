@@ -64,14 +64,13 @@ public class GenerateServiceImpl implements GenerateService {
     private final static String DAO_TXT_TEMPLATE_NAME = "dao.txt";
     private final static String DAO_TEST_TXT_TEMPLATE_NAME = "daotest.txt";
     private final static String DAOIMPL_TXT_TEMPLATE_NAME = "daoimpl.txt";
-    private final static String DAOJPAIMPL_TXT_TEMPLATE_NAME = "daojpaimpl.txt";
     private final static String SERVICE_TXT_TEMPLATE_NAME = "service.txt";
     private final static String SERVICEIMPL_TXT_TEMPLATE_NAME = "serviceimpl.txt";
     private final static String SERVICETEST_TXT_TEMPLATE_NAME = "servicetest.txt";
     private final static String VO_TXT_TEMPLATE_NAME = "vo.txt";
     private final static String CONTROLLER_TXT_TEMPLATE_NAME = "controller.txt";
 
-    private final static String CACHEKEY_TXT_TEMPLATE_NAME = "cachekey.txt";
+    private final static String CACHESUPPORT_TXT_TEMPLATE_NAME = "cachesupport.txt";
 
     private final Boolean overwrite; // 生成文件是否覆盖原来的文件
     private final TableService tableService;
@@ -101,10 +100,10 @@ public class GenerateServiceImpl implements GenerateService {
         CLASS_MAPPING.put("NPage", "org.nqcx.doox.commons.lang.o.NPage");
         CLASS_MAPPING.put("NSort", "org.nqcx.doox.commons.lang.o.NSort");
 
+        CLASS_MAPPING.put("PeriodConst", "org.nqcx.doox.commons.lang.consts.PeriodConst");
         CLASS_MAPPING.put("IMapper", "org.nqcx.doox.commons.data.mapper.IMapper");
-        CLASS_MAPPING.put("MapperSupport", "org.nqcx.doox.commons.data.mapper.MapperSupport");
+        CLASS_MAPPING.put("DAOSupport", "org.nqcx.doox.commons.dao.DAOSupport");
         CLASS_MAPPING.put("IJpa", "org.nqcx.doox.commons.data.jpa.IJpa");
-        CLASS_MAPPING.put("JpaSupport", "org.nqcx.doox.commons.data.jpa.JpaSupport");
         CLASS_MAPPING.put("IDAO", "org.nqcx.doox.commons.dao.IDAO");
 
         CLASS_MAPPING.put("IService", "org.nqcx.doox.commons.service.IService");
@@ -129,7 +128,7 @@ public class GenerateServiceImpl implements GenerateService {
         CLASS_MAPPING.put("Logger", "org.slf4j.Logger");
         CLASS_MAPPING.put("LoggerFactory", "org.slf4j.LoggerFactory");
 
-        CLASS_MAPPING.put("JedisCluster", "redis.clients.jedis.JedisCluster");
+        CLASS_MAPPING.put("JedisCommands", "redis.clients.jedis.JedisCommands");
     }
 
     @Autowired
@@ -200,8 +199,8 @@ public class GenerateServiceImpl implements GenerateService {
         // 表信息
         this.fillPojo(g.getTable(), g.getPojoColumn(), g.getPojoField(), g.getPojoType());
 
-        // idType
-        this.idType(g);
+        // idType & idName
+        this.idTypeAndName(g);
 
         // 类信息
         this.fillClass(g);
@@ -272,14 +271,16 @@ public class GenerateServiceImpl implements GenerateService {
     /**
      * @param g g
      */
-    private void idType(Generate g) {
+    private void idTypeAndName(Generate g) {
         if (g == null)
             return;
 
         g.setIdType("");
 
-        if (g.getTable() != null && g.getTable().getIdColumn() != null)
+        if (g.getTable() != null && g.getTable().getIdColumn() != null) {
+            g.setIdName(g.getTable().getIdColumn().getField_());
             g.setIdType(g.getTable().getIdColumn().getIdType_());
+        }
     }
 
     /**
@@ -317,6 +318,7 @@ public class GenerateServiceImpl implements GenerateService {
         g.setDaoJpaReference(g.getDaoJpaPackage() + "." + g.getDaoJpa());
         g.setDaoJpaVeriable(StringUtils.uncapitalize(StringUtils.substring(g.getDaoJpa(), 1)));
         g.setDaoDAOReference(g.getDaoDAOPackage() + "." + g.getDaoDAO());
+        g.setDaoCacheSupportReference(g.getDaoCacheSupportPackage() + "." + g.getDaoCacheSupport());
         g.setDaoDAOVeriable(StringUtils.uncapitalize(StringUtils.substring(g.getDaoDAO(), 1)));
         g.setDaoDAOImplReference(g.getDaoDAOImplPackage() + "." + g.getDaoDAOImpl());
 
@@ -360,6 +362,7 @@ public class GenerateServiceImpl implements GenerateService {
         CLASS_MAPPING.put(g.getDaoMapper(), g.getDaoMapperReference());
         CLASS_MAPPING.put(g.getDaoJpa(), g.getDaoJpaReference());
         CLASS_MAPPING.put(g.getDaoDAO(), g.getDaoDAOReference());
+        CLASS_MAPPING.put(g.getDaoCacheSupport(), g.getDaoCacheSupportReference());
         CLASS_MAPPING.put(g.getDaoDAOImpl(), g.getDaoDAOImplReference());
         CLASS_MAPPING.put(g.getDaoBaseTest(), g.getDaoBaseTestReference());
 
@@ -393,7 +396,7 @@ public class GenerateServiceImpl implements GenerateService {
     }
 
     /**
-     * @param imports set
+     * @param imports   set
      * @param className string
      */
     private void mappingImport(Set<String> imports, String className) {
@@ -480,7 +483,7 @@ public class GenerateServiceImpl implements GenerateService {
     }
 
     /**
-     * @param modulePath modulePath
+     * @param modulePath   modulePath
      * @param resoucesPath resoucesPath
      * @param _package     _package
      * @return sting
@@ -715,47 +718,53 @@ public class GenerateServiceImpl implements GenerateService {
                     process(DAO_TXT_TEMPLATE_NAME, cxt));
         }
 
+        if (g.getDaoCacheSupport_().isTrue()) {
+            // cache support
+            baseVariable(cxt, imports, g.getAuthor(), g.getDaoCacheSupportPackage(), g.getDaoCacheSupport());
+
+            mappingImport(imports, "PeriodConst");
+
+            cxt.setVariable("nsSchema", g.getpName().toUpperCase());
+
+            this.writeFile(g.getLogFile(),
+                    package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoCacheSupportPackage()),
+                    g.getDaoCacheSupport(), JAVA_EXT_NAME,
+                    process(CACHESUPPORT_TXT_TEMPLATE_NAME, cxt));
+        }
+
         if (g.getDaoDAOImpl_().isTrue()) {
             // dao defalt & jpa impl
             baseVariable(cxt, imports, g.getAuthor(), g.getDaoDAOImplPackage(), g.getDaoDAOImpl());
 
             cxt.setVariable("poName", g.getDaoPO());
             cxt.setVariable("idType", g.getIdType());
+            cxt.setVariable("idName", g.getIdName());
+            cxt.setVariable("idNameUpperCase", g.getIdName().toUpperCase());
 
             cxt.setVariable("daoName", g.getDaoDAO());
             cxt.setVariable("mapperName", g.getDaoMapper());
             cxt.setVariable("jpaName", g.getDaoJpa());
 
-            cxt.setVariable("daoVeriable", g.getDaoDAOVeriable());
             cxt.setVariable("mapperVeriable", g.getDaoMapperVeriable());
             cxt.setVariable("jpaVeriable", g.getDaoJpaVeriable());
 
             imports.clear();
+            mappingImport(imports, "Autowired");
             mappingImport(imports, "Qualifier");
+            mappingImport(imports, "stereotype.Service");
             mappingImport(imports, g.getDaoMapper());
-            mappingImport(imports, "MapperSupport");
+            mappingImport(imports, g.getDaoJpa());
             mappingImport(imports, g.getDaoPO());
             mappingImport(imports, g.getDaoDAO());
-            mappingImport(imports, "stereotype.Service");
+            mappingImport(imports, "JedisCommands");
+            mappingImport(imports, g.getDaoCacheSupport());
+            mappingImport(imports, "DAOSupport");
 
             cxt.setVariable("name", StringUtils.capitalize(g.getDaoDAOVeriable()));
             this.writeFile(g.getLogFile(),
                     package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoDAOImplPackage()),
                     StringUtils.capitalize(g.getDaoDAOVeriable()), JAVA_EXT_NAME,
                     process(DAOIMPL_TXT_TEMPLATE_NAME, cxt));
-
-            imports.clear();
-            mappingImport(imports, g.getDaoJpa());
-            mappingImport(imports, "JpaSupport");
-            mappingImport(imports, g.getDaoPO());
-            mappingImport(imports, g.getDaoDAO());
-            mappingImport(imports, "stereotype.Service");
-
-            cxt.setVariable("name", StringUtils.capitalize(g.getDaoJpaVeriable()));
-            this.writeFile(g.getLogFile(),
-                    package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoDAOImplPackage()),
-                    StringUtils.capitalize(g.getDaoJpaVeriable()), JAVA_EXT_NAME,
-                    process(DAOJPAIMPL_TXT_TEMPLATE_NAME, cxt));
         }
 
         if (g.getDaoDAOTest_().isTrue()) {
@@ -771,7 +780,6 @@ public class GenerateServiceImpl implements GenerateService {
 
             cxt.setVariable("daoName", g.getDaoDAO());
             cxt.setVariable("daoVeriable", g.getDaoDAOVeriable());
-            cxt.setVariable("jpaVeriable", g.getDaoJpaVeriable());
 
             cxt.setVariable("poName", g.getDaoPO());
             cxt.setVariable("idType", g.getIdType());
@@ -845,8 +853,8 @@ public class GenerateServiceImpl implements GenerateService {
             cxt.setVariable("serviceName", g.getServiceService());
 
             cxt.setVariable("daoVeriable", g.getDaoDAOVeriable());
-            cxt.setVariable("mapperVeriable", g.getDaoMapperVeriable());
-            cxt.setVariable("jpaVeriable", g.getDaoJpaVeriable());
+//            cxt.setVariable("mapperVeriable", g.getDaoMapperVeriable());
+//            cxt.setVariable("jpaVeriable", g.getDaoJpaVeriable());
 
             this.writeFile(g.getLogFile(),
                     package2path(g.getServiceModuleFile().getPath(), JAVA_PATH, g.getServiceServiceImplPackage()),
@@ -976,7 +984,7 @@ public class GenerateServiceImpl implements GenerateService {
     }
 
     /**
-     * @param pPath string
+     * @param pPath   string
      * @param content string
      */
     private void writeFile(File logFile, String pPath, String name, String ext, String content) {
@@ -987,7 +995,7 @@ public class GenerateServiceImpl implements GenerateService {
 
         File pathFile = new File(pPath);
         if (!pathFile.exists() && !pathFile.mkdirs())
-           return;
+            return;
 
         String fileName = pPath + "/" + name + ext;
         File file = new File(fileName);
@@ -1018,7 +1026,7 @@ public class GenerateServiceImpl implements GenerateService {
 
     /**
      * @param logFile file
-     * @param line string
+     * @param line    string
      */
     private void writeLog(File logFile, String line) {
         FileWriter fw = null;
