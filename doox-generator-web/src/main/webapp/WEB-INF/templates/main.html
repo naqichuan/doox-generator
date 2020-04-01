@@ -420,7 +420,18 @@
 
                     pPackageValue = 'org.nqcx.' + ppName;
                 }
-                this.pPackage().val(pPackageValue);
+
+                var _this = this;
+
+                nqcxPost(/*[[\'/project/groupId\']]*/'',{
+                    wsPath: ws.wsPath().val(),
+                    pPath: project.pPath().val()
+                }, function (result) {
+                    if (result.success && result.object) {
+                        _this.pPackage().val(result.object)
+                    } else
+                        _this.pPackage().val(pPackageValue);
+                });
             },
             pPackageChanged: false,
             pPackageTip: function () {

@@ -23,4 +23,11 @@ public interface ProjectService {
      * @author naqichuan Mar 2, 2014 7:33:13 PM
      */
     DTO openFile(String wsPath, String projectPath, String path, String name);
+
+    /**
+     * @param wsPath      wsPath
+     * @param projectPath projectPath
+     * @return dto
+     */
+    DTO groupId(String wsPath, String projectPath);
 }

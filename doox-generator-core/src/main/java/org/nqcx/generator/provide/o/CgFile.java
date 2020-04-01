@@ -95,14 +95,19 @@ public class CgFile implements Serializable {
         return !isfile;
     }
 
-    public void asFile() {
-        isfile = true;
-        this.initFileList();
-    }
+//    public void asFile() {
+//        isfile = true;
+//        this.initFileList();
+//    }
+//
+//    public void asDirectory() {
+//        isfile = false;
+//        this.initFileList();
+//    }
 
-    public void asDirectory() {
-        isfile = false;
-        this.initFileList();
+
+    public String getFullPath() {
+        return this.path + this.name;
     }
 
     public boolean hasParent() {
