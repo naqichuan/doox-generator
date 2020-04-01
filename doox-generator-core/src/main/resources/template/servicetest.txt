@@ -86,8 +86,7 @@ public class [(${name})] extends BaseServiceTest {
 
     @Test
     public void findAll() {
-        // page and sort
-        // Jpa 排序指定的是 pojo field name，Mybatis 排序需要指定数据库字段名，该问题会在未来的版本中解决
+        // page and sort(field)
         DTO dtoRequest = new DTO().setPage(new NPage(1, 20))
                 .setSort(NSort.by(new NSort.NOrder(NSort.NDirection.DESC, "id"),
                         new NSort.NOrder(NSort.NDirection.ASC, "create")));
