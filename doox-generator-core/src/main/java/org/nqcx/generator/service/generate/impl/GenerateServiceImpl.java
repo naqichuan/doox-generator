@@ -222,6 +222,8 @@ public class GenerateServiceImpl implements GenerateService {
                 || types == null || table.getColumns().size() != types.length)
             return;
 
+        boolean hasId = false;
+        String idFieldName = "";
         Column c;
         for (int i = 0; i < table.getColumns().size(); i++) {
             if ((c = table.getColumns().get(i)) == null
@@ -245,7 +247,13 @@ public class GenerateServiceImpl implements GenerateService {
                 c.setNull_(false);
             }
 
+
+            if (StringUtils.equalsAnyIgnoreCase(c.getField() , "ID"))
+                idFieldName = c.getField();
+
             if ("PRI".equalsIgnoreCase(c.getKey()) && StringUtils.containsIgnoreCase(c.getField(), "ID")) {
+                hasId = true;
+
                 c.setId_(true);
                 c.setIdType_("INT".equalsIgnoreCase(types[i]) ? "Integer" : "Long");
 
@@ -265,6 +273,18 @@ public class GenerateServiceImpl implements GenerateService {
 
                 c.setMybatisValue("CURRENT_TIMESTAMP()");
             }
+        }
+
+        // 检查是否有 id 字段，如果没有，检查是否 field 为 id 的字段，如果有设置为 id
+        if(!hasId) {
+            String finalIdFieldName = idFieldName;
+            table.getColumns().forEach(col -> {
+                if(StringUtils.equals(finalIdFieldName, col.getField())) {
+                    col.setId_(true);
+                    col.setIdType_("Long");
+                    col.setMybatisValue("NULL");
+                }
+            });
         }
     }
 
