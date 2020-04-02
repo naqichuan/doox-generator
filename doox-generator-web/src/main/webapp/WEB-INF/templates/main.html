@@ -405,7 +405,7 @@
             pType: function () {
                 return jQuery('input[name="pType"]');
             },
-            pPackageChange: function () {
+            pPackageChange: function (callback) {
                 var ppName = this.pName().val();
                 if (ppName)
                     ppName = ppName.replace("nqcx-", "").toLocaleLowerCase();
@@ -415,24 +415,28 @@
                 var _this = this;
 
                 // project package
-                var pPackageValue = this.pPackage().val();
-                if (!this.pPackageChanged || !pPackageValue) {
-                    project.pPackageChanged = false; // 允许自动生成 pPackage
-                    project.pPackageTip();
+                var pPackageValue = _this.pPackage().val();
 
-                    pPackageValue = 'org.nqcx.' + ppName;
+                nqcxPost(/*[[\'/project/groupId\']]*/'', {
+                    wsPath: ws.wsPath().val(),
+                    pPath: project.pPath().val()
+                }, function (result) {
+                    if (!_this.pPackageChanged || !pPackageValue) {
+                        project.pPackageChanged = false; // 允许自动生成 pPackage
+                        project.pPackageTip();
 
-                    nqcxPost(/*[[\'/project/groupId\']]*/'',{
-                        wsPath: ws.wsPath().val(),
-                        pPath: project.pPath().val()
-                    }, function (result) {
-                        if (result.success && result.object) {
-                            _this.pPackage().val(result.object)
-                        } else
-                            _this.pPackage().val(pPackageValue);
-                    });
-                }
-             },
+                        pPackageValue = 'org.nqcx.' + ppName;
+
+                        if (result.success && result.object)
+                            pPackageValue = result.object
+                    }
+
+                    _this.pPackage().val(pPackageValue);
+
+                    if (callback)
+                        callback();
+                });
+            },
             pPackageChanged: false,
             pPackageTip: function () {
                 if (this.pPackageChanged) {
@@ -441,27 +445,32 @@
                     this.pPackage().addClass("waring");
                 }
             },
-            change: function () {
-                var pNameValue = this.pName().val();
+            change: function (callback) {
+                var _this = this;
+
+                var pNameValue = _this.pName().val();
                 if (!pNameValue) {
-                    this.clear();
+                    _this.clear();
                     return;
                 }
                 // project path
-                this.pPath().val('/' + pNameValue + '/');
+                _this.pPath().val('/' + pNameValue + '/');
 
                 // project package
-                this.pPackageChange();
+                _this.pPackageChange(function () {
+                    // modules
+                    var pTypeValue = _this.pType().filter(':checked').val();
+                    if (pTypeValue === "Multiple")
+                        _this.fecthDirs(_this.module.fillAll);
+                    else
+                        _this.module.emptyAll();
 
-                // modules
-                var pTypeValue = this.pType().filter(':checked').val();
-                if (pTypeValue === "Multiple")
-                    this.fecthDirs(this.module.fillAll);
-                else
-                    this.module.emptyAll();
+                    // file path
+                    path.openFile();
 
-                // file path
-                path.openFile();
+                    if (callback)
+                        callback();
+                });
             },
             clear: function () {
                 this.module.emptyAll();
@@ -930,18 +939,18 @@
 
         // project
         project.pName().change(function () {
-            project.change();
-
-            // child
-            if (project.module.change)
-                project.module.change();
+            project.change(function () {
+                // child
+                if (project.module.change)
+                    project.module.change();
+            });
         });
         project.pType().change(function () {
-            project.change();
-
-            // child
-            if (project.module.change)
-                project.module.change();
+            project.change(function () {
+                // child
+                if (project.module.change)
+                    project.module.change();
+            });
         });
         project.pPackage().change(function () {
             // child
