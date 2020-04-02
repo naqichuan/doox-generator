@@ -14,6 +14,8 @@ import [(${import})];
 @Service
 public class [(${name})] extends DAOSupport<[(${mapperName})], [(${poName})], [(${idType})]> implements [(${daoName})] {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger([(${name})].class);
+
     private final static KO KO_[(${idNameUpperCase})] = new KO(CacheSupport.NS_SCHEMA, [(${poName})].class.getSimpleName(), CacheSupport.EXPIRE, "[(${idName})]");
 
     {
