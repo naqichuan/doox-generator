@@ -44,5 +44,4 @@ public class GenerateController extends AbstractController {
     public Map<?, ?> doit(GenerateVO vo) {
         return buildResult(generateService.generate(Orika.o2o(vo, Generate.class)));
     }
-
 }

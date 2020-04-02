@@ -275,7 +275,8 @@ public class GenerateServiceImpl implements GenerateService {
         if (g == null)
             return;
 
-        g.setIdType("");
+        g.setIdType("Long");
+        g.setIdName("id");
 
         if (g.getTable() != null && g.getTable().getIdColumn() != null) {
             g.setIdName(g.getTable().getIdColumn().getField_());
