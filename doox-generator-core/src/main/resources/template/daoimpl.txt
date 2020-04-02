@@ -14,10 +14,10 @@ import [(${import})];
 @Service
 public class [(${name})] extends DAOSupport<[(${mapperName})], [(${poName})], [(${idType})]> implements [(${daoName})] {
 
-    private final static KO KO_[(${idNameUpperCase})] = new KO(CacheSupport.NS_SCHEMA, [(${poName})].class.getSimpleName(), "[(${idName})]", CacheSupport.EXPIRE);
+    private final static KO KO_[(${idNameUpperCase})] = new KO(CacheSupport.NS_SCHEMA, [(${poName})].class.getSimpleName(), CacheSupport.EXPIRE, "[(${idName})]");
 
     {
-        KOS.put(KO_[(${idNameUpperCase})].field(), KO_[(${idNameUpperCase})]);
+        KOS.put(KO_[(${idNameUpperCase})].fieldStr(), KO_[(${idNameUpperCase})]);
     }
 
     private final [(${jpaName})] [(${jpaVeriable})];
