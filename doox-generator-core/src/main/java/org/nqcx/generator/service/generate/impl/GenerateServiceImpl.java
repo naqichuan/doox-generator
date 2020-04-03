@@ -770,9 +770,9 @@ public class GenerateServiceImpl implements GenerateService {
             cxt.setVariable("jpaVeriable", g.getDaoJpaVeriable());
 
             imports.clear();
-            mappingImport(imports, "Autowired");
-            mappingImport(imports, "Qualifier");
             mappingImport(imports, "stereotype.Service");
+            mappingImport(imports, "Logger");
+            mappingImport(imports, "LoggerFactory");
             mappingImport(imports, g.getDaoMapper());
             mappingImport(imports, g.getDaoJpa());
             mappingImport(imports, g.getDaoPO());

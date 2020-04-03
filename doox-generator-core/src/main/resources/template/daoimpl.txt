@@ -24,7 +24,8 @@ public class [(${name})] extends DAOSupport<[(${mapperName})], [(${poName})], [(
 
     private final [(${jpaName})] [(${jpaVeriable})];
 
-    public [(${name})]([(${mapperName})] [(${mapperVeriable})], [(${jpaName})] [(${jpaVeriable})],
+    public [(${name})]([(${mapperName})] [(${mapperVeriable})],
+                       [(${jpaName})] [(${jpaVeriable})],
                        RedisTemplate<String, String> redisTemplate) {
         super([(${mapperVeriable})], redisTemplate);
         this.[(${jpaVeriable})] = [(${jpaVeriable})];
