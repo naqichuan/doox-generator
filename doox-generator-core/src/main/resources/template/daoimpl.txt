@@ -23,12 +23,10 @@ public class [(${name})] extends DAOSupport<[(${mapperName})], [(${poName})], [(
     }
 
     private final [(${jpaName})] [(${jpaVeriable})];
-    private final JedisCommands jedis;
 
     public [(${name})]([(${mapperName})] [(${mapperVeriable})], [(${jpaName})] [(${jpaVeriable})],
-                       @Qualifier("jedis") @Autowired(required = false) JedisCommands jedis) {
-        super([(${mapperVeriable})], jedis);
+                       RedisTemplate<String, String> redisTemplate) {
+        super([(${mapperVeriable})], redisTemplate);
         this.[(${jpaVeriable})] = [(${jpaVeriable})];
-        this.jedis = jedis;
     }
 }

@@ -128,7 +128,7 @@ public class GenerateServiceImpl implements GenerateService {
         CLASS_MAPPING.put("Logger", "org.slf4j.Logger");
         CLASS_MAPPING.put("LoggerFactory", "org.slf4j.LoggerFactory");
 
-        CLASS_MAPPING.put("JedisCommands", "redis.clients.jedis.JedisCommands");
+        CLASS_MAPPING.put("RedisTemplate", "org.springframework.data.redis.core.RedisTemplate");
     }
 
     @Autowired
@@ -777,7 +777,7 @@ public class GenerateServiceImpl implements GenerateService {
             mappingImport(imports, g.getDaoJpa());
             mappingImport(imports, g.getDaoPO());
             mappingImport(imports, g.getDaoDAO());
-            mappingImport(imports, "JedisCommands");
+            mappingImport(imports, "RedisTemplate");
             mappingImport(imports, g.getDaoCacheSupport());
             mappingImport(imports, "DAOSupport");
 
