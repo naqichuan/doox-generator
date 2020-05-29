@@ -12,12 +12,10 @@
     <mvc:annotation-driven/>
     <mvc:default-servlet-handler/>
     <import resource="classpath:spring/bean-commons-servlet.xml"/>
-    <context:component-scan base-package="org.nqcx.generator.data.converter, org.nqcx.generator.web.controller"/>
+    <context:component-scan base-package="org.nqcx.generator.data.converter, org.nqcx.generator.web.controller, org.nqcx.generator.web.config"/>
 
     <util:map id="_staticVariables">
-        <entry key="nqcxValues">
-            <ref bean="_nqcxValues"/>
-        </entry>
+        <entry key="nqcxValues" value-ref="_nqcxValues"/>
     </util:map>
 
     <!-- ====以下是 ViewResolver & Velocity 配置==== -->
