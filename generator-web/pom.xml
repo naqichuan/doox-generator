@@ -30,6 +30,16 @@
             <artifactId>generator-ui</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <!-- ########## 3rd party library ########## -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

@@ -15,11 +15,9 @@ server:
 ##spring config
 spring:
   application:
-    name: dooxframework
+    name: dooxgenerator
   profiles:
     active: base
-  thymeleaf:
-    cache: @spring.thymeleaf.cache@
   devtools:
     add-properties: false
     livereload:
@@ -36,12 +34,4 @@ logging:
   context:
     name: @logging.context.name@
 
-##dooxframework config
-url:
-  assets:
-    base: @url.assets.base@
-dooxframework:
-  title:
-    default: DooxGenerator
-  timesure: ?t=20200202
 

@@ -59,9 +59,9 @@ public class IndexController extends AbstractController {
             author = authorCookieValue;
         mav.addObject("author", author);
 
-        String jdbcUrl = "localhost:3306/nqcx";
-        String user = "nqcx";
-        String password = "nqcx";
+        String jdbcUrl = "localhost:3306/test";
+        String user = "test";
+        String password = "test";
 
         String jdbcCookieValue = CookieUtils.getCookieValue(request, jdbcCookie.getName());
         String[] vals = null;
