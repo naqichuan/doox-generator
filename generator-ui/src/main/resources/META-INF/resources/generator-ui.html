@@ -11,11 +11,967 @@
     <link rel="icon" type="image/png" href="webjars/doox-generator-ui/favicon.ico?v=1.2.0"/>
     <link rel="stylesheet" type="text/css" href="webjars/doox-generator-ui/doox.css?v=1.2.0"/>
     <link rel="stylesheet" type="text/css" href="webjars/doox-generator-ui/doox-generator.css?v=1.2.0"/>
+
+    <link href="webjars/doox-generator-ui/themes/default/easyui.css" rel="stylesheet" type="text/css">
+    <link href="webjars/doox-generator-ui/themes/icon.css" rel="stylesheet" type="text/css">
+    <link href="webjars/doox-generator-ui/css/demo.css" rel="stylesheet" type="text/css">
     <style type="text/css">
+        #fileShow {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #fileShow li {
+            line-height: 20px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        table td, table th {
+            padding: 0 2px;
+        }
+
+        table td.lable {
+            text-align: right;
+        }
+
+        input[type="text"] {
+            width: 100px;
+        }
+
+        input[type="password"] {
+            width: 100px;
+        }
+
+        input[type="text"].big {
+            width: 120px;
+        }
+
+        input[type="text"].big_140 {
+            width: 140px;
+        }
+
+        input[type="text"].big_200 {
+            width: 200px;
+        }
+
+        input[type="text"].big_240 {
+            width: 240px;
+        }
+
+        input[type="text"].middle {
+            width: 80px;
+        }
+
+        input[type="text"].small {
+            width: 40px;
+        }
+
+        input[type="text"].waring {
+            background-color: #FFFF00;
+        }
+
+        input[type="text"].error {
+            background-color: #FF8888;
+        }
+
+        input[type="text"].right {
+            text-align: right;
+        }
     </style>
+    <script type="text/javascript" src="webjars/doox-generator-ui/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="webjars/doox-generator-ui/jquery/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="webjars/doox-generator-ui/jquery/jquery.easyui.nqcx.js"></script>
+    <script type="text/javascript">
+        // string
+        String.prototype.compare = function (str) {
+            return this.toLowerCase() === str.toLowerCase();
+        };
+        String.prototype.startWith = function (str) {
+            if (str == null || str === '' || this.length === 0 || str.length > this.length)
+                return false;
+            return this.substr(0, str.length).compare(str);
+        };
+        String.prototype.endWith = function (str) {
+            if (str == null || str === "" || this.length === 0 || str.length > this.length)
+                return false;
+            return this.substring(this.length - str.length) === str;
+        };
+        String.prototype.replaceFirstUP = function () {
+            if (this.length === 0)
+                return this;
+            return this.replace(/\b(\w)|\s(\w)|(_\w)/g, function (m) {
+                if (m.indexOf('_') > -1) {
+                    return m.substring(m.indexOf('_') + 1).toUpperCase();
+                } else
+                    return m.toUpperCase();
+            });
+        };
+        String.prototype.replaceFirstLow = function () {
+            if (this.length === 0)
+                return this;
+            return this.replace(/\b(\w)|\s(\w)|(_\w)/g, function (m) {
+                if (m.indexOf('_') > -1) {
+                    return m.substring(m.indexOf('_') + 1).toLowerCase();
+                } else
+                    return m.toLowerCase();
+            });
+        };
+        // end of string
+    </script>
+    <script type="text/javascript">
+        var retryTimes = 1;
+        var nqcxPost = function (url, data, callBack) {
+            jQuery.post(url, data, function (result) {
+                if (result.success) {
+                    retryTimes = 1;
+                    if (callBack)
+                        callBack(result);
+                } else if (result.errorCode === '11') {
+                    if (retryTimes === 0) {
+                        jQuery.messager.show({
+                            title: 'Error',
+                            msg: result.errorText
+                        });
+                    } else {
+                        retryTimes--;
+                        db.conn(connCallBack);
+                    }
+                } else {
+                    jQuery.messager.show({
+                        title: 'Error',
+                        msg: result.errorText
+                    });
+                }
+            }, 'json');
+            var connCallBack = function () {
+                nqcxPost(url, data, callBack);
+            }
+        };
+
+        var nqcxGet = function (url, data, callBack) {
+            if (url) {
+                if (url.indexOf('?') === -1)
+                    url += '?t=' + (new Date()).getTime();
+                else
+                    url += '&t=' + (new Date()).getTime();
+            }
+
+            jQuery.get(url, data, function (result) {
+                if (result.success) {
+                    retryTimes = 1;
+                    if (callBack)
+                        callBack(result);
+                } else if (result.errorCode === '11') {
+                    if (retryTimes === 0) {
+                        jQuery.messager.show({
+                            title: 'Error',
+                            msg: result.errorText
+                        });
+                    } else {
+                        retryTimes--;
+                        db.conn(connCallBack);
+                    }
+                } else {
+                    jQuery.messager.show({
+                        title: 'Error',
+                        msg: result.errorText
+                    });
+                }
+            }, 'json');
+            var connCallBack = function () {
+                nqcxGet(url, data, callBack);
+            }
+        };
+    </script>
+    <script type="text/javascript">
+        var ws = {
+            author: function () {
+                return jQuery('input[name="author"]');
+            },
+            wsPath: function () {
+                return jQuery('input[name="wsPath"]');
+            },
+            saveAuthor: function () {
+                var author = this.author().val();
+                if (!author)
+                    return;
+
+                nqcxPost("[(@{'/ws/author'})]", {author: author}, function (result) {
+                    if (result.success) {
+                        console.log(result.object);
+                    }
+                });
+            },
+            loadWsPath: function (callBack, errorCallBack) {
+                var path = decodeURIComponent(this.wsPath().val());
+                if (!path)
+                    return;
+
+                nqcxPost("[(@{'/ws/path/load'})]", {"wsPath": path}, function (result) {
+                    if (result.success && result.object) {
+                        var wsdata = result.object;
+                        if (wsdata.exists) {
+                            ws.wsPathExists = true;
+                            ws.wsPathExistsTip();
+
+                            jQuery.messager.show({
+                                title: 'Success',
+                                msg: 'Ws loaded'
+                            });
+
+                            callBack(wsdata);
+                        } else {
+                            $.messager.show({
+                                title: 'Error',
+                                msg: 'WS 不存在！'
+                            });
+                            if (errorCallBack)
+                                errorCallBack();
+                        }
+                    } else {
+                        $.messager.show({
+                            title: 'Error',
+                            msg: '加载 WS 错误！'
+                        });
+                    }
+                });
+            },
+            wsPathExists: false,
+            wsPathExistsTip: function () {
+                if (this.wsPathExists) {
+                    this.wsPath().removeClass("error");
+                } else {
+                    this.wsPath().addClass("error");
+                }
+            },
+            reset: function () {
+                this.wsPathExists = false;
+                this.wsPathExistsTip();
+
+                project.emptyProjects();
+
+                project.change();
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        var db = {
+            jdbcUrl: function () {
+                return $('input[name="jdbcUrl"]');
+            },
+            jdbcUser: function () {
+                return $('input[name="jdbcUser"]');
+            },
+            jdbcPassword: function () {
+                return $('input[name="jdbcPassword"]');
+            },
+            reset: function () {
+                this.jdbcUrl().val(/*[[${jdbcUrl}]]*/ '');
+                this.jdbcUser().val(/*[[${jdbcUser}]]*/ '');
+                this.jdbcPassword().val(/*[[${jdbcPassword}]]*/ '');
+            },
+            conn: function (callBack, errorCallBack) {
+                $('#connForm').form('nqcxSubmit', {
+                    url: /*[['/connection/connect']]*/ '',
+                    dataType: 'json',
+                    onSubmit: function () {
+                        return $(this).form('validate');
+                    },
+                    success: function (result) {
+                        if (result.success) {
+                            if (callBack)
+                                callBack();
+                        } else {
+                            if (errorCallBack)
+                                errorCallBack();
+                            jQuery.messager.show({
+                                title: 'Error',
+                                msg: result.errorText
+                            });
+                        }
+                    },
+                    error: function () {
+                        jQuery.messager.show({
+                            title: 'Error',
+                            msg: 'Connect db fail! Please try again later.'
+                        });
+                    }
+                });
+            }
+        };  // end of db
+
+        var table = {
+            tableName: function () {
+                return jQuery('select[name="tableName"]');
+            },
+            colPrefix: function () {
+                return jQuery('input[name="colPrefix"]');
+            },
+            tablePack: function () {
+                return jQuery('input[name="tablePack"]');
+            },
+            tablePackChanged: false,
+            tablePackTip: function () {
+                if (this.tablePackChanged) {
+                    this.tablePack().removeClass("waring");
+                } else {
+                    this.tablePack().addClass("waring");
+                }
+            },
+            reset: function () {
+                this.tableName().val(this.tableName().attr('t-data'));
+                this.colPrefix().val(this.colPrefix().attr('t-data'));
+                this.tablePack().val(this.tablePack().attr('t-data'));
+            },
+            emptyTables: function () {
+                jQuery('select[name="tableName"] option').each(function () {
+                    if ($(this).val()) {
+                        $(this).remove();
+                    }
+                });
+            },
+            listNames: function () {
+                // 取当前 table name
+                var tableNameValue = table.tableName().val();
+                var colPrefixValue = table.colPrefix().val();
+                var tablePackValue = table.tablePack().val();
+
+                var url = /*[['/table/list']]*/ '';
+                nqcxGet(url, {}, function (result) {
+                    table.emptyTables();
+                    if (result.list) {
+                        for (t in result.list) {
+                            table.listNamesAppend(result.list[t].name, result.list[t].name);
+                        }
+                    }
+                    jQuery.messager.show({
+                        title: 'Success',
+                        msg: 'Table loaded'
+                    });
+
+                    table.change(tableNameValue, colPrefixValue, tablePackValue);
+                });
+            },
+            listNamesAppend: function (value, text) {
+                jQuery('<option value="' + value + '">' + text + '</option>').appendTo(this.tableName());
+            },
+            change: function (lastTableName, lastColPrefixValue, lastTablePack) {
+                var tableNameValue = this.tableName().val();
+                if (!lastTableName && !tableNameValue) {
+                    // 首次加载或选择了空值
+                    tableNameValue = this.tableName().attr('t-data');
+                } else if (lastTableName) {
+                    // 点了 [Connect DB] 或 [>>Load tables>>]
+                    tableNameValue = this.tableName().attr('t-data');
+                    $('select[name="tableName"] option').each(function () {
+                        if ($(this).val() && $(this).val() === lastTableName)
+                            tableNameValue = lastTableName;
+                    });
+                }
+
+                if (!tableNameValue) {
+                    table.reset();
+                    center.clear();
+                    return;
+                }
+
+                this.tableName().val(tableNameValue);
+                if (!this.colPrefix().val())
+                    this.colPrefix().val(this.colPrefix().attr('t-data'))
+                if (!this.tablePackChanged)
+                    this.tablePack().val(tableNameValue.replaceFirstLow());
+
+                jQuery.post(/*[['/center']]*/ '', '', function (result) {
+                    center.load(result);
+                }, 'html');
+            }
+        }; // end of table
+    </script>
+
+    <script type="text/javascript">
+        var project = {
+            pName: function () {
+                return jQuery('select[name="pName"]');
+            },
+            pPath: function () {
+                return jQuery('input[name="pPath"]');
+            },
+            pPackage: function () {
+                return jQuery('input[name="pPackage"]');
+            },
+            pType: function () {
+                return jQuery('input[name="pType"]');
+            },
+            pPackageChange: function (callback) {
+                var ppName = this.pName().val();
+                if (ppName)
+                    ppName = ppName.replace("nqcx-", "").toLocaleLowerCase();
+                else
+                    ppName = "";
+
+                var _this = this;
+
+                // project package
+                var pPackageValue = _this.pPackage().val();
+
+                nqcxPost(/*[[\'/project/groupId\']]*/'', {
+                    wsPath: ws.wsPath().val(),
+                    pPath: project.pPath().val()
+                }, function (result) {
+                    if (!_this.pPackageChanged || !pPackageValue) {
+                        project.pPackageChanged = false; // 允许自动生成 pPackage
+                        project.pPackageTip();
+
+                        pPackageValue = 'org.nqcx.' + ppName;
+
+                        if (result.success && result.object)
+                            pPackageValue = result.object
+                    }
+
+                    _this.pPackage().val(pPackageValue);
+
+                    if (callback)
+                        callback();
+                });
+            },
+            pPackageChanged: false,
+            pPackageTip: function () {
+                if (this.pPackageChanged) {
+                    this.pPackage().removeClass("waring");
+                } else {
+                    this.pPackage().addClass("waring");
+                }
+            },
+            change: function (callback) {
+                var _this = this;
+
+                var pNameValue = _this.pName().val();
+                if (!pNameValue) {
+                    _this.clear();
+                    return;
+                }
+                // project path
+                _this.pPath().val('/' + pNameValue + '/');
+
+                // project package
+                _this.pPackageChange(function () {
+                    // modules
+                    var pTypeValue = _this.pType().filter(':checked').val();
+                    if (pTypeValue === "Multiple")
+                        _this.fecthDirs(_this.module.fillAll);
+                    else
+                        _this.module.emptyAll();
+
+                    // file path
+                    path.openFile();
+
+                    if (callback)
+                        callback();
+                });
+            },
+            clear: function () {
+                this.module.emptyAll();
+
+                this.pPath().val('');
+                if (!this.pPackageChanged)
+                    this.pPackage().val('');
+
+                path.setRelativePath('');
+                path.loadCgFile('', []);
+            },
+            emptyProjects: function () {
+                jQuery('select[name="pName"] option').each(function () {
+                    if ($(this).val()) {
+                        $(this).remove();
+                    }
+                });
+            },
+            loadProjects: function (wsdata) {
+                this.emptyProjects();
+
+                var select = this.pName();
+                var cList = wsdata.cgFileList;
+                if (cList && cList.length > 0) {
+                    for (var idx in cList) {
+                        $('<option value="' + cList[idx].name + '">' + cList[idx].name + '</option>').appendTo(select);
+                    }
+                    jQuery.messager.show({
+                        title: 'Success',
+                        msg: 'Projects loaded'
+                    });
+                }
+            },
+            dirList: null,
+            fecthDirs: function (callback) {
+                var _this = this;
+
+                // clear array
+                _this.dirList = [];
+
+                var wsPath = ws.wsPath().val();
+                if (!ws.wsPathExists || !wsPath) {
+                    jQuery.messager.show({
+                        title: 'Error',
+                        msg: 'WS not exists.'
+                    });
+                    return;
+                }
+
+                var pPath = _this.pPath().val();
+                if (!pPath) {
+                    jQuery.messager.show({
+                        title: 'Error',
+                        msg: 'Please select project.'
+                    });
+                    return;
+                }
+
+                var url = /*[['/project/openFile']]*/'';
+                nqcxPost(url, {wsPath: wsPath, pPath: pPath, path: '', name: ''}, function (result) {
+                    if (result.success && result.object.cgFileList) {
+                        var cgFileList = result.object.cgFileList;
+                        for (var idx in cgFileList) {
+                            if (!cgFileList[idx].file)
+                                _this.dirList.push(cgFileList[idx].name)
+                        }
+                        if (_this.dirList)
+                            callback(_this);
+                    }
+                });
+            },
+            module: {
+                provide: function () {
+                    return jQuery('select[name="provideModuleName"]');
+                },
+                dao: function () {
+                    return jQuery('select[name="daoModuleName"]');
+                },
+                service: function () {
+                    return jQuery('select[name="serviceModuleName"]');
+                },
+                web: function () {
+                    return jQuery('select[name="webModuleName"]');
+                },
+                fillAll: function (_this) {
+                    if (!_this)
+                        _this = this;
+
+                    _this.module.emptyAll();
+
+                    // provide
+                    _this.module.fill(_this, _this.module.provide().attr("name"), _this.pName().val() + '-provide');
+                    // dao
+                    _this.module.fill(_this, _this.module.dao().attr("name"), _this.pName().val() + '-dao');
+                    // service
+                    _this.module.fill(_this, _this.module.service().attr("name"), _this.pName().val() + '-service');
+                    // web
+                    _this.module.fill(_this, _this.module.web().attr("name"), _this.pName().val() + '-web');
+                },
+                fill: function (_this, name, defaultModule) {
+                    if (!_this)
+                        _this = this;
+
+                    var select = jQuery('select[name="' + name + '"]');
+                    var ml = _this.dirList;
+                    for (idx in ml) {
+                        if (defaultModule && defaultModule == ml[idx])
+                            jQuery('<option selected="selected" value="' + ml[idx] + '">' + ml[idx] + '</option>').appendTo(select);
+                        else
+                            jQuery('<option value="' + ml[idx] + '">' + ml[idx] + '</option>').appendTo(select);
+                    }
+                },
+                emptyAll: function () {
+                    // provide
+                    this.empty(this.provide());
+                    // dao
+                    this.empty(this.dao());
+                    // service
+                    this.empty(this.service());
+                    // web
+                    this.empty(this.web());
+                },
+                empty: function (module) {
+                    jQuery('option', module).each(function () {
+                        if ($(this).val()) {
+                            $(this).remove();
+                        }
+                    });
+                }
+            }
+        };
+    </script>
+    <script type="text/javascript">
+        var path = {
+            relativePath: function () {
+                return jQuery('input[name="relativePath"]');
+            },
+            fileShow: function () {
+                return jQuery('#fileShow');
+            },
+            setRelativePath: function (value) {
+                this.relativePath().val(value);
+            },
+            enterKeyDown: function (event) {
+                if ((event.keyCode || event.which) === 13) {
+                    event.preventDefault();
+
+                    var relativePathValue = this.relativePath().val();
+                    var path = '';
+                    var name = '';
+                    if (!relativePathValue)
+                        relativePathValue = '/';
+
+                    if (relativePathValue.indexOf('/') === -1)
+                        relativePathValue = '/' + relativePathValue;
+
+                    if (relativePathValue.length > 1 && relativePathValue.endWith('/'))
+                        relativePathValue = relativePathValue.substring(0, relativePathValue.lastIndexOf('/'));
+
+                    this.openFile(relativePathValue.substring(0, relativePathValue.lastIndexOf('/') + 1), relativePathValue.substring(relativePathValue.lastIndexOf('/') + 1, relativePathValue.length));
+                }
+            },
+            openFile: function (pathValue, nameValue) {
+                var wsPath = ws.wsPath().val();
+                if (!ws.wsPathExists || !wsPath) {
+                    jQuery.messager.show({
+                        title: 'Error',
+                        msg: 'WS not exists.'
+                    });
+                    return;
+                }
+
+                var pPath = project.pPath().val();
+                if (!pPath) {
+                    jQuery.messager.show({
+                        title: 'Error',
+                        msg: 'Please select project.'
+                    });
+                    return;
+                }
+
+                if (!pathValue)
+                    pathValue = '';
+                if (!nameValue)
+                    nameValue = '';
+
+                var url = /*[['/project/openFile']]*/'';
+                nqcxPost(url, {
+                    wsPath: wsPath,
+                    pPath: pPath,
+                    path: pathValue,
+                    name: nameValue
+                }, function (result) {
+                    var relativePathPath = '/';
+                    var relativePathName = '';
+                    var cgFileListValue = [];
+                    if (result.success) {
+                        if (result.object) {
+                            relativePathPath = result.object.path;
+                            relativePathName = result.object.name;
+                        }
+                        if (result.object.cgFileList)
+                            cgFileListValue = result.object.cgFileList;
+                    }
+                    path.setRelativePath(relativePathPath + relativePathName);
+                    path.loadCgFile(relativePathPath, cgFileListValue);
+                });
+            },
+            loadCgFile: function (pathValue, cgFileList) {
+                var cgFileHtml = '';
+                if (pathValue)
+                    cgFileHtml += '<li><a href="javascript:void(0);" onclick="path.openFile(\'' + pathValue + '\',\'\');">..</a></li>';
+                for (var idx in cgFileList) {
+                    if (cgFileList[idx].file)
+                        cgFileHtml += '<li>' + cgFileList[idx].name + '</li>';
+                    else
+                        cgFileHtml += '<li><a href="javascript:void(0);" onclick="path.openFile(\'' + cgFileList[idx].path + '\',\'' + cgFileList[idx].name + '\');">' + cgFileList[idx].name + '</a></li>';
+                }
+                this.fileShow().html(cgFileHtml);
+            }
+        };
+    </script>
+    <script type="text/javascript">
+        var center = {
+            o: function () {
+                return jQuery('div#center');
+            },
+            load: function (content) {
+                this.o().html(content);
+            },
+            clear: function () {
+                this.o().html('');
+            }
+        };
+    </script>
+</head>
 <body>
-<div id="generator-ui"></div>
+<body class="easyui-layout">
+<div data-options="region:'north',split:true" style="height:75px;padding:5px 5px 0;overflow:hidden;">
+    <form id="connForm" method="post" action="@{'/session'}">
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tr height="30px">
+                <td class="lable">jdbc:mysql://</td>
+                <td><input type="text" class="connectDB big_200" name="jdbcUrl" value=""></td>
+                <td class="lable">User:</td>
+                <td><input type="text" class="connectDB" name="jdbcUser" value=""/></td>
+                <td class="lable">Password:</td>
+                <td><input type="password" class="connectDB small" name="jdbcPassword" value="" autocomplete="off"/>
+                </td>
+                <td class="lable">
+                    <input id="connectDB" type="button" value="Connect DB"/>
+                </td>
+            </tr>
+            <tr height="30px">
+                <td colspan="2">
+                    <input id="loadTables" type="button" value=">>Load tables>>"/>
+                    <select name="tableName" t-data="">
+                        <option value="">Select Table</option>
+                    </select>
+                </td>
+                <td class="lable">Col-prefix:</td>
+                <td><input type="text" name="colPrefix" value="" t-data="t_,"/></td>
+                <td class="lable">Table-pack:</td>
+                <td><input type="text" class="waring" name="tablePack" value="" t-data=""/></td>
+                <td class="lable">
+                    <input id="loadCenter" type="button" value="Load Center"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div data-options="region:'south',split:true" style="height:30px;"></div>
+<div data-options="region:'west',split:true" style="width:230px;">
+    <table border="0" cellpadding="0" cellspacing="0">
+        <tr height="30">
+            <td class="lable">
+                Author:
+            </td>
+            <td>
+                <input type="text" class="big_140" name="author" value=""/>
+            </td>
+        </tr>
+        <tr height="30">
+            <td class="lable">
+                WS:
+            </td>
+            <td>
+                <input type="text" class="error big_140" name="wsPath" value=""/>
+            </td>
+        </tr>
+        <tr height="30">
+            <td class="lable">
+                Project:
+            </td>
+            <td>
+                <select name="pName">
+                    <option value="">Select Project</option>
+                </select>
+            </td>
+        </tr>
+        <tr height="30">
+            <td class="lable">Path:</td>
+            <td><input type="text" class="big_140" name="pPath" value="" readonly="true"></td>
+        </tr>
+        <tr height="30">
+            <td class="lable">Package:</td>
+            <td>
+                <input type="text" class="waring big_140" name="pPackage" value="">
+            </td>
+        </tr>
+        <tr height="30">
+            <td class="lable">Type:</td>
+            <td nowrap>
+                <input type="radio" name="pType" value="Single"/>Single
+                <input type="radio" name="pType" value="Multiple" checked="checked"/>Multiple
+            </td>
+        </tr>
+        <tr height="30">
+            <td class="lable">Provide:</td>
+            <td>
+                <select name="provideModuleName">
+                    <option value="">/</option>
+                </select>
+            </td>
+        </tr>
+        <tr height="30">
+            <td class="lable">DAO:</td>
+            <td>
+                <select name="daoModuleName">
+                    <option value="">/</option>
+                </select>
+            </td>
+        </tr>
+        <tr height="30">
+            <td class="lable">Service:</td>
+            <td>
+                <select name="serviceModuleName">
+                    <option value="">/</option>
+                </select>
+            </td>
+        </tr>
+        <tr height="30">
+            <td class="lable">Web:</td>
+            <td>
+                <select name="webModuleName">
+                    <option value="">/</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <hr/>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td style="padding-left: 10px"><strong>.</strong><input type="text" class="big_200" name="relativePath"
+                                                                    value=""/>
+        </tr>
+        <tr>
+            <td style="padding-left: 10px">
+                <ul id="fileShow"></ul>
+            </td>
+        </tr>
+    </table>
+</div>
+<div id="center" data-options="region:'center'" style="padding:5px;background:#eee;"></div>
 
 <script src="webjars/doox-generator-ui/generator-ui.js?v=1.2.0"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        // 初始化 db 相关值
+        db.reset();
+        // 初始化 table 相关的
+        table.reset();
+        // 初始化 worksapce 相关
+        ws.wsPath().val(/*[[${ws?.path}]]*/ '');
+        ws.reset();
+        ws.loadWsPath(function (wsdata) {
+            project.loadProjects(wsdata);
+        }, function () {
+            project.emptyProjects();
+            project.clear();
+        });
+        // 初始化 autho 相关
+        ws.author().val(/*[[${author}]]*/ '');
+
+        // Connect db and load table
+        $('.connectDB').keyup(function (event) {
+            if ((event.keyCode || event.which) === 13) {
+                event.preventDefault();
+
+                table.tablePackChanged = false; // 允许自动生成 table-pack
+                table.tablePackTip();
+
+                db.conn(table.listNames, function () {
+                    table.reset();
+                    table.emptyTables();
+                    table.change();
+                });
+            }
+        });
+        $('#connectDB').click(function () {
+            table.tablePackChanged = false; // 允许自动生成 table-pack
+            table.tablePackTip();
+
+            db.conn(table.listNames, function () {
+                table.reset();
+                table.emptyTables();
+                table.change();
+            });
+        });
+
+        $('#loadTables').click(function () {
+            db.conn(table.listNames, function () {
+                table.reset();
+                table.emptyTables();
+                table.change();
+            });
+        });
+        // end of Connect...
+
+        // table
+        table.tableName().change(function () {
+            table.change();
+        });
+        table.tablePack().change(function () {
+            // child
+            if (project.module.change)
+                project.module.change();
+        });
+        table.tablePack().keyup(function () {
+            table.tablePackChanged = true; // 手动变更，不允许自动生成 table-pack
+            table.tablePackTip();
+            // child
+            if (project.module.change)
+                project.module.change();
+        });
+        table.colPrefix().keyup(function () {
+            if (table.colPrefixChange)
+                table.colPrefixChange();
+        });
+        // end of table
+
+        // ws
+        ws.wsPath().keyup(function (event) {
+            project.pPackageChanged = false; // 允许自动生成 pPackage
+            project.pPackageTip();
+
+            ws.reset();
+
+            // child
+            if (project.module.change)
+                project.module.change();
+
+            if ((event.keyCode || event.which) === 13) {
+                event.preventDefault();
+
+                ws.loadWsPath(function (wsdata) {
+                    project.loadProjects(wsdata);
+                }, function () {
+                    project.emptyProjects();
+                    project.clear();
+                });
+            }
+        }); // end of ws
+
+        // author
+        ws.author().keyup(function (event) {
+            ws.saveAuthor();
+        });
+
+        // project
+        project.pName().change(function () {
+            project.change(function () {
+                // child
+                if (project.module.change)
+                    project.module.change();
+            });
+        });
+        project.pType().change(function () {
+            project.change(function () {
+                // child
+                if (project.module.change)
+                    project.module.change();
+            });
+        });
+        project.pPackage().change(function () {
+            // child
+            if (project.module.change)
+                project.module.change();
+        });
+        project.pPackage().keyup(function (e) {
+            project.pPackageChanged = true; // 手动变更，不允许自动生成 pPackage
+            project.pPackageTip();
+
+            if (project.module.change)
+                project.module.change();
+        });
+        // end of project
+
+        path.relativePath().keydown(function (e) {
+            path.enterKeyDown(e);
+        });
+    });
+</script>
 </body>
 </html>
