@@ -46,8 +46,10 @@ public class SwaggerConfig {
     public ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("Code generate api docs")
-                .contact(new Contact("纳琪川", "http://naqichuan.com", "naqichuan@163.com"))
                 .description("Code generate api")
-                .version("1.0").build();
+                .termsOfServiceUrl("")
+                .version("1.0")
+                .contact(new Contact("纳琪川", "http://naqichuan.com", "naqichuan@163.com"))
+                .build();
     }
 }

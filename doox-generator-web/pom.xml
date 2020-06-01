@@ -20,6 +20,16 @@
             <artifactId>doox-generator-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.nqcx.generator</groupId>
+            <artifactId>generator</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.nqcx.generator</groupId>
+            <artifactId>generator-ui</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- ########## 2nd party library ########## -->
         <dependency>

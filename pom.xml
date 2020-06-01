@@ -20,6 +20,8 @@
     <modules>
         <module>doox-generator-core</module>
         <module>doox-generator-web</module>
+        <module>generator</module>
+        <module>generator-ui</module>
     </modules>
 
     <distributionManagement>
@@ -71,33 +73,5 @@
                 </configuration>
             </plugin>
         </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/*.xml</include>
-                    <include>**/*.properties</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>config/*.properties</include>
-                    <include>log4j2.xml</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>beans.xml</include>
-                    <include>gmsg/*.properties</include>
-                    <include>spring/*.xml</include>
-                    <include>mybatis/*.xml</include>
-                    <include>template/*.txt</include>
-                </includes>
-            </resource>
-        </resources>
     </build>
 </project>
