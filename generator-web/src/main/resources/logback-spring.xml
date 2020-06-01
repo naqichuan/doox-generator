@@ -11,6 +11,9 @@
 
     <contextName>${LOGGING_CONTEXT_NAME}</contextName>
 
+    <!--本机 ip 地址-->
+    <conversionRule conversionWord="ip" converterClass="org.nqcx.generator.common.IPLogConfig"/>
+
     <!-- 彩色日志依赖的渲染类 -->
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
     <conversionRule conversionWord="wex"
@@ -31,6 +34,26 @@
             <charset>UTF-8</charset>
         </encoder>
     </appender>
+
+    <!-- 访问日志文件 access -->
+    <appender name="ACCESS_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <!--此日志appender是为开发使用，只配置最底级别，控制台输出的日志级别是大于或等于此级别的日志信息-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>info</level>
+        </filter>
+        <encoder>
+            <Pattern>
+                <![CDATA["time":"%d{yyyy-MM-dd HH:mm:ss.SSS}","serverAddr":"%ip","webAppName":"${LOGGING_CONTEXT_NAME}",%m%n]]>
+            </Pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+
+    </appender>
+
+    <!-- 访问日志 -->
+    <logger name="_NQCX_LOGGER_ACCESS" level="info" additivity="false">
+        <appender-ref ref="ACCESS_CONSOLE"/>
+    </logger>
 
     <root level="${LOGGING_LEVEL_ROOT}">
         <appender-ref ref="CONSOLE"/>

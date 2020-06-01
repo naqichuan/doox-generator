@@ -17,9 +17,16 @@
         <logging.context.name>doox-generator</logging.context.name>
         <logging.level.root>info</logging.level.root>
         <logging.level.web>info</logging.level.web>
+
+        <server.port>1280</server.port>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.nqcx.generator</groupId>
+            <artifactId>generator-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.nqcx.generator</groupId>
             <artifactId>generator</artifactId>
@@ -29,6 +36,20 @@
             <groupId>org.nqcx.generator</groupId>
             <artifactId>generator-ui</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <!-- ########## 2nd party library ########## -->
+        <dependency>
+            <groupId>org.nqcx.doox.commons</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.nqcx.doox.commons</groupId>
+            <artifactId>commons-biz</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.nqcx.doox.commons</groupId>
+            <artifactId>commons-web</artifactId>
         </dependency>
 
         <!-- ########## 3rd party library ########## -->

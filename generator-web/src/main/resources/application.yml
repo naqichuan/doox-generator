@@ -1,6 +1,6 @@
 ##server config
 server:
-  port: 8001
+  port: @server.port@
   servlet:
     context-path:
     session:
