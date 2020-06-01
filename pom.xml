@@ -18,10 +18,10 @@
     <url>http://nqcx.org</url>
 
     <modules>
-        <module>doox-generator-core</module>
-        <module>doox-generator-web</module>
+        <module>generator-core</module>
         <module>generator</module>
         <module>generator-ui</module>
+        <module>generator-web</module>
     </modules>
 
     <distributionManagement>
