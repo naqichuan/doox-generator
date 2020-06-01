@@ -12,6 +12,13 @@
     <artifactId>generator-web</artifactId>
     <packaging>war</packaging>
 
+    <properties>
+        <logging.file.path>/doox/logs/doox-generator</logging.file.path>
+        <logging.context.name>doox-generator</logging.context.name>
+        <logging.level.root>info</logging.level.root>
+        <logging.level.web>info</logging.level.web>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.nqcx.generator</groupId>

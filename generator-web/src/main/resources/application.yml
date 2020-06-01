@@ -1,0 +1,47 @@
+##server config
+server:
+  port: 8001
+  servlet:
+    context-path:
+    session:
+      timeout: 1800s
+      tracking-modes: cookie
+  tomcat:
+    remote_ip_header: x-forwarded-for
+    protocol_header: x-forwarded-proto
+    port-header: X-Forwarded-Port
+  forward-headers-strategy: framework
+
+##spring config
+spring:
+  application:
+    name: dooxframework
+  profiles:
+    active: base
+  thymeleaf:
+    cache: @spring.thymeleaf.cache@
+  devtools:
+    add-properties: false
+    livereload:
+      enabled: true
+      port: 35701
+
+##log config
+logging:
+  level:
+    root: @logging.level.root@
+    web: @logging.level.web@
+  file:
+    path: @logging.file.path@
+  context:
+    name: @logging.context.name@
+
+##dooxframework config
+url:
+  assets:
+    base: @url.assets.base@
+dooxframework:
+  title:
+    default: DooxGenerator
+  timesure: ?t=20200202
+
