@@ -193,12 +193,15 @@
             wsPath: function () {
                 return jQuery('input[name="wsPath"]');
             },
+            reset: function () {
+
+            },
             saveAuthor: function () {
                 var author = this.author().val();
                 if (!author)
                     return;
 
-                nqcxPost("[(@{'/ws/author'})]", {author: author}, function (result) {
+                nqcxPost("ws/author", {author: author}, function (result) {
                     if (result.success) {
                         console.log(result.object);
                     }
@@ -209,7 +212,7 @@
                 if (!path)
                     return;
 
-                nqcxPost("[(@{'/ws/path/load'})]", {"wsPath": path}, function (result) {
+                nqcxPost("ws/path/load", {"wsPath": path}, function (result) {
                     if (result.success && result.object) {
                         var wsdata = result.object;
                         if (wsdata.exists) {
@@ -247,12 +250,34 @@
                 }
             },
             reset: function () {
-                this.wsPathExists = false;
-                this.wsPathExistsTip();
+                var _this = this;
+                nqcxGet('ws/info', {}, function (result) {
+                    if (result.success && result.result) {
+                        jQuery.messager.show({
+                            title: 'Success',
+                            msg: 'Ws info loaded'
+                        });
+                        // 初始化 author 相关
+                        ws.author().val(result.result.author);
 
-                project.emptyProjects();
+                        if (result.result.ws)
+                        // 初始化 worksapce 相关
+                            ws.wsPath().val(result.result.ws.path);
 
-                project.change();
+                        _this.wsPathExists = false;
+                        _this.wsPathExistsTip();
+
+                        project.emptyProjects();
+
+                        project.change();
+
+                    } else {
+                        $.messager.show({
+                            title: 'Error',
+                            msg: '加载 Ws info 错误！'
+                        });
+                    }
+                });
             }
         }
     </script>
@@ -268,13 +293,28 @@
                 return $('input[name="jdbcPassword"]');
             },
             reset: function () {
-                this.jdbcUrl().val(/*[[${jdbcUrl}]]*/ '');
-                this.jdbcUser().val(/*[[${jdbcUser}]]*/ '');
-                this.jdbcPassword().val(/*[[${jdbcPassword}]]*/ '');
+                var _this = this;
+                nqcxGet('connection/info', {}, function (result) {
+                    if (result.success && result.result) {
+                        jQuery.messager.show({
+                            title: 'Success',
+                            msg: 'Connection info loaded'
+                        });
+
+                        _this.jdbcUrl().val(result.result.jdbcUrl);
+                        _this.jdbcUser().val(result.result.jdbcUser);
+                        _this.jdbcPassword().val(result.result.jdbcPassword);
+                    } else {
+                        $.messager.show({
+                            title: 'Error',
+                            msg: '加载 connection info 错误！'
+                        });
+                    }
+                });
             },
             conn: function (callBack, errorCallBack) {
                 $('#connForm').form('nqcxSubmit', {
-                    url: /*[['/connection/connect']]*/ '',
+                    url: "connection/connect",
                     dataType: 'json',
                     onSubmit: function () {
                         return $(this).form('validate');
@@ -338,7 +378,7 @@
                 var colPrefixValue = table.colPrefix().val();
                 var tablePackValue = table.tablePack().val();
 
-                var url = /*[['/table/list']]*/ '';
+                var url = "table/list";
                 nqcxGet(url, {}, function (result) {
                     table.emptyTables();
                     if (result.list) {
@@ -383,7 +423,7 @@
                 if (!this.tablePackChanged)
                     this.tablePack().val(tableNameValue.replaceFirstLow());
 
-                jQuery.post(/*[['/center']]*/ '', '', function (result) {
+                jQuery.post("center", '', function (result) {
                     center.load(result);
                 }, 'html');
             }
@@ -706,10 +746,9 @@
         };
     </script>
 </head>
-<body>
 <body class="easyui-layout">
 <div data-options="region:'north',split:true" style="height:75px;padding:5px 5px 0;overflow:hidden;">
-    <form id="connForm" method="post" action="@{'/session'}">
+    <form id="connForm" method="post" action="session">
         <table border="0" cellpadding="0" cellspacing="0">
             <tr height="30px">
                 <td class="lable">jdbc:mysql://</td>
@@ -840,19 +879,17 @@
     $(document).ready(function () {
         // 初始化 db 相关值
         db.reset();
-        // 初始化 table 相关的
+        // 初始化 table 相关
         table.reset();
-        // 初始化 worksapce 相关
-        ws.wsPath().val(/*[[${ws?.path}]]*/ '');
+        // 初始化 ws 相关
         ws.reset();
+
         ws.loadWsPath(function (wsdata) {
             project.loadProjects(wsdata);
         }, function () {
             project.emptyProjects();
             project.clear();
         });
-        // 初始化 autho 相关
-        ws.author().val(/*[[${author}]]*/ '');
 
         // Connect db and load table
         $('.connectDB').keyup(function (event) {

@@ -6,7 +6,7 @@
  * into with nqcx.org.
  */
 
-package org.nqcx.generator.web.controller.generate;
+package org.nqcx.generator.web.api.generate;
 
 import org.nqcx.doox.commons.util.orika.Orika;
 import org.nqcx.generator.data.vo.GenerateVO;
@@ -27,7 +27,7 @@ import java.util.Map;
  * @author naqichuan Feb 8, 2014 9:33:03 PM
  */
 @Controller
-@RequestMapping("/generate")
+@RequestMapping("/generator-api/generate")
 public class GenerateController extends AbstractController {
 
     @Autowired

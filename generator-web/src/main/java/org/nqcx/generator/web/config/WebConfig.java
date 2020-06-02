@@ -50,8 +50,8 @@ public class WebConfig implements WebMvcConfigurer {
 
     private String jdbcCookie = "jdbcCookie";
     private String wsCookie = "wsCookie";
+    private String projectCookie = "projectCookie";
     private String authorCookie = "authorCookie";
-
 
     @Bean("cookieCipherTools")
     public CookieCipherTools getCookieCipherTools() {
@@ -67,6 +67,7 @@ public class WebConfig implements WebMvcConfigurer {
         Map<String, NqcxCookie> cookieMap = new HashMap<>(1);
         cookieMap.put(jdbcCookie, getJdbcCookie());
         cookieMap.put(wsCookie, getWsCookie());
+        cookieMap.put(projectCookie, getProjectCookie());
         cookieMap.put(authorCookie, getAuthorCookie());
         cookieUtils.setCookieMap(cookieMap);
 
@@ -74,7 +75,7 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     private NqcxCookie newCookie(String cookieName) {
-        String cookieNormalPath = "";
+        String cookieNormalPath = "/generator-api";
         String cookieNormalDomain = "";
         String cookieNormalKey = "kVgKySMDePHOwrGtTJqA9CfSCrh81wEo";
         int cookieNormalExpires = 31536000;
@@ -101,6 +102,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean("wsCookie")
     public NqcxCookie getWsCookie() {
         return newCookie(wsCookie);
+    }
+
+    @Bean("projectCookie")
+    public NqcxCookie getProjectCookie() {
+        return newCookie(projectCookie);
     }
 
     @Bean("authorCookie")

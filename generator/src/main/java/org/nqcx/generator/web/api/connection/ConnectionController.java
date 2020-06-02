@@ -6,7 +6,7 @@
  * into with nqcx.org.
  */
 
-package org.nqcx.generator.web.controller.connection;
+package org.nqcx.generator.web.api.connection;
 
 import org.nqcx.doox.commons.lang.o.DTO;
 import org.nqcx.doox.commons.web.cookie.CookieUtils;
@@ -15,7 +15,6 @@ import org.nqcx.generator.service.conn.ConnService;
 import org.nqcx.generator.web.controller.AbstractController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,7 +29,7 @@ import java.util.Map;
  * @author naqichuan Feb 7, 2014 4:04:01 PM
  */
 @Controller
-@RequestMapping("/connection")
+@RequestMapping("/generator-api/connection")
 public class ConnectionController extends AbstractController {
 
     @Autowired
@@ -38,6 +37,33 @@ public class ConnectionController extends AbstractController {
     @Autowired
     @Qualifier("jdbcCookie")
     private NqcxCookie jdbcCookie;
+
+
+    /**
+     * @return map
+     */
+    @RequestMapping(value = "/info", method = RequestMethod.GET,
+            produces = "application/json")
+    @ResponseBody
+    public Map<?, ?> info(HttpServletRequest request) {
+        String jdbcUrl = "localhost:3306/test";
+        String user = "test";
+        String password = "test";
+
+        String jdbcCookieValue = CookieUtils.getCookieValue(request, jdbcCookie.getName());
+        String[] vals = null;
+        if (jdbcCookieValue != null && (vals = jdbcCookieValue.split(",")).length == 3) {
+            jdbcUrl = vals[0] == null ? jdbcUrl : vals[0];
+            user = vals[1] == null ? user : vals[1];
+            password = vals[2] == null ? password : vals[2];
+        }
+
+        return buildResult(new DTO(true)
+                .putResult("jdbcUrl", jdbcUrl)
+                .putResult("jdbcUser", user)
+                .putResult("jdbcPassword", password)
+        );
+    }
 
     /**
      * @param response

@@ -6,7 +6,7 @@
  * into with nqcx.org.
  */
 
-package org.nqcx.generator.web.controller.table;
+package org.nqcx.generator.web.api.table;
 
 import org.nqcx.generator.service.table.TableService;
 import org.nqcx.generator.web.controller.AbstractController;
@@ -23,7 +23,7 @@ import java.util.Map;
  * @author naqichuan Feb 8, 2014 11:32:39 AM
  */
 @Controller
-@RequestMapping("/table")
+@RequestMapping("/generator-api/table")
 public class TableController extends AbstractController {
 
     @Autowired

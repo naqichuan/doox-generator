@@ -6,14 +6,20 @@
  * into with nqcx.org.
  */
 
-package org.nqcx.generator.service.ws;
+package org.nqcx.generator.service.project;
 
 import org.nqcx.doox.commons.lang.o.DTO;
 
 /**
  * @author naqichuan Feb 9, 2014 10:14:39 PM
  */
-public interface ProjectService {
+public interface IProjectService {
+
+    /**
+     * @param basedir
+     * @return
+     */
+    DTO info(String basedir);
 
     /**
      * @param projectPath

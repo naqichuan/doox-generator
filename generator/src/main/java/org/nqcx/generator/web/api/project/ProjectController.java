@@ -6,28 +6,66 @@
  * into with nqcx.org.
  */
 
-package org.nqcx.generator.web.controller.project;
+package org.nqcx.generator.web.api.project;
 
-import org.nqcx.generator.service.ws.ProjectService;
+import org.nqcx.doox.commons.lang.o.DTO;
+import org.nqcx.doox.commons.web.cookie.CookieUtils;
+import org.nqcx.doox.commons.web.cookie.NqcxCookie;
+import org.nqcx.generator.service.project.IProjectService;
 import org.nqcx.generator.web.controller.AbstractController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
  * @author naqichuan Feb 24, 2014 10:11:06 PM
  */
 @Controller
-@RequestMapping("/project")
+@RequestMapping("/generator-api/project")
 public class ProjectController extends AbstractController {
 
     @Autowired
-    private ProjectService projectService;
+    private IProjectService projectService;
+
+    @Autowired
+    @Qualifier("authorCookie")
+    private NqcxCookie authorCookie;
+    @Autowired
+    @Qualifier("projectCookie")
+    private NqcxCookie projectCookie;
+
+    @Value("${project.basedir}")
+    private String projectBasedir;
+
+    @RequestMapping(value = "/info", method = RequestMethod.GET,
+            produces = "application/json")
+    @ResponseBody
+    public Map<?, ?> info(HttpServletRequest request) {
+        String author = "NaqiChuan";
+        String authorCookieValue = CookieUtils.getCookieValue(request, authorCookie.getName());
+        if (authorCookieValue != null && authorCookieValue.length() > 0)
+            author = authorCookieValue;
+
+        // 确定 project path
+        String pPath = projectBasedir;
+
+        String projectCookieValue = CookieUtils.getCookieValue(request, projectCookie.getName());
+        if (projectCookieValue != null && projectCookieValue.length() > 0) {
+
+        }
+
+
+        return buildResult(new DTO(true).putResult("author", author));
+    }
+
 
     @RequestMapping(value = "/openFile", method = {RequestMethod.GET,
             RequestMethod.POST}, produces = "application/json")

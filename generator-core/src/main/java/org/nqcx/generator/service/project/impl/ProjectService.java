@@ -6,18 +6,18 @@
  * into with nqcx.org.
  */
 
-package org.nqcx.generator.service.ws.impl;
+package org.nqcx.generator.service.project.impl;
 
 import com.sun.org.apache.xerces.internal.dom.DeferredElementImpl;
 import org.nqcx.doox.commons.lang.o.DTO;
 import org.nqcx.generator.common.util.CgFileUtils;
 import org.nqcx.generator.provide.o.CgFile;
-import org.nqcx.generator.service.ws.ProjectService;
+import org.nqcx.generator.provide.o.project.Project;
+import org.nqcx.generator.service.project.IProjectService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -32,9 +32,20 @@ import java.io.File;
  * @author naqichuan Feb 9, 2014 10:15:26 PM
  */
 @Service
-public class ProjectServiceImpl implements ProjectService {
+public class ProjectService implements IProjectService {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(ProjectServiceImpl.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ProjectService.class);
+
+    @Override
+    public DTO info(String basedir) {
+        DTO dto = new DTO();
+
+        Project p = new Project();
+
+        CgFile cgPom = new CgFile(basedir, "pom.xml", true);
+
+        return dto.setSuccess(true);
+    }
 
     @Override
     public DTO openFile(String wsPath, String projectPath, String path, String name) {
@@ -65,7 +76,7 @@ public class ProjectServiceImpl implements ProjectService {
                     nodeList = (NodeList) expr.evaluate(document, XPathConstants.NODE);
                 }
 
-                if (nodeList != null && nodeList instanceof DeferredElementImpl)
+                if (nodeList instanceof DeferredElementImpl)
                     return new DTO(true).setObject(((DeferredElementImpl) nodeList).getTextContent());
             } catch (Exception e) {
                 LOGGER.error("", e);

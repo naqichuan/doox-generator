@@ -34,4 +34,6 @@ logging:
   context:
     name: @logging.context.name@
 
-
+## project basedir
+project:
+  basedir: @project.basedir@
