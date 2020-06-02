@@ -7,11 +7,9 @@
 package org.nqcx.generator.web;
 
 
-import org.nqcx.generator.web.controller.AbstractController;
-
 /**
  * @author naqichuan 2018/5/20 09:55
  */
-public class WebInformation extends AbstractController {
+public class WebInformation {
 
 }

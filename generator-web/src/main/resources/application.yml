@@ -37,3 +37,4 @@ logging:
 ## project basedir
 project:
   basedir: @project.basedir@
+  author: Naqichuan

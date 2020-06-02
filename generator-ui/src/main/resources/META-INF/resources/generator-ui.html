@@ -201,7 +201,7 @@
                 if (!author)
                     return;
 
-                nqcxPost("ws/author", {author: author}, function (result) {
+                nqcxPost("generator-api/ws/author", {author: author}, function (result) {
                     if (result.success) {
                         console.log(result.object);
                     }
@@ -212,7 +212,7 @@
                 if (!path)
                     return;
 
-                nqcxPost("ws/path/load", {"wsPath": path}, function (result) {
+                nqcxPost("generator-api/ws/path/load", {"wsPath": path}, function (result) {
                     if (result.success && result.object) {
                         var wsdata = result.object;
                         if (wsdata.exists) {
@@ -251,7 +251,7 @@
             },
             reset: function () {
                 var _this = this;
-                nqcxGet('ws/info', {}, function (result) {
+                nqcxGet('generator-api/ws/info', {}, function (result) {
                     if (result.success && result.result) {
                         jQuery.messager.show({
                             title: 'Success',
@@ -294,7 +294,7 @@
             },
             reset: function () {
                 var _this = this;
-                nqcxGet('connection/info', {}, function (result) {
+                nqcxGet('generator-api/connection/info', {}, function (result) {
                     if (result.success && result.result) {
                         jQuery.messager.show({
                             title: 'Success',
@@ -378,7 +378,7 @@
                 var colPrefixValue = table.colPrefix().val();
                 var tablePackValue = table.tablePack().val();
 
-                var url = "table/list";
+                var url = "generator-api/table/list";
                 nqcxGet(url, {}, function (result) {
                     table.emptyTables();
                     if (result.list) {
@@ -456,7 +456,7 @@
                 // project package
                 var pPackageValue = _this.pPackage().val();
 
-                nqcxPost(/*[[\'/project/groupId\']]*/'', {
+                nqcxPost('generator-api/project/groupId', {
                     wsPath: ws.wsPath().val(),
                     pPath: project.pPath().val()
                 }, function (result) {
@@ -568,7 +568,7 @@
                     return;
                 }
 
-                var url = /*[['/project/openFile']]*/'';
+                var url = 'generator-api/project/openFile';
                 nqcxPost(url, {wsPath: wsPath, pPath: pPath, path: '', name: ''}, function (result) {
                     if (result.success && result.object.cgFileList) {
                         var cgFileList = result.object.cgFileList;
@@ -696,7 +696,7 @@
                 if (!nameValue)
                     nameValue = '';
 
-                var url = /*[['/project/openFile']]*/'';
+                var url = 'generator-api/project/openFile';
                 nqcxPost(url, {
                     wsPath: wsPath,
                     pPath: pPath,

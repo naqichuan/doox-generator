@@ -106,7 +106,6 @@
     </dependencies>
 
     <build>
-        <finalName>doox-generator</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

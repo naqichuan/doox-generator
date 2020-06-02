@@ -134,7 +134,7 @@ public class WebConfig implements WebMvcConfigurer {
         map.put("nqcxValues", getNqcxValues());
 
         map.put("homeUrl", getHomeUrl());
-        map.put("WI", new WebInformation());
+//        map.put("WI", new WebInformation());
 
         if (thymeleafViewResolver != null) {
             thymeleafViewResolver.setStaticVariables(map);
