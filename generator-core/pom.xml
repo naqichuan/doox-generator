@@ -93,6 +93,13 @@
                     <include>spring/*.*</include>
                 </includes>
             </resource>
+            <resource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>*.yml</include>
+                </includes>
+            </resource>
         </resources>
     </build>
 </project>

@@ -7,6 +7,7 @@
 package org.nqcx.generator.service.project;
 
 import org.junit.jupiter.api.Test;
+import org.nqcx.generator.provide.o.project.Project;
 import org.nqcx.generator.service.BaseServiceTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,8 +22,9 @@ public class ProjectServiceTest extends BaseServiceTest {
     @Test
     public void info() {
 
-        projectService.info("abcd");
+//        projectService.info("/Users/nqcx/Works/Sources/OpenSource/doox-generator/generator-web");
+        Project p = projectService.info(null).getObject();
 
-        System.out.println("test");
+        System.out.println(p);
     }
 }
