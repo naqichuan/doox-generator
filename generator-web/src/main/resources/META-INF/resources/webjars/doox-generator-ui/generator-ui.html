@@ -193,9 +193,6 @@
             wsPath: function () {
                 return jQuery('input[name="wsPath"]');
             },
-            reset: function () {
-
-            },
             saveAuthor: function () {
                 var author = this.author().val();
                 if (!author)
@@ -251,18 +248,19 @@
             },
             reset: function () {
                 var _this = this;
-                nqcxGet('generator-api/ws/info', {}, function (result) {
-                    if (result.success && result.result) {
+                nqcxGet('generator-api/project/info', {}, function (response) {
+                    if (response && response.success && response.object) {
+                        var o = response.object;
+
                         jQuery.messager.show({
                             title: 'Success',
                             msg: 'Ws info loaded'
                         });
-                        // 初始化 author 相关
-                        ws.author().val(result.result.author);
 
-                        if (result.result.ws)
+                        // 初始化 author 相关
+                        ws.author().val(o.author);
                         // 初始化 worksapce 相关
-                            ws.wsPath().val(result.result.ws.path);
+                        ws.wsPath().val(o.projectPath);
 
                         _this.wsPathExists = false;
                         _this.wsPathExistsTip();
@@ -881,6 +879,7 @@
         db.reset();
         // 初始化 table 相关
         table.reset();
+
         // 初始化 ws 相关
         ws.reset();
 

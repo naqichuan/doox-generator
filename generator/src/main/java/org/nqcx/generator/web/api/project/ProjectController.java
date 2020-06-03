@@ -8,14 +8,12 @@
 
 package org.nqcx.generator.web.api.project;
 
-import org.nqcx.doox.commons.lang.o.DTO;
 import org.nqcx.doox.commons.web.cookie.CookieUtils;
 import org.nqcx.doox.commons.web.cookie.NqcxCookie;
 import org.nqcx.generator.service.project.IProjectService;
 import org.nqcx.generator.web.controller.AbstractController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,30 +40,23 @@ public class ProjectController extends AbstractController {
     @Qualifier("projectCookie")
     private NqcxCookie projectCookie;
 
-    @Value("${project.basedir}")
-    private String projectBasedir;
-
     @RequestMapping(value = "/info", method = RequestMethod.GET,
             produces = "application/json")
     @ResponseBody
     public Map<?, ?> info(HttpServletRequest request) {
-        String author = "NaqiChuan";
+        // 确定 project path
+        String pPath = null;
+        String projectCookieValue = CookieUtils.getCookieValue(request, projectCookie.getName());
+        if (projectCookieValue != null && projectCookieValue.length() > 0)
+            pPath = projectCookieValue;
+
+        String author = null;
         String authorCookieValue = CookieUtils.getCookieValue(request, authorCookie.getName());
         if (authorCookieValue != null && authorCookieValue.length() > 0)
             author = authorCookieValue;
 
-        // 确定 project path
-        String pPath = projectBasedir;
-
-        String projectCookieValue = CookieUtils.getCookieValue(request, projectCookie.getName());
-        if (projectCookieValue != null && projectCookieValue.length() > 0) {
-
-        }
-
-
-        return buildResult(new DTO(true).putResult("author", author));
+        return buildResult(projectService.info(pPath, author));
     }
-
 
     @RequestMapping(value = "/openFile", method = {RequestMethod.GET,
             RequestMethod.POST}, produces = "application/json")

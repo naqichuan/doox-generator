@@ -17,9 +17,10 @@ public interface IProjectService {
 
     /**
      * @param basedir
+     * @param author
      * @return
      */
-    DTO info(String basedir);
+    DTO info(String basedir, String author);
 
     /**
      * @param projectPath

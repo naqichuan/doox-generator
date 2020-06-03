@@ -10,6 +10,7 @@ package org.nqcx.generator.service.project.impl;
 
 import com.sun.org.apache.xerces.internal.dom.DeferredElementImpl;
 import org.nqcx.doox.commons.lang.o.DTO;
+import org.nqcx.doox.commons.util.StringUtils;
 import org.nqcx.generator.common.util.CgFileUtils;
 import org.nqcx.generator.provide.enums.PType;
 import org.nqcx.generator.provide.o.CgFile;
@@ -47,28 +48,32 @@ public class ProjectService implements IProjectService {
     private String projectBasedir;
 
     @Override
-    public DTO info(String basedir) {
-
+    public DTO info(String basedir, String author) {
         if (basedir == null || basedir.length() == 0) {
             basedir = projectBasedir;
         }
 
-        CgFile pom = new CgFile(basedir, "pom.xml", true);
+        if (StringUtils.isBlank(author))
+            author = this.projectAuthor;
 
         Project p = new Project();
 
-        p.setAuthor(projectAuthor);
-        p.setProjectPath(projectBasedir);
+        p.setAuthor(author);
+        p.setProjectPath(basedir);
         p.setProjectType(PType.SINGLE);
 
-        p.setGroupId(this.groupId(pom.getFullPath()));
-        p.setArtifactId(this.artifactId(pom.getFullPath()));
-        p.setVersion(this.version(pom.getFullPath()));
+        CgFile pom = new CgFile(basedir, "pom.xml", true);
+        File pomFile = new File(pom.getFullPath());
+        if (pomFile.exists() && pomFile.isFile()) {
+            p.setGroupId(this.groupId(pom.getFullPath()));
+            p.setArtifactId(this.artifactId(pom.getFullPath()));
+            p.setVersion(this.version(pom.getFullPath()));
 
-        p.setModules(this.modules(pom.getFullPath()));
+            p.setModules(this.modules(pom.getFullPath()));
 
-        if (p.getModules() != null && p.getModules().size() > 0)
-            p.setProjectType(PType.MULTIPLE);
+            if (p.getModules() != null && p.getModules().size() > 0)
+                p.setProjectType(PType.MULTIPLE);
+        }
 
         return new DTO(true).setObject(p);
     }

@@ -23,7 +23,7 @@ public class ProjectServiceTest extends BaseServiceTest {
     public void info() {
 
 //        projectService.info("/Users/nqcx/Works/Sources/OpenSource/doox-generator/generator-web");
-        Project p = projectService.info(null).getObject();
+        Project p = projectService.info(null, null).getObject();
 
         System.out.println(p);
     }
