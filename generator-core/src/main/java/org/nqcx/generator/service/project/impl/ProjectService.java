@@ -48,6 +48,18 @@ public class ProjectService implements IProjectService {
     private String projectBasedir;
 
     @Override
+    public DTO basedir(String basedir) {
+        if (basedir == null || basedir.length() == 0)
+            basedir = projectBasedir;
+
+        File p = new File(projectBasedir);
+        if (p.exists() && p.isDirectory())
+            return new DTO(true).setObject(basedir);
+
+        return new DTO(false);
+    }
+
+    @Override
     public DTO info(String basedir, String author) {
         if (basedir == null || basedir.length() == 0) {
             basedir = projectBasedir;

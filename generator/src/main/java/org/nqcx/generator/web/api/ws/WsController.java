@@ -59,37 +59,4 @@ public class WsController extends AbstractController {
                 .putResult("ws", ws));
     }
 
-    @RequestMapping(value = "/path/load", method = {RequestMethod.POST},
-            produces = "application/json")
-    @ResponseBody
-    public Map<?, ?> loadWsPath(HttpServletResponse response,
-                                @RequestParam("wsPath") String wsPath) {
-
-        LOGGER.info("The wsPath is {}", wsPath);
-
-        Ws ws = wsService.getWs(wsPath, true);
-
-        if (ws != null && ws.isExists()) {
-            String cookieValue = ws.getPath();
-            // 记录写入 cookie
-            CookieUtils.setCookie(response, wsCookie.getName(), cookieValue);
-        }
-
-        return buildResult(new DTO(true).setObject(ws));
-    }
-
-    @RequestMapping(value = "/author", method = {RequestMethod.POST},
-            produces = "application/json")
-    @ResponseBody
-    public Map<?, ?> author(HttpServletResponse response,
-                            @RequestParam("author") String author) {
-
-        if (author != null && author.trim().length() > 0) {
-            String cookieValue = (author = author.trim());
-            // 记录写入 cookie
-            CookieUtils.setCookie(response, authorCookie.getName(), cookieValue);
-        }
-
-        return buildResult(new DTO(true).setObject(author));
-    }
 }

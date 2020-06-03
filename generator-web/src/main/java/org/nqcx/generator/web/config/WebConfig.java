@@ -50,7 +50,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     private String jdbcCookie = "jdbcCookie";
     private String wsCookie = "wsCookie";
-    private String projectCookie = "projectCookie";
+    private String basedirCookie = "basedirCookie";
     private String authorCookie = "authorCookie";
 
     @Bean("cookieCipherTools")
@@ -67,7 +67,7 @@ public class WebConfig implements WebMvcConfigurer {
         Map<String, NqcxCookie> cookieMap = new HashMap<>(1);
         cookieMap.put(jdbcCookie, getJdbcCookie());
         cookieMap.put(wsCookie, getWsCookie());
-        cookieMap.put(projectCookie, getProjectCookie());
+        cookieMap.put(basedirCookie, getProjectCookie());
         cookieMap.put(authorCookie, getAuthorCookie());
         cookieUtils.setCookieMap(cookieMap);
 
@@ -104,9 +104,9 @@ public class WebConfig implements WebMvcConfigurer {
         return newCookie(wsCookie);
     }
 
-    @Bean("projectCookie")
+    @Bean("basedirCookie")
     public NqcxCookie getProjectCookie() {
-        return newCookie(projectCookie);
+        return newCookie(basedirCookie);
     }
 
     @Bean("authorCookie")

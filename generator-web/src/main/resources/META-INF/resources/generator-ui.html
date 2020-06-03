@@ -208,7 +208,7 @@
         //             }
         //         });
         //     },
-        //     loadWsPath: function (callBack, errorCallBack) {
+        //     saveBasedir: function (callBack, errorCallBack) {
         //         var path = decodeURIComponent(this.wsPath().val());
         //         if (!path)
         //             return;
@@ -453,39 +453,84 @@
             pType: function () {
                 return $('input[name="pType"]');
             },
-            p: {},
-            init: function () {
+            basedir: '',
+            basedirChanged: false,
+            basedirChangedTip: function () {
+                if (this.basedirChanged)
+                    this.wsPath().addClass("error");
+                else
+                    this.wsPath().removeClass("error");
+            },
+            basedirLoad: function (callback, errorCallback) {
                 var _this = this;
-                _this.p = {};
 
-                nqcxGet('generator-api/project/info', {}, function (response) {
+                nqcxGet('generator-api/project/basedir', {}, function (response) {
                     if (response && response.success && response.object) {
-                        _this.p = response.object;
+                        _this.basedir = response.object;
+                        _this.wsPath().val(_this.basedir);
 
-                        // $.messager.show({
-                        //     title: 'Success',
-                        //     msg: 'Ws info loaded'
-                        // });
+                        _this.basedirChanged = false;
+                        _this.basedirChangedTip();
 
-                        _this.author().val(_this.p.author);
-
-                        _this.pName().val(_this.p.artifactId);
-                        _this.pPackage().val(_this.p.groupId);
-                        _this.pPath().val(_this.p.projectPath);
-                        _this.pType().val(_this.p.projectType);
-
-                        _this.wsPath().val(_this.p.projectPath);
-
-                        _this.wsPathExists = false;
-                        _this.wsPathExistsTip();
-
-                        // _this.emptyProjects();
-
-                        _this.change();
+                        if (callback)
+                            callback(_this.basedir);
                     } else {
                         $.messager.show({
                             title: 'Error',
-                            msg: '加载 Ws info 错误！'
+                            msg: 'Load project basedir fail！'
+                        });
+
+                        if (errorCallback)
+                            errorCallback(_this.basedir);
+                    }
+                });
+            },
+            p: {}, // project
+            loaded: false,
+            init: function () {
+                var _this = this;
+                this.basedirLoad(function (basedir) {
+                    _this.load(basedir);
+                })
+            },
+            load: function (basedir) {
+                var _this = this;
+                _this.p = {};
+                _this.loaded = false;
+
+                var params = {};
+                if (basedir)
+                    params.basedir = basedir;
+
+                nqcxGet('generator-api/project/info', params, function (response) {
+                    if (response && response.success && response.object) {
+                        _this.p = response.object;
+
+                        //
+                        _this.author().val(_this.p.author);
+                        //
+                        // _this.wsPath().val(_this.p.projectPath);
+                        _this.pPackage().val(_this.p.groupId);
+
+                        project.pPackageChanged = false; // 允许自动生成 pPackage
+                        project.pPackageTip();
+
+                        //
+                        _this.pName().val(_this.p.artifactId);
+                        _this.pPath().val(_this.p.projectPath);
+                        _this.pType().val(_this.p.projectType);
+
+                        // _this.emptyProjects();
+                        _this.change();
+
+                        // _this.wsPathExists = false;
+                        // _this.wsPathExistsTip();
+
+                        _this.loaded = true;
+                    } else {
+                        $.messager.show({
+                            title: 'Error',
+                            msg: 'Load project info fail！'
                         });
                     }
                 });
@@ -495,56 +540,50 @@
                 if (!author)
                     return;
 
-                nqcxPost("generator-api/ws/author", {author: author}, function (result) {
+                nqcxPost("generator-api/project/author/save", {author: author}, function (result) {
                     if (result.success) {
                         console.log(result.object);
                     }
                 });
             },
-            loadWsPath: function (callBack, errorCallBack) {
+            saveBasedir: function (callBack, errorCallBack) {
                 var _this = this;
 
                 var path = decodeURIComponent(_this.wsPath().val());
                 if (!path)
                     return;
 
-                nqcxPost("generator-api/ws/path/load", {"wsPath": path}, function (result) {
-                    if (result.success && result.object) {
-                        var wsdata = result.object;
-                        if (wsdata.exists) {
-                            _this.wsPathExists = true;
-                            _this.wsPathExistsTip();
+                nqcxPost("generator-api/project/path/save", {"path": path}, function (response) {
+                    if (response && response.success) {
+                        // _this.wsPathExists = true;
+                        // _this.wsPathExistsTip();
 
-                            $.messager.show({
-                                title: 'Success',
-                                msg: 'Ws loaded'
-                            });
+                        $.messager.show({
+                            title: 'Success',
+                            msg: 'Project path saved.'
+                        });
 
-                            callBack(wsdata);
-                        } else {
-                            $.messager.show({
-                                title: 'Error',
-                                msg: 'WS 不存在！'
-                            });
-                            if (errorCallBack)
-                                errorCallBack();
-                        }
+                        if (callBack)
+                            callBack(path);
                     } else {
                         $.messager.show({
                             title: 'Error',
-                            msg: '加载 WS 错误！'
+                            msg: 'Project path save fail！'
                         });
+
+                        if (errorCallBack)
+                            errorCallBack();
                     }
                 });
             },
-            wsPathExists: false,
-            wsPathExistsTip: function () {
-                if (this.wsPathExists) {
-                    this.wsPath().removeClass("error");
-                } else {
-                    this.wsPath().addClass("error");
-                }
-            },
+            // wsPathExists: false,
+            // wsPathExistsTip: function () {
+            //     if (this.wsPathExists) {
+            //         this.wsPath().removeClass("error");
+            //     } else {
+            //         this.wsPath().addClass("error");
+            //     }
+            // },
             pPackageChange: function (callback) {
                 var _this = this;
 
@@ -629,21 +668,21 @@
             //         }
             //     });
             // },
-            loadProjects: function (wsdata) {
-                this.emptyProjects();
-
-                var select = this.pName();
-                var cList = wsdata.cgFileList;
-                if (cList && cList.length > 0) {
-                    for (var idx in cList) {
-                        $('<option value="' + cList[idx].name + '">' + cList[idx].name + '</option>').appendTo(select);
-                    }
-                    $.messager.show({
-                        title: 'Success',
-                        msg: 'Projects loaded'
-                    });
-                }
-            },
+            // loadProjects: function (wsdata) {
+            //     this.emptyProjects();
+            //
+            //     var select = this.pName();
+            //     var cList = wsdata.cgFileList;
+            //     if (cList && cList.length > 0) {
+            //         for (var idx in cList) {
+            //             $('<option value="' + cList[idx].name + '">' + cList[idx].name + '</option>').appendTo(select);
+            //         }
+            //         $.messager.show({
+            //             title: 'Success',
+            //             msg: 'Projects loaded'
+            //         });
+            //     }
+            // },
             dirList: null,
             fecthDirs: function (callback) {
                 var _this = this;
@@ -1003,16 +1042,15 @@
         db.reset();
         // 初始化 table 相关
         table.reset();
-
         // 初始化 ws 相关
         project.init();
 
-        project.loadWsPath(function (wsdata) {
-            project.loadProjects(wsdata);
-        }, function () {
-            project.emptyProjects();
-            project.clear();
-        });
+        // project.saveBasedir(function (wsdata) {
+        //     project.loadProjects(wsdata);
+        // }, function () {
+        //     project.emptyProjects();
+        //     project.clear();
+        // });
 
         // Connect db and load table
         $('.connectDB').keyup(function (event) {
@@ -1073,7 +1111,7 @@
 
         // project
         project.wsPath().keyup(function (event) {
-            project.pPackageChanged = false; // 允许自动生成 pPackage
+            project.pPackageChanged = false;
             project.pPackageTip();
 
             project.init();
@@ -1085,10 +1123,11 @@
             if ((event.keyCode || event.which) === 13) {
                 event.preventDefault();
 
-                project.loadWsPath(function (wsdata) {
-                    project.loadProjects(wsdata);
-                }, function () {
-                    project.emptyProjects();
+                project.saveBasedir(function (path) {
+                    // project.loadProjects(path);
+                    project.load(path);
+                }, function (path) {
+                    // project.emptyProjects();
                     project.clear();
                 });
             }
