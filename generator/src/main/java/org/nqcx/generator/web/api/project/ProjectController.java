@@ -74,6 +74,28 @@ public class ProjectController extends AbstractController {
         return buildResult(projectService.basedir(basedir));
     }
 
+    @RequestMapping(value = "/basedir/save", method = {RequestMethod.POST},
+            produces = "application/json")
+    @ResponseBody
+    public Map<?, ?> savePath(HttpServletResponse response,
+                              @RequestParam("path") String path) {
+
+        File p = new File(path);
+        if (p.exists() && p.isDirectory()) {
+            try {
+                String cookieValue = p.getCanonicalPath();
+                // 记录写入 cookie
+                CookieUtils.setCookie(response, basedirCookie.getName(), cookieValue);
+
+                return buildResult(new DTO(true).setObject(path));
+            } catch (IOException e) {
+                LOGGER.error("", e);
+            }
+        }
+
+        return buildResult(new DTO(false));
+    }
+
     /**
      * @param request
      * @return
@@ -138,25 +160,5 @@ public class ProjectController extends AbstractController {
         return buildResult(new DTO(true).setObject(author));
     }
 
-    @RequestMapping(value = "/path/save", method = {RequestMethod.POST},
-            produces = "application/json")
-    @ResponseBody
-    public Map<?, ?> savePath(HttpServletResponse response,
-                              @RequestParam("path") String path) {
 
-        File p = new File(path);
-        if (p.exists() && p.isDirectory()) {
-            try {
-                String cookieValue = p.getCanonicalPath();
-                // 记录写入 cookie
-                CookieUtils.setCookie(response, basedirCookie.getName(), cookieValue);
-
-                return buildResult(new DTO(true).setObject(path));
-            } catch (IOException e) {
-                LOGGER.error("", e);
-            }
-        }
-
-        return buildResult(new DTO(false));
-    }
 }

@@ -194,11 +194,11 @@
         //     author: function () {
         //         return $('input[name="author"]');
         //     },
-        //     wsPath: function () {
-        //         return $('input[name="wsPath"]');
+        //     basedir: function () {
+        //         return $('input[name="basedir"]');
         //     },
         //     saveAuthor: function () {
-        //         var author = this.author().val();
+        //         var author = this.authorElement().val();
         //         if (!author)
         //             return;
         //
@@ -209,16 +209,16 @@
         //         });
         //     },
         //     saveBasedir: function (callBack, errorCallBack) {
-        //         var path = decodeURIComponent(this.wsPath().val());
+        //         var path = decodeURIComponent(this.basedirElement().val());
         //         if (!path)
         //             return;
         //
-        //         nqcxPost("generator-api/ws/path/load", {"wsPath": path}, function (result) {
+        //         nqcxPost("generator-api/ws/path/load", {"basedir": path}, function (result) {
         //             if (result.success && result.object) {
         //                 var wsdata = result.object;
         //                 if (wsdata.exists) {
-        //                     ws.wsPathExists = true;
-        //                     ws.wsPathExistsTip();
+        //                     ws.basedirExists = true;
+        //                     ws.basedirExistsTip();
         //
         //                     $.messager.show({
         //                         title: 'Success',
@@ -242,12 +242,12 @@
         //             }
         //         });
         //     },
-        //     wsPathExists: false,
-        //     wsPathExistsTip: function () {
-        //         if (this.wsPathExists) {
-        //             this.wsPath().removeClass("error");
+        //     basedirExists: false,
+        //     basedirExistsTip: function () {
+        //         if (this.basedirExists) {
+        //             this.basedirElement().removeClass("error");
         //         } else {
-        //             this.wsPath().addClass("error");
+        //             this.basedirElement().addClass("error");
         //         }
         //     },
         //     reset: function () {
@@ -264,10 +264,10 @@
         //                 // 初始化 author 相关
         //                 ws.author().val(o.author);
         //                 // 初始化 worksapce 相关
-        //                 ws.wsPath().val(o.projectPath);
+        //                 ws.basedirElement().val(o.projectPath);
         //
-        //                 _this.wsPathExists = false;
-        //                 _this.wsPathExistsTip();
+        //                 _this.basedirExists = false;
+        //                 _this.basedirExistsTip();
         //
         //                 project.emptyProjects();
         //
@@ -434,10 +434,10 @@
 
     <script type="text/javascript">
         var project = {
-            author: function () {
+            authorElement: function () {
                 return $('input[name="author"]');
             },
-            wsPath: function () {
+            basedirElement: function () {
                 return $('input[name="wsPath"]');
             },
             pName: function () {
@@ -457,17 +457,17 @@
             basedirChanged: false,
             basedirChangedTip: function () {
                 if (this.basedirChanged)
-                    this.wsPath().addClass("error");
+                    this.basedirElement().addClass("error");
                 else
-                    this.wsPath().removeClass("error");
+                    this.basedirElement().removeClass("error");
             },
-            basedirLoad: function (callback, errorCallback) {
+            loadBasedir: function (callback, errorCallback) {
                 var _this = this;
 
                 nqcxGet('generator-api/project/basedir', {}, function (response) {
                     if (response && response.success && response.object) {
                         _this.basedir = response.object;
-                        _this.wsPath().val(_this.basedir);
+                        _this.basedirElement().val(_this.basedir);
 
                         _this.basedirChanged = false;
                         _this.basedirChangedTip();
@@ -485,11 +485,38 @@
                     }
                 });
             },
+            saveBasedir: function (basedir, callBack, errorCallBack) {
+                var basedirDecode = decodeURIComponent(basedir);
+                if (!basedirDecode)
+                    return;
+
+                var _this = this;
+                nqcxPost("generator-api/project/basedir/save", {"basedir": basedirDecode}, function (response) {
+                    if (response && response.success) {
+                        // _this.basedirExists = true;
+                        // _this.basedirExistsTip();
+
+                        _this.basedirChanged = false;
+                        _this.basedirChangedTip();
+
+                        if (callBack)
+                            callBack(basedirDecode);
+                    } else {
+                        $.messager.show({
+                            title: 'Error',
+                            msg: 'Project path save fail！'
+                        });
+
+                        if (errorCallBack)
+                            errorCallBack(basedirDecode);
+                    }
+                });
+            },
             p: {}, // project
             loaded: false,
             init: function () {
                 var _this = this;
-                this.basedirLoad(function (basedir) {
+                this.loadBasedir(function (basedir) {
                     _this.load(basedir);
                 })
             },
@@ -505,11 +532,13 @@
                 nqcxGet('generator-api/project/info', params, function (response) {
                     if (response && response.success && response.object) {
                         _this.p = response.object;
+                        _this.author = _this.p.author;
+                        _this.basedir = _this.p.author;
 
                         //
-                        _this.author().val(_this.p.author);
+                        _this.authorElement().val(_this.author);
                         //
-                        // _this.wsPath().val(_this.p.projectPath);
+                        // _this.basedirElement().val(_this.p.projectPath);
                         _this.pPackage().val(_this.p.groupId);
 
                         project.pPackageChanged = false; // 允许自动生成 pPackage
@@ -523,8 +552,8 @@
                         // _this.emptyProjects();
                         _this.change();
 
-                        // _this.wsPathExists = false;
-                        // _this.wsPathExistsTip();
+                        // _this.basedirExists = false;
+                        // _this.basedirExistsTip();
 
                         _this.loaded = true;
                     } else {
@@ -535,53 +564,44 @@
                     }
                 });
             },
-            saveAuthor: function () {
-                var author = this.author().val();
+            author: '',
+            authorChanged: false,
+            authorChangedTip: function () {
+                if (this.authorChanged)
+                    this.authorElement().addClass("error");
+                else
+                    this.authorElement().removeClass("error");
+            },
+            saveAuthor: function (author, callBack, errorCallBack) {
                 if (!author)
                     return;
 
-                nqcxPost("generator-api/project/author/save", {author: author}, function (result) {
-                    if (result.success) {
-                        console.log(result.object);
-                    }
-                });
-            },
-            saveBasedir: function (callBack, errorCallBack) {
                 var _this = this;
-
-                var path = decodeURIComponent(_this.wsPath().val());
-                if (!path)
-                    return;
-
-                nqcxPost("generator-api/project/path/save", {"path": path}, function (response) {
+                nqcxPost("generator-api/project/author/save", {author: author}, function (response) {
                     if (response && response.success) {
-                        // _this.wsPathExists = true;
-                        // _this.wsPathExistsTip();
 
-                        $.messager.show({
-                            title: 'Success',
-                            msg: 'Project path saved.'
-                        });
+                        _this.authorChanged = false;
+                        _this.authorChangedTip();
 
                         if (callBack)
-                            callBack(path);
+                            callBack(author);
                     } else {
                         $.messager.show({
                             title: 'Error',
-                            msg: 'Project path save fail！'
+                            msg: 'Save author fail！'
                         });
 
                         if (errorCallBack)
-                            errorCallBack();
+                            callBack(errorCallBack);
                     }
                 });
             },
-            // wsPathExists: false,
-            // wsPathExistsTip: function () {
-            //     if (this.wsPathExists) {
-            //         this.wsPath().removeClass("error");
+            // basedirExists: false,
+            // basedirExistsTip: function () {
+            //     if (this.basedirExists) {
+            //         this.basedirElement().removeClass("error");
             //     } else {
-            //         this.wsPath().addClass("error");
+            //         this.basedirElement().addClass("error");
             //     }
             // },
             pPackageChange: function (callback) {
@@ -597,7 +617,7 @@
                 var pPackageValue = _this.pPackage().val();
 
                 nqcxPost('generator-api/project/groupId', {
-                    wsPath: _this.wsPath().val(),
+                    basedir: _this.basedirElement().val(),
                     pPath: project.pPath().val()
                 }, function (result) {
                     if (!_this.pPackageChanged || !pPackageValue) {
@@ -690,8 +710,8 @@
                 // clear array
                 _this.dirList = [];
 
-                var wsPath = _this.wsPath().val();
-                if (!_this.wsPathExists || !wsPath) {
+                var basedir = _this.basedirElement().val();
+                if (!_this.basedirExists || !basedir) {
                     $.messager.show({
                         title: 'Error',
                         msg: 'WS not exists.'
@@ -709,7 +729,7 @@
                 }
 
                 var url = 'generator-api/project/openFile';
-                nqcxPost(url, {wsPath: wsPath, pPath: pPath, path: '', name: ''}, function (result) {
+                nqcxPost(url, {basedir: basedir, pPath: pPath, path: '', name: ''}, function (result) {
                     if (result.success && result.object.cgFileList) {
                         var cgFileList = result.object.cgFileList;
                         for (var idx in cgFileList) {
@@ -814,8 +834,8 @@
             openFile: function (pathValue, nameValue) {
                 var _this = this;
 
-                var wsPath = project.wsPath().val();
-                if (!_this.wsPathExists || !wsPath) {
+                var basedir = project.basedirElement().val();
+                if (!_this.basedirExists || !basedir) {
                     $.messager.show({
                         title: 'Error',
                         msg: 'WS not exists.'
@@ -839,7 +859,7 @@
 
                 var url = 'generator-api/project/openFile';
                 nqcxPost(url, {
-                    wsPath: wsPath,
+                    basedir: basedir,
                     pPath: pPath,
                     path: pathValue,
                     name: nameValue
@@ -1110,33 +1130,55 @@
         // end of table
 
         // project
-        project.wsPath().keyup(function (event) {
-            project.pPackageChanged = false;
-            project.pPackageTip();
+        project.authorElement().keyup(function (event) {
+            var author = $(this).val();
 
-            project.init();
+            if (author !== project.author) {
+                project.authorChanged = true;
+                project.authorChangedTip();
 
-            // child
-            if (project.module.change)
-                project.module.change();
+                if ((event.keyCode || event.which) === 13) {
+                    event.preventDefault();
 
-            if ((event.keyCode || event.which) === 13) {
-                event.preventDefault();
-
-                project.saveBasedir(function (path) {
-                    // project.loadProjects(path);
-                    project.load(path);
-                }, function (path) {
-                    // project.emptyProjects();
-                    project.clear();
-                });
+                    project.saveAuthor($(this).val());
+                }
+            } else {
+                project.authorChanged = false;
+                project.authorChangedTip();
             }
-        }); // end of ws
-
-        // author
-        project.author().keyup(function (event) {
-            project.saveAuthor();
         });
+        project.basedirElement().keyup(function (event) {
+            var basedir = $(this).val();
+
+            if (basedir !== project.basedir) {
+                project.basedirChanged = true;
+                project.basedirChangedTip();
+
+                if ((event.keyCode || event.which) === 13) {
+                    event.preventDefault();
+
+                    project.saveBasedir(basedir, function (basedir) {
+                        // project.loadProjects(path);
+                        project.load(basedir);
+                    }, function (basedir) {
+                        // project.emptyProjects();
+                        project.clear();
+                    });
+                }
+            } else {
+                project.basedirChanged = false;
+                project.basedirChangedTip();
+            }
+
+
+            // project.pPackageChanged = false;
+            // project.pPackageTip();
+
+            // // child
+            // if (project.module.change)
+            //     project.module.change();
+
+        }); // end of project
 
         // // project
         // project.pName().change(function () {
