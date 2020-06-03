@@ -52,6 +52,10 @@
             width: 140px;
         }
 
+        input[type="text"].big_180 {
+            width: 180px;
+        }
+
         input[type="text"].big_200 {
             width: 200px;
         }
@@ -123,14 +127,14 @@
     <script type="text/javascript">
         var retryTimes = 1;
         var nqcxPost = function (url, data, callBack) {
-            jQuery.post(url, data, function (result) {
+            $.post(url, data, function (result) {
                 if (result.success) {
                     retryTimes = 1;
                     if (callBack)
                         callBack(result);
                 } else if (result.errorCode === '11') {
                     if (retryTimes === 0) {
-                        jQuery.messager.show({
+                        $.messager.show({
                             title: 'Error',
                             msg: result.errorText
                         });
@@ -139,7 +143,7 @@
                         db.conn(connCallBack);
                     }
                 } else {
-                    jQuery.messager.show({
+                    $.messager.show({
                         title: 'Error',
                         msg: result.errorText
                     });
@@ -158,14 +162,14 @@
                     url += '&t=' + (new Date()).getTime();
             }
 
-            jQuery.get(url, data, function (result) {
+            $.get(url, data, function (result) {
                 if (result.success) {
                     retryTimes = 1;
                     if (callBack)
                         callBack(result);
                 } else if (result.errorCode === '11') {
                     if (retryTimes === 0) {
-                        jQuery.messager.show({
+                        $.messager.show({
                             title: 'Error',
                             msg: result.errorText
                         });
@@ -174,7 +178,7 @@
                         db.conn(connCallBack);
                     }
                 } else {
-                    jQuery.messager.show({
+                    $.messager.show({
                         title: 'Error',
                         msg: result.errorText
                     });
@@ -186,98 +190,98 @@
         };
     </script>
     <script type="text/javascript">
-        var ws = {
-            author: function () {
-                return jQuery('input[name="author"]');
-            },
-            wsPath: function () {
-                return jQuery('input[name="wsPath"]');
-            },
-            saveAuthor: function () {
-                var author = this.author().val();
-                if (!author)
-                    return;
-
-                nqcxPost("generator-api/ws/author", {author: author}, function (result) {
-                    if (result.success) {
-                        console.log(result.object);
-                    }
-                });
-            },
-            loadWsPath: function (callBack, errorCallBack) {
-                var path = decodeURIComponent(this.wsPath().val());
-                if (!path)
-                    return;
-
-                nqcxPost("generator-api/ws/path/load", {"wsPath": path}, function (result) {
-                    if (result.success && result.object) {
-                        var wsdata = result.object;
-                        if (wsdata.exists) {
-                            ws.wsPathExists = true;
-                            ws.wsPathExistsTip();
-
-                            jQuery.messager.show({
-                                title: 'Success',
-                                msg: 'Ws loaded'
-                            });
-
-                            callBack(wsdata);
-                        } else {
-                            $.messager.show({
-                                title: 'Error',
-                                msg: 'WS 不存在！'
-                            });
-                            if (errorCallBack)
-                                errorCallBack();
-                        }
-                    } else {
-                        $.messager.show({
-                            title: 'Error',
-                            msg: '加载 WS 错误！'
-                        });
-                    }
-                });
-            },
-            wsPathExists: false,
-            wsPathExistsTip: function () {
-                if (this.wsPathExists) {
-                    this.wsPath().removeClass("error");
-                } else {
-                    this.wsPath().addClass("error");
-                }
-            },
-            reset: function () {
-                var _this = this;
-                nqcxGet('generator-api/project/info', {}, function (response) {
-                    if (response && response.success && response.object) {
-                        var o = response.object;
-
-                        jQuery.messager.show({
-                            title: 'Success',
-                            msg: 'Ws info loaded'
-                        });
-
-                        // 初始化 author 相关
-                        ws.author().val(o.author);
-                        // 初始化 worksapce 相关
-                        ws.wsPath().val(o.projectPath);
-
-                        _this.wsPathExists = false;
-                        _this.wsPathExistsTip();
-
-                        project.emptyProjects();
-
-                        project.change();
-
-                    } else {
-                        $.messager.show({
-                            title: 'Error',
-                            msg: '加载 Ws info 错误！'
-                        });
-                    }
-                });
-            }
-        }
+        // var ws = {
+        //     author: function () {
+        //         return $('input[name="author"]');
+        //     },
+        //     wsPath: function () {
+        //         return $('input[name="wsPath"]');
+        //     },
+        //     saveAuthor: function () {
+        //         var author = this.author().val();
+        //         if (!author)
+        //             return;
+        //
+        //         nqcxPost("generator-api/ws/author", {author: author}, function (result) {
+        //             if (result.success) {
+        //                 console.log(result.object);
+        //             }
+        //         });
+        //     },
+        //     loadWsPath: function (callBack, errorCallBack) {
+        //         var path = decodeURIComponent(this.wsPath().val());
+        //         if (!path)
+        //             return;
+        //
+        //         nqcxPost("generator-api/ws/path/load", {"wsPath": path}, function (result) {
+        //             if (result.success && result.object) {
+        //                 var wsdata = result.object;
+        //                 if (wsdata.exists) {
+        //                     ws.wsPathExists = true;
+        //                     ws.wsPathExistsTip();
+        //
+        //                     $.messager.show({
+        //                         title: 'Success',
+        //                         msg: 'Ws loaded'
+        //                     });
+        //
+        //                     callBack(wsdata);
+        //                 } else {
+        //                     $.messager.show({
+        //                         title: 'Error',
+        //                         msg: 'WS 不存在！'
+        //                     });
+        //                     if (errorCallBack)
+        //                         errorCallBack();
+        //                 }
+        //             } else {
+        //                 $.messager.show({
+        //                     title: 'Error',
+        //                     msg: '加载 WS 错误！'
+        //                 });
+        //             }
+        //         });
+        //     },
+        //     wsPathExists: false,
+        //     wsPathExistsTip: function () {
+        //         if (this.wsPathExists) {
+        //             this.wsPath().removeClass("error");
+        //         } else {
+        //             this.wsPath().addClass("error");
+        //         }
+        //     },
+        //     reset: function () {
+        //         var _this = this;
+        //         nqcxGet('generator-api/project/info', {}, function (response) {
+        //             if (response && response.success && response.object) {
+        //                 var o = response.object;
+        //
+        //                 $.messager.show({
+        //                     title: 'Success',
+        //                     msg: 'Ws info loaded'
+        //                 });
+        //
+        //                 // 初始化 author 相关
+        //                 ws.author().val(o.author);
+        //                 // 初始化 worksapce 相关
+        //                 ws.wsPath().val(o.projectPath);
+        //
+        //                 _this.wsPathExists = false;
+        //                 _this.wsPathExistsTip();
+        //
+        //                 project.emptyProjects();
+        //
+        //                 project.change();
+        //
+        //             } else {
+        //                 $.messager.show({
+        //                     title: 'Error',
+        //                     msg: '加载 Ws info 错误！'
+        //                 });
+        //             }
+        //         });
+        //     }
+        // }
     </script>
     <script type="text/javascript">
         var db = {
@@ -294,7 +298,7 @@
                 var _this = this;
                 nqcxGet('generator-api/connection/info', {}, function (result) {
                     if (result.success && result.result) {
-                        jQuery.messager.show({
+                        $.messager.show({
                             title: 'Success',
                             msg: 'Connection info loaded'
                         });
@@ -324,14 +328,14 @@
                         } else {
                             if (errorCallBack)
                                 errorCallBack();
-                            jQuery.messager.show({
+                            $.messager.show({
                                 title: 'Error',
                                 msg: result.errorText
                             });
                         }
                     },
                     error: function () {
-                        jQuery.messager.show({
+                        $.messager.show({
                             title: 'Error',
                             msg: 'Connect db fail! Please try again later.'
                         });
@@ -342,13 +346,13 @@
 
         var table = {
             tableName: function () {
-                return jQuery('select[name="tableName"]');
+                return $('select[name="tableName"]');
             },
             colPrefix: function () {
-                return jQuery('input[name="colPrefix"]');
+                return $('input[name="colPrefix"]');
             },
             tablePack: function () {
-                return jQuery('input[name="tablePack"]');
+                return $('input[name="tablePack"]');
             },
             tablePackChanged: false,
             tablePackTip: function () {
@@ -364,7 +368,7 @@
                 this.tablePack().val(this.tablePack().attr('t-data'));
             },
             emptyTables: function () {
-                jQuery('select[name="tableName"] option').each(function () {
+                $('select[name="tableName"] option').each(function () {
                     if ($(this).val()) {
                         $(this).remove();
                     }
@@ -384,7 +388,7 @@
                             table.listNamesAppend(result.list[t].name, result.list[t].name);
                         }
                     }
-                    jQuery.messager.show({
+                    $.messager.show({
                         title: 'Success',
                         msg: 'Table loaded'
                     });
@@ -393,7 +397,7 @@
                 });
             },
             listNamesAppend: function (value, text) {
-                jQuery('<option value="' + value + '">' + text + '</option>').appendTo(this.tableName());
+                $('<option value="' + value + '">' + text + '</option>').appendTo(this.tableName());
             },
             change: function (lastTableName, lastColPrefixValue, lastTablePack) {
                 var tableNameValue = this.tableName().val();
@@ -421,7 +425,7 @@
                 if (!this.tablePackChanged)
                     this.tablePack().val(tableNameValue.replaceFirstLow());
 
-                jQuery.post("center", '', function (result) {
+                $.post("center", '', function (result) {
                     center.load(result);
                 }, 'html');
             }
@@ -430,32 +434,131 @@
 
     <script type="text/javascript">
         var project = {
+            author: function () {
+                return $('input[name="author"]');
+            },
+            wsPath: function () {
+                return $('input[name="wsPath"]');
+            },
             pName: function () {
-                return jQuery('select[name="pName"]');
+                // return $('select[name="pName"]');
+                return $('input[name="pName"]');
             },
             pPath: function () {
-                return jQuery('input[name="pPath"]');
+                return $('input[name="pPath"]');
             },
             pPackage: function () {
-                return jQuery('input[name="pPackage"]');
+                return $('input[name="pPackage"]');
             },
             pType: function () {
-                return jQuery('input[name="pType"]');
+                return $('input[name="pType"]');
+            },
+            p: {},
+            init: function () {
+                var _this = this;
+                _this.p = {};
+
+                nqcxGet('generator-api/project/info', {}, function (response) {
+                    if (response && response.success && response.object) {
+                        _this.p = response.object;
+
+                        // $.messager.show({
+                        //     title: 'Success',
+                        //     msg: 'Ws info loaded'
+                        // });
+
+                        _this.author().val(_this.p.author);
+
+                        _this.pName().val(_this.p.artifactId);
+                        _this.pPackage().val(_this.p.groupId);
+                        _this.pPath().val(_this.p.projectPath);
+                        _this.pType().val(_this.p.projectType);
+
+                        _this.wsPath().val(_this.p.projectPath);
+
+                        _this.wsPathExists = false;
+                        _this.wsPathExistsTip();
+
+                        // _this.emptyProjects();
+
+                        _this.change();
+                    } else {
+                        $.messager.show({
+                            title: 'Error',
+                            msg: '加载 Ws info 错误！'
+                        });
+                    }
+                });
+            },
+            saveAuthor: function () {
+                var author = this.author().val();
+                if (!author)
+                    return;
+
+                nqcxPost("generator-api/ws/author", {author: author}, function (result) {
+                    if (result.success) {
+                        console.log(result.object);
+                    }
+                });
+            },
+            loadWsPath: function (callBack, errorCallBack) {
+                var _this = this;
+
+                var path = decodeURIComponent(_this.wsPath().val());
+                if (!path)
+                    return;
+
+                nqcxPost("generator-api/ws/path/load", {"wsPath": path}, function (result) {
+                    if (result.success && result.object) {
+                        var wsdata = result.object;
+                        if (wsdata.exists) {
+                            _this.wsPathExists = true;
+                            _this.wsPathExistsTip();
+
+                            $.messager.show({
+                                title: 'Success',
+                                msg: 'Ws loaded'
+                            });
+
+                            callBack(wsdata);
+                        } else {
+                            $.messager.show({
+                                title: 'Error',
+                                msg: 'WS 不存在！'
+                            });
+                            if (errorCallBack)
+                                errorCallBack();
+                        }
+                    } else {
+                        $.messager.show({
+                            title: 'Error',
+                            msg: '加载 WS 错误！'
+                        });
+                    }
+                });
+            },
+            wsPathExists: false,
+            wsPathExistsTip: function () {
+                if (this.wsPathExists) {
+                    this.wsPath().removeClass("error");
+                } else {
+                    this.wsPath().addClass("error");
+                }
             },
             pPackageChange: function (callback) {
+                var _this = this;
+
                 var ppName = this.pName().val();
                 if (ppName)
                     ppName = ppName.replace("nqcx-", "").toLocaleLowerCase();
                 else
                     ppName = "";
 
-                var _this = this;
-
                 // project package
                 var pPackageValue = _this.pPackage().val();
 
                 nqcxPost('generator-api/project/groupId', {
-                    wsPath: ws.wsPath().val(),
+                    wsPath: _this.wsPath().val(),
                     pPath: project.pPath().val()
                 }, function (result) {
                     if (!_this.pPackageChanged || !pPackageValue) {
@@ -519,13 +622,13 @@
                 path.setRelativePath('');
                 path.loadCgFile('', []);
             },
-            emptyProjects: function () {
-                jQuery('select[name="pName"] option').each(function () {
-                    if ($(this).val()) {
-                        $(this).remove();
-                    }
-                });
-            },
+            // emptyProjects: function () {
+            //     $('select[name="pName"] option').each(function () {
+            //         if ($(this).val()) {
+            //             $(this).remove();
+            //         }
+            //     });
+            // },
             loadProjects: function (wsdata) {
                 this.emptyProjects();
 
@@ -535,7 +638,7 @@
                     for (var idx in cList) {
                         $('<option value="' + cList[idx].name + '">' + cList[idx].name + '</option>').appendTo(select);
                     }
-                    jQuery.messager.show({
+                    $.messager.show({
                         title: 'Success',
                         msg: 'Projects loaded'
                     });
@@ -548,9 +651,9 @@
                 // clear array
                 _this.dirList = [];
 
-                var wsPath = ws.wsPath().val();
-                if (!ws.wsPathExists || !wsPath) {
-                    jQuery.messager.show({
+                var wsPath = _this.wsPath().val();
+                if (!_this.wsPathExists || !wsPath) {
+                    $.messager.show({
                         title: 'Error',
                         msg: 'WS not exists.'
                     });
@@ -559,7 +662,7 @@
 
                 var pPath = _this.pPath().val();
                 if (!pPath) {
-                    jQuery.messager.show({
+                    $.messager.show({
                         title: 'Error',
                         msg: 'Please select project.'
                     });
@@ -581,16 +684,16 @@
             },
             module: {
                 provide: function () {
-                    return jQuery('select[name="provideModuleName"]');
+                    return $('select[name="provideModuleName"]');
                 },
                 dao: function () {
-                    return jQuery('select[name="daoModuleName"]');
+                    return $('select[name="daoModuleName"]');
                 },
                 service: function () {
-                    return jQuery('select[name="serviceModuleName"]');
+                    return $('select[name="serviceModuleName"]');
                 },
                 web: function () {
-                    return jQuery('select[name="webModuleName"]');
+                    return $('select[name="webModuleName"]');
                 },
                 fillAll: function (_this) {
                     if (!_this)
@@ -611,13 +714,13 @@
                     if (!_this)
                         _this = this;
 
-                    var select = jQuery('select[name="' + name + '"]');
+                    var select = $('select[name="' + name + '"]');
                     var ml = _this.dirList;
                     for (idx in ml) {
                         if (defaultModule && defaultModule == ml[idx])
-                            jQuery('<option selected="selected" value="' + ml[idx] + '">' + ml[idx] + '</option>').appendTo(select);
+                            $('<option selected="selected" value="' + ml[idx] + '">' + ml[idx] + '</option>').appendTo(select);
                         else
-                            jQuery('<option value="' + ml[idx] + '">' + ml[idx] + '</option>').appendTo(select);
+                            $('<option value="' + ml[idx] + '">' + ml[idx] + '</option>').appendTo(select);
                     }
                 },
                 emptyAll: function () {
@@ -631,22 +734,22 @@
                     this.empty(this.web());
                 },
                 empty: function (module) {
-                    jQuery('option', module).each(function () {
+                    $('option', module).each(function () {
                         if ($(this).val()) {
                             $(this).remove();
                         }
                     });
                 }
             }
-        };
+        };  // end of project
     </script>
     <script type="text/javascript">
         var path = {
             relativePath: function () {
-                return jQuery('input[name="relativePath"]');
+                return $('input[name="relativePath"]');
             },
             fileShow: function () {
-                return jQuery('#fileShow');
+                return $('#fileShow');
             },
             setRelativePath: function (value) {
                 this.relativePath().val(value);
@@ -656,8 +759,7 @@
                     event.preventDefault();
 
                     var relativePathValue = this.relativePath().val();
-                    var path = '';
-                    var name = '';
+
                     if (!relativePathValue)
                         relativePathValue = '/';
 
@@ -671,9 +773,11 @@
                 }
             },
             openFile: function (pathValue, nameValue) {
-                var wsPath = ws.wsPath().val();
-                if (!ws.wsPathExists || !wsPath) {
-                    jQuery.messager.show({
+                var _this = this;
+
+                var wsPath = project.wsPath().val();
+                if (!_this.wsPathExists || !wsPath) {
+                    $.messager.show({
                         title: 'Error',
                         msg: 'WS not exists.'
                     });
@@ -682,7 +786,7 @@
 
                 var pPath = project.pPath().val();
                 if (!pPath) {
-                    jQuery.messager.show({
+                    $.messager.show({
                         title: 'Error',
                         msg: 'Please select project.'
                     });
@@ -728,12 +832,12 @@
                 }
                 this.fileShow().html(cgFileHtml);
             }
-        };
+        }; // end of path
     </script>
     <script type="text/javascript">
         var center = {
             o: function () {
-                return jQuery('div#center');
+                return $('div#center');
             },
             load: function (content) {
                 this.o().html(content);
@@ -741,7 +845,7 @@
             clear: function () {
                 this.o().html('');
             }
-        };
+        }; // end of center
     </script>
 </head>
 <body class="easyui-layout">
@@ -789,27 +893,18 @@
                 <input type="text" class="big_140" name="author" value=""/>
             </td>
         </tr>
+        <tr height="10">
+            <td colspan="2">
+                <hr/>
+            </td>
+        </tr>
         <tr height="30">
             <td class="lable">
-                WS:
+                BaseDir:
             </td>
             <td>
                 <input type="text" class="error big_140" name="wsPath" value=""/>
             </td>
-        </tr>
-        <tr height="30">
-            <td class="lable">
-                Project:
-            </td>
-            <td>
-                <select name="pName">
-                    <option value="">Select Project</option>
-                </select>
-            </td>
-        </tr>
-        <tr height="30">
-            <td class="lable">Path:</td>
-            <td><input type="text" class="big_140" name="pPath" value="" readonly="true"></td>
         </tr>
         <tr height="30">
             <td class="lable">Package:</td>
@@ -817,11 +912,37 @@
                 <input type="text" class="waring big_140" name="pPackage" value="">
             </td>
         </tr>
+        <tr height="10">
+            <td colspan="2">
+                <hr/>
+            </td>
+        </tr>
+        <tr height="30">
+            <td class="lable">
+                Project:
+            </td>
+            <td>
+                <!--<select name="pName">-->
+                <!--<option value="">Select Project</option>-->
+                <!--</select>-->
+                <input type="text" class="big_140" name="pName" value="" readonly="true"/>
+            </td>
+        </tr>
+        <tr height="30">
+            <td class="lable">Path:</td>
+            <td><input type="text" class="big_140" name="pPath" value="" readonly="true"></td>
+        </tr>
         <tr height="30">
             <td class="lable">Type:</td>
-            <td nowrap>
-                <input type="radio" name="pType" value="Single"/>Single
-                <input type="radio" name="pType" value="Multiple" checked="checked"/>Multiple
+            <td>
+                <!--<input type="radio" name="pType" value="Single"/>Single-->
+                <!--<input type="radio" name="pType" value="Multiple" checked="checked"/>Multiple-->
+                <input type="text" class="big_140" name="pType" value="" readonly="true">
+            </td>
+        </tr>
+        <tr height="10">
+            <td colspan="2">
+                <hr/>
             </td>
         </tr>
         <tr height="30">
@@ -856,15 +977,18 @@
                 </select>
             </td>
         </tr>
-    </table>
-    <hr/>
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-        <tr>
-            <td style="padding-left: 10px"><strong>.</strong><input type="text" class="big_200" name="relativePath"
-                                                                    value=""/>
+        <tr height="10">
+            <td colspan="2">
+                <hr/>
+            </td>
+        </tr>
+        <tr height="30">
+            <td colspan="2" style="padding-left: 10px">
+                <strong>.</strong><input
+                    type="text" class="big_180" name="relativePath" value=""/>
         </tr>
         <tr>
-            <td style="padding-left: 10px">
+            <td colspan="2">
                 <ul id="fileShow"></ul>
             </td>
         </tr>
@@ -881,9 +1005,9 @@
         table.reset();
 
         // 初始化 ws 相关
-        ws.reset();
+        project.init();
 
-        ws.loadWsPath(function (wsdata) {
+        project.loadWsPath(function (wsdata) {
             project.loadProjects(wsdata);
         }, function () {
             project.emptyProjects();
@@ -947,12 +1071,12 @@
         });
         // end of table
 
-        // ws
-        ws.wsPath().keyup(function (event) {
+        // project
+        project.wsPath().keyup(function (event) {
             project.pPackageChanged = false; // 允许自动生成 pPackage
             project.pPackageTip();
 
-            ws.reset();
+            project.init();
 
             // child
             if (project.module.change)
@@ -961,7 +1085,7 @@
             if ((event.keyCode || event.which) === 13) {
                 event.preventDefault();
 
-                ws.loadWsPath(function (wsdata) {
+                project.loadWsPath(function (wsdata) {
                     project.loadProjects(wsdata);
                 }, function () {
                     project.emptyProjects();
@@ -971,25 +1095,25 @@
         }); // end of ws
 
         // author
-        ws.author().keyup(function (event) {
-            ws.saveAuthor();
+        project.author().keyup(function (event) {
+            project.saveAuthor();
         });
 
-        // project
-        project.pName().change(function () {
-            project.change(function () {
-                // child
-                if (project.module.change)
-                    project.module.change();
-            });
-        });
-        project.pType().change(function () {
-            project.change(function () {
-                // child
-                if (project.module.change)
-                    project.module.change();
-            });
-        });
+        // // project
+        // project.pName().change(function () {
+        //     project.change(function () {
+        //         // child
+        //         if (project.module.change)
+        //             project.module.change();
+        //     });
+        // });
+        // project.pType().change(function () {
+        //     project.change(function () {
+        //         // child
+        //         if (project.module.change)
+        //             project.module.change();
+        //     });
+        // });
         project.pPackage().change(function () {
             // child
             if (project.module.change)
