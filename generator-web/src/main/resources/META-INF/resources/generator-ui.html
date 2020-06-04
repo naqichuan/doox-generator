@@ -1947,19 +1947,17 @@
         tableInfo.loadTable();
     };
 
-    $(document).ready(function () {
-        table.changeWatchers.push(function () {
-            button.loadCenter().unbind('click').click(function () {
-                table.change();
-            });
-
-            tableInfo.projectInit();
-            provide.projectInit();
-            dao.projectInit();
-            service.projectInit();
-            web.projectInit();
-            console.log("Center loaded.")
+    table.changeWatchers.push(function () {
+        button.loadCenter().unbind('click').click(function () {
+            table.change();
         });
+
+        tableInfo.projectInit();
+        provide.projectInit();
+        dao.projectInit();
+        service.projectInit();
+        web.projectInit();
+        console.log("Center loaded.")
     });
 </script>
 </body>
