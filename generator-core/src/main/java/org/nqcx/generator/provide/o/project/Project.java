@@ -17,7 +17,8 @@ import java.util.List;
  */
 public class Project implements Serializable {
 
-    private String author;
+    private String basedir;
+    private String baseName;
 
     private String projectPath;
     private PType projectType;
@@ -28,12 +29,20 @@ public class Project implements Serializable {
 
     private List<String> modules;
 
-    public String getAuthor() {
-        return author;
+    public String getBasedir() {
+        return basedir;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setBasedir(String basedir) {
+        this.basedir = basedir;
+    }
+
+    public String getBaseName() {
+        return baseName;
+    }
+
+    public void setBaseName(String baseName) {
+        this.baseName = baseName;
     }
 
     public String getProjectPath() {

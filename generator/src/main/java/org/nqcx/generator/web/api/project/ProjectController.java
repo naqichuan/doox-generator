@@ -74,20 +74,20 @@ public class ProjectController extends AbstractController {
         return buildResult(projectService.basedir(basedir));
     }
 
-    @RequestMapping(value = "/basedir/save", method = {RequestMethod.POST},
+    @RequestMapping(value = "/basedir/change", method = {RequestMethod.POST},
             produces = "application/json")
     @ResponseBody
-    public Map<?, ?> savePath(HttpServletResponse response,
-                              @RequestParam("path") String path) {
+    public Map<?, ?> changePath(HttpServletResponse response,
+                                @RequestParam("basedir") String basedir) {
 
-        File p = new File(path);
+        File p = new File(basedir);
         if (p.exists() && p.isDirectory()) {
             try {
                 String cookieValue = p.getCanonicalPath();
                 // 记录写入 cookie
                 CookieUtils.setCookie(response, basedirCookie.getName(), cookieValue);
 
-                return buildResult(new DTO(true).setObject(path));
+                return buildResult(new DTO(true).setObject(basedir));
             } catch (IOException e) {
                 LOGGER.error("", e);
             }
@@ -105,22 +105,64 @@ public class ProjectController extends AbstractController {
     @ResponseBody
     public Map<?, ?> info(HttpServletRequest request) {
         // 确定 project path
-        String pPath = null;
+        String basedir = null;
         String basedirCookieValue = CookieUtils.getCookieValue(request, basedirCookie.getName());
         if (basedirCookieValue != null && basedirCookieValue.length() > 0)
-            pPath = basedirCookieValue;
+            basedir = basedirCookieValue;
 
-        String author = null;
-        String authorCookieValue = CookieUtils.getCookieValue(request, authorCookie.getName());
-        if (authorCookieValue != null && authorCookieValue.length() > 0)
-            author = authorCookieValue;
-
-        return buildResult(projectService.info(pPath, author));
+        return buildResult(projectService.info(basedir));
     }
 
     /**
-     * @param wsPath
-     * @param pPath
+     * @param request  request
+     * @param response response
+     * @return map
+     */
+    @RequestMapping(value = "/author", method = {RequestMethod.POST},
+            produces = "application/json")
+    @ResponseBody
+    public Map<?, ?> author(HttpServletRequest request, HttpServletResponse response) {
+
+        String author = StringUtils.trimToEmpty(this.getCookieValue(request, authorCookie.getName()));
+        if (author.length() == 0) {
+            author = projectService.author();
+
+            // 记录写入 cookie
+            CookieUtils.setCookie(response, authorCookie.getName(), author);
+        }
+
+        return buildResult(new DTO(true).setObject(author));
+    }
+
+    /**
+     * @param request
+     * @param response
+     * @param author
+     * @return
+     */
+    @RequestMapping(value = "/author/change", method = {RequestMethod.POST},
+            produces = "application/json")
+    @ResponseBody
+    public Map<?, ?> changeAuthor(HttpServletRequest request,
+                                  HttpServletResponse response,
+                                  @RequestParam("author") String author) {
+
+        author = StringUtils.trimToEmpty(author);
+
+        if (author.length() == 0) {
+            CookieUtils.removeCookie(request, response, authorCookie.getName());
+            author = projectService.author();
+        }
+
+        // 记录写入 cookie
+        CookieUtils.setCookie(response, authorCookie.getName(), author);
+
+        return buildResult(new DTO(true).setObject(author));
+    }
+
+
+    /**
+     * @param basedir
      * @param path
      * @param name
      * @return
@@ -129,36 +171,18 @@ public class ProjectController extends AbstractController {
             RequestMethod.POST}, produces = "application/json")
     @ResponseBody
     public Map<?, ?> openFile(
-            @RequestParam(value = "wsPath") String wsPath,
-            @RequestParam(value = "pPath", required = false, defaultValue = "") String pPath,
+            @RequestParam(value = "basedir") String basedir,
             @RequestParam(value = "path", required = false, defaultValue = "") String path,
             @RequestParam(value = "name", required = false, defaultValue = "") String name) {
-        return buildResult(projectService.openFile(wsPath, pPath, path, name));
+        return buildResult(projectService.openFile(basedir, path, name));
     }
 
-    @RequestMapping(value = "/groupId", method = {RequestMethod.GET,
-            RequestMethod.POST}, produces = "application/json")
-    @ResponseBody
-    public Map<?, ?> groupId(
-            @RequestParam(value = "wsPath") String wsPath,
-            @RequestParam(value = "pPath", required = false, defaultValue = "") String pPath) {
-        return buildResult(projectService.groupId(wsPath, pPath));
-    }
-
-    @RequestMapping(value = "/author/save", method = {RequestMethod.POST},
-            produces = "application/json")
-    @ResponseBody
-    public Map<?, ?> author(HttpServletResponse response,
-                            @RequestParam("author") String author) {
-
-        if (author != null && author.trim().length() > 0) {
-            String cookieValue = (author = author.trim());
-            // 记录写入 cookie
-            CookieUtils.setCookie(response, authorCookie.getName(), cookieValue);
-        }
-
-        return buildResult(new DTO(true).setObject(author));
-    }
-
-
+//    @RequestMapping(value = "/groupId", method = {RequestMethod.GET,
+//            RequestMethod.POST}, produces = "application/json")
+//    @ResponseBody
+//    public Map<?, ?> groupId(
+//            @RequestParam(value = "wsPath") String wsPath,
+//            @RequestParam(value = "pPath", required = false, defaultValue = "") String pPath) {
+//        return buildResult(projectService.groupId(wsPath, pPath));
+//    }
 }

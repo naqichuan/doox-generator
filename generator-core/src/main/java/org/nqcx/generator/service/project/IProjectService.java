@@ -16,6 +16,11 @@ import org.nqcx.doox.commons.lang.o.DTO;
 public interface IProjectService {
 
     /**
+     * @return
+     */
+    String author();
+
+    /**
      * @param basedir
      * @return
      */
@@ -23,24 +28,23 @@ public interface IProjectService {
 
     /**
      * @param basedir
-     * @param author
      * @return
      */
-    DTO info(String basedir, String author);
+    DTO info(String basedir);
 
     /**
-     * @param projectPath
+     * @param basedir
      * @param path
      * @param name
      * @return
      * @author naqichuan Mar 2, 2014 7:33:13 PM
      */
-    DTO openFile(String wsPath, String projectPath, String path, String name);
+    DTO openFile(String basedir, String path, String name);
 
-    /**
-     * @param wsPath      wsPath
-     * @param projectPath projectPath
-     * @return dto
-     */
-    DTO groupId(String wsPath, String projectPath);
+//    /**
+//     * @param wsPath      wsPath
+//     * @param projectPath projectPath
+//     * @return dto
+//     */
+//    DTO groupId(String wsPath, String projectPath);
 }

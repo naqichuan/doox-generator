@@ -10,7 +10,6 @@ package org.nqcx.generator.service.project.impl;
 
 import com.sun.org.apache.xerces.internal.dom.DeferredElementImpl;
 import org.nqcx.doox.commons.lang.o.DTO;
-import org.nqcx.doox.commons.util.StringUtils;
 import org.nqcx.generator.common.util.CgFileUtils;
 import org.nqcx.generator.provide.enums.PType;
 import org.nqcx.generator.provide.o.CgFile;
@@ -48,6 +47,11 @@ public class ProjectService implements IProjectService {
     private String projectBasedir;
 
     @Override
+    public String author() {
+        return projectAuthor;
+    }
+
+    @Override
     public DTO basedir(String basedir) {
         if (basedir == null || basedir.length() == 0)
             basedir = projectBasedir;
@@ -60,20 +64,34 @@ public class ProjectService implements IProjectService {
     }
 
     @Override
-    public DTO info(String basedir, String author) {
-        if (basedir == null || basedir.length() == 0) {
-            basedir = projectBasedir;
-        }
-
-        if (StringUtils.isBlank(author))
-            author = this.projectAuthor;
+    public DTO info(String basedir) {
 
         Project p = new Project();
 
-        p.setAuthor(author);
-        p.setProjectPath(basedir);
-        p.setProjectType(PType.SINGLE);
+        // basedir
+        if (basedir == null || basedir.length() == 0)
+            basedir = projectBasedir;
+        p.setBasedir(basedir);
 
+        // normal project
+        File baseFile = new File(p.getBasedir());
+        if (baseFile.exists() && baseFile.isDirectory()) {
+            p.setBaseName(baseFile.getName());
+
+            p.setProjectPath(p.getBasedir());
+            p.setProjectType(PType.SINGLE);
+
+            List<String> modules = new ArrayList<>();
+            File[] childs = baseFile.listFiles();
+            for (File child : childs) {
+                if (child.isDirectory())
+                    modules.add(child.getName());
+            }
+
+            p.setModules(modules);
+        }
+
+        // maven project
         CgFile pom = new CgFile(basedir, "pom.xml", true);
         File pomFile = new File(pom.getFullPath());
         if (pomFile.exists() && pomFile.isFile()) {
@@ -197,41 +215,40 @@ public class ProjectService implements IProjectService {
     }
 
     @Override
-    public DTO openFile(String wsPath, String projectPath, String path, String name) {
+    public DTO openFile(String basedir, String path, String name) {
         DTO dto = new DTO();
 
-        dto.setObject(CgFileUtils.getCgFile(wsPath + projectPath,
-                path, name, false));
+        dto.setObject(CgFileUtils.getCgFile(basedir, path, name, false));
 
         return dto.setSuccess(true);
     }
 
-    @Override
-    public DTO groupId(String wsPath, String projectPath) {
-        CgFile cgPom = new CgFile(wsPath + projectPath, "pom.xml", true);
-
-        File pomFile = new File(cgPom.getFullPath());
-        if (pomFile.exists() && pomFile.isFile()) {
-            try {
-                DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-                Document document = db.parse(pomFile);
-
-                XPathFactory factory = XPathFactory.newInstance();
-                XPath xpath = factory.newXPath();
-                XPathExpression expr = xpath.compile("/project/groupId");
-                NodeList nodeList = (NodeList) expr.evaluate(document, XPathConstants.NODE);
-                if (nodeList == null) {
-                    expr = xpath.compile("/project/parent/groupId");
-                    nodeList = (NodeList) expr.evaluate(document, XPathConstants.NODE);
-                }
-
-                if (nodeList instanceof DeferredElementImpl)
-                    return new DTO(true).setObject(((DeferredElementImpl) nodeList).getTextContent());
-            } catch (Exception e) {
-                LOGGER.error("", e);
-            }
-        }
-
-        return new DTO(true);
-    }
+//    @Override
+//    public DTO groupId(String wsPath, String projectPath) {
+//        CgFile cgPom = new CgFile(wsPath + projectPath, "pom.xml", true);
+//
+//        File pomFile = new File(cgPom.getFullPath());
+//        if (pomFile.exists() && pomFile.isFile()) {
+//            try {
+//                DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+//                Document document = db.parse(pomFile);
+//
+//                XPathFactory factory = XPathFactory.newInstance();
+//                XPath xpath = factory.newXPath();
+//                XPathExpression expr = xpath.compile("/project/groupId");
+//                NodeList nodeList = (NodeList) expr.evaluate(document, XPathConstants.NODE);
+//                if (nodeList == null) {
+//                    expr = xpath.compile("/project/parent/groupId");
+//                    nodeList = (NodeList) expr.evaluate(document, XPathConstants.NODE);
+//                }
+//
+//                if (nodeList instanceof DeferredElementImpl)
+//                    return new DTO(true).setObject(((DeferredElementImpl) nodeList).getTextContent());
+//            } catch (Exception e) {
+//                LOGGER.error("", e);
+//            }
+//        }
+//
+//        return new DTO(true);
+//    }
 }
