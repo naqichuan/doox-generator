@@ -447,7 +447,7 @@
     nqcxPost.retryConnect = db.conn;
     nqcxGet.retryConnect = db.conn;
 
-
+    // table
     var table = {
         tableName: function () {
             return $('select[name="tableName"]');
@@ -1070,6 +1070,10 @@
             return true;
         }
     };
+
+    button.loadCenter().click(function () {
+        table.change();
+    });
 </script>
 <script type="text/javascript">
     var tableInfo = {
@@ -1105,8 +1109,11 @@
         },
         loadTable: function () {
             var tableName = table.tableName().val();
-            if (!tableName)
+            if (!tableName) {
+                this.resetTable();
+                this.resetConfig()
                 return;
+            }
 
             var columns = [];
             nqcxGet("generator-api/table/get/" + tableName, {}, function (result) {
@@ -1116,6 +1123,9 @@
                 tableInfo.addInfo(columns);
                 tableInfo.config(columns);
             });
+        },
+        resetTable: function () {
+            this.info().html('');
         },
         config: function (columns) {
             var tableName = table.tableName().val();
@@ -1129,6 +1139,9 @@
             }
             tableHtml += '</table>';
             this.projectDiv().html(tableHtml);
+        },
+        resetConfig: function () {
+            this.projectDiv().html('');
         },
         row1: function (column) {
             var rowHtml = '';
@@ -1678,10 +1691,6 @@
     };
 
     table.changeWatchers.push(function () {
-        button.loadCenter().unbind('click').click(function () {
-            table.change();
-        });
-
         tableInfo.projectInit();
         provide.projectInit();
         dao.projectInit();
