@@ -132,7 +132,7 @@
     </script>
     <script type="text/javascript">
         var retryTimes = 1;
-        var nqcxPost = function (url, data, callBack, errorCallBack) {
+        var nqcxPost = function (url, data, callBack) {
             $.post(url, data, function (result) {
                 if (!result) {
                     $.messager.show({
@@ -194,100 +194,6 @@
                 nqcxGet(url, data, callBack);
             }
         };
-    </script>
-    <script type="text/javascript">
-        // var ws = {
-        //     author: function () {
-        //         return $('input[name="author"]');
-        //     },
-        //     basedir: function () {
-        //         return $('input[name="basedir"]');
-        //     },
-        //     saveAuthor: function () {
-        //         var author = this.authorElement().val();
-        //         if (!author)
-        //             return;
-        //
-        //         nqcxPost("generator-api/ws/author", {author: author}, function (result) {
-        //             if (result.success) {
-        //                 console.log(result.object);
-        //             }
-        //         });
-        //     },
-        //     changeBasedir: function (callBack, errorCallBack) {
-        //         var path = decodeURIComponent(this.basedirElement().val());
-        //         if (!path)
-        //             return;
-        //
-        //         nqcxPost("generator-api/ws/path/load", {"basedir": path}, function (result) {
-        //             if (result.success && result.object) {
-        //                 var wsdata = result.object;
-        //                 if (wsdata.exists) {
-        //                     ws.basedirExists = true;
-        //                     ws.basedirExistsTip();
-        //
-        //                     $.messager.show({
-        //                         title: 'Success',
-        //                         msg: 'Ws _loaded'
-        //                     });
-        //
-        //                     callBack(wsdata);
-        //                 } else {
-        //                     $.messager.show({
-        //                         title: 'Error',
-        //                         msg: 'WS 不存在！'
-        //                     });
-        //                     if (errorCallBack)
-        //                         errorCallBack();
-        //                 }
-        //             } else {
-        //                 $.messager.show({
-        //                     title: 'Error',
-        //                     msg: '加载 WS 错误！'
-        //                 });
-        //             }
-        //         });
-        //     },
-        //     basedirExists: false,
-        //     basedirExistsTip: function () {
-        //         if (this.basedirExists) {
-        //             this.basedirElement().removeClass("error");
-        //         } else {
-        //             this.basedirElement().addClass("error");
-        //         }
-        //     },
-        //     reset: function () {
-        //         var _this = this;
-        //         nqcxGet('generator-api/project/info', {}, function (response) {
-        //             if (response && response.success && response.object) {
-        //                 var o = response.object;
-        //
-        //                 $.messager.show({
-        //                     title: 'Success',
-        //                     msg: 'Ws info _loaded'
-        //                 });
-        //
-        //                 // 初始化 author 相关
-        //                 ws.author().val(o.author);
-        //                 // 初始化 worksapce 相关
-        //                 ws.basedirElement().val(o.projectPath);
-        //
-        //                 _this.basedirExists = false;
-        //                 _this.basedirExistsTip();
-        //
-        //                 project.emptyProjects();
-        //
-        //                 project.change();
-        //
-        //             } else {
-        //                 $.messager.show({
-        //                     title: 'Error',
-        //                     msg: '加载 Ws info 错误！'
-        //                 });
-        //             }
-        //         });
-        //     }
-        // }
     </script>
     <script type="text/javascript">
         var db = {
@@ -422,15 +328,13 @@
 
                 if (!tableNameValue) {
                     table.reset();
-                    // center.clear();
-                    return;
+                } else {
+                    this.tableName().val(tableNameValue);
+                    if (!this.colPrefix().val())
+                        this.colPrefix().val(this.colPrefix().attr('t-data'))
+                    if (!this.tablePackChanged)
+                        this.tablePack().val(tableNameValue.replaceFirstLow());
                 }
-
-                this.tableName().val(tableNameValue);
-                if (!this.colPrefix().val())
-                    this.colPrefix().val(this.colPrefix().attr('t-data'))
-                if (!this.tablePackChanged)
-                    this.tablePack().val(tableNameValue.replaceFirstLow());
 
                 this.changeWatchers.forEach((item) => {
                     item();
@@ -1378,7 +1282,7 @@
 
         // project
         project.authorElement().keyup(function (event) {
-            project.authorChanged = false;
+            project.authorChanged = true;
             project.authorChangedTip();
 
             project.saveAuthor($(this).val());
