@@ -1,0 +1,73 @@
+#fileShow {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#fileShow li {
+    line-height: 20px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+table td, table th {
+    padding: 0 2px;
+}
+
+table td.lable {
+    text-align: right;
+}
+
+input[type="text"] {
+    width: 100px;
+}
+
+input[type="password"] {
+    width: 100px;
+}
+
+input[type="text"].big {
+    width: 120px;
+}
+
+input[type="text"].big_140 {
+    width: 140px;
+}
+
+input[type="text"].big_180 {
+    width: 180px;
+}
+
+input[type="text"].big_200 {
+    width: 200px;
+}
+
+input[type="text"].big_240 {
+    width: 240px;
+}
+
+input[type="text"].middle {
+    width: 80px;
+}
+
+input[type="text"].small {
+    width: 40px;
+}
+
+input[type="text"].waring {
+    background-color: #FFFF00;
+}
+
+input[type="text"].error {
+    background-color: #FF8888;
+}
+
+input[type="text"].right {
+    text-align: right;
+}
+
+input[type="text"].readonly {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}

@@ -9,836 +9,11 @@
     <meta content="telephone=no" name="format-detection">
     <title>Doox code generator</title>
     <link rel="icon" type="image/png" href="webjars/doox-generator-ui/favicon.ico?v=1.2.0"/>
+    <link rel="stylesheet" type="text/css" href="webjars/doox-generator-ui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="webjars/doox-generator-ui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="webjars/doox-generator-ui/css/demo.css">
     <link rel="stylesheet" type="text/css" href="webjars/doox-generator-ui/doox.css?v=1.2.0"/>
     <link rel="stylesheet" type="text/css" href="webjars/doox-generator-ui/doox-generator.css?v=1.2.0"/>
-
-    <link href="webjars/doox-generator-ui/themes/default/easyui.css" rel="stylesheet" type="text/css">
-    <link href="webjars/doox-generator-ui/themes/icon.css" rel="stylesheet" type="text/css">
-    <link href="webjars/doox-generator-ui/css/demo.css" rel="stylesheet" type="text/css">
-    <style type="text/css">
-        #fileShow {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        #fileShow li {
-            line-height: 20px;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        table td, table th {
-            padding: 0 2px;
-        }
-
-        table td.lable {
-            text-align: right;
-        }
-
-        input[type="text"] {
-            width: 100px;
-        }
-
-        input[type="password"] {
-            width: 100px;
-        }
-
-        input[type="text"].big {
-            width: 120px;
-        }
-
-        input[type="text"].big_140 {
-            width: 140px;
-        }
-
-        input[type="text"].big_180 {
-            width: 180px;
-        }
-
-        input[type="text"].big_200 {
-            width: 200px;
-        }
-
-        input[type="text"].big_240 {
-            width: 240px;
-        }
-
-        input[type="text"].middle {
-            width: 80px;
-        }
-
-        input[type="text"].small {
-            width: 40px;
-        }
-
-        input[type="text"].waring {
-            background-color: #FFFF00;
-        }
-
-        input[type="text"].error {
-            background-color: #FF8888;
-        }
-
-        input[type="text"].right {
-            text-align: right;
-        }
-
-        input[type="text"].readonly {
-            border-top: none;
-            border-left: none;
-            border-right: none;
-        }
-    </style>
-    <script type="text/javascript" src="webjars/doox-generator-ui/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="webjars/doox-generator-ui/jquery/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="webjars/doox-generator-ui/jquery/jquery.easyui.nqcx.js"></script>
-    <script type="text/javascript">
-        // string
-        String.prototype.compare = function (str) {
-            return this.toLowerCase() === str.toLowerCase();
-        };
-        String.prototype.startWith = function (str) {
-            if (str == null || str === '' || this.length === 0 || str.length > this.length)
-                return false;
-            return this.substr(0, str.length).compare(str);
-        };
-        String.prototype.endWith = function (str) {
-            if (str == null || str === "" || this.length === 0 || str.length > this.length)
-                return false;
-            return this.substring(this.length - str.length) === str;
-        };
-        String.prototype.replaceFirstUP = function () {
-            if (this.length === 0)
-                return this;
-            return this.replace(/\b(\w)|\s(\w)|(_\w)/g, function (m) {
-                if (m.indexOf('_') > -1) {
-                    return m.substring(m.indexOf('_') + 1).toUpperCase();
-                } else
-                    return m.toUpperCase();
-            });
-        };
-        String.prototype.replaceFirstLow = function () {
-            if (this.length === 0)
-                return this;
-            return this.replace(/\b(\w)|\s(\w)|(_\w)/g, function (m) {
-                if (m.indexOf('_') > -1) {
-                    return m.substring(m.indexOf('_') + 1).toLowerCase();
-                } else
-                    return m.toLowerCase();
-            });
-        };
-        // end of string
-    </script>
-    <script type="text/javascript">
-        var retryTimes = 1;
-        var nqcxPost = function (url, data, callBack) {
-            $.post(url, data, function (result) {
-                if (!result) {
-                    $.messager.show({
-                        title: 'Error',
-                        msg: 'error'
-                    });
-                } else if (!result.success && result.errorCode === '11') {
-                    if (retryTimes === 0) {
-                        $.messager.show({
-                            title: 'Error',
-                            msg: result.errorText || 'error'
-                        });
-                    } else {
-                        retryTimes--;
-                        db.conn(connCallBack);
-                    }
-                } else {
-                    retryTimes = 1;
-                    if (callBack)
-                        callBack(result);
-                }
-            }, 'json');
-            var connCallBack = function () {
-                nqcxPost(url, data, callBack);
-            }
-        };
-
-        var nqcxGet = function (url, data, callBack) {
-            if (url) {
-                if (url.indexOf('?') === -1)
-                    url += '?t=' + (new Date()).getTime();
-                else
-                    url += '&t=' + (new Date()).getTime();
-            }
-
-            $.get(url, data, function (result) {
-                if (!result) {
-                    $.messager.show({
-                        title: 'Error',
-                        msg: 'error'
-                    });
-                } else if (!result.success && result.errorCode === '11') {
-                    if (retryTimes === 0) {
-                        $.messager.show({
-                            title: 'Error',
-                            msg: result.errorText || 'error'
-                        });
-                    } else {
-                        retryTimes--;
-                        db.conn(connCallBack);
-                    }
-                } else {
-                    retryTimes = 1;
-                    if (callBack)
-                        callBack(result);
-                }
-            }, 'json');
-            var connCallBack = function () {
-                nqcxGet(url, data, callBack);
-            }
-        };
-    </script>
-    <script type="text/javascript">
-        var db = {
-            jdbcUrl: function () {
-                return $('input[name="jdbcUrl"]');
-            },
-            jdbcUser: function () {
-                return $('input[name="jdbcUser"]');
-            },
-            jdbcPassword: function () {
-                return $('input[name="jdbcPassword"]');
-            },
-            reset: function () {
-                var _this = this;
-                nqcxGet('generator-api/connection/info', {}, function (result) {
-                    if (result.success && result.result) {
-                        $.messager.show({
-                            title: 'Success',
-                            msg: 'Connection info loaded'
-                        });
-
-                        _this.jdbcUrl().val(result.result.jdbcUrl);
-                        _this.jdbcUser().val(result.result.jdbcUser);
-                        _this.jdbcPassword().val(result.result.jdbcPassword);
-                    } else {
-                        $.messager.show({
-                            title: 'Error',
-                            msg: '加载 connection info 错误！'
-                        });
-                    }
-                });
-            },
-            conn: function (callBack, errorCallBack) {
-                $('#connForm').form('nqcxSubmit', {
-                    url: "generator-api/connection/connect",
-                    dataType: 'json',
-                    onSubmit: function () {
-                        return $(this).form('validate');
-                    },
-                    success: function (result) {
-                        if (result.success) {
-                            if (callBack)
-                                callBack();
-                        } else {
-                            if (errorCallBack)
-                                errorCallBack();
-                            $.messager.show({
-                                title: 'Error',
-                                msg: result.errorText
-                            });
-                        }
-                    },
-                    error: function () {
-                        $.messager.show({
-                            title: 'Error',
-                            msg: 'Connect db fail! Please try again later.'
-                        });
-                    }
-                });
-            }
-        };  // end of db
-
-        var table = {
-            tableName: function () {
-                return $('select[name="tableName"]');
-            },
-            colPrefix: function () {
-                return $('input[name="colPrefix"]');
-            },
-            tablePack: function () {
-                return $('input[name="tablePack"]');
-            },
-            tablePackChanged: false,
-            tablePackTip: function () {
-                if (this.tablePackChanged) {
-                    this.tablePack().addClass("waring");
-                } else {
-                    this.tablePack().removeClass("waring");
-                }
-            },
-            reset: function () {
-                this.tableName().val(this.tableName().attr('t-data'));
-                this.colPrefix().val(this.colPrefix().attr('t-data'));
-                this.tablePack().val(this.tablePack().attr('t-data'));
-            },
-            emptyTables: function () {
-                $('select[name="tableName"] option').each(function () {
-                    if ($(this).val()) {
-                        $(this).remove();
-                    }
-                });
-            },
-            listNames: function () {
-                // 取当前 table name
-                var tableNameValue = table.tableName().val();
-                var colPrefixValue = table.colPrefix().val();
-                var tablePackValue = table.tablePack().val();
-
-                var url = "generator-api/table/list";
-                nqcxGet(url, {}, function (result) {
-                    table.emptyTables();
-                    if (result.list) {
-                        for (t in result.list) {
-                            table.listNamesAppend(result.list[t].name, result.list[t].name);
-                        }
-                    }
-                    $.messager.show({
-                        title: 'Success',
-                        msg: 'Table loaded'
-                    });
-
-                    table.change(tableNameValue, colPrefixValue, tablePackValue);
-                });
-            },
-            listNamesAppend: function (value, text) {
-                $('<option value="' + value + '">' + text + '</option>').appendTo(this.tableName());
-            },
-            changeWatchers: [],
-            change: function (lastTableName, lastColPrefixValue, lastTablePack) {
-                var tableNameValue = this.tableName().val();
-                if (!lastTableName && !tableNameValue) {
-                    // 首次加载或选择了空值
-                    tableNameValue = this.tableName().attr('t-data');
-                } else if (lastTableName) {
-                    // 点了 [Connect DB] 或 [>>Load tables>>]
-                    tableNameValue = this.tableName().attr('t-data');
-                    $('select[name="tableName"] option').each(function () {
-                        if ($(this).val() && $(this).val() === lastTableName)
-                            tableNameValue = lastTableName;
-                    });
-                }
-
-                if (!tableNameValue) {
-                    table.reset();
-                } else {
-                    this.tableName().val(tableNameValue);
-                    if (!this.colPrefix().val())
-                        this.colPrefix().val(this.colPrefix().attr('t-data'))
-                    if (!this.tablePackChanged)
-                        this.tablePack().val(tableNameValue.replaceFirstLow());
-                }
-
-                this.changeWatchers.forEach((item) => {
-                    item();
-                });
-            }
-        }; // end of table
-    </script>
-
-    <script type="text/javascript">
-        var project = {
-            authorElement: function () {
-                return $('input[name="author"]');
-            },
-            basedirElement: function () {
-                return $('input[name="basedir"]');
-            },
-            reloadProjectBtn: function () {
-                return $('#reloadProjectBtn');
-            },
-            pName: function () {
-                // return $('select[name="pName"]');
-                return $('input[name="pName"]');
-            },
-            pPath: function () {
-                return $('input[name="pPath"]');
-            },
-            pPackage: function () {
-                return $('input[name="pPackage"]');
-            },
-            pType: function () {
-                return $('input[name="pType"]');
-            },
-            author: '',
-            authorChanged: false,
-            authorChangedTip: function () {
-                if (this.authorChanged)
-                    this.authorElement().addClass("error");
-                else
-                    this.authorElement().removeClass("error");
-            },
-            loadAuthor: function () {
-                var _this = this;
-                nqcxPost("generator-api/project/author", {}, function (response) {
-                    if (response.success) {
-                        _this.author = response.object;
-                        _this.authorElement().val(_this.author);
-                        _this.authorChanged = false;
-                        _this.authorChangedTip();
-                    } else {
-                        $.messager.show({
-                            title: 'Error',
-                            msg: 'Load author fail！'
-                        });
-                    }
-                });
-            },
-            saveAuthor: function (author) {
-                if (!author)
-                    author = '';
-
-                var _this = this;
-                nqcxPost("generator-api/project/author/change", {author: author}, function (response) {
-                    if (response.success) {
-                        _this.author = response.object;
-                        _this.authorElement().val(_this.author);
-                        _this.authorChanged = false;
-                        _this.authorChangedTip();
-                    } else {
-                        $.messager.show({
-                            title: 'Error',
-                            msg: 'Change author fail！'
-                        });
-                    }
-                });
-            },
-            basedir: '',
-            basedirChanged: false,
-            basedirChangedTip: function () {
-                if (this.basedirChanged)
-                    this.basedirElement().addClass("error");
-                else
-                    this.basedirElement().removeClass("error");
-            },
-            loadBasedir: function (callback, errorCallback) {
-                var _this = this;
-
-                nqcxGet('generator-api/project/basedir', {}, function (response) {
-                    if (response.success && response.object) {
-                        _this.basedir = response.object;
-                        _this.basedirElement().val(_this.basedir);
-
-                        _this.basedirChanged = false;
-                        _this.basedirChangedTip();
-
-                        if (callback)
-                            callback(_this.basedir);
-                    } else {
-                        $.messager.show({
-                            title: 'Error',
-                            msg: 'Load basedir fail！'
-                        });
-
-                        if (errorCallback)
-                            errorCallback(_this.basedir);
-                    }
-                });
-            },
-            changeBasedir: function (basedir, callBack, errorCallBack) {
-                var basedirDecode = decodeURIComponent(basedir);
-                if (!basedirDecode)
-                    return;
-
-                var _this = this;
-                nqcxPost("generator-api/project/basedir/change", {"basedir": basedirDecode}, function (response) {
-                    if (response && response.success) {
-                        _this.basedirChanged = false;
-                        _this.basedirChangedTip();
-
-                        if (callBack)
-                            callBack(basedirDecode);
-                    } else {
-                        $.messager.show({
-                            title: 'Error',
-                            msg: 'Change basedir fail！'
-                        });
-
-                        if (errorCallBack)
-                            errorCallBack(basedirDecode);
-                    }
-                });
-            },
-            _p: {}, // project
-            _loaded: false,
-            _init: function () {
-                var _this = this;
-
-                this.loadAuthor();
-                this.loadBasedir(function (basedir) {
-                    _this._load(basedir);
-                });
-            },
-            _load: function (basedir) {
-                var _this = this;
-                _this._p = {};
-                _this._loaded = false;
-
-                var params = {};
-                if (basedir)
-                    params.basedir = basedir;
-
-                nqcxGet('generator-api/project/info', params, function (response) {
-                    if (response.success && response.object) {
-                        _this._p = response.object;
-
-                        //basedir
-                        _this.basedir = _this._p.projectPath;
-                        // name path type
-                        _this.pName().val(_this._p.artifactId || _this._p.baseName);
-                        _this.pPath().val(_this._p.projectPath);
-                        _this.pType().val(_this._p.projectType);
-                        // package
-                        _this.pPackage().val(_this._p.groupId);
-                        _this.pPackageChange();
-                        _this.pPackageChanged = false;
-                        _this.pPackageTip();
-
-                        _this._loaded = true;
-
-                        // modules
-                        if (_this._p.modules)
-                            _this.module.fillAll()
-                        else
-                            _this.module.emptyAll();
-
-                        // change
-                        _this._change();
-                    } else {
-                        $.messager.show({
-                            title: 'Error',
-                            msg: 'Load project info fail！'
-                        });
-                    }
-                });
-            },
-            _clear: function () {
-                this._p = {};
-                this._loaded = false;
-
-                //  name path type
-                this.pName().val('');
-                this.pPath().val('');
-                this.pType().val('');
-
-                // package
-                this.pPackage().val('');
-                this.pPackageChange();
-                this.pPackageChanged = false;
-                this.pPackageTip();
-
-                // modules
-                this.module.emptyAll();
-
-                path.setRelativePath('');
-                path.loadCgFile('', []);
-            },
-            _change: function (callback) {
-                var _this = this;
-
-                // var pNameValue = _this.pName().val();
-                // if (!pNameValue) {
-                //     _this.clear();
-                //     return;
-                // }
-                // // project path
-                // _this.pPath().val('/' + pNameValue + '/');
-                //
-                // // project package
-                // _this.pPackageChange(function () {
-                //     // modules
-                //     var pTypeValue = _this.pType().filter(':checked').val();
-                //     if (pTypeValue === "Multiple")
-                //         _this.fecthDirs(_this.module.fillAll);
-                //     else
-                //         _this.module.emptyAll();
-                //
-                //     // file path
-                //     path.openFile();
-                //
-                //     if (callback)
-                //         callback();
-                // });
-
-                // file path
-                path.openFile();
-            },
-            pPackageChange: function () {
-                // var _this = this;
-
-                this.pPackageWatchers.forEach((item, index, array) => {
-                    item();
-                });
-
-                // var ppName = this.pName().val();
-                // if (ppName)
-                //     ppName = ppName.replace("nqcx-", "").toLocaleLowerCase();
-                // else
-                //     ppName = "";
-                //
-                // // project package
-                // var pPackageValue = _this.pPackage().val();
-
-                // nqcxPost('generator-api/project/groupId', {
-                //     basedir: _this.basedirElement().val(),
-                //     pPath: project.pPath().val()
-                // }, function (result) {
-                //     if (!_this.pPackageChanged || !pPackageValue) {
-                //         project.pPackageChanged = false; // 允许自动生成 pPackage
-                //         project.pPackageTip();
-                //
-                //         pPackageValue = 'org.nqcx.' + ppName;
-                //
-                //         if (result.success && result.object)
-                //             pPackageValue = result.object
-                //     }
-                //
-                //     _this.pPackage().val(pPackageValue);
-                //
-                //     if (callback)
-                //         callback();
-                // });
-            },
-            pPackageChanged: false,
-            pPackageTip: function () {
-                if (this.pPackageChanged) {
-                    this.pPackage().addClass("waring");
-                } else {
-                    this.pPackage().removeClass("waring");
-                }
-            },
-            pPackageWatchers: [],
-
-            // emptyProjects: function () {
-            //     $('select[name="pName"] option').each(function () {
-            //         if ($(this).val()) {
-            //             $(this).remove();
-            //         }
-            //     });
-            // },
-            // loadProjects: function (wsdata) {
-            //     this.emptyProjects();
-            //
-            //     var select = this.pName();
-            //     var cList = wsdata.cgFileList;
-            //     if (cList && cList.length > 0) {
-            //         for (var idx in cList) {
-            //             $('<option value="' + cList[idx].name + '">' + cList[idx].name + '</option>').appendTo(select);
-            //         }
-            //         $.messager.show({
-            //             title: 'Success',
-            //             msg: 'Projects _loaded'
-            //         });
-            //     }
-            // },
-            // dirList: null,
-            // fecthDirs: function (callback) {
-            //     var _this = this;
-            //
-            //     // clear array
-            //     _this.dirList = [];
-            //
-            //     var basedir = _this.basedirElement().val();
-            //     if (!_this.basedirExists || !basedir) {
-            //         $.messager.show({
-            //             title: 'Error',
-            //             msg: 'WS not exists.'
-            //         });
-            //         return;
-            //     }
-            //
-            //     var pPath = _this.pPath().val();
-            //     if (!pPath) {
-            //         $.messager.show({
-            //             title: 'Error',
-            //             msg: 'Please select project.'
-            //         });
-            //         return;
-            //     }
-            //
-            //     var url = 'generator-api/project/openFile';
-            //     nqcxPost(url, {basedir: basedir, pPath: pPath, path: '', name: ''}, function (result) {
-            //         if (result.success && result.object.cgFileList) {
-            //             var cgFileList = result.object.cgFileList;
-            //             for (var idx in cgFileList) {
-            //                 if (!cgFileList[idx].file)
-            //                     _this.dirList.push(cgFileList[idx].name)
-            //             }
-            //             if (_this.dirList)
-            //                 callback(_this);
-            //         }
-            //     });
-            // },
-            module: {
-                provide: function () {
-                    return $('select[name="provideModuleName"]');
-                },
-                dao: function () {
-                    return $('select[name="daoModuleName"]');
-                },
-                service: function () {
-                    return $('select[name="serviceModuleName"]');
-                },
-                web: function () {
-                    return $('select[name="webModuleName"]');
-                },
-                fillAll: function () {
-                    var _this = this;
-
-                    _this.emptyAll();
-
-                    // provide
-                    _this.fill(_this.provide().attr("name"), project.pName().val() + '-provide');
-                    // dao
-                    _this.fill(_this.dao().attr("name"), project.pName().val() + '-dao');
-                    // service
-                    _this.fill(_this.service().attr("name"), project.pName().val() + '-service');
-                    // web
-                    _this.fill(_this.web().attr("name"), project.pName().val() + '-web');
-                },
-                fill: function (name, defaultModule) {
-                    var _this = this;
-
-                    var select = $('select[name="' + name + '"]');
-                    var ml = project._p.modules;
-                    for (var idx in ml) {
-                        if (defaultModule && defaultModule === ml[idx])
-                            $('<option selected="selected" value="' + ml[idx] + '">' + ml[idx] + '</option>').appendTo(select);
-                        else
-                            $('<option value="' + ml[idx] + '">' + ml[idx] + '</option>').appendTo(select);
-                    }
-                },
-                emptyAll: function () {
-                    // provide
-                    this.empty(this.provide());
-                    // dao
-                    this.empty(this.dao());
-                    // service
-                    this.empty(this.service());
-                    // web
-                    this.empty(this.web());
-                },
-                empty: function (module) {
-                    $('option', module).each(function () {
-                        if ($(this).val()) {
-                            $(this).remove();
-                        }
-                    });
-                }
-            }
-        };  // end of project
-    </script>
-    <script type="text/javascript">
-        var path = {
-            relativePath: function () {
-                return $('input[name="relativePath"]');
-            },
-            fileShow: function () {
-                return $('#fileShow');
-            },
-            setRelativePath: function (value) {
-                this.relativePath().val(value);
-            },
-            enterKeyDown: function (event) {
-                if ((event.keyCode || event.which) === 13) {
-                    event.preventDefault();
-
-                    var relativePathValue = this.relativePath().val();
-
-                    if (!relativePathValue)
-                        relativePathValue = '/';
-
-                    if (relativePathValue.indexOf('/') === -1)
-                        relativePathValue = '/' + relativePathValue;
-
-                    if (relativePathValue.length > 1 && relativePathValue.endWith('/'))
-                        relativePathValue = relativePathValue.substring(0, relativePathValue.lastIndexOf('/'));
-
-                    this.openFile(relativePathValue.substring(0, relativePathValue.lastIndexOf('/') + 1), relativePathValue.substring(relativePathValue.lastIndexOf('/') + 1, relativePathValue.length));
-                }
-            },
-            openFile: function (pathValue, nameValue) {
-                if (!project._loaded) {
-                    $.messager.show({
-                        title: 'Error',
-                        msg: 'Basedir not exists.'
-                    });
-
-                    return;
-                }
-                var basedir = project.basedir;
-
-                // var _this = this;
-
-                // var pPath = project.pPath().val();
-                // if (!pPath) {
-                //     $.messager.show({
-                //         title: 'Error',
-                //         msg: 'Please select project.'
-                //     });
-                //     return;
-                // }
-
-                if (!pathValue)
-                    pathValue = '';
-                if (!nameValue)
-                    nameValue = '';
-
-                var url = 'generator-api/project/openFile';
-                nqcxPost(url, {
-                    basedir: basedir,
-                    // pPath: pPath,
-                    path: pathValue,
-                    name: nameValue
-                }, function (result) {
-                    var relativePathPath = '/';
-                    var relativePathName = '';
-                    var cgFileListValue = [];
-                    if (result.success) {
-                        if (result.object) {
-                            relativePathPath = result.object.path;
-                            relativePathName = result.object.name;
-                        }
-                        if (result.object.cgFileList)
-                            cgFileListValue = result.object.cgFileList;
-                    }
-                    path.setRelativePath(relativePathPath + relativePathName);
-                    path.loadCgFile(relativePathPath, cgFileListValue);
-                });
-            },
-            loadCgFile: function (pathValue, cgFileList) {
-                var cgFileHtml = '';
-                if (pathValue)
-                    cgFileHtml += '<li><a href="javascript:void(0);" onclick="path.openFile(\'' + pathValue + '\',\'\');">..</a></li>';
-                for (var idx in cgFileList) {
-                    if (cgFileList[idx].file)
-                        cgFileHtml += '<li>' + cgFileList[idx].name + '</li>';
-                    else
-                        cgFileHtml += '<li><a href="javascript:void(0);" onclick="path.openFile(\'' + cgFileList[idx].path + '\',\'' + cgFileList[idx].name + '\');">' + cgFileList[idx].name + '</a></li>';
-                }
-                this.fileShow().html(cgFileHtml);
-            }
-        }; // end of path
-    </script>
-    <script type="text/javascript">
-        // var center = {
-        //     o: function () {
-        //         return $('div#center');
-        //     },
-        //     load: function () {
-        //
-        //     },
-        //     clear: function () {
-        //     }
-        // }; // end of center
-    </script>
 </head>
 <body class="easyui-layout">
 <div data-options="region:'north',split:true" style="height:75px;padding:5px 5px 0;overflow:hidden;">
@@ -1203,153 +378,661 @@
         <input id="generate_btn" type="button" value="Generate Code"
                style="width: 150px; height: 32px; background-color: orange;"/>
     </form>
-
 </div>
-
-<script src="webjars/doox-generator-ui/generator-ui.js?v=1.2.0"></script>
+<script type="text/javascript" src="webjars/doox-generator-ui/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="webjars/doox-generator-ui/jquery/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="webjars/doox-generator-ui/jquery/jquery.easyui.nqcx.js"></script>
+<script type="text/javascript" src="webjars/doox-generator-ui/doox-generator.js?v=1.2.0"></script>
 <script type="text/javascript">
-    $(document).ready(function () {
-        // 初始化 db 相关值
-        db.reset();
-        // 初始化 table 相关
-        table.reset();
-        // 初始化 ws 相关
-        project._init();
+    var db = {
+        jdbcUrl: function () {
+            return $('input[name="jdbcUrl"]');
+        },
+        jdbcUser: function () {
+            return $('input[name="jdbcUser"]');
+        },
+        jdbcPassword: function () {
+            return $('input[name="jdbcPassword"]');
+        },
+        _init: function () {
+            var _this = this;
+            nqcxGet('generator-api/connection/info', {}, function (result) {
+                if (result.success && result.result) {
+                    _this.jdbcUrl().val(result.result.jdbcUrl);
+                    _this.jdbcUser().val(result.result.jdbcUser);
+                    _this.jdbcPassword().val(result.result.jdbcPassword);
+                } else {
+                    $.messager.show({
+                        title: 'Error',
+                        msg: 'Load connection info fail！'
+                    });
+                }
+            });
+        },
+        _reset: function () {
+            this._init();
+        },
+        conn: function (callBack, errorCallBack) {
+            $('#connForm').form('nqcxSubmit', {
+                url: "generator-api/connection/connect",
+                dataType: 'json',
+                onSubmit: function () {
+                    return $(this).form('validate');
+                },
+                success: function (result) {
+                    if (result.success) {
+                        if (callBack)
+                            callBack();
+                    } else {
+                        if (errorCallBack)
+                            errorCallBack();
 
-        // project.changeBasedir(function (wsdata) {
-        //     project.loadProjects(wsdata);
-        // }, function () {
-        //     project.emptyProjects();
-        //     project._clear();
-        // });
+                        $.messager.show({
+                            title: 'Error',
+                            msg: result.errorText
+                        });
+                    }
+                },
+                error: function () {
+                    $.messager.show({
+                        title: 'Error',
+                        msg: 'Connect db fail! Please try again later.'
+                    });
+                }
+            });
+        }
+    };  // end of db
 
-        // Connect db and load table
-        $('.connectDB').keyup(function (event) {
+    // 注册重连方法
+    nqcxPost.retryConnect = db.conn;
+    nqcxGet.retryConnect = db.conn;
+
+
+    var table = {
+        tableName: function () {
+            return $('select[name="tableName"]');
+        },
+        colPrefix: function () {
+            return $('input[name="colPrefix"]');
+        },
+        tablePack: function () {
+            return $('input[name="tablePack"]');
+        },
+        tablePackChanged: false,
+        tablePackTip: function () {
+            if (this.tablePackChanged) {
+                this.tablePack().addClass("waring");
+            } else {
+                this.tablePack().removeClass("waring");
+            }
+        },
+        reset: function () {
+            this.tableName().val(this.tableName().attr('t-data'));
+            this.colPrefix().val(this.colPrefix().attr('t-data'));
+            this.tablePack().val(this.tablePack().attr('t-data'));
+        },
+        emptyTables: function () {
+            $('select[name="tableName"] option').each(function () {
+                if ($(this).val()) {
+                    $(this).remove();
+                }
+            });
+        },
+        listNames: function () {
+            // 取当前 table name
+            var tableNameValue = table.tableName().val();
+            var colPrefixValue = table.colPrefix().val();
+            var tablePackValue = table.tablePack().val();
+
+            var url = "generator-api/table/list";
+            nqcxGet(url, {}, function (result) {
+                table.emptyTables();
+                if (result.list) {
+                    for (var t in result.list) {
+                        table.listNamesAppend(result.list[t].name, result.list[t].name);
+                    }
+                }
+                $.messager.show({
+                    title: 'Success',
+                    msg: 'Table loaded'
+                });
+
+                table.change(tableNameValue, colPrefixValue, tablePackValue);
+            });
+        },
+        listNamesAppend: function (value, text) {
+            $('<option value="' + value + '">' + text + '</option>').appendTo(this.tableName());
+        },
+        changeWatchers: [],
+        change: function (lastTableName, lastColPrefixValue, lastTablePack) {
+            var tableNameValue = this.tableName().val();
+            if (!lastTableName && !tableNameValue) {
+                // 首次加载或选择了空值
+                tableNameValue = this.tableName().attr('t-data');
+            } else if (lastTableName) {
+                // 点了 [Connect DB] 或 [>>Load tables>>]
+                tableNameValue = this.tableName().attr('t-data');
+                $('select[name="tableName"] option').each(function () {
+                    if ($(this).val() && $(this).val() === lastTableName)
+                        tableNameValue = lastTableName;
+                });
+            }
+
+            if (!tableNameValue) {
+                table.reset();
+            } else {
+                this.tableName().val(tableNameValue);
+                if (!this.colPrefix().val())
+                    this.colPrefix().val(this.colPrefix().attr('t-data'))
+                if (!this.tablePackChanged)
+                    this.tablePack().val(tableNameValue.replaceFirstLow());
+            }
+
+            this.changeWatchers.forEach((item) => {
+                item();
+            });
+        }
+    }; // end of table
+</script>
+
+<script type="text/javascript">
+    var project = {
+        authorElement: function () {
+            return $('input[name="author"]');
+        },
+        basedirElement: function () {
+            return $('input[name="basedir"]');
+        },
+        reloadProjectBtn: function () {
+            return $('#reloadProjectBtn');
+        },
+        pName: function () {
+            // return $('select[name="pName"]');
+            return $('input[name="pName"]');
+        },
+        pPath: function () {
+            return $('input[name="pPath"]');
+        },
+        pPackage: function () {
+            return $('input[name="pPackage"]');
+        },
+        pType: function () {
+            return $('input[name="pType"]');
+        },
+        author: '',
+        authorChanged: false,
+        authorChangedTip: function () {
+            if (this.authorChanged)
+                this.authorElement().addClass("error");
+            else
+                this.authorElement().removeClass("error");
+        },
+        loadAuthor: function () {
+            var _this = this;
+            nqcxPost("generator-api/project/author", {}, function (response) {
+                if (response.success) {
+                    _this.author = response.object;
+                    _this.authorElement().val(_this.author);
+                    _this.authorChanged = false;
+                    _this.authorChangedTip();
+                } else {
+                    $.messager.show({
+                        title: 'Error',
+                        msg: 'Load author fail！'
+                    });
+                }
+            });
+        },
+        saveAuthor: function (author) {
+            if (!author)
+                author = '';
+
+            var _this = this;
+            nqcxPost("generator-api/project/author/change", {author: author}, function (response) {
+                if (response.success) {
+                    _this.author = response.object;
+                    _this.authorElement().val(_this.author);
+                    _this.authorChanged = false;
+                    _this.authorChangedTip();
+                } else {
+                    $.messager.show({
+                        title: 'Error',
+                        msg: 'Change author fail！'
+                    });
+                }
+            });
+        },
+        basedir: '',
+        basedirChanged: false,
+        basedirChangedTip: function () {
+            if (this.basedirChanged)
+                this.basedirElement().addClass("error");
+            else
+                this.basedirElement().removeClass("error");
+        },
+        loadBasedir: function (callback, errorCallback) {
+            var _this = this;
+
+            nqcxGet('generator-api/project/basedir', {}, function (response) {
+                if (response.success && response.object) {
+                    _this.basedir = response.object;
+                    _this.basedirElement().val(_this.basedir);
+
+                    _this.basedirChanged = false;
+                    _this.basedirChangedTip();
+
+                    if (callback)
+                        callback(_this.basedir);
+                } else {
+                    $.messager.show({
+                        title: 'Error',
+                        msg: 'Load basedir fail！'
+                    });
+
+                    if (errorCallback)
+                        errorCallback(_this.basedir);
+                }
+            });
+        },
+        changeBasedir: function (basedir, callBack, errorCallBack) {
+            var basedirDecode = decodeURIComponent(basedir);
+            if (!basedirDecode)
+                return;
+
+            var _this = this;
+            nqcxPost("generator-api/project/basedir/change", {"basedir": basedirDecode}, function (response) {
+                if (response && response.success) {
+                    _this.basedirChanged = false;
+                    _this.basedirChangedTip();
+
+                    if (callBack)
+                        callBack(basedirDecode);
+                } else {
+                    $.messager.show({
+                        title: 'Error',
+                        msg: 'Change basedir fail！'
+                    });
+
+                    if (errorCallBack)
+                        errorCallBack(basedirDecode);
+                }
+            });
+        },
+        _p: {}, // project
+        _loaded: false,
+        _init: function () {
+            var _this = this;
+
+            this.loadAuthor();
+            this.loadBasedir(function (basedir) {
+                _this._load(basedir);
+            });
+        },
+        _load: function (basedir) {
+            var _this = this;
+            _this._p = {};
+            _this._loaded = false;
+
+            var params = {};
+            if (basedir)
+                params.basedir = basedir;
+
+            nqcxGet('generator-api/project/info', params, function (response) {
+                if (response.success && response.object) {
+                    _this._p = response.object;
+
+                    //basedir
+                    _this.basedir = _this._p.projectPath;
+                    // name path type
+                    _this.pName().val(_this._p.artifactId || _this._p.baseName);
+                    _this.pPath().val(_this._p.projectPath);
+                    _this.pType().val(_this._p.projectType);
+                    // package
+                    _this.pPackage().val(_this._p.groupId);
+                    _this.pPackageChange();
+                    _this.pPackageChanged = false;
+                    _this.pPackageTip();
+
+                    _this._loaded = true;
+
+                    // modules
+                    if (_this._p.modules)
+                        _this.module.fillAll()
+                    else
+                        _this.module.emptyAll();
+
+                    // change
+                    _this._change();
+                } else {
+                    $.messager.show({
+                        title: 'Error',
+                        msg: 'Load project info fail！'
+                    });
+                }
+            });
+        },
+        _clear: function () {
+            this._p = {};
+            this._loaded = false;
+
+            //  name path type
+            this.pName().val('');
+            this.pPath().val('');
+            this.pType().val('');
+
+            // package
+            this.pPackage().val('');
+            this.pPackageChange();
+            this.pPackageChanged = false;
+            this.pPackageTip();
+
+            // modules
+            this.module.emptyAll();
+
+            path.setRelativePath('');
+            path.loadCgFile('', []);
+        },
+        _change: function (callback) {
+            var _this = this;
+
+            // var pNameValue = _this.pName().val();
+            // if (!pNameValue) {
+            //     _this.clear();
+            //     return;
+            // }
+            // // project path
+            // _this.pPath().val('/' + pNameValue + '/');
+            //
+            // // project package
+            // _this.pPackageChange(function () {
+            //     // modules
+            //     var pTypeValue = _this.pType().filter(':checked').val();
+            //     if (pTypeValue === "Multiple")
+            //         _this.fecthDirs(_this.module.fillAll);
+            //     else
+            //         _this.module.emptyAll();
+            //
+            //     // file path
+            //     path.openFile();
+            //
+            //     if (callback)
+            //         callback();
+            // });
+
+            // file path
+            path.openFile();
+        },
+        pPackageChange: function () {
+            // var _this = this;
+
+            this.pPackageWatchers.forEach((item, index, array) => {
+                item();
+            });
+
+            // var ppName = this.pName().val();
+            // if (ppName)
+            //     ppName = ppName.replace("nqcx-", "").toLocaleLowerCase();
+            // else
+            //     ppName = "";
+            //
+            // // project package
+            // var pPackageValue = _this.pPackage().val();
+
+            // nqcxPost('generator-api/project/groupId', {
+            //     basedir: _this.basedirElement().val(),
+            //     pPath: project.pPath().val()
+            // }, function (result) {
+            //     if (!_this.pPackageChanged || !pPackageValue) {
+            //         project.pPackageChanged = false; // 允许自动生成 pPackage
+            //         project.pPackageTip();
+            //
+            //         pPackageValue = 'org.nqcx.' + ppName;
+            //
+            //         if (result.success && result.object)
+            //             pPackageValue = result.object
+            //     }
+            //
+            //     _this.pPackage().val(pPackageValue);
+            //
+            //     if (callback)
+            //         callback();
+            // });
+        },
+        pPackageChanged: false,
+        pPackageTip: function () {
+            if (this.pPackageChanged) {
+                this.pPackage().addClass("waring");
+            } else {
+                this.pPackage().removeClass("waring");
+            }
+        },
+        pPackageWatchers: [],
+
+        // emptyProjects: function () {
+        //     $('select[name="pName"] option').each(function () {
+        //         if ($(this).val()) {
+        //             $(this).remove();
+        //         }
+        //     });
+        // },
+        // loadProjects: function (wsdata) {
+        //     this.emptyProjects();
+        //
+        //     var select = this.pName();
+        //     var cList = wsdata.cgFileList;
+        //     if (cList && cList.length > 0) {
+        //         for (var idx in cList) {
+        //             $('<option value="' + cList[idx].name + '">' + cList[idx].name + '</option>').appendTo(select);
+        //         }
+        //         $.messager.show({
+        //             title: 'Success',
+        //             msg: 'Projects _loaded'
+        //         });
+        //     }
+        // },
+        // dirList: null,
+        // fecthDirs: function (callback) {
+        //     var _this = this;
+        //
+        //     // clear array
+        //     _this.dirList = [];
+        //
+        //     var basedir = _this.basedirElement().val();
+        //     if (!_this.basedirExists || !basedir) {
+        //         $.messager.show({
+        //             title: 'Error',
+        //             msg: 'WS not exists.'
+        //         });
+        //         return;
+        //     }
+        //
+        //     var pPath = _this.pPath().val();
+        //     if (!pPath) {
+        //         $.messager.show({
+        //             title: 'Error',
+        //             msg: 'Please select project.'
+        //         });
+        //         return;
+        //     }
+        //
+        //     var url = 'generator-api/project/openFile';
+        //     nqcxPost(url, {basedir: basedir, pPath: pPath, path: '', name: ''}, function (result) {
+        //         if (result.success && result.object.cgFileList) {
+        //             var cgFileList = result.object.cgFileList;
+        //             for (var idx in cgFileList) {
+        //                 if (!cgFileList[idx].file)
+        //                     _this.dirList.push(cgFileList[idx].name)
+        //             }
+        //             if (_this.dirList)
+        //                 callback(_this);
+        //         }
+        //     });
+        // },
+        module: {
+            provide: function () {
+                return $('select[name="provideModuleName"]');
+            },
+            dao: function () {
+                return $('select[name="daoModuleName"]');
+            },
+            service: function () {
+                return $('select[name="serviceModuleName"]');
+            },
+            web: function () {
+                return $('select[name="webModuleName"]');
+            },
+            fillAll: function () {
+                var _this = this;
+
+                _this.emptyAll();
+
+                // provide
+                _this.fill(_this.provide().attr("name"), project.pName().val() + '-provide');
+                // dao
+                _this.fill(_this.dao().attr("name"), project.pName().val() + '-dao');
+                // service
+                _this.fill(_this.service().attr("name"), project.pName().val() + '-service');
+                // web
+                _this.fill(_this.web().attr("name"), project.pName().val() + '-web');
+            },
+            fill: function (name, defaultModule) {
+                var _this = this;
+
+                var select = $('select[name="' + name + '"]');
+                var ml = project._p.modules;
+                for (var idx in ml) {
+                    if (defaultModule && defaultModule === ml[idx])
+                        $('<option selected="selected" value="' + ml[idx] + '">' + ml[idx] + '</option>').appendTo(select);
+                    else
+                        $('<option value="' + ml[idx] + '">' + ml[idx] + '</option>').appendTo(select);
+                }
+            },
+            emptyAll: function () {
+                // provide
+                this.empty(this.provide());
+                // dao
+                this.empty(this.dao());
+                // service
+                this.empty(this.service());
+                // web
+                this.empty(this.web());
+            },
+            empty: function (module) {
+                $('option', module).each(function () {
+                    if ($(this).val()) {
+                        $(this).remove();
+                    }
+                });
+            }
+        }
+    };  // end of project
+</script>
+<script type="text/javascript">
+    var path = {
+        relativePath: function () {
+            return $('input[name="relativePath"]');
+        },
+        fileShow: function () {
+            return $('#fileShow');
+        },
+        setRelativePath: function (value) {
+            this.relativePath().val(value);
+        },
+        enterKeyDown: function (event) {
             if ((event.keyCode || event.which) === 13) {
                 event.preventDefault();
 
-                table.tablePackChanged = false; // 允许自动生成 table-pack
-                table.tablePackTip();
+                var relativePathValue = this.relativePath().val();
 
-                db.conn(table.listNames, function () {
-                    table.reset();
-                    table.emptyTables();
-                    table.change();
-                });
+                if (!relativePathValue)
+                    relativePathValue = '/';
+
+                if (relativePathValue.indexOf('/') === -1)
+                    relativePathValue = '/' + relativePathValue;
+
+                if (relativePathValue.length > 1 && relativePathValue.endWith('/'))
+                    relativePathValue = relativePathValue.substring(0, relativePathValue.lastIndexOf('/'));
+
+                this.openFile(relativePathValue.substring(0, relativePathValue.lastIndexOf('/') + 1), relativePathValue.substring(relativePathValue.lastIndexOf('/') + 1, relativePathValue.length));
             }
-        });
-        $('#connectDB').click(function () {
-            table.tablePackChanged = false; // 允许自动生成 table-pack
-            table.tablePackTip();
+        },
+        openFile: function (pathValue, nameValue) {
+            if (!project._loaded) {
+                $.messager.show({
+                    title: 'Error',
+                    msg: 'Basedir not exists.'
+                });
 
-            db.conn(table.listNames, function () {
-                table.reset();
-                table.emptyTables();
-                table.change();
+                return;
+            }
+            var basedir = project.basedir;
+
+            // var _this = this;
+
+            // var pPath = project.pPath().val();
+            // if (!pPath) {
+            //     $.messager.show({
+            //         title: 'Error',
+            //         msg: 'Please select project.'
+            //     });
+            //     return;
+            // }
+
+            if (!pathValue)
+                pathValue = '';
+            if (!nameValue)
+                nameValue = '';
+
+            var url = 'generator-api/project/openFile';
+            nqcxPost(url, {
+                basedir: basedir,
+                // pPath: pPath,
+                path: pathValue,
+                name: nameValue
+            }, function (result) {
+                var relativePathPath = '/';
+                var relativePathName = '';
+                var cgFileListValue = [];
+                if (result.success) {
+                    if (result.object) {
+                        relativePathPath = result.object.path;
+                        relativePathName = result.object.name;
+                    }
+                    if (result.object.cgFileList)
+                        cgFileListValue = result.object.cgFileList;
+                }
+                path.setRelativePath(relativePathPath + relativePathName);
+                path.loadCgFile(relativePathPath, cgFileListValue);
             });
-        });
-
-        $('#loadTables').click(function () {
-            db.conn(table.listNames, function () {
-                table.reset();
-                table.emptyTables();
-                table.change();
-            });
-        });
-        // end of Connect...
-
-        // table
-        table.tableName().change(function () {
-            table.change();
-        });
-        table.tablePack().change(function () {
-            // child
-            if (project.module.change)
-                project.module.change();
-        });
-        table.tablePack().keyup(function () {
-            table.tablePackChanged = true; // 手动变更，不允许自动生成 table-pack
-            table.tablePackTip();
-            // child
-            if (project.module.change)
-                project.module.change();
-        });
-        table.colPrefix().keyup(function () {
-            if (table.colPrefixChange)
-                table.colPrefixChange();
-        });
-        // end of table
-
-        // project
-        project.authorElement().keyup(function (event) {
-            project.authorChanged = true;
-            project.authorChangedTip();
-
-            project.saveAuthor($(this).val());
-        });
-        project.reloadProjectBtn().click(function (event) {
-            project._init();
-        });
-        project.basedirElement().keyup(function (event) {
-            var basedir = $(this).val();
-
-            project.basedirChanged = false;
-            if (basedir !== project.basedir)
-                project.basedirChanged = true;
-            project.basedirChangedTip();
-
-            project.changeBasedir(basedir, function (basedir) {
-                project._load(basedir);
-            }, function (basedir) {
-                project._clear();
-            });
-
-
-            // project.pPackageChanged = false;
-            // project.pPackageTip();
-
-            // // child
-            // if (project.module.change)
-            //     project.module.change();
-
-        }); // end of project
-
-        // // project
-        // project.pName().change(function () {
-        //     project.change(function () {
-        //         // child
-        //         if (project.module.change)
-        //             project.module.change();
-        //     });
-        // });
-        // project.pType().change(function () {
-        //     project.change(function () {
-        //         // child
-        //         if (project.module.change)
-        //             project.module.change();
-        //     });
-        // });
-        // project.pPackage().change(function () {
-        //     // child
-        // });
-        project.pPackageWatchers.push(function () {
-            if (project.module.change)
-                project.module.change();
-        });
-        project.pPackage().keyup(function (e) {
-            project.pPackageChanged = true; // 手动变更，不允许自动生成 pPackage
-            project.pPackageTip();
-
-            if (project.module.change)
-                project.module.change();
-        });
-        // end of project
-
-        path.relativePath().keydown(function (e) {
-            path.enterKeyDown(e);
-        });
-    });
+        },
+        loadCgFile: function (pathValue, cgFileList) {
+            var cgFileHtml = '';
+            if (pathValue)
+                cgFileHtml += '<li><a href="javascript:void(0);" onclick="path.openFile(\'' + pathValue + '\',\'\');">..</a></li>';
+            for (var idx in cgFileList) {
+                if (cgFileList[idx].file)
+                    cgFileHtml += '<li>' + cgFileList[idx].name + '</li>';
+                else
+                    cgFileHtml += '<li><a href="javascript:void(0);" onclick="path.openFile(\'' + cgFileList[idx].path + '\',\'' + cgFileList[idx].name + '\');">' + cgFileList[idx].name + '</a></li>';
+            }
+            this.fileShow().html(cgFileHtml);
+        }
+    }; // end of path
 </script>
+<script type="text/javascript">
+    // var center = {
+    //     o: function () {
+    //         return $('div#center');
+    //     },
+    //     load: function () {
+    //
+    //     },
+    //     clear: function () {
+    //     }
+    // }; // end of center
+</script>
+
+
 <script type="text/javascript">
     var button = {
         loadCenter: function () {
@@ -1837,6 +1520,149 @@
 
     $('#generate_btn').unbind('click').click(function () {
         generate();
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        // 初始化 db 相关值
+        db._init();
+        // 初始化 table 相关
+        table.reset();
+        // 初始化 ws 相关
+        project._init();
+
+        // project.changeBasedir(function (wsdata) {
+        //     project.loadProjects(wsdata);
+        // }, function () {
+        //     project.emptyProjects();
+        //     project._clear();
+        // });
+
+        // Connect db and load table
+        $('.connectDB').keyup(function (event) {
+            if ((event.keyCode || event.which) === 13) {
+                event.preventDefault();
+
+                table.tablePackChanged = false; // 允许自动生成 table-pack
+                table.tablePackTip();
+
+                db.conn(table.listNames, function () {
+                    table.reset();
+                    table.emptyTables();
+                    table.change();
+                });
+            }
+        });
+        $('#connectDB').click(function () {
+            table.tablePackChanged = false; // 允许自动生成 table-pack
+            table.tablePackTip();
+
+            db.conn(table.listNames, function () {
+                table.reset();
+                table.emptyTables();
+                table.change();
+            });
+        });
+
+        $('#loadTables').click(function () {
+            db.conn(table.listNames, function () {
+                table.reset();
+                table.emptyTables();
+                table.change();
+            });
+        });
+        // end of Connect...
+
+        // table
+        table.tableName().change(function () {
+            table.change();
+        });
+        table.tablePack().change(function () {
+            // child
+            if (project.module.change)
+                project.module.change();
+        });
+        table.tablePack().keyup(function () {
+            table.tablePackChanged = true; // 手动变更，不允许自动生成 table-pack
+            table.tablePackTip();
+            // child
+            if (project.module.change)
+                project.module.change();
+        });
+        table.colPrefix().keyup(function () {
+            if (table.colPrefixChange)
+                table.colPrefixChange();
+        });
+        // end of table
+
+        // project
+        project.authorElement().keyup(function (event) {
+            project.authorChanged = true;
+            project.authorChangedTip();
+
+            project.saveAuthor($(this).val());
+        });
+        project.reloadProjectBtn().click(function (event) {
+            project._init();
+        });
+        project.basedirElement().keyup(function (event) {
+            var basedir = $(this).val();
+
+            project.basedirChanged = false;
+            if (basedir !== project.basedir)
+                project.basedirChanged = true;
+            project.basedirChangedTip();
+
+            project.changeBasedir(basedir, function (basedir) {
+                project._load(basedir);
+            }, function (basedir) {
+                project._clear();
+            });
+
+
+            // project.pPackageChanged = false;
+            // project.pPackageTip();
+
+            // // child
+            // if (project.module.change)
+            //     project.module.change();
+
+        }); // end of project
+
+        // // project
+        // project.pName().change(function () {
+        //     project.change(function () {
+        //         // child
+        //         if (project.module.change)
+        //             project.module.change();
+        //     });
+        // });
+        // project.pType().change(function () {
+        //     project.change(function () {
+        //         // child
+        //         if (project.module.change)
+        //             project.module.change();
+        //     });
+        // });
+        // project.pPackage().change(function () {
+        //     // child
+        // });
+        project.pPackageWatchers.push(function () {
+            if (project.module.change)
+                project.module.change();
+        });
+        project.pPackage().keyup(function (e) {
+            project.pPackageChanged = true; // 手动变更，不允许自动生成 pPackage
+            project.pPackageTip();
+
+            if (project.module.change)
+                project.module.change();
+        });
+        // end of project
+
+        path.relativePath().keydown(function (e) {
+            path.enterKeyDown(e);
+        });
     });
 </script>
 <script type="text/javascript">
