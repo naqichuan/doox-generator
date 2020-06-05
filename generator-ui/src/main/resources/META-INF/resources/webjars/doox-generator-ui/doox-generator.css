@@ -58,7 +58,7 @@ input[type="text"].waring {
     background-color: #FFFF00;
 }
 
-input[type="text"].error {
+tr.error, input[type="text"].error {
     background-color: #FF8888;
 }
 

@@ -19,21 +19,21 @@
 <div data-options="region:'north',split:true" style="height:75px;padding:5px 5px 0;overflow:hidden;">
     <form id="connForm" method="post" action="session">
         <table border="0" cellpadding="0" cellspacing="0">
-            <tr height="30px">
-                <td class="lable">jdbc:mysql://</td>
-                <td><input type="text" class="connectDB big_200" name="jdbcUrl" value=""></td>
+            <tr height="30px" id="connbg">
+                <td>
+                    <input id="connectDB" type="button" value=">> Connect DB >>"/>
+                    jdbc:mysql://<input type="text" class="connectDB big_200" name="jdbcUrl" value="">
+                </td>
                 <td class="lable">User:</td>
                 <td><input type="text" class="connectDB" name="jdbcUser" value=""/></td>
                 <td class="lable">Password:</td>
-                <td><input type="password" class="connectDB small" name="jdbcPassword" value="" autocomplete="off"/>
-                </td>
-                <td class="lable">
-                    <input id="connectDB" type="button" value="Connect DB"/>
+                <td>
+                    <input type="password" class="connectDB small" name="jdbcPassword" value="" autocomplete="off"/>
                 </td>
             </tr>
             <tr height="30px">
-                <td colspan="2">
-                    <input id="loadTables" type="button" value=">>Load tables>>"/>
+                <td>
+                    <input id="loadTables" type="button" value=">> Load tables >>"/>
                     <select name="tableName" t-data="">
                         <option value="">Select Table</option>
                     </select>
@@ -42,9 +42,9 @@
                 <td><input type="text" name="colPrefix" value="" t-data="t_,"/></td>
                 <td class="lable">Table-pack:</td>
                 <td><input type="text" name="tablePack" value="" t-data=""/></td>
-                <td class="lable">
-                    <input id="loadCenter" type="button" value="Load Center"/>
-                </td>
+                <!--<td class="lable">-->
+                <!--<input id="loadCenter" type="button" value="Load Center"/>-->
+                <!--</td>-->
             </tr>
         </table>
     </form>
@@ -385,6 +385,9 @@
 <script type="text/javascript" src="webjars/doox-generator-ui/doox-generator.js?v=1.2.0"></script>
 <script type="text/javascript">
     var db = {
+        connbg: function () {
+            return $('#connbg');
+        },
         jdbcUrl: function () {
             return $('input[name="jdbcUrl"]');
         },
@@ -409,34 +412,56 @@
                 }
             });
         },
-        _reset: function () {
-            this._init();
+        connChanged: false,
+        connChangedTip: function () {
+            if (this.connChanged)
+                this.connbg().addClass("error");
+            else
+                this.connbg().removeClass("error");
         },
-        conn: function (callBack, errorCallBack) {
+        conned: false,
+        connWatchers: [],
+        conn: function (callBack) {
+            this.connChanged = true;
+            this.connChangedTip();
+
+            conned = false;
+
+            var _this = this;
             $('#connForm').form('nqcxSubmit', {
                 url: "generator-api/connection/connect",
                 dataType: 'json',
                 onSubmit: function () {
                     return $(this).form('validate');
                 },
-                success: function (result) {
-                    if (result.success) {
+                success: function (response) {
+                    if (response && response.success) {
+                        _this.connChanged = false;
+                        _this.connChangedTip();
+
+                        conned = true;
+
                         if (callBack)
                             callBack();
                     } else {
-                        if (errorCallBack)
-                            errorCallBack();
-
                         $.messager.show({
                             title: 'Error',
-                            msg: result.errorText
+                            msg: response.errorText || 'error'
                         });
                     }
+
+                    _this.connWatchers.forEach((item) => {
+                        item();
+                    });
                 },
                 error: function () {
                     $.messager.show({
                         title: 'Error',
                         msg: 'Connect db fail! Please try again later.'
+                    });
+
+                    _this.connWatchers.forEach((item) => {
+                        item();
                     });
                 }
             });
@@ -446,6 +471,38 @@
     // 注册重连方法
     nqcxPost.retryConnect = db.conn;
     nqcxGet.retryConnect = db.conn;
+
+    // Connect db and load table
+    $('.connectDB').keyup(function (event) {
+        db.connChanged = true;
+        db.connChangedTip();
+
+        if ((event.keyCode || event.which) === 13) {
+            event.preventDefault();
+
+        // table.tablePackChanged = false; // 允许自动生成 table-pack
+        // table.tablePackTip();
+        //
+        // db.conn(table.listNames, function () {
+        //     table._init();
+        //     table.emptyTables();
+        //     table.change();
+        // });
+
+            db.conn();
+        }
+    });
+    $('#connectDB').click(function () {
+        // table.tablePackChanged = false; // 允许自动生成 table-pack
+        // table.tablePackTip();
+        //
+        // db.conn(table.listNames, function () {
+        //     table._init();
+        //     table.emptyTables();
+        //     table.change();
+        // });
+        db.conn();
+    });
 
     // table
     var table = {
@@ -466,7 +523,7 @@
                 this.tablePack().removeClass("waring");
             }
         },
-        reset: function () {
+        _init: function () {
             this.tableName().val(this.tableName().attr('t-data'));
             this.colPrefix().val(this.colPrefix().attr('t-data'));
             this.tablePack().val(this.tablePack().attr('t-data'));
@@ -519,7 +576,7 @@
             }
 
             if (!tableNameValue) {
-                table.reset();
+                table._init();
             } else {
                 this.tableName().val(tableNameValue);
                 if (!this.colPrefix().val())
@@ -1035,9 +1092,9 @@
 
 <script type="text/javascript">
     var button = {
-        loadCenter: function () {
-            return $('#loadCenter');
-        },
+        // loadCenter: function () {
+        //     return $('#loadCenter');
+        // },
         checkForm: function () {
             if (!ws.wsPathExists || !ws.wsPath().val()) {
                 $.messager.show({
@@ -1071,9 +1128,9 @@
         }
     };
 
-    button.loadCenter().click(function () {
-        table.change();
-    });
+    // button.loadCenter().click(function () {
+    //     table.change();
+    // });
 </script>
 <script type="text/javascript">
     var tableInfo = {
@@ -1540,46 +1597,14 @@
         // 初始化 db 相关值
         db._init();
         // 初始化 table 相关
-        table.reset();
+        table._init();
         // 初始化 ws 相关
         project._init();
 
-        // project.changeBasedir(function (wsdata) {
-        //     project.loadProjects(wsdata);
-        // }, function () {
-        //     project.emptyProjects();
-        //     project._clear();
-        // });
-
-        // Connect db and load table
-        $('.connectDB').keyup(function (event) {
-            if ((event.keyCode || event.which) === 13) {
-                event.preventDefault();
-
-                table.tablePackChanged = false; // 允许自动生成 table-pack
-                table.tablePackTip();
-
-                db.conn(table.listNames, function () {
-                    table.reset();
-                    table.emptyTables();
-                    table.change();
-                });
-            }
-        });
-        $('#connectDB').click(function () {
-            table.tablePackChanged = false; // 允许自动生成 table-pack
-            table.tablePackTip();
-
-            db.conn(table.listNames, function () {
-                table.reset();
-                table.emptyTables();
-                table.change();
-            });
-        });
 
         $('#loadTables').click(function () {
             db.conn(table.listNames, function () {
-                table.reset();
+                table._init();
                 table.emptyTables();
                 table.change();
             });
