@@ -19,7 +19,7 @@ import java.io.Serializable;
 public class Generate implements Serializable {
 
     // project field
-    private String basedir;
+    private String wsPath;
     private String author;
     private String pName;
     private String pPath;
@@ -174,11 +174,11 @@ public class Generate implements Serializable {
     }
 
     public String getBasedir() {
-        return basedir;
+        return wsPath;
     }
 
     public void setBasedir(String basedir) {
-        this.basedir = basedir;
+        this.wsPath = basedir;
     }
 
     public String getAuthor() {
