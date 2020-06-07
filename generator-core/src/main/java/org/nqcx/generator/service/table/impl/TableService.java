@@ -28,7 +28,7 @@ import java.util.List;
  * @author naqichuan Feb 8, 2014 10:48:07 AM
  */
 @Service
-public class TableServiceImpl implements ITableService {
+public class TableService implements ITableService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

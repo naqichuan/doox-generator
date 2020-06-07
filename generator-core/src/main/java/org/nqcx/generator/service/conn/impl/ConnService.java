@@ -24,10 +24,10 @@ import java.sql.Statement;
 /**
  * @author naqichuan Feb 7, 2014 10:58:42 PM
  */
-@Service("connService")
-public class ConnServiceImpl implements IConnService {
+@Service
+public class ConnService implements IConnService {
 
-    private final static Logger logger = LoggerFactory.getLogger(ConnServiceImpl.class);
+    private final static Logger logger = LoggerFactory.getLogger(ConnService.class);
 
     private volatile String initString = "";
     private DruidDataSource dataSource = null;

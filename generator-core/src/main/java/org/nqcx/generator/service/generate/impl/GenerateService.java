@@ -41,7 +41,7 @@ import static org.nqcx.doox.commons.util.date.DateFormatUtils.TIME;
  * @author naqichuan Feb 9, 2014 2:18:27 AM
  */
 @Service
-public class GenerateServiceImpl implements IGenerateService {
+public class GenerateService implements IGenerateService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -132,7 +132,7 @@ public class GenerateServiceImpl implements IGenerateService {
     }
 
     @Autowired
-    public GenerateServiceImpl(@Qualifier("overwrite") Boolean overwrite, ITableService tableService) {
+    public GenerateService(@Qualifier("overwrite") Boolean overwrite, ITableService tableService) {
         this.overwrite = overwrite;
         this.tableService = tableService;
     }
