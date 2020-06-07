@@ -12,10 +12,10 @@ import org.nqcx.doox.commons.web.cookie.CookieUtils;
 import org.nqcx.doox.commons.web.cookie.NqcxCookie;
 import org.nqcx.doox.commons.web.interceptor.WebContextInterceptor;
 import org.nqcx.doox.commons.web.values.NqcxValues;
-import org.nqcx.generator.web.WebInformation;
 import org.nqcx.generator.web.interceptor.AppContextInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.*;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
@@ -46,6 +46,16 @@ public class WebConfig implements WebMvcConfigurer {
         return new UrlBuilder("//$baseUrl$");
     }
 
+    // ========================================================================
+    @Bean("messageSource")
+    public ResourceBundleMessageSource initMessageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+
+        messageSource.setUseCodeAsDefaultMessage(false);
+        messageSource.setBasenames("gmsg.gmsg", "0000_CG");
+
+        return messageSource;
+    }
     // ========================================================================
 
     private String jdbcCookie = "jdbcCookie";
