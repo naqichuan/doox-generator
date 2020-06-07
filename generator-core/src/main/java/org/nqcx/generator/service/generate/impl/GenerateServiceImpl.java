@@ -15,8 +15,8 @@ import org.nqcx.generator.provide.o.CgField;
 import org.nqcx.generator.provide.o.Generate;
 import org.nqcx.generator.provide.o.table.Column;
 import org.nqcx.generator.provide.o.table.Table;
-import org.nqcx.generator.service.generate.GenerateService;
-import org.nqcx.generator.service.table.TableService;
+import org.nqcx.generator.service.generate.IGenerateService;
+import org.nqcx.generator.service.table.ITableService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ import static org.nqcx.doox.commons.util.date.DateFormatUtils.TIME;
  * @author naqichuan Feb 9, 2014 2:18:27 AM
  */
 @Service
-public class GenerateServiceImpl implements GenerateService {
+public class GenerateServiceImpl implements IGenerateService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -73,7 +73,7 @@ public class GenerateServiceImpl implements GenerateService {
     private final static String CACHESUPPORT_TXT_TEMPLATE_NAME = "cachesupport.txt";
 
     private final Boolean overwrite; // 生成文件是否覆盖原来的文件
-    private final TableService tableService;
+    private final ITableService tableService;
 
     static {
         CLASS_MAPPING.put("Serializable", "java.io.Serializable");
@@ -132,7 +132,7 @@ public class GenerateServiceImpl implements GenerateService {
     }
 
     @Autowired
-    public GenerateServiceImpl(@Qualifier("overwrite") Boolean overwrite, TableService tableService) {
+    public GenerateServiceImpl(@Qualifier("overwrite") Boolean overwrite, ITableService tableService) {
         this.overwrite = overwrite;
         this.tableService = tableService;
     }

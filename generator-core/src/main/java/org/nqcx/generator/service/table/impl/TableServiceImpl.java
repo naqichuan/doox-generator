@@ -12,8 +12,8 @@ import org.nqcx.doox.commons.lang.o.DTO;
 import org.nqcx.generator.provide.o.table.Column;
 import org.nqcx.generator.provide.o.table.Table;
 import org.nqcx.generator.service.conn.CgResult;
-import org.nqcx.generator.service.conn.ConnService;
-import org.nqcx.generator.service.table.TableService;
+import org.nqcx.generator.service.conn.IConnService;
+import org.nqcx.generator.service.table.ITableService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +28,12 @@ import java.util.List;
  * @author naqichuan Feb 8, 2014 10:48:07 AM
  */
 @Service
-public class TableServiceImpl implements TableService {
+public class TableServiceImpl implements ITableService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private ConnService connService;
+    private IConnService connService;
 
     @Override
     public DTO listTables() {

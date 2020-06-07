@@ -14,7 +14,7 @@ import org.nqcx.generator.provide.o.Generate;
 /**
  * @author naqichuan Feb 9, 2014 2:21:48 AM
  */
-public interface GenerateService {
+public interface IGenerateService {
 
     /**
      * @param generate

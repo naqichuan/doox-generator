@@ -11,7 +11,7 @@ package org.nqcx.generator.web.api.connection;
 import org.nqcx.doox.commons.lang.o.DTO;
 import org.nqcx.doox.commons.web.cookie.CookieUtils;
 import org.nqcx.doox.commons.web.cookie.NqcxCookie;
-import org.nqcx.generator.service.conn.ConnService;
+import org.nqcx.generator.service.conn.IConnService;
 import org.nqcx.generator.web.controller.AbstractController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -33,7 +33,7 @@ import java.util.Map;
 public class ConnectionController extends AbstractController {
 
     @Autowired
-    private ConnService connService;
+    private IConnService connService;
     @Autowired
     @Qualifier("jdbcCookie")
     private NqcxCookie jdbcCookie;

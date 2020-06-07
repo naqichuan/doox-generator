@@ -11,7 +11,7 @@ package org.nqcx.generator.web.api.generate;
 import org.nqcx.doox.commons.util.orika.Orika;
 import org.nqcx.generator.data.vo.GenerateVO;
 import org.nqcx.generator.provide.o.Generate;
-import org.nqcx.generator.service.generate.GenerateService;
+import org.nqcx.generator.service.generate.IGenerateService;
 import org.nqcx.generator.web.controller.AbstractController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,7 +31,7 @@ import java.util.Map;
 public class GenerateController extends AbstractController {
 
     @Autowired
-    private GenerateService generateService;
+    private IGenerateService generateService;
 
     @InitBinder
     @Override

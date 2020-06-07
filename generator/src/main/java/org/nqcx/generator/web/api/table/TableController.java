@@ -8,7 +8,7 @@
 
 package org.nqcx.generator.web.api.table;
 
-import org.nqcx.generator.service.table.TableService;
+import org.nqcx.generator.service.table.ITableService;
 import org.nqcx.generator.web.controller.AbstractController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,7 +27,7 @@ import java.util.Map;
 public class TableController extends AbstractController {
 
     @Autowired
-    private TableService tableService;
+    private ITableService tableService;
 
     @RequestMapping(value = "/list", method = {RequestMethod.GET,
             RequestMethod.POST}, produces = "application/json")

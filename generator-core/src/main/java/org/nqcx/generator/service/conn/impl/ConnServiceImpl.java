@@ -10,7 +10,7 @@ package org.nqcx.generator.service.conn.impl;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import org.nqcx.generator.service.conn.CgResult;
-import org.nqcx.generator.service.conn.ConnService;
+import org.nqcx.generator.service.conn.IConnService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ import java.sql.Statement;
  * @author naqichuan Feb 7, 2014 10:58:42 PM
  */
 @Service("connService")
-public class ConnServiceImpl implements ConnService {
+public class ConnServiceImpl implements IConnService {
 
     private final static Logger logger = LoggerFactory.getLogger(ConnServiceImpl.class);
 

@@ -14,7 +14,7 @@ import java.sql.Connection;
 /**
  * @author naqichuan Feb 7, 2014 10:53:49 PM
  */
-public interface ConnService {
+public interface IConnService {
 
     /**
      * @param jdbcUrl

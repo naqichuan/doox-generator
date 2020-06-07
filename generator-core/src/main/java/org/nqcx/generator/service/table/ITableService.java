@@ -13,7 +13,7 @@ import org.nqcx.doox.commons.lang.o.DTO;
 /**
  * @author naqichuan Feb 8, 2014 10:47:21 AM
  */
-public interface TableService {
+public interface ITableService {
 
     /***
      *
