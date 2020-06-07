@@ -1608,13 +1608,13 @@
 </script>
 <script type="text/javascript">
     var checkForm = function () {
-        if (!ws.wsPathExists || !ws.wsPath().val()) {
+        if (!project.basedirExists || !project.basedir().val()) {
             $.messager.show({
                 title: 'Error',
                 msg: 'WS not exists.'
             });
             return false;
-        } else if (!ws.author().val()) {
+        } else if (!project.author().val()) {
             $.messager.show({
                 title: 'Error',
                 msg: 'Please input author.'
@@ -1637,7 +1637,7 @@
             return false;
         }
         return true;
-    }
+    };
 
     var generate = function () {
         $('#generate_form').form('nqcxSubmit', {
@@ -1650,8 +1650,8 @@
             addDatas: {
                 tableName: table.tableName().val(),
                 tablePack: table.tablePack().val(),
-                author: ws.author().val(),
-                wsPath: ws.wsPath().val(),
+                author: project.author().val(),
+                basedir: project.basedir().val(),
                 pName: project.pName().val(),
                 pPath: project.pPath().val(),
                 pPackage: project.pPackage().val(),
@@ -1687,7 +1687,7 @@
         db._init();
         // 初始化 table 相关
         table._init();
-        // 初始化 ws 相关
+        // 初始化 project 相关
         project._init();
     });
 </script>
