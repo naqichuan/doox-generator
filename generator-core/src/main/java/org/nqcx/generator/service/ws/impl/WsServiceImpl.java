@@ -22,11 +22,11 @@ import java.io.File;
 public class WsServiceImpl implements WsService {
 
     @Override
-    public Ws getWs(String wsPath, boolean needProject) {
-        Ws ws = new Ws(wsPath);
+    public Ws getWs(String basedir, boolean needProject) {
+        Ws ws = new Ws(basedir);
 
         File file;
-        if (wsPath == null
+        if (basedir == null
                 || !(file = new File(ws.getPath())).exists()
                 || !file.isDirectory())
             return ws;
@@ -34,7 +34,7 @@ public class WsServiceImpl implements WsService {
         ws.setExists(true);
 
         if (needProject)
-            ws.setCgFileList(CgFileUtils.getCgFile(wsPath, "", "",
+            ws.setCgFileList(CgFileUtils.getCgFile(basedir, "", "",
                     false).getCgFileList());
         return ws;
     }

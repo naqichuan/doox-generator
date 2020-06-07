@@ -40,11 +40,4 @@ public interface IProjectService {
      * @author naqichuan Mar 2, 2014 7:33:13 PM
      */
     DTO openFile(String basedir, String path, String name);
-
-//    /**
-//     * @param wsPath      wsPath
-//     * @param projectPath projectPath
-//     * @return dto
-//     */
-//    DTO groupId(String wsPath, String projectPath);
 }

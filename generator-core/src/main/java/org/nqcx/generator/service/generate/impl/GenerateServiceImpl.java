@@ -148,7 +148,7 @@ public class GenerateServiceImpl implements GenerateService {
         if (g == null)
             return new DTO(false).putResult("100", "生成代码失败！");
 
-        if (!pathExist(g.getWsPath() + g.getpPath()))
+        if (!pathExist(g.getBasedir() + g.getpPath()))
             return new DTO(false).putResult("101", "工程路径不存在");
 
         // 取表
@@ -191,7 +191,7 @@ public class GenerateServiceImpl implements GenerateService {
             return false;
 
         // 日志
-        g.setLogFile(new File(g.getWsPath() + g.getpPath() + "/cglog.log"));
+        g.setLogFile(new File(g.getBasedir() + g.getpPath() + "/cglog.log"));
 
         // module path
         this.modulePath(g);
@@ -408,7 +408,7 @@ public class GenerateServiceImpl implements GenerateService {
      * @param g g
      */
     private void modulePath(Generate g) {
-        String path = g.getWsPath() + g.getpPath();
+        String path = g.getBasedir() + g.getpPath();
 
         g.setProvideModuleFile(new File(path + g.getProvideModule()));
         g.setDaoModuleFile(new File(path + g.getDaoModule()));

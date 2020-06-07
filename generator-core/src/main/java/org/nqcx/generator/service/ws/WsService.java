@@ -16,9 +16,9 @@ import org.nqcx.generator.provide.o.ws.Ws;
 public interface WsService {
 
     /**
-     * @param wsPath
+     * @param basedir
      * @param needProject
      * @return
      */
-    Ws getWs(String wsPath, boolean needProject);
+    Ws getWs(String basedir, boolean needProject);
 }
