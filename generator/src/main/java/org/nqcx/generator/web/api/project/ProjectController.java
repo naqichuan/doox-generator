@@ -160,7 +160,6 @@ public class ProjectController extends AbstractController {
         return buildResult(new DTO(true).setObject(author));
     }
 
-
     /**
      * @param basedir
      * @param path
@@ -176,13 +175,4 @@ public class ProjectController extends AbstractController {
             @RequestParam(value = "name", required = false, defaultValue = "") String name) {
         return buildResult(projectService.openFile(basedir, path, name));
     }
-
-//    @RequestMapping(value = "/groupId", method = {RequestMethod.GET,
-//            RequestMethod.POST}, produces = "application/json")
-//    @ResponseBody
-//    public Map<?, ?> groupId(
-//            @RequestParam(value = "wsPath") String wsPath,
-//            @RequestParam(value = "pPath", required = false, defaultValue = "") String pPath) {
-//        return buildResult(projectService.groupId(wsPath, pPath));
-//    }
 }

@@ -222,33 +222,4 @@ public class ProjectService implements IProjectService {
 
         return dto.setSuccess(true);
     }
-
-//    @Override
-//    public DTO groupId(String wsPath, String projectPath) {
-//        CgFile cgPom = new CgFile(wsPath + projectPath, "pom.xml", true);
-//
-//        File pomFile = new File(cgPom.getFullPath());
-//        if (pomFile.exists() && pomFile.isFile()) {
-//            try {
-//                DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-//                Document document = db.parse(pomFile);
-//
-//                XPathFactory factory = XPathFactory.newInstance();
-//                XPath xpath = factory.newXPath();
-//                XPathExpression expr = xpath.compile("/project/groupId");
-//                NodeList nodeList = (NodeList) expr.evaluate(document, XPathConstants.NODE);
-//                if (nodeList == null) {
-//                    expr = xpath.compile("/project/parent/groupId");
-//                    nodeList = (NodeList) expr.evaluate(document, XPathConstants.NODE);
-//                }
-//
-//                if (nodeList instanceof DeferredElementImpl)
-//                    return new DTO(true).setObject(((DeferredElementImpl) nodeList).getTextContent());
-//            } catch (Exception e) {
-//                LOGGER.error("", e);
-//            }
-//        }
-//
-//        return new DTO(true);
-//    }
 }

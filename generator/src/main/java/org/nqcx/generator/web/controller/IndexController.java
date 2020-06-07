@@ -8,11 +8,6 @@
 
 package org.nqcx.generator.web.controller;
 
-import org.nqcx.doox.commons.web.cookie.CookieUtils;
-import org.nqcx.doox.commons.web.cookie.NqcxCookie;
-import org.nqcx.generator.service.ws.WsService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
