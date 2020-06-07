@@ -148,7 +148,7 @@ public class GenerateService implements IGenerateService {
         if (g == null)
             return new DTO(false).putResult("100", "生成代码失败！");
 
-        if (!pathExist(g.getBasedir() + g.getpPath()))
+        if (!pathExist(g.getpPath()))
             return new DTO(false).putResult("101", "工程路径不存在");
 
         // 取表
@@ -191,7 +191,7 @@ public class GenerateService implements IGenerateService {
             return false;
 
         // 日志
-        g.setLogFile(new File(g.getBasedir() + g.getpPath() + "/cglog.log"));
+        g.setLogFile(new File(g.getpPath() + "/cglog.log"));
 
         // module path
         this.modulePath(g);
@@ -248,7 +248,7 @@ public class GenerateService implements IGenerateService {
             }
 
 
-            if (StringUtils.equalsAnyIgnoreCase(c.getField() , "ID"))
+            if (StringUtils.equalsAnyIgnoreCase(c.getField(), "ID"))
                 idFieldName = c.getField();
 
             if ("PRI".equalsIgnoreCase(c.getKey()) && StringUtils.containsIgnoreCase(c.getField(), "ID")) {
@@ -276,10 +276,10 @@ public class GenerateService implements IGenerateService {
         }
 
         // 检查是否有 id 字段，如果没有，检查是否 field 为 id 的字段，如果有设置为 id
-        if(!hasId) {
+        if (!hasId) {
             String finalIdFieldName = idFieldName;
             table.getColumns().forEach(col -> {
-                if(StringUtils.equals(finalIdFieldName, col.getField())) {
+                if (StringUtils.equals(finalIdFieldName, col.getField())) {
                     col.setId_(true);
                     col.setIdType_("Long");
                     col.setMybatisValue("NULL");
@@ -408,7 +408,7 @@ public class GenerateService implements IGenerateService {
      * @param g g
      */
     private void modulePath(Generate g) {
-        String path = g.getBasedir() + g.getpPath();
+        String path = g.getpPath();
 
         g.setProvideModuleFile(new File(path + g.getProvideModule()));
         g.setDaoModuleFile(new File(path + g.getDaoModule()));
