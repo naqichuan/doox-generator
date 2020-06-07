@@ -1106,7 +1106,7 @@
                 this.info().append(colstr);
             }
         },
-        projectInit: function () {
+        _init: function () {
             this.loadTable()
         },
         loadTable: function () {
@@ -1202,14 +1202,16 @@
     };
 
     // 注册事件
-    table.colPrefixWatchers.push(function () {
-        tableInfo.loadTable();
-    });
+    table.tableNameWatchers.push(() => tableInfo._init());
+    table.colPrefixWatchers.push(() => tableInfo.loadTable());
 </script>
 <script type="text/javascript">
     var provide = {
         _: function () {
             return $('input[name="provide_"]');
+        },
+        provideO_: function () {
+            return $('input[name="provideO_"]');
         },
         provideOPackage: function () {
             return $('input[name="provideOPackage"]');
@@ -1217,14 +1219,28 @@
         provideO: function () {
             return $('input[name="provideO"]');
         },
+        provideProvide_: function () {
+            return $('input[name="provideProvide_"]');
+        },
         provideProvidePackage: function () {
             return $('input[name="provideProvidePackage"]');
         },
         provideProvide: function () {
             return $('input[name="provideProvide"]');
         },
-        projectInit: function () {
-            this.loadPackage();
+        _init: function () {
+            this._().prop("checked", false);
+
+            this.provideO_().prop("checked", false);
+            this.provideOPackage().val('');
+            this.provideO().val('');
+
+            this.provideProvide_().prop("checked", false);
+            this.provideProvidePackage().val('');
+            this.provideProvide().val('');
+        },
+        _reset: function () {
+            this._init();
         },
         loadPackage: function () {
             // project package value
@@ -1233,8 +1249,10 @@
             var tablePack = table.tablePack().val();
 
             var tableName = table.tableName().val();
-            if (!tableName)
+            if (!tableName) {
+                this._reset();
                 return;
+            }
 
             var provideName = tableName.replaceFirstUP();
             var provideO = provideName;
@@ -1256,11 +1274,17 @@
             this.provideProvide().val(provideProvide);
         }
     };
+
+    table.tableNameWatchers.push(() => provide.loadPackage());
+    project.module.changeWatchars.push(() => provide.loadPackage());
 </script>
 <script type="text/javascript">
     var dao = {
         _: function () {
             return $('input[name="dao_"]');
+        },
+        daoPO_: function () {
+            return $('input[name="daoPO_"]');
         },
         poPackage: function () {
             return $('input[name="daoPOPackage"]');
@@ -1268,11 +1292,17 @@
         po: function () {
             return $('input[name="daoPO"]');
         },
+        daoMapper_: function () {
+            return $('input[name="daoMapper_"]');
+        },
         mapperPackage: function () {
             return $('input[name="daoMapperPackage"]');
         },
         mapper: function () {
             return $('input[name="daoMapper"]');
+        },
+        daoJpa_: function () {
+            return $('input[name="daoJpa_"]');
         },
         jpaPackage: function () {
             return $('input[name="daoJpaPackage"]');
@@ -1280,11 +1310,17 @@
         jpa: function () {
             return $('input[name="daoJpa"]');
         },
+        daoCacheSupport_: function () {
+            return $('input[name="daoCacheSupport_"]');
+        },
         daoCacheSupportPackage: function () {
             return $('input[name="daoCacheSupportPackage"]');
         },
         daoCacheSupport: function () {
             return $('input[name="daoCacheSupport"]');
+        },
+        daoDAO_: function () {
+            return $('input[name="daoDAO_"]');
         },
         daoPackage: function () {
             return $('input[name="daoDAOPackage"]');
@@ -1292,11 +1328,17 @@
         dao: function () {
             return $('input[name="daoDAO"]');
         },
+        daoDAOImpl_: function () {
+            return $('input[name="daoDAOImpl_"]');
+        },
         daoImplPackage: function () {
             return $('input[name="daoDAOImplPackage"]');
         },
         daoImpl: function () {
             return $('input[name="daoDAOImpl"]');
+        },
+        daoDAOTest_: function () {
+            return $('input[name="daoDAOTest_"]');
         },
         testPackage: function () {
             return $('input[name="daoDAOTestPackage"]');
@@ -1304,8 +1346,33 @@
         test: function () {
             return $('input[name="daoDAOTest"]');
         },
-        projectInit: function () {
-            this.loadPackage();
+        _init: function () {
+            this._().prop("checked", false);
+
+            this.daoPO_().prop("checked", false);
+            this.poPackage().val('');
+            this.po().val('');
+            this.daoMapper_().prop("checked", false);
+            this.mapperPackage().val('');
+            this.mapper().val('');
+            this.daoJpa_().prop("checked", false);
+            this.jpaPackage().val('');
+            this.jpa().val('');
+            this.daoCacheSupport_().prop("checked", false);
+            this.daoCacheSupportPackage().val('');
+            this.daoCacheSupport().val('');
+            this.daoDAO_().prop("checked", false);
+            this.daoPackage().val('');
+            this.dao().val('');
+            this.daoDAOImpl_().prop("checked", false);
+            this.daoImplPackage().val('');
+            this.daoImpl().val('');
+            this.daoDAOTest_().prop("checked", false);
+            this.testPackage().val('');
+            this.test().val('');
+        },
+        _reset() {
+            this._init();
         },
         loadPackage: function () {
             // project pakcage value
@@ -1314,8 +1381,10 @@
             var tablePack = table.tablePack().val();
 
             var tableName = table.tableName().val();
-            if (!tableName)
+            if (!tableName) {
+                this._reset();
                 return;
+            }
 
             var daoName = tableName.replaceFirstUP();
             var daoPO = daoName + "PO";
@@ -1371,11 +1440,17 @@
             this.test().val(daoTest);
         }
     };
+
+    table.tableNameWatchers.push(() => dao.loadPackage());
+    project.module.changeWatchars.push(() => dao.loadPackage());
 </script>
 <script type="text/javascript">
     var service = {
         _: function () {
             return $('input[name="service_"]');
+        },
+        serviceService_: function () {
+            return $('input[name="serviceService_"]');
         },
         serviceServicePackage: function () {
             return $('input[name="serviceServicePackage"]');
@@ -1383,11 +1458,17 @@
         serviceService: function () {
             return $('input[name="serviceService"]');
         },
+        serviceServiceImpl_: function () {
+            return $('input[name="serviceServiceImpl_"]');
+        },
         serviceImplPackage: function () {
             return $('input[name="serviceServiceImplPackage"]');
         },
         serviceImpl: function () {
             return $('input[name="serviceServiceImpl"]');
+        },
+        serviceServiceTest_: function () {
+            return $('input[name="serviceServiceTest_"]');
         },
         serviceTestPackage: function () {
             return $('input[name="serviceServiceTestPackage"]');
@@ -1395,8 +1476,21 @@
         serviceTest: function () {
             return $('input[name="serviceServiceTest"]');
         },
-        projectInit: function () {
-            this.loadPackage();
+        _init: function () {
+            this._().prop("checked", false);
+
+            this.serviceService_().prop("checked", false);
+            this.serviceServicePackage().val('');
+            this.serviceService().val('');
+            this.serviceServiceImpl_().prop("checked", false);
+            this.serviceImplPackage().val('');
+            this.serviceImpl().val('');
+            this.serviceServiceTest_().prop("checked", false);
+            this.serviceTestPackage().val('');
+            this.serviceTest().val('');
+        },
+        _reset: function () {
+            this._init();
         },
         loadPackage: function () {
             // project pakcage value
@@ -1405,8 +1499,10 @@
             var tablePack = table.tablePack().val();
 
             var tableName = table.tableName().val();
-            if (!tableName)
+            if (!tableName) {
+                this._reset();
                 return;
+            }
 
             var serviceName = tableName.replaceFirstUP();
             var serviceService = 'I' + serviceName + "Service";
@@ -1436,11 +1532,16 @@
         }
     };
 
+    table.tableNameWatchers.push(() => service.loadPackage());
+    project.module.changeWatchars.push(() => service.loadPackage());
 </script>
 <script type="text/javascript">
     var web = {
         _: function () {
             return $('input[name="web_"]');
+        },
+        webVO_: function () {
+            return $('input[name="webVO_"]');
         },
         webVOPackage: function () {
             return $('input[name="webVOPackage"]');
@@ -1448,14 +1549,27 @@
         webVO: function () {
             return $('input[name="webVO"]');
         },
+        webController_: function () {
+            return $('input[name="webController_"]');
+        },
         webControllerPackage: function () {
             return $('input[name="webControllerPackage"]');
         },
         webController: function () {
             return $('input[name="webController"]');
         },
-        projectInit: function () {
-            this.loadPackage();
+        _init: function () {
+            this._().prop("checked", false);
+
+            this.webVO_().prop("checked", false);
+            this.webVOPackage().val('');
+            this.webVO().val('');
+            this.webController_().prop("checked", false);
+            this.webControllerPackage().val('');
+            this.webController().val('');
+        },
+        _reset: function () {
+            this._init();
         },
         loadPackage: function () {
             // project pakcage value
@@ -1464,8 +1578,10 @@
             var tablePack = table.tablePack().val();
 
             var tableName = table.tableName().val();
-            if (!tableName)
+            if (!tableName) {
+                this._reset();
                 return;
+            }
 
             var webName = tableName.replaceFirstUP();
             var webVO = webName + "VO";
@@ -1486,6 +1602,9 @@
             this.webController().val(webController);
         }
     };
+
+    table.tableNameWatchers.push(() => web.loadPackage());
+    project.module.changeWatchars.push(() => web.loadPackage());
 </script>
 <script type="text/javascript">
     var checkForm = function () {
@@ -1563,18 +1682,6 @@
     });
 </script>
 <script type="text/javascript">
-    project.module.changeWatchars.push(() => provide.loadPackage());
-    project.module.changeWatchars.push(() => dao.loadPackage());
-    project.module.changeWatchars.push(() => service.loadPackage());
-    project.module.changeWatchars.push(() => web.loadPackage());
-
-    table.tableNameWatchers.push(() => tableInfo.projectInit());
-    table.tableNameWatchers.push(() => provide.projectInit());
-    table.tableNameWatchers.push(() => dao.projectInit());
-    table.tableNameWatchers.push(() => service.projectInit());
-    table.tableNameWatchers.push(() => web.projectInit());
-</script>
-<script type="text/javascript">
     $(document).ready(function () {
         // 初始化 db 相关值
         db._init();
@@ -1582,7 +1689,6 @@
         table._init();
         // 初始化 ws 相关
         project._init();
-
     });
 </script>
 </body>
