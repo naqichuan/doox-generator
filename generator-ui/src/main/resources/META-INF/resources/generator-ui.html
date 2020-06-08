@@ -46,7 +46,8 @@
         </table>
     </form>
 </div>
-<div data-options="region:'south',split:true" style="height:30px;line-height: 24px;text-align: center;"><span>&copy 2020 By Naqichuan</span></div>
+<div data-options="region:'south',split:true" style="height:30px;line-height: 24px;text-align: center;"><span>&copy 2020 By Naqichuan</span>
+</div>
 <div data-options="region:'west',split:true" style="width:230px;">
     <table border="0" cellpadding="0" cellspacing="0">
         <tr height="30">
@@ -1607,7 +1608,7 @@
         if (!project._loaded || !project.basedirElement().val()) {
             $.messager.show({
                 title: 'Error',
-                msg: 'WS not exists.'
+                msg: 'Basedir not exists.'
             });
             return false;
         } else if (!project.author().val()) {
