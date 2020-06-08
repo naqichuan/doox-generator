@@ -24,11 +24,6 @@
     <dependencies>
         <dependency>
             <groupId>org.nqcx.generator</groupId>
-            <artifactId>generator-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.nqcx.generator</groupId>
             <artifactId>generator</artifactId>
             <version>${project.version}</version>
         </dependency>

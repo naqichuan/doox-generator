@@ -35,7 +35,7 @@ public class CgFileUtils {
 
         String allPath = formatPath(basedir, false, true) + cgFile.getPath()
                 + cgFile.getName();
-        allPath = allPath.replace("\\", "/");
+        allPath = allPath.replace("\\", "/").replace("//", "/");
 
         File file = new File(allPath);
         if (file.exists()) {
@@ -92,7 +92,7 @@ public class CgFileUtils {
             return "";
         String newPath = path.replace("\\", "/");
 
-        while (newPath.indexOf("//") != -1)
+        while (newPath.contains("//"))
             newPath = newPath.replace("//", "/");
 
         if (begin && !newPath.startsWith("/"))

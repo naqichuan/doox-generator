@@ -806,7 +806,7 @@
                     _this._p = response.object;
 
                     //basedir
-                    _this.basedir = _this._p.projectPath;
+                    _this.basedir = _this._p.basedir;
                     // name path type
                     _this.pName().val(_this._p.artifactId || _this._p.baseName);
                     _this.pPath().val(_this._p.projectPath);
@@ -1027,7 +1027,7 @@
 
                 return;
             }
-            var basedir = project.basedir;
+            var basedir = project.basedirElement().val();
 
             if (!pathValue)
                 pathValue = '';
@@ -1604,7 +1604,7 @@
 </script>
 <script type="text/javascript">
     var checkForm = function () {
-        if (!project.basedirExists || !project.basedir().val()) {
+        if (!project._loaded || !project.basedirElement().val()) {
             $.messager.show({
                 title: 'Error',
                 msg: 'WS not exists.'
