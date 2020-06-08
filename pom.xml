@@ -38,7 +38,6 @@
     </scm>
 
     <modules>
-        <module>generator-core</module>
         <module>generator</module>
         <module>generator-ui</module>
         <module>generator-web</module>

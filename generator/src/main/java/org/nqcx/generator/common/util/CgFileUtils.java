@@ -19,21 +19,21 @@ import java.util.Collections;
 public class CgFileUtils {
 
     /**
-     * @param rootPath
+     * @param basedir
      * @param path
      * @param name
      * @param onlyDirectory
      * @return
      * @author naqichuan Mar 2, 2014 12:53:12 AM
      */
-    public static CgFile getCgFile(String rootPath, String path, String name,
+    public static CgFile getCgFile(String basedir, String path, String name,
                                    boolean onlyDirectory) {
 
         CgFile cgFile = new CgFile(path, name, false);
 
         checkPathAndName(cgFile);
 
-        String allPath = formatPath(rootPath, false, true) + cgFile.getPath()
+        String allPath = formatPath(basedir, false, true) + cgFile.getPath()
                 + cgFile.getName();
         allPath = allPath.replace("\\", "/");
 
@@ -62,7 +62,7 @@ public class CgFileUtils {
             }
         } else {
             if (!"/".equals(path) || !"".equals(name)) {
-                cgFile = getCgFile(rootPath, "/", "", onlyDirectory);
+                cgFile = getCgFile(basedir, "/", "", onlyDirectory);
             }
         }
         return cgFile;

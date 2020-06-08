@@ -6,9 +6,9 @@
 
 package org.nqcx.generator.service.project;
 
+import org.nqcx.generator.service.BaseServiceTest;
 import org.junit.jupiter.api.Test;
 import org.nqcx.generator.provide.o.project.Project;
-import org.nqcx.generator.service.BaseServiceTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

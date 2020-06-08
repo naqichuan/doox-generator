@@ -12,8 +12,8 @@
     <link rel="stylesheet" type="text/css" href="webjars/doox-generator-ui/themes/default/easyui.css">
     <link rel="stylesheet" type="text/css" href="webjars/doox-generator-ui/themes/icon.css">
     <link rel="stylesheet" type="text/css" href="webjars/doox-generator-ui/css/demo.css">
-    <link rel="stylesheet" type="text/css" href="webjars/doox-generator-ui/doox.css?v=1.2.0"/>
-    <link rel="stylesheet" type="text/css" href="webjars/doox-generator-ui/doox-generator.css?v=1.2.0"/>
+    <link rel="stylesheet" type="text/css" href="webjars/doox-generator-ui/css/doox.css?v=1.2.0"/>
+    <link rel="stylesheet" type="text/css" href="webjars/doox-generator-ui/css/doox-generator.css?v=1.2.0"/>
 </head>
 <body class="easyui-layout">
 <div data-options="region:'north',split:true" style="height:75px;padding:5px 5px 0;overflow:hidden;">
@@ -46,7 +46,7 @@
         </table>
     </form>
 </div>
-<div data-options="region:'south',split:true" style="height:30px;"></div>
+<div data-options="region:'south',split:true" style="height:30px;line-height: 24px;text-align: center;"><span>&copy 2020 By Naqichuan</span></div>
 <div data-options="region:'west',split:true" style="width:230px;">
     <table border="0" cellpadding="0" cellspacing="0">
         <tr height="30">
@@ -80,9 +80,6 @@
                 Project:
             </td>
             <td>
-                <!--<select name="pName">-->
-                <!--<option value="">Select Project</option>-->
-                <!--</select>-->
                 <input type="text" class="big_140 readonly" name="pName" value="" readonly="true"/>
             </td>
         </tr>
@@ -379,7 +376,7 @@
 <script type="text/javascript" src="webjars/doox-generator-ui/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="webjars/doox-generator-ui/jquery/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="webjars/doox-generator-ui/jquery/jquery.easyui.nqcx.js"></script>
-<script type="text/javascript" src="webjars/doox-generator-ui/doox-generator.js?v=1.2.0"></script>
+<script type="text/javascript" src="webjars/doox-generator-ui/js/doox-generator.js?v=1.2.0"></script>
 <script type="text/javascript">
     var db = {
         connbg: function () {
@@ -663,7 +660,6 @@
         }
     });
 </script>
-
 <script type="text/javascript">
     var project = {
         authorElement: function () {
