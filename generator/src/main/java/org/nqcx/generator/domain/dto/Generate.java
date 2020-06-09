@@ -4,10 +4,10 @@
  * it only in accordance with the terms of the license agreement you entered into with nqcx.org.
  */
 
-package org.nqcx.generator.domain.o;
+package org.nqcx.generator.domain.dto;
 
 import org.nqcx.doox.commons.lang.enums.BoolEO;
-import org.nqcx.generator.domain.o.table.Table;
+import org.nqcx.generator.domain.dto.table.Table;
 import org.nqcx.generator.domain.enums.PType;
 
 import java.io.File;
@@ -44,9 +44,9 @@ public class Generate implements Serializable {
 
     // api field
     private BoolEO api_ = BoolEO.FALSE;
-    private BoolEO apiO_ = BoolEO.FALSE;
-    private String apiOPackage;
-    private String apiO;
+    private BoolEO apiDTO_ = BoolEO.FALSE;
+    private String apiDTOPackage;
+    private String apiDTO;
     private BoolEO apiApi_ = BoolEO.FALSE;
     private String apiApiPackage;
     private String apiApi;
@@ -94,9 +94,9 @@ public class Generate implements Serializable {
 
     // web field
     private BoolEO web_ = BoolEO.FALSE;
-    private BoolEO webVO_ = BoolEO.FALSE;
-    private String webVOPackage;
-    private String webVO;
+    private BoolEO serviceVO_ = BoolEO.FALSE;
+    private String serviceVOPackage;
+    private String serviceVO;
     private BoolEO webController_ = BoolEO.FALSE;
     private String webControllerPackage;
     private String webController;
@@ -113,8 +113,8 @@ public class Generate implements Serializable {
     private String idType;
     private String idName;
 
-    private String apiOReference;
-    private String apiOVeriable;
+    private String apiDTOReference;
+    private String apiDTOVeriable;
     private String apiApiReference;
     private String apiApiVeriable;
 
@@ -141,8 +141,8 @@ public class Generate implements Serializable {
     private String serviceBaseTest;
     private String serviceBaseTestReference;
 
-    private String webVOReference;
-    private String webVOVeriable;
+    private String serviceVOReference;
+    private String serviceVOVeriable;
     private String webControllerReference;
     private String webControllerVeriable;
     private String webAbstractControllerPackage;
@@ -253,20 +253,20 @@ public class Generate implements Serializable {
         this.api_ = api_;
     }
 
-    public BoolEO getApiO_() {
-        return apiO_;
+    public BoolEO getApiDTO_() {
+        return apiDTO_;
     }
 
-    public void setApiO_(BoolEO apiO_) {
-        this.apiO_ = apiO_;
+    public void setApiDTO_(BoolEO apiDTO_) {
+        this.apiDTO_ = apiDTO_;
     }
 
-    public String getApiOPackage() {
-        return apiOPackage;
+    public String getApiDTOPackage() {
+        return apiDTOPackage;
     }
 
-    public void setApiOPackage(String apiOPackage) {
-        this.apiOPackage = apiOPackage;
+    public void setApiDTOPackage(String apiDTOPackage) {
+        this.apiDTOPackage = apiDTOPackage;
     }
 
     public String getApiApiPackage() {
@@ -285,12 +285,12 @@ public class Generate implements Serializable {
         this.apiApi_ = apiApi_;
     }
 
-    public String getApiO() {
-        return apiO;
+    public String getApiDTO() {
+        return apiDTO;
     }
 
-    public void setApiO(String apiO) {
-        this.apiO = apiO;
+    public void setApiDTO(String apiDTO) {
+        this.apiDTO = apiDTO;
     }
 
     public String getApiApi() {
@@ -615,20 +615,20 @@ public class Generate implements Serializable {
         this.web_ = web_;
     }
 
-    public BoolEO getWebVO_() {
-        return webVO_;
+    public BoolEO getServiceVO_() {
+        return serviceVO_;
     }
 
-    public void setWebVO_(BoolEO webVO_) {
-        this.webVO_ = webVO_;
+    public void setServiceVO_(BoolEO serviceVO_) {
+        this.serviceVO_ = serviceVO_;
     }
 
-    public String getWebVOPackage() {
-        return webVOPackage;
+    public String getServiceVOPackage() {
+        return serviceVOPackage;
     }
 
-    public void setWebVOPackage(String webVOPackage) {
-        this.webVOPackage = webVOPackage;
+    public void setServiceVOPackage(String serviceVOPackage) {
+        this.serviceVOPackage = serviceVOPackage;
     }
 
     public String getWebControllerPackage() {
@@ -639,12 +639,12 @@ public class Generate implements Serializable {
         this.webControllerPackage = webControllerPackage;
     }
 
-    public String getWebVO() {
-        return webVO;
+    public String getServiceVO() {
+        return serviceVO;
     }
 
-    public void setWebVO(String webVO) {
-        this.webVO = webVO;
+    public void setServiceVO(String serviceVO) {
+        this.serviceVO = serviceVO;
     }
 
     public BoolEO getWebController_() {
@@ -730,20 +730,20 @@ public class Generate implements Serializable {
         this.idName = idName;
     }
 
-    public String getApiOReference() {
-        return apiOReference;
+    public String getApiDTOReference() {
+        return apiDTOReference;
     }
 
-    public void setApiOReference(String apiOReference) {
-        this.apiOReference = apiOReference;
+    public void setApiDTOReference(String apiDTOReference) {
+        this.apiDTOReference = apiDTOReference;
     }
 
-    public String getApiOVeriable() {
-        return apiOVeriable;
+    public String getApiDTOVeriable() {
+        return apiDTOVeriable;
     }
 
-    public void setApiOVeriable(String apiOVeriable) {
-        this.apiOVeriable = apiOVeriable;
+    public void setApiDTOVeriable(String apiDTOVeriable) {
+        this.apiDTOVeriable = apiDTOVeriable;
     }
 
     public String getApiApiReference() {
@@ -930,20 +930,20 @@ public class Generate implements Serializable {
         this.serviceBaseTestReference = serviceBaseTestReference;
     }
 
-    public String getWebVOReference() {
-        return webVOReference;
+    public String getServiceVOReference() {
+        return serviceVOReference;
     }
 
-    public void setWebVOReference(String webVOReference) {
-        this.webVOReference = webVOReference;
+    public void setServiceVOReference(String serviceVOReference) {
+        this.serviceVOReference = serviceVOReference;
     }
 
-    public String getWebVOVeriable() {
-        return webVOVeriable;
+    public String getServiceVOVeriable() {
+        return serviceVOVeriable;
     }
 
-    public void setWebVOVeriable(String webVOVeriable) {
-        this.webVOVeriable = webVOVeriable;
+    public void setServiceVOVeriable(String serviceVOVeriable) {
+        this.serviceVOVeriable = serviceVOVeriable;
     }
 
     public String getWebControllerReference() {

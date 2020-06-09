@@ -6,7 +6,7 @@
  * into with nqcx.org.
  */
 
-package org.nqcx.generator.domain.o;
+package org.nqcx.generator.domain.dto;
 
 import org.nqcx.generator.common.util.CgFileUtils;
 

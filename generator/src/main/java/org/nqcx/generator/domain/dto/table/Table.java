@@ -6,7 +6,7 @@
  * into with nqcx.org.
  */
 
-package org.nqcx.generator.domain.o.table;
+package org.nqcx.generator.domain.dto.table;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 

@@ -6,7 +6,7 @@
 
 package org.nqcx.generator.domain.vo;
 
-import org.nqcx.generator.domain.o.Generate;
+import org.nqcx.generator.domain.dto.Generate;
 
 /**
  * @author naqichuan 2018/11/27 18:11

@@ -4,7 +4,7 @@
  * it only in accordance with the terms of the license agreement you entered into with nqcx.org.
  */
 
-package org.nqcx.generator.domain.o;
+package org.nqcx.generator.domain.dto;
 
 import java.io.Serializable;
 import java.util.Set;

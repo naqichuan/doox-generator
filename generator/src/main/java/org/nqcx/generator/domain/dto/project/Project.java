@@ -4,7 +4,7 @@
  * it only in accordance with the terms of the license agreement you entered into with nqcx.org.
  */
 
-package org.nqcx.generator.domain.o.project;
+package org.nqcx.generator.domain.dto.project;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.nqcx.generator.domain.enums.PType;

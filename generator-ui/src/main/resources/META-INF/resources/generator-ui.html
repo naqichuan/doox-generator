@@ -189,14 +189,14 @@
             </legend>
             <table border="0" cellpadding="0" cellspacing="0">
                 <tr>
-                    <td class="lable"><input type="checkbox" name="apiO_" value="true"></td>
-                    <td class="lable">Create O:</td>
+                    <td class="lable"><input type="checkbox" name="apiDTO_" value="true"></td>
+                    <td class="lable">Create DTO:</td>
                     <td>
-                        <input type="text" name="apiOPackage" class="big_240 right" value="">
+                        <input type="text" name="apiDTOPackage" class="big_240 right" value="">
                     </td>
                     <td class="lable">.</td>
                     <td>
-                        <input type="text" name="apiO" class="big_200" value="">
+                        <input type="text" name="apiDTO" class="big_200" value="">
                     </td>
                 </tr>
                 <tr>
@@ -305,6 +305,17 @@
             </legend>
             <table border="0" cellpadding="0" cellspacing="0">
                 <tr>
+                    <td class="lable"><input type="checkbox" name="serviceVO_" value="true"></td>
+                    <td class="lable">Create VO:</td>
+                    <td>
+                        <input type="text" name="serviceVOPackage" class="big_240 right" value="">
+                    </td>
+                    <td class="lable">.</td>
+                    <td>
+                        <input type="text" name="serviceVO" class="big_200" value="">
+                    </td>
+                </tr>
+                <tr>
                     <td class="lable"><input type="checkbox" name="serviceService_" value="true"></td>
                     <td class="lable">Create Service:</td>
                     <td>
@@ -345,17 +356,6 @@
                 <span style="font-weight: 700;"><input type="checkbox" name="web_" value="true">Module -> Web:</span>
             </legend>
             <table border="0" cellpadding="0" cellspacing="0">
-                <tr>
-                    <td class="lable"><input type="checkbox" name="webVO_" value="true"></td>
-                    <td class="lable">Create VO:</td>
-                    <td>
-                        <input type="text" name="webVOPackage" class="big_240 right" value="">
-                    </td>
-                    <td class="lable">.</td>
-                    <td>
-                        <input type="text" name="webVO" class="big_200" value="">
-                    </td>
-                </tr>
                 <tr>
                     <td class="lable"><input type="checkbox" name="webController_" value="true"></td>
                     <td class="lable">Create Controller:</td>
@@ -1207,14 +1207,14 @@
         _: function () {
             return $('input[name="api_"]');
         },
-        apiO_: function () {
-            return $('input[name="apiO_"]');
+        apiDTO_: function () {
+            return $('input[name="apiDTO_"]');
         },
-        apiOPackage: function () {
-            return $('input[name="apiOPackage"]');
+        apiDTOPackage: function () {
+            return $('input[name="apiDTOPackage"]');
         },
-        apiO: function () {
-            return $('input[name="apiO"]');
+        apiDTO: function () {
+            return $('input[name="apiDTO"]');
         },
         apiApi_: function () {
             return $('input[name="apiApi_"]');
@@ -1228,9 +1228,9 @@
         _init: function () {
             this._().prop("checked", false);
 
-            this.apiO_().prop("checked", false);
-            this.apiOPackage().val('');
-            this.apiO().val('');
+            this.apiDTO_().prop("checked", false);
+            this.apiDTOPackage().val('');
+            this.apiDTO().val('');
 
             this.apiApi_().prop("checked", false);
             this.apiApiPackage().val('');
@@ -1252,10 +1252,10 @@
             }
 
             var apiName = tableName.replaceFirstUP();
-            var apiO = apiName;
+            var apiDTO = apiName;
             var apiApi = 'I' + apiName + 'Api';
 
-            var poValue = pValue + '.data.o' + (tablePack ? "." + tablePack : "");
+            var poValue = pValue + '.domain.dto' + (tablePack ? "." + tablePack : "");
             if (poValue.indexOf(".") === 0 && poValue.length > 1)
                 poValue = poValue.substring(1);
 
@@ -1264,8 +1264,8 @@
                 ppValue = ppValue.substring(1);
 
             // set value
-            this.apiOPackage().val(poValue);
-            this.apiO().val(apiO);
+            this.apiDTOPackage().val(poValue);
+            this.apiDTO().val(apiDTO);
 
             this.apiApiPackage().val(ppValue);
             this.apiApi().val(apiApi);
@@ -1392,7 +1392,7 @@
             var daoDaoImpl = daoName + 'DAO';
             var daoTest = daoDaoImpl + 'Test';
 
-            var poValue = pValue + '.data.po' + (tablePack ? "." + tablePack : "");
+            var poValue = pValue + '.domain.po' + (tablePack ? "." + tablePack : "");
             if (poValue.indexOf(".") === 0 && poValue.length > 1)
                 poValue = poValue.substring(1);
 
@@ -1446,6 +1446,15 @@
         _: function () {
             return $('input[name="service_"]');
         },
+        serviceVO_: function () {
+            return $('input[name="serviceVO_"]');
+        },
+        serviceVOPackage: function () {
+            return $('input[name="serviceVOPackage"]');
+        },
+        serviceVO: function () {
+            return $('input[name="serviceVO"]');
+        },
         serviceService_: function () {
             return $('input[name="serviceService_"]');
         },
@@ -1476,6 +1485,9 @@
         _init: function () {
             this._().prop("checked", false);
 
+            this.serviceVO_().prop("checked", false);
+            this.serviceVOPackage().val('');
+            this.serviceVO().val('');
             this.serviceService_().prop("checked", false);
             this.serviceServicePackage().val('');
             this.serviceService().val('');
@@ -1502,10 +1514,14 @@
             }
 
             var serviceName = tableName.replaceFirstUP();
+            var serviceVO = serviceName + "VO";
             var serviceService = 'I' + serviceName + "Service";
             var serviceServiceImpl = serviceName + "Service"
             var serviceServiceTest = serviceServiceImpl + "Test"
 
+            var svValue = pValue + '.domain.vo' + (tablePack ? "." + tablePack : "");
+            if (svValue.indexOf(".") === 0 && svValue.length > 1)
+                svValue = svValue.substring(1);
 
             var ssValue = pValue + '.service' + (tablePack ? "." + tablePack : "");
             if (ssValue.indexOf(".") === 0 && ssValue.length > 1)
@@ -1520,6 +1536,8 @@
                 sstValue = sstValue.substring(1);
 
             // set value
+            this.serviceVOPackage().val(svValue);
+            this.serviceVO().val(serviceVO);
             this.serviceServicePackage().val(ssValue);
             this.serviceService().val(serviceService);
             this.serviceImplPackage().val(ssiValue);
@@ -1537,15 +1555,6 @@
         _: function () {
             return $('input[name="web_"]');
         },
-        webVO_: function () {
-            return $('input[name="webVO_"]');
-        },
-        webVOPackage: function () {
-            return $('input[name="webVOPackage"]');
-        },
-        webVO: function () {
-            return $('input[name="webVO"]');
-        },
         webController_: function () {
             return $('input[name="webController_"]');
         },
@@ -1558,9 +1567,6 @@
         _init: function () {
             this._().prop("checked", false);
 
-            this.webVO_().prop("checked", false);
-            this.webVOPackage().val('');
-            this.webVO().val('');
             this.webController_().prop("checked", false);
             this.webControllerPackage().val('');
             this.webController().val('');
@@ -1581,20 +1587,14 @@
             }
 
             var webName = tableName.replaceFirstUP();
-            var webVO = webName + "VO";
             var webController = webName + "Controller";
 
-            var wvValue = pValue + '.data.vo' + (tablePack ? "." + tablePack : "");
-            if (wvValue.indexOf(".") === 0 && wvValue.length > 1)
-                wvValue = wvValue.substring(1);
 
             var wcValue = pValue + '.web.controller' + (tablePack ? "." + tablePack : "");
             if (wcValue.indexOf(".") === 0 && wcValue.length > 1)
                 wcValue = wcValue.substring(1);
 
             // set value
-            this.webVOPackage().val(wvValue);
-            this.webVO().val(webVO);
             this.webControllerPackage().val(wcValue);
             this.webController().val(webController);
         }
@@ -1611,7 +1611,7 @@
                 msg: 'Basedir not exists.'
             });
             return false;
-        } else if (!project.author().val()) {
+        } else if (!project.authorElement().val()) {
             $.messager.show({
                 title: 'Error',
                 msg: 'Please input author.'
@@ -1640,7 +1640,7 @@
         $('#generate_form').form('nqcxSubmit', {
             url: "generator-api/generate/doit",
             onSubmit: function () {
-                if (checkForm)
+                if (checkForm())
                     return $(this).form('validate');
                 return false;
             },

@@ -10,7 +10,7 @@ package org.nqcx.generator.web.controller.generate;
 
 import org.nqcx.doox.commons.util.orika.Orika;
 import org.nqcx.generator.domain.vo.GenerateVO;
-import org.nqcx.generator.domain.o.Generate;
+import org.nqcx.generator.domain.dto.Generate;
 import org.nqcx.generator.service.generate.IGenerateService;
 import org.nqcx.generator.web.controller.AbstractController;
 import org.springframework.beans.factory.annotation.Autowired;

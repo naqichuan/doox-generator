@@ -9,7 +9,7 @@
 package org.nqcx.generator.service.generate;
 
 import org.nqcx.doox.commons.lang.o.DTO;
-import org.nqcx.generator.domain.o.Generate;
+import org.nqcx.generator.domain.dto.Generate;
 
 /**
  * @author naqichuan Feb 9, 2014 2:21:48 AM

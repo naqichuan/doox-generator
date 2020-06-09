@@ -11,10 +11,10 @@ package org.nqcx.generator.service.generate.impl;
 import org.apache.commons.lang3.StringUtils;
 import org.nqcx.doox.commons.lang.o.DTO;
 import org.nqcx.doox.commons.util.date.DateUtils;
-import org.nqcx.generator.domain.o.CgField;
-import org.nqcx.generator.domain.o.Generate;
-import org.nqcx.generator.domain.o.table.Column;
-import org.nqcx.generator.domain.o.table.Table;
+import org.nqcx.generator.domain.dto.CgField;
+import org.nqcx.generator.domain.dto.Generate;
+import org.nqcx.generator.domain.dto.table.Column;
+import org.nqcx.generator.domain.dto.table.Table;
 import org.nqcx.generator.service.generate.IGenerateService;
 import org.nqcx.generator.service.table.ITableService;
 import org.slf4j.Logger;
@@ -55,7 +55,7 @@ public class GenerateService implements IGenerateService {
     private final static String JAVA_EXT_NAME = ".java";
     private final static String XML_EXT_NAME = ".xml";
 
-    private final static String O_TXT_TEMPLATE_NAME = "o.txt";
+    private final static String DTO_TXT_TEMPLATE_NAME = "dto.txt";
     private final static String PROVIDE_TXT_TEMPLATE_NAME = "api.txt";
     private final static String PO_TXT_TEMPLATE_NAME = "po.txt";
     private final static String MAPPER_TXT_TEMPLATE_NAME = "mapper.txt";
@@ -327,8 +327,8 @@ public class GenerateService implements IGenerateService {
         if (g == null)
             return;
 
-        g.setApiOReference(g.getApiOPackage() + "." + g.getApiO());
-        g.setApiOVeriable(StringUtils.uncapitalize(g.getApiO()));
+        g.setApiDTOReference(g.getApiDTOPackage() + "." + g.getApiDTO());
+        g.setApiDTOVeriable(StringUtils.uncapitalize(g.getApiDTO()));
         g.setApiApiReference(g.getApiApiPackage() + "." + g.getApiApi());
         g.setApiApiVeriable(StringUtils.uncapitalize(StringUtils.substring(g.getApiApi(), 1)));
 
@@ -359,8 +359,8 @@ public class GenerateService implements IGenerateService {
         g.setServiceServiceTestPackage(g.getServiceServiceTestPackage());
         g.setServiceServiceTest(g.getServiceServiceTest());
 
-        g.setWebVOReference(g.getWebVOPackage() + "." + g.getWebVO());
-        g.setWebVOVeriable(StringUtils.uncapitalize(g.getWebVO()));
+        g.setServiceVOReference(g.getServiceVOPackage() + "." + g.getServiceVO());
+        g.setServiceVOVeriable(StringUtils.uncapitalize(g.getServiceVO()));
         g.setWebControllerReference(g.getWebControllerPackage() + "." + g.getWebController());
         g.setWebControllerVeriable(StringUtils.uncapitalize(StringUtils.substring(g.getWebController(), 1)));
 
@@ -376,7 +376,7 @@ public class GenerateService implements IGenerateService {
         if (g == null)
             return;
 
-        CLASS_MAPPING.put(g.getApiO(), g.getApiOReference());
+        CLASS_MAPPING.put(g.getApiDTO(), g.getApiDTOReference());
         CLASS_MAPPING.put(g.getApiApi(), g.getApiApiReference());
 
         CLASS_MAPPING.put(g.getDaoPO(), g.getDaoPOReference());
@@ -391,7 +391,7 @@ public class GenerateService implements IGenerateService {
         CLASS_MAPPING.put(g.getServiceServiceImpl(), g.getServiceServiceImplReference());
         CLASS_MAPPING.put(g.getServiceBaseTest(), g.getServiceBaseTestReference());
 
-        CLASS_MAPPING.put(g.getWebVO(), g.getWebVOReference());
+        CLASS_MAPPING.put(g.getServiceVO(), g.getServiceVOReference());
         CLASS_MAPPING.put(g.getWebController(), g.getWebControllerReference());
 
         CLASS_MAPPING.put(g.getWebAbstractController(), g.getWebAbstractControllerReference());
@@ -458,8 +458,8 @@ public class GenerateService implements IGenerateService {
         Set<String> imports = new LinkedHashSet<>();
 
         // o
-        if (g.getApiO_().isTrue()) {
-            baseVariable(cxt, imports, g.getAuthor(), g.getApiOPackage(), g.getApiO());
+        if (g.getApiDTO_().isTrue()) {
+            baseVariable(cxt, imports, g.getAuthor(), g.getApiDTOPackage(), g.getApiDTO());
             mappingImport(imports, "Serializable");
 
             List<String> oFieldComments = new ArrayList<>();
@@ -487,9 +487,9 @@ public class GenerateService implements IGenerateService {
             cxt.setVariable("oGetterAndSetter", oGetterAndSetters);
 
             this.writeFile(g.getLogFile(),
-                    package2path(g.getApiModuleFile().getPath(), JAVA_PATH, g.getApiOPackage()),
-                    g.getApiO(), JAVA_EXT_NAME,
-                    process(O_TXT_TEMPLATE_NAME, cxt));
+                    package2path(g.getApiModuleFile().getPath(), JAVA_PATH, g.getApiDTOPackage()),
+                    g.getApiDTO(), JAVA_EXT_NAME,
+                    process(DTO_TXT_TEMPLATE_NAME, cxt));
         }
 
         if (g.getApiApi_().isTrue()) {
@@ -857,6 +857,21 @@ public class GenerateService implements IGenerateService {
             // end of service
         }
 
+        if (g.getServiceVO_().isTrue()) {
+            // vo
+            baseVariable(cxt, imports, g.getAuthor(), g.getServiceVOPackage(), g.getServiceVO());
+
+            mappingImport(imports, g.getDaoPO());
+
+            cxt.setVariable("poName", g.getDaoPO());
+
+            this.writeFile(g.getLogFile(),
+                    package2path(g.getServiceModuleFile().getPath(), JAVA_PATH, g.getServiceVOPackage()),
+                    g.getServiceVO(), JAVA_EXT_NAME,
+                    process(VO_TXT_TEMPLATE_NAME, cxt));
+            // end of vo
+        }
+
         if (g.getServiceServiceImpl_().isTrue()) {
             // service impl
             baseVariable(cxt, imports, g.getAuthor(), g.getServiceServiceImplPackage(), g.getServiceServiceImpl());
@@ -874,8 +889,6 @@ public class GenerateService implements IGenerateService {
             cxt.setVariable("serviceName", g.getServiceService());
 
             cxt.setVariable("daoVeriable", g.getDaoDAOVeriable());
-//            cxt.setVariable("mapperVeriable", g.getDaoMapperVeriable());
-//            cxt.setVariable("jpaVeriable", g.getDaoJpaVeriable());
 
             this.writeFile(g.getLogFile(),
                     package2path(g.getServiceModuleFile().getPath(), JAVA_PATH, g.getServiceServiceImplPackage()),
@@ -931,21 +944,6 @@ public class GenerateService implements IGenerateService {
         Context cxt = new Context();
         Set<String> imports = new LinkedHashSet<>();
 
-        if (g.getWebVO_().isTrue()) {
-            // vo
-            baseVariable(cxt, imports, g.getAuthor(), g.getWebVOPackage(), g.getWebVO());
-
-            mappingImport(imports, g.getDaoPO());
-
-            cxt.setVariable("poName", g.getDaoPO());
-
-            this.writeFile(g.getLogFile(),
-                    package2path(g.getWebModuleFile().getPath(), JAVA_PATH, g.getWebVOPackage()),
-                    g.getWebVO(), JAVA_EXT_NAME,
-                    process(VO_TXT_TEMPLATE_NAME, cxt));
-            // end of vo
-        }
-
         if (g.getWebController_().isTrue()) {
             // controller
             baseVariable(cxt, imports, g.getAuthor(), g.getWebControllerPackage(), g.getWebController());
@@ -965,7 +963,7 @@ public class GenerateService implements IGenerateService {
 
             mappingImport(imports, "Map");
 
-            mappingImport(imports, g.getWebVO());
+            mappingImport(imports, g.getServiceVO());
             mappingImport(imports, g.getServiceService());
             mappingImport(imports, g.getWebAbstractController());
 
@@ -973,8 +971,8 @@ public class GenerateService implements IGenerateService {
             cxt.setVariable("tableName", g.getTable().getName());
             cxt.setVariable("serviceName", g.getServiceService());
             cxt.setVariable("serviceVeriable", g.getServiceServiceVeriable());
-            cxt.setVariable("webVO", g.getWebVO());
-            cxt.setVariable("webVOVeriable", g.getWebVOVeriable());
+            cxt.setVariable("serviceVO", g.getServiceVO());
+            cxt.setVariable("serviceVOVeriable", g.getServiceVOVeriable());
 
             this.writeFile(g.getLogFile(),
                     package2path(g.getWebModuleFile().getPath(), JAVA_PATH, g.getWebControllerPackage()),
