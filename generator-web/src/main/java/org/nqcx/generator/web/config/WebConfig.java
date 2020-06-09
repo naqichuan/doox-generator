@@ -17,7 +17,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.*;
-import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,16 +29,6 @@ import java.util.Map;
 @Configuration
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
-
-    // ========================================================================
-
-    private final ThymeleafViewResolver thymeleafViewResolver;
-
-    // ========================================================================
-
-    public WebConfig(ThymeleafViewResolver thymeleafViewResolver) {
-        this.thymeleafViewResolver = thymeleafViewResolver;
-    }
 
     @Bean("homeUrl")
     public UrlBuilder getHomeUrl() {
@@ -145,10 +134,6 @@ public class WebConfig implements WebMvcConfigurer {
 
         map.put("homeUrl", getHomeUrl());
 //        map.put("WI", new WebInformation());
-
-        if (thymeleafViewResolver != null) {
-            thymeleafViewResolver.setStaticVariables(map);
-        }
     }
 
     // ========================================================================
