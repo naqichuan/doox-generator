@@ -52,7 +52,7 @@
 
     <!-- 访问日志 -->
     <logger name="_NQCX_LOGGER_ACCESS" level="info" additivity="false">
-        <!--<appender-ref ref="ACCESS_CONSOLE"/>-->
+        <appender-ref ref="ACCESS_CONSOLE"/>
     </logger>
 
     <root level="${LOGGING_LEVEL_ROOT}">
