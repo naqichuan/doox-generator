@@ -6,7 +6,7 @@
  * into with nqcx.org.
  */
 
-package org.nqcx.generator.web.api.generate;
+package org.nqcx.generator.web.controller.generate;
 
 import org.nqcx.doox.commons.util.orika.Orika;
 import org.nqcx.generator.data.vo.GenerateVO;

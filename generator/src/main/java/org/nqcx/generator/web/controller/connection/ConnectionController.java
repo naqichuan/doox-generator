@@ -6,7 +6,7 @@
  * into with nqcx.org.
  */
 
-package org.nqcx.generator.web.api.connection;
+package org.nqcx.generator.web.controller.connection;
 
 import org.nqcx.doox.commons.lang.o.DTO;
 import org.nqcx.doox.commons.web.cookie.CookieUtils;

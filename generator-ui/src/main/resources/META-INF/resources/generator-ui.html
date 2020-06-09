@@ -902,19 +902,19 @@
                 _this.emptyAll();
 
                 // provide
-                _this.fill(_this.provide().attr("name"), project.pName().val() + '-provide');
+                _this.fill(_this.provide().attr("name"), '-provide');
                 // dao
-                _this.fill(_this.dao().attr("name"), project.pName().val() + '-dao');
+                _this.fill(_this.dao().attr("name"), '-dao');
                 // service
-                _this.fill(_this.service().attr("name"), project.pName().val() + '-service');
+                _this.fill(_this.service().attr("name"), '-service');
                 // web
-                _this.fill(_this.web().attr("name"), project.pName().val() + '-web');
+                _this.fill(_this.web().attr("name"), '-web');
             },
             fill: function (name, defaultModule) {
                 var select = $('select[name="' + name + '"]');
                 var ml = project._p.modules;
                 for (var idx in ml) {
-                    if (defaultModule && defaultModule === ml[idx])
+                    if (defaultModule && ml[idx].indexOf(defaultModule) > -1)
                         $('<option selected="selected" value="' + ml[idx] + '">' + ml[idx] + '</option>').appendTo(select);
                     else
                         $('<option value="' + ml[idx] + '">' + ml[idx] + '</option>').appendTo(select);

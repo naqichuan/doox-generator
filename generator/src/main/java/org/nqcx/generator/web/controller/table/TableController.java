@@ -6,7 +6,7 @@
  * into with nqcx.org.
  */
 
-package org.nqcx.generator.web.api.table;
+package org.nqcx.generator.web.controller.table;
 
 import org.nqcx.generator.service.table.ITableService;
 import org.nqcx.generator.web.controller.AbstractController;

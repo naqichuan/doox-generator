@@ -6,7 +6,7 @@
  * into with nqcx.org.
  */
 
-package org.nqcx.generator.web.api.project;
+package org.nqcx.generator.web.controller.project;
 
 import org.apache.commons.lang3.StringUtils;
 import org.nqcx.doox.commons.lang.o.DTO;
