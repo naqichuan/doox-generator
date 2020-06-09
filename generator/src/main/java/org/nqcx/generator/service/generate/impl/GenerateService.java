@@ -56,7 +56,7 @@ public class GenerateService implements IGenerateService {
     private final static String XML_EXT_NAME = ".xml";
 
     private final static String O_TXT_TEMPLATE_NAME = "o.txt";
-    private final static String PROVIDE_TXT_TEMPLATE_NAME = "provide.txt";
+    private final static String PROVIDE_TXT_TEMPLATE_NAME = "api.txt";
     private final static String PO_TXT_TEMPLATE_NAME = "po.txt";
     private final static String MAPPER_TXT_TEMPLATE_NAME = "mapper.txt";
     private final static String MAPPERXML_TXT_TEMPLATE_NAME = "mapperxml.txt";
@@ -166,9 +166,9 @@ public class GenerateService implements IGenerateService {
         this.writeLog(g.getLogFile(), "");
         this.writeLog(g.getLogFile(), TIME.format(DateUtils.date()));
 
-        // provide
-        if (g.getProvide_().isTrue())
-            this.generateProvide(g);
+        // api
+        if (g.getApi_().isTrue())
+            this.generateApi(g);
 
         // dao
         if (g.getDao_().isTrue())
@@ -327,10 +327,10 @@ public class GenerateService implements IGenerateService {
         if (g == null)
             return;
 
-        g.setProvideOReference(g.getProvideOPackage() + "." + g.getProvideO());
-        g.setProvideOVeriable(StringUtils.uncapitalize(g.getProvideO()));
-        g.setProvideProvideReference(g.getProvideProvidePackage() + "." + g.getProvideProvide());
-        g.setProvideProvideVeriable(StringUtils.uncapitalize(StringUtils.substring(g.getProvideProvide(), 1)));
+        g.setApiOReference(g.getApiOPackage() + "." + g.getApiO());
+        g.setApiOVeriable(StringUtils.uncapitalize(g.getApiO()));
+        g.setApiApiReference(g.getApiApiPackage() + "." + g.getApiApi());
+        g.setApiApiVeriable(StringUtils.uncapitalize(StringUtils.substring(g.getApiApi(), 1)));
 
         g.setDaoPOReference(g.getDaoPOPackage() + "." + g.getDaoPO());
         g.setDaoPOVeriable(StringUtils.uncapitalize(g.getDaoPO()));
@@ -376,8 +376,8 @@ public class GenerateService implements IGenerateService {
         if (g == null)
             return;
 
-        CLASS_MAPPING.put(g.getProvideO(), g.getProvideOReference());
-        CLASS_MAPPING.put(g.getProvideProvide(), g.getProvideProvideReference());
+        CLASS_MAPPING.put(g.getApiO(), g.getApiOReference());
+        CLASS_MAPPING.put(g.getApiApi(), g.getApiApiReference());
 
         CLASS_MAPPING.put(g.getDaoPO(), g.getDaoPOReference());
         CLASS_MAPPING.put(g.getDaoMapper(), g.getDaoMapperReference());
@@ -410,7 +410,7 @@ public class GenerateService implements IGenerateService {
     private void modulePath(Generate g) {
         String path = g.getpPath();
 
-        g.setProvideModuleFile(new File(path + g.getProvideModule()));
+        g.setApiModuleFile(new File(path + g.getApiModule()));
         g.setDaoModuleFile(new File(path + g.getDaoModule()));
         g.setServiceModuleFile(new File(path + g.getServiceModule()));
         g.setWebModuleFile(new File(path + g.getWebModule()));
@@ -452,14 +452,14 @@ public class GenerateService implements IGenerateService {
     /**
      * @param g g
      */
-    private void generateProvide(Generate g) {
+    private void generateApi(Generate g) {
 
         Context cxt = new Context();
         Set<String> imports = new LinkedHashSet<>();
 
         // o
-        if (g.getProvideO_().isTrue()) {
-            baseVariable(cxt, imports, g.getAuthor(), g.getProvideOPackage(), g.getProvideO());
+        if (g.getApiO_().isTrue()) {
+            baseVariable(cxt, imports, g.getAuthor(), g.getApiOPackage(), g.getApiO());
             mappingImport(imports, "Serializable");
 
             List<String> oFieldComments = new ArrayList<>();
@@ -487,18 +487,18 @@ public class GenerateService implements IGenerateService {
             cxt.setVariable("oGetterAndSetter", oGetterAndSetters);
 
             this.writeFile(g.getLogFile(),
-                    package2path(g.getProvideModuleFile().getPath(), JAVA_PATH, g.getProvideOPackage()),
-                    g.getProvideO(), JAVA_EXT_NAME,
+                    package2path(g.getApiModuleFile().getPath(), JAVA_PATH, g.getApiOPackage()),
+                    g.getApiO(), JAVA_EXT_NAME,
                     process(O_TXT_TEMPLATE_NAME, cxt));
         }
 
-        if (g.getProvideProvide_().isTrue()) {
-            // provide
-            baseVariable(cxt, imports, g.getAuthor(), g.getProvideProvidePackage(), g.getProvideProvide());
+        if (g.getApiApi_().isTrue()) {
+            // api
+            baseVariable(cxt, imports, g.getAuthor(), g.getApiApiPackage(), g.getApiApi());
 
             this.writeFile(g.getLogFile(),
-                    package2path(g.getProvideModuleFile().getPath(), JAVA_PATH, g.getProvideProvidePackage()),
-                    g.getProvideProvide(), JAVA_EXT_NAME,
+                    package2path(g.getApiModuleFile().getPath(), JAVA_PATH, g.getApiApiPackage()),
+                    g.getApiApi(), JAVA_EXT_NAME,
                     process(PROVIDE_TXT_TEMPLATE_NAME, cxt));
         }
     }
@@ -844,11 +844,11 @@ public class GenerateService implements IGenerateService {
 
             mappingImport(imports, "IService");
             mappingImport(imports, g.getDaoPO());
-            mappingImport(imports, g.getProvideProvide());
+            mappingImport(imports, g.getApiApi());
 
             cxt.setVariable("poName", g.getDaoPO());
             cxt.setVariable("idType", g.getIdType());
-            cxt.setVariable("provideName", g.getProvideProvide());
+            cxt.setVariable("apiName", g.getApiApi());
 
             this.writeFile(g.getLogFile(),
                     package2path(g.getServiceModuleFile().getPath(), JAVA_PATH, g.getServiceServicePackage()),

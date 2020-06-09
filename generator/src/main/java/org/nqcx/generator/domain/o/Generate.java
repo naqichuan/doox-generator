@@ -25,7 +25,7 @@ public class Generate implements Serializable {
     private String pPath;
     private String pPackage;
     private PType pType;
-    private String provideModule;
+    private String apiModule;
     private String daoModule;
     private String serviceModule;
     private String webModule;
@@ -42,15 +42,15 @@ public class Generate implements Serializable {
     private String[] pojoType;
     // end of pojo
 
-    // provide field
-    private BoolEO provide_ = BoolEO.FALSE;
-    private BoolEO provideO_ = BoolEO.FALSE;
-    private String provideOPackage;
-    private String provideO;
-    private BoolEO provideProvide_ = BoolEO.FALSE;
-    private String provideProvidePackage;
-    private String provideProvide;
-    // end of provide field
+    // api field
+    private BoolEO api_ = BoolEO.FALSE;
+    private BoolEO apiO_ = BoolEO.FALSE;
+    private String apiOPackage;
+    private String apiO;
+    private BoolEO apiApi_ = BoolEO.FALSE;
+    private String apiApiPackage;
+    private String apiApi;
+    // end of api field
 
     // dao field
     private BoolEO dao_ = BoolEO.FALSE;
@@ -105,7 +105,7 @@ public class Generate implements Serializable {
     // generate resource ======================================================
     private File logFile;
     private Table table;
-    private File provideModuleFile;
+    private File apiModuleFile;
     private File daoModuleFile;
     private File serviceModuleFile;
     private File webModuleFile;
@@ -113,10 +113,10 @@ public class Generate implements Serializable {
     private String idType;
     private String idName;
 
-    private String provideOReference;
-    private String provideOVeriable;
-    private String provideProvideReference;
-    private String provideProvideVeriable;
+    private String apiOReference;
+    private String apiOVeriable;
+    private String apiApiReference;
+    private String apiApiVeriable;
 
     private String daoPOReference;
     private String daoPOVeriable;
@@ -213,12 +213,12 @@ public class Generate implements Serializable {
         this.pType = pType;
     }
 
-    public String getProvideModule() {
-        return provideModule;
+    public String getApiModule() {
+        return apiModule;
     }
 
-    public void setProvideModule(String provideModule) {
-        this.provideModule = provideModule;
+    public void setApiModule(String apiModule) {
+        this.apiModule = apiModule;
     }
 
     public String getDaoModule() {
@@ -245,60 +245,60 @@ public class Generate implements Serializable {
         this.webModule = webModule;
     }
 
-    public BoolEO getProvide_() {
-        return provide_;
+    public BoolEO getApi_() {
+        return api_;
     }
 
-    public void setProvide_(BoolEO provide_) {
-        this.provide_ = provide_;
+    public void setApi_(BoolEO api_) {
+        this.api_ = api_;
     }
 
-    public BoolEO getProvideO_() {
-        return provideO_;
+    public BoolEO getApiO_() {
+        return apiO_;
     }
 
-    public void setProvideO_(BoolEO provideO_) {
-        this.provideO_ = provideO_;
+    public void setApiO_(BoolEO apiO_) {
+        this.apiO_ = apiO_;
     }
 
-    public String getProvideOPackage() {
-        return provideOPackage;
+    public String getApiOPackage() {
+        return apiOPackage;
     }
 
-    public void setProvideOPackage(String provideOPackage) {
-        this.provideOPackage = provideOPackage;
+    public void setApiOPackage(String apiOPackage) {
+        this.apiOPackage = apiOPackage;
     }
 
-    public String getProvideProvidePackage() {
-        return provideProvidePackage;
+    public String getApiApiPackage() {
+        return apiApiPackage;
     }
 
-    public void setProvideProvidePackage(String provideProvidePackage) {
-        this.provideProvidePackage = provideProvidePackage;
+    public void setApiApiPackage(String apiApiPackage) {
+        this.apiApiPackage = apiApiPackage;
     }
 
-    public BoolEO getProvideProvide_() {
-        return provideProvide_;
+    public BoolEO getApiApi_() {
+        return apiApi_;
     }
 
-    public void setProvideProvide_(BoolEO provideProvide_) {
-        this.provideProvide_ = provideProvide_;
+    public void setApiApi_(BoolEO apiApi_) {
+        this.apiApi_ = apiApi_;
     }
 
-    public String getProvideO() {
-        return provideO;
+    public String getApiO() {
+        return apiO;
     }
 
-    public void setProvideO(String provideO) {
-        this.provideO = provideO;
+    public void setApiO(String apiO) {
+        this.apiO = apiO;
     }
 
-    public String getProvideProvide() {
-        return provideProvide;
+    public String getApiApi() {
+        return apiApi;
     }
 
-    public void setProvideProvide(String provideProvide) {
-        this.provideProvide = provideProvide;
+    public void setApiApi(String apiApi) {
+        this.apiApi = apiApi;
     }
 
     public String[] getPojoColumn() {
@@ -682,12 +682,12 @@ public class Generate implements Serializable {
     }
 
 
-    public File getProvideModuleFile() {
-        return provideModuleFile;
+    public File getApiModuleFile() {
+        return apiModuleFile;
     }
 
-    public void setProvideModuleFile(File provideModuleFile) {
-        this.provideModuleFile = provideModuleFile;
+    public void setApiModuleFile(File apiModuleFile) {
+        this.apiModuleFile = apiModuleFile;
     }
 
     public File getDaoModuleFile() {
@@ -730,36 +730,36 @@ public class Generate implements Serializable {
         this.idName = idName;
     }
 
-    public String getProvideOReference() {
-        return provideOReference;
+    public String getApiOReference() {
+        return apiOReference;
     }
 
-    public void setProvideOReference(String provideOReference) {
-        this.provideOReference = provideOReference;
+    public void setApiOReference(String apiOReference) {
+        this.apiOReference = apiOReference;
     }
 
-    public String getProvideOVeriable() {
-        return provideOVeriable;
+    public String getApiOVeriable() {
+        return apiOVeriable;
     }
 
-    public void setProvideOVeriable(String provideOVeriable) {
-        this.provideOVeriable = provideOVeriable;
+    public void setApiOVeriable(String apiOVeriable) {
+        this.apiOVeriable = apiOVeriable;
     }
 
-    public String getProvideProvideReference() {
-        return provideProvideReference;
+    public String getApiApiReference() {
+        return apiApiReference;
     }
 
-    public void setProvideProvideReference(String provideProvideReference) {
-        this.provideProvideReference = provideProvideReference;
+    public void setApiApiReference(String apiApiReference) {
+        this.apiApiReference = apiApiReference;
     }
 
-    public String getProvideProvideVeriable() {
-        return provideProvideVeriable;
+    public String getApiApiVeriable() {
+        return apiApiVeriable;
     }
 
-    public void setProvideProvideVeriable(String provideProvideVeriable) {
-        this.provideProvideVeriable = provideProvideVeriable;
+    public void setApiApiVeriable(String apiApiVeriable) {
+        this.apiApiVeriable = apiApiVeriable;
     }
 
     public String getDaoPOReference() {

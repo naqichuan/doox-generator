@@ -108,9 +108,9 @@
             </td>
         </tr>
         <tr height="30">
-            <td class="lable">Provide:</td>
+            <td class="lable">Api:</td>
             <td>
-                <select name="provideModuleName">
+                <select name="apiModuleName">
                     <option value="">/</option>
                 </select>
             </td>
@@ -184,30 +184,30 @@
         <br/> <br/>
         <fieldset>
             <legend>
-                <span style="font-weight: 700;"><input type="checkbox" name="provide_"
-                                                       value="true">Module -> Provide</span>
+                <span style="font-weight: 700;"><input type="checkbox" name="api_"
+                                                       value="true">Module -> Api</span>
             </legend>
             <table border="0" cellpadding="0" cellspacing="0">
                 <tr>
-                    <td class="lable"><input type="checkbox" name="provideO_" value="true"></td>
+                    <td class="lable"><input type="checkbox" name="apiO_" value="true"></td>
                     <td class="lable">Create O:</td>
                     <td>
-                        <input type="text" name="provideOPackage" class="big_240 right" value="">
+                        <input type="text" name="apiOPackage" class="big_240 right" value="">
                     </td>
                     <td class="lable">.</td>
                     <td>
-                        <input type="text" name="provideO" class="big_200" value="">
+                        <input type="text" name="apiO" class="big_200" value="">
                     </td>
                 </tr>
                 <tr>
-                    <td class="lable"><input type="checkbox" name="provideProvide_" value="true"></td>
-                    <td class="lable">Create Provide:</td>
+                    <td class="lable"><input type="checkbox" name="apiApi_" value="true"></td>
+                    <td class="lable">Create Api:</td>
                     <td>
-                        <input type="text" name="provideProvidePackage" class="big_240 right" value="">
+                        <input type="text" name="apiApiPackage" class="big_240 right" value="">
                     </td>
                     <td class="lable">.</td>
                     <td>
-                        <input type="text" name="provideProvide" class="big_200" value="">
+                        <input type="text" name="apiApi" class="big_200" value="">
                     </td>
                 </tr>
             </table>
@@ -884,8 +884,8 @@
         },
         pPackageWatchers: [],
         module: {
-            provide: function () {
-                return $('select[name="provideModuleName"]');
+            api: function () {
+                return $('select[name="apiModuleName"]');
             },
             dao: function () {
                 return $('select[name="daoModuleName"]');
@@ -901,8 +901,8 @@
 
                 _this.emptyAll();
 
-                // provide
-                _this.fill(_this.provide().attr("name"), '-provide');
+                // api
+                _this.fill(_this.api().attr("name"), '-api');
                 // dao
                 _this.fill(_this.dao().attr("name"), '-dao');
                 // service
@@ -921,8 +921,8 @@
                 }
             },
             emptyAll: function () {
-                // provide
-                this.empty(this.provide());
+                // api
+                this.empty(this.api());
                 // dao
                 this.empty(this.dao());
                 // service
@@ -1203,38 +1203,38 @@
     table.colPrefixWatchers.push(() => tableInfo.loadTable());
 </script>
 <script type="text/javascript">
-    var provide = {
+    var api = {
         _: function () {
-            return $('input[name="provide_"]');
+            return $('input[name="api_"]');
         },
-        provideO_: function () {
-            return $('input[name="provideO_"]');
+        apiO_: function () {
+            return $('input[name="apiO_"]');
         },
-        provideOPackage: function () {
-            return $('input[name="provideOPackage"]');
+        apiOPackage: function () {
+            return $('input[name="apiOPackage"]');
         },
-        provideO: function () {
-            return $('input[name="provideO"]');
+        apiO: function () {
+            return $('input[name="apiO"]');
         },
-        provideProvide_: function () {
-            return $('input[name="provideProvide_"]');
+        apiApi_: function () {
+            return $('input[name="apiApi_"]');
         },
-        provideProvidePackage: function () {
-            return $('input[name="provideProvidePackage"]');
+        apiApiPackage: function () {
+            return $('input[name="apiApiPackage"]');
         },
-        provideProvide: function () {
-            return $('input[name="provideProvide"]');
+        apiApi: function () {
+            return $('input[name="apiApi"]');
         },
         _init: function () {
             this._().prop("checked", false);
 
-            this.provideO_().prop("checked", false);
-            this.provideOPackage().val('');
-            this.provideO().val('');
+            this.apiO_().prop("checked", false);
+            this.apiOPackage().val('');
+            this.apiO().val('');
 
-            this.provideProvide_().prop("checked", false);
-            this.provideProvidePackage().val('');
-            this.provideProvide().val('');
+            this.apiApi_().prop("checked", false);
+            this.apiApiPackage().val('');
+            this.apiApi().val('');
         },
         _reset: function () {
             this._init();
@@ -1251,29 +1251,29 @@
                 return;
             }
 
-            var provideName = tableName.replaceFirstUP();
-            var provideO = provideName;
-            var provideProvide = 'I' + provideName + 'Provide';
+            var apiName = tableName.replaceFirstUP();
+            var apiO = apiName;
+            var apiApi = 'I' + apiName + 'Api';
 
             var poValue = pValue + '.data.o' + (tablePack ? "." + tablePack : "");
             if (poValue.indexOf(".") === 0 && poValue.length > 1)
                 poValue = poValue.substring(1);
 
-            var ppValue = pValue + '.provide' + (tablePack ? "." + tablePack : "");
+            var ppValue = pValue + '.api' + (tablePack ? "." + tablePack : "");
             if (ppValue.indexOf(".") === 0 && ppValue.length > 1)
                 ppValue = ppValue.substring(1);
 
             // set value
-            this.provideOPackage().val(poValue);
-            this.provideO().val(provideO);
+            this.apiOPackage().val(poValue);
+            this.apiO().val(apiO);
 
-            this.provideProvidePackage().val(ppValue);
-            this.provideProvide().val(provideProvide);
+            this.apiApiPackage().val(ppValue);
+            this.apiApi().val(apiApi);
         }
     };
 
-    table.tableNameWatchers.push(() => provide.loadPackage());
-    project.module.changeWatchars.push(() => provide.loadPackage());
+    table.tableNameWatchers.push(() => api.loadPackage());
+    project.module.changeWatchars.push(() => api.loadPackage());
 </script>
 <script type="text/javascript">
     var dao = {
@@ -1623,7 +1623,7 @@
                 msg: 'Please select project.'
             });
             return false;
-        } else if (!provide._().is(":checked")
+        } else if (!api._().is(":checked")
             && !dao._().is(":checked")
             && !service._().is(":checked")
             && !web._().is(":checked")) {
@@ -1653,7 +1653,7 @@
                 pPath: project.pPath().val(),
                 pPackage: project.pPackage().val(),
                 pType: project.pType().filter(':checked').val(),
-                provideModule: project.module.provide().val(),
+                apiModule: project.module.api().val(),
                 daoModule: project.module.dao().val(),
                 serviceModule: project.module.service().val(),
                 webModule: project.module.web().val()
