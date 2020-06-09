@@ -4,11 +4,11 @@
  * it only in accordance with the terms of the license agreement you entered into with nqcx.org.
  */
 
-package org.nqcx.generator.provide.o;
+package org.nqcx.generator.domain.o;
 
 import org.nqcx.doox.commons.lang.enums.BoolEO;
-import org.nqcx.generator.provide.enums.PType;
-import org.nqcx.generator.provide.o.table.Table;
+import org.nqcx.generator.domain.o.table.Table;
+import org.nqcx.generator.domain.enums.PType;
 
 import java.io.File;
 import java.io.Serializable;

@@ -4,10 +4,10 @@
  * it only in accordance with the terms of the license agreement you entered into with nqcx.org.
  */
 
-package org.nqcx.generator.provide.o.project;
+package org.nqcx.generator.domain.o.project;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.nqcx.generator.provide.enums.PType;
+import org.nqcx.generator.domain.enums.PType;
 
 import java.io.Serializable;
 import java.util.List;

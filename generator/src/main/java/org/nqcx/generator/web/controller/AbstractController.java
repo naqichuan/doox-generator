@@ -9,7 +9,7 @@ package org.nqcx.generator.web.controller;
 import org.nqcx.doox.commons.lang.enums.BoolEO;
 import org.nqcx.doox.commons.util.StringUtils;
 import org.nqcx.doox.commons.web.WebSupport;
-import org.nqcx.generator.provide.enums.PType;
+import org.nqcx.generator.domain.enums.PType;
 import org.springframework.beans.propertyeditors.PropertiesEditor;
 import org.springframework.web.bind.ServletRequestDataBinder;
 

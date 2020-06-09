@@ -8,7 +8,7 @@
 
 package org.nqcx.generator.common.util;
 
-import org.nqcx.generator.provide.o.CgFile;
+import org.nqcx.generator.domain.o.CgFile;
 
 import java.io.File;
 import java.util.Collections;

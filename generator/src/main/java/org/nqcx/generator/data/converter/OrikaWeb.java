@@ -9,8 +9,8 @@ package org.nqcx.generator.data.converter;
 import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MappingContext;
 import org.nqcx.doox.commons.util.orika.Orika;
-import org.nqcx.generator.data.vo.GenerateVO;
-import org.nqcx.generator.provide.o.Generate;
+import org.nqcx.generator.domain.vo.GenerateVO;
+import org.nqcx.generator.domain.o.Generate;
 import org.springframework.stereotype.Service;
 
 /**

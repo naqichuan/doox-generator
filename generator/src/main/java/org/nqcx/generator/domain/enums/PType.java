@@ -6,7 +6,7 @@
  * into with nqcx.org.
  */
 
-package org.nqcx.generator.provide.enums;
+package org.nqcx.generator.domain.enums;
 
 /**
  * @author naqichuan Feb 13, 2014 10:54:08 PM

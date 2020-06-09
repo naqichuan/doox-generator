@@ -9,8 +9,8 @@
 package org.nqcx.generator.service.table.impl;
 
 import org.nqcx.doox.commons.lang.o.DTO;
-import org.nqcx.generator.provide.o.table.Column;
-import org.nqcx.generator.provide.o.table.Table;
+import org.nqcx.generator.domain.o.table.Column;
+import org.nqcx.generator.domain.o.table.Table;
 import org.nqcx.generator.service.conn.CgResult;
 import org.nqcx.generator.service.conn.IConnService;
 import org.nqcx.generator.service.table.ITableService;

@@ -4,9 +4,9 @@
  * it only in accordance with the terms of the license agreement you entered into with nqcx.org.
  */
 
-package org.nqcx.generator.data.vo;
+package org.nqcx.generator.domain.vo;
 
-import org.nqcx.generator.provide.o.Generate;
+import org.nqcx.generator.domain.o.Generate;
 
 /**
  * @author naqichuan 2018/11/27 18:11
