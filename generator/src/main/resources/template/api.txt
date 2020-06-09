@@ -11,6 +11,6 @@ import [(${import})];
 /**
  * @author [(${author})] [(${#dates.format(date, 'yyyy-MM-dd HH:mm')})]
  */
-public interface [(${name})] extends [(${apiName})], IService<[(${poName})], [(${idType})]> {
+public interface [(${name})] {
 
 }
