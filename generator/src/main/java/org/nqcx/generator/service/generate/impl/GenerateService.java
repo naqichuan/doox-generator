@@ -9,6 +9,7 @@
 package org.nqcx.generator.service.generate.impl;
 
 import org.apache.commons.lang3.StringUtils;
+import org.nqcx.doox.commons.lang.enums.BoolEO;
 import org.nqcx.doox.commons.lang.o.DTO;
 import org.nqcx.doox.commons.util.date.DateUtils;
 import org.nqcx.generator.domain.dto.CgField;
@@ -844,11 +845,15 @@ public class GenerateService implements IGenerateService {
 
             mappingImport(imports, "IService");
             mappingImport(imports, g.getDaoPO());
-            mappingImport(imports, g.getApiApi());
 
             cxt.setVariable("poName", g.getDaoPO());
             cxt.setVariable("idType", g.getIdType());
-            cxt.setVariable("apiName", g.getApiApi());
+
+            // 是否在 interface 中增加 api interface
+            if (BoolEO.TRUE.is(g.getApiApi_())) {
+                mappingImport(imports, g.getApiApi());
+                cxt.setVariable("apiName", g.getApiApi());
+            }
 
             this.writeFile(g.getLogFile(),
                     package2path(g.getServiceModuleFile().getPath(), JAVA_PATH, g.getServiceServicePackage()),
