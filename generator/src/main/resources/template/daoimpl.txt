@@ -20,14 +20,14 @@ public class [(${name})] extends DAOSupport<[(${mapperName})], [(${poName})], [(
 
     {
         KOS.put(KO_[(${idNameUpperCase})].fieldStr(), KO_[(${idNameUpperCase})]);
-    }
+    }[# th:if="${jpaName != null and jpaVeriable != null}"]
 
-    private final [(${jpaName})] [(${jpaVeriable})];
+    private final [(${jpaName})] [(${jpaVeriable})];[/]
 
-    public [(${name})]([(${mapperName})] [(${mapperVeriable})],
-                       [(${jpaName})] [(${jpaVeriable})],
+    public [(${name})]([(${mapperName})] [(${mapperVeriable})],[# th:if="${jpaName != null and jpaVeriable != null}"]
+                       [(${jpaName})] [(${jpaVeriable})],[/]
                        RedisTemplate<String, String> redisTemplate) {
-        super([(${mapperVeriable})], redisTemplate);
-        this.[(${jpaVeriable})] = [(${jpaVeriable})];
+        super([(${mapperVeriable})], redisTemplate);[# th:if="${jpaName != null and jpaVeriable != null}"]
+        this.[(${jpaVeriable})] = [(${jpaVeriable})];[/]
     }
 }

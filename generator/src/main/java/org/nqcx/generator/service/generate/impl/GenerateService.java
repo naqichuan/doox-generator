@@ -765,22 +765,28 @@ public class GenerateService implements IGenerateService {
 
             cxt.setVariable("daoName", g.getDaoDAO());
             cxt.setVariable("mapperName", g.getDaoMapper());
-            cxt.setVariable("jpaName", g.getDaoJpa());
 
             cxt.setVariable("mapperVeriable", g.getDaoMapperVeriable());
-            cxt.setVariable("jpaVeriable", g.getDaoJpaVeriable());
 
             imports.clear();
             mappingImport(imports, "stereotype.Service");
             mappingImport(imports, "Logger");
             mappingImport(imports, "LoggerFactory");
             mappingImport(imports, g.getDaoMapper());
-            mappingImport(imports, g.getDaoJpa());
             mappingImport(imports, g.getDaoPO());
             mappingImport(imports, g.getDaoDAO());
             mappingImport(imports, "RedisTemplate");
             mappingImport(imports, g.getDaoCacheSupport());
             mappingImport(imports, "DAOSupport");
+
+            // 如果没有 jpa 选项，不增加 jpa 引用
+            if (BoolEO.TRUE.is(g.getDaoJpa_())) {
+                cxt.setVariable("jpaVeriable", g.getDaoJpaVeriable());
+                cxt.setVariable("jpaName", g.getDaoJpa());
+                cxt.setVariable("jpaVeriable", g.getDaoJpaVeriable());
+
+                mappingImport(imports, g.getDaoJpa());
+            }
 
             cxt.setVariable("name", StringUtils.capitalize(g.getDaoDAOVeriable()));
             this.writeFile(g.getLogFile(),
