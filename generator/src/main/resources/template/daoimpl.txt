@@ -11,7 +11,7 @@ import [(${import})];
 /**
  * @author [(${author})] [(${#dates.format(date, 'yyyy-MM-dd HH:mm')})]
  */
-@Service
+@Repository
 public class [(${name})] extends DAOSupport<[(${mapperName})], [(${poName})], [(${idType})]> implements [(${daoName})] {
 
     private final static Logger LOGGER = LoggerFactory.getLogger([(${name})].class);

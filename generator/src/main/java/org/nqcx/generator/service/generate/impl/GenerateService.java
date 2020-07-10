@@ -110,6 +110,7 @@ public class GenerateService implements IGenerateService {
         CLASS_MAPPING.put("IService", "org.nqcx.doox.commons.service.IService");
         CLASS_MAPPING.put("ServiceSupport", "org.nqcx.doox.commons.service.ServiceSupport");
 
+        CLASS_MAPPING.put("stereotype.Repository", "org.springframework.stereotype.Repository");
         CLASS_MAPPING.put("stereotype.Service", "org.springframework.stereotype.Service");
         CLASS_MAPPING.put("Autowired", "org.springframework.beans.factory.annotation.Autowired");
         CLASS_MAPPING.put("Qualifier", "org.springframework.beans.factory.annotation.Qualifier");
@@ -769,7 +770,7 @@ public class GenerateService implements IGenerateService {
             cxt.setVariable("mapperVeriable", g.getDaoMapperVeriable());
 
             imports.clear();
-            mappingImport(imports, "stereotype.Service");
+            mappingImport(imports, "stereotype.Repository");
             mappingImport(imports, "Logger");
             mappingImport(imports, "LoggerFactory");
             mappingImport(imports, g.getDaoMapper());
