@@ -412,10 +412,10 @@ public class GenerateService implements IGenerateService {
     private void modulePath(Generate g) {
         String path = g.getpPath();
 
-        g.setApiModuleFile(new File(path + g.getApiModule()));
-        g.setDaoModuleFile(new File(path + g.getDaoModule()));
-        g.setServiceModuleFile(new File(path + g.getServiceModule()));
-        g.setWebModuleFile(new File(path + g.getWebModule()));
+        g.setApiModuleFile(new File(path + (!path.endsWith("/") && g.getApiModule().length() > 0 ? "/" : "") + g.getApiModule()));
+        g.setDaoModuleFile(new File(path + (!path.endsWith("/") && g.getDaoModule().length() > 0 ? "/" : "") + g.getDaoModule()));
+        g.setServiceModuleFile(new File(path + (!path.endsWith("/") && g.getServiceModule().length() > 0 ? "/" : "") + g.getServiceModule()));
+        g.setWebModuleFile(new File(path + (!path.endsWith("/") && g.getWebModule().length() > 0 ? "/" : "") + g.getWebModule()));
     }
 
     /**
