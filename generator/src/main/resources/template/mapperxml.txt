@@ -24,7 +24,7 @@
         UPDATE
             `[(${tableName})]`
         SET[# th:each="c : ${poUpdateColumns}"][# th:if="${cStat.index > 0}"],[/]
-            [(${c})]=[(*{poUpdateFields[__${cStat.index}__]})][/]
+            `[(${c})]`=[(*{poUpdateFields[__${cStat.index}__]})][/]
         WHERE
             `[(${idColumn})]`=[(${idField})]
     </update>
