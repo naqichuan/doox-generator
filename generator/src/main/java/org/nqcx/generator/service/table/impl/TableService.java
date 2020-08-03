@@ -72,7 +72,7 @@ public class TableService implements ITableService {
         t.setName(tableName);
         t.setColumns(new ArrayList<>());
 
-        String cSql = "SHOW FULL COLUMNS FROM " + tableName;
+        String cSql = "SHOW FULL COLUMNS FROM `" + tableName + "`";
         CgResult result = connService.query(cSql);
 
         try {
