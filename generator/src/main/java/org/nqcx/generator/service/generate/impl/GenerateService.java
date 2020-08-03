@@ -659,7 +659,9 @@ public class GenerateService implements IGenerateService {
             g.getTable().getColumns().forEach(c -> {
                 if (tableColumnsStr[0].length() > 0)
                     tableColumnsStr[0] += ", ";
+                tableColumnsStr[0] += "`";
                 tableColumnsStr[0] += c.getField();
+                tableColumnsStr[0] += "`";
 
                 poInsertColumns.add(c.getField());
 

@@ -13,7 +13,7 @@
     </sql>
 
     <insert id="save" parameterType="[(${poName})]" useGeneratedKeys="true" keyProperty="[(${idFieldName})]">
-        INSERT INTO [(${tableName})] (
+        INSERT INTO `[(${tableName})]` (
             <include refid="[(${tableName})]_columns" />
         ) VALUES ([# th:each="c : ${poInsertColumns}"][# th:if="${cStat.index > 0}"],[/]
             [(*{poInsertFields[__${cStat.index}__]})][/]
@@ -22,29 +22,29 @@
 
     <update id="update" parameterType="[(${poName})]">
         UPDATE
-            [(${tableName})]
+            `[(${tableName})]`
         SET[# th:each="c : ${poUpdateColumns}"][# th:if="${cStat.index > 0}"],[/]
             [(${c})]=[(*{poUpdateFields[__${cStat.index}__]})][/]
         WHERE
-            [(${idColumn})]=[(${idField})]
+            `[(${idColumn})]`=[(${idField})]
     </update>
 
     <select id="findById" resultMap="[(${tableName})]_rm" parameterType="[(${idType})]">
         SELECT
             <include refid="[(${tableName})]_columns" />
         FROM
-            [(${tableName})]
+            `[(${tableName})]`
         WHERE
-            [(${idColumn})]=[(${idField})]
+            `[(${idColumn})]`=[(${idField})]
     </select>
 
     <select id="findByIds" resultMap="[(${tableName})]_rm">
         SELECT
             <include refid="[(${tableName})]_columns" />
         FROM
-            [(${tableName})]
+            `[(${tableName})]`
         WHERE
-            [(${idColumn})] IN
+            `[(${idColumn})]` IN
             <foreach item="item" index="index" collection="list"
                      open="(" separator="," close=")">
                 #{item}
@@ -54,7 +54,7 @@
     <sql id="condition">
         <where>
             <if test="[(${idFieldName})] != null and [(${idFieldName})] != ''">
-                [(${idColumn})]=[(${idField})]
+                `[(${idColumn})]`=[(${idField})]
             </if>[# th:each="c : ${poConditionFields}"]
             <if test="[(${c})] != null and [(${c})] != ''">
                 AND [(*{poConditionColumns[__${cStat.index}__]})]=#{[(${c})]}
@@ -66,7 +66,7 @@
         SELECT
             <include refid="[(${tableName})]_columns" />
         FROM
-            [(${tableName})]
+            `[(${tableName})]`
         <include refid="condition" />
         <if test="_order_ != null and _order_ != ''">
             ${_order_}
@@ -78,24 +78,24 @@
 
     <select id="getCount" parameterType="map" resultType="long">
         SELECT
-            count([(${idColumn})])
+            count(`[(${idColumn})]`)
         FROM
-            [(${tableName})]
+            `[(${tableName})]`
         <include refid="condition" />
     </select>
 
     <delete id="deleteById" parameterType="[(${idType})]">
         DELETE FROM
-            [(${tableName})]
+            `[(${tableName})]`
         WHERE
-            [(${idColumn})]=[(${idField})]
+            `[(${idColumn})]`=[(${idField})]
     </delete>
 
     <delete id="deleteByIds">
         DELETE FROM
-            [(${tableName})]
+            `[(${tableName})]`
         WHERE
-            [(${idColumn})] IN
+            `[(${idColumn})]` IN
             <foreach item="item" index="index" collection="list"
                      open="(" separator="," close=")">
                 #{item}
