@@ -78,7 +78,7 @@ public class [(${name})] extends AbstractController {
             produces = "application/json")
     @ResponseBody
     public Map<?, ?> detail(@PathVariable("id") [(${idType})] id) {
-        return edit(id);
+        return buildResult(new DTO(true).setObject([(${serviceVeriable})].findById(id)));
     }
 
     /**
@@ -91,7 +91,7 @@ public class [(${name})] extends AbstractController {
             produces = "application/json")
     @ResponseBody
     public Map<?, ?> edit(@PathVariable("id") [(${idType})] id) {
-        return buildResult(new DTO(true).setObject([(${serviceVeriable})].findById(id)));
+        return detail(id);
     }
 
     /**
