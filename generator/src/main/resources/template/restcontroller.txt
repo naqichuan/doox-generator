@@ -24,14 +24,13 @@ public class [(${name})] extends AbstractController {
     /**
      * list
      *
-     * @param page     page
-     * @param pageSize pageSize
+     * @param [(${serviceVOVeriable})] vo
      * @return Map
      */
     @RequestMapping(value = "/list", method = {RequestMethod.GET, RequestMethod.POST},
             produces = "application/json")
     public Map<?, ?> list([(${serviceVO})] [(${serviceVOVeriable})]) {
-        return return buildResult([(${serviceVeriable})].findAll([(${serviceVOVeriable})].vo2dto()));
+        return buildResult([(${serviceVeriable})].findAll([(${serviceVOVeriable})].vo2dto()));
     }
 
     /**
