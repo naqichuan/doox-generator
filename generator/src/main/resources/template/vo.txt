@@ -12,5 +12,15 @@ import [(${import})];
  * @author [(${author})] [(${#dates.format(date, 'yyyy-MM-dd HH:mm')})]
  */
 public class [(${name})] extends [(${poName})] {
+[# th:each="f : ${voFields}"][# th:if="${voFieldComments[__${fStat.index}__] != ''}"]
+    [(*{voFieldComments[__${fStat.index}__]})][/]
+    [(${f})][/][# th:each="gs : ${voGetterAndSetter}"]
 
+    public [(${gs.type})] get[(${gs.name})]() {
+        return [(${gs.field})];
+    }
+
+    public void set[(${gs.name})]([(${gs.type})] [(${gs.field})]) {
+        this.[(${gs.field})] = [(${gs.field})];
+    }[/]
 }

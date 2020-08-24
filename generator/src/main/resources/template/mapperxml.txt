@@ -57,7 +57,7 @@
                 `[(${idColumn})]`=[(${idField})]
             </if>[# th:each="c : ${poConditionFields}"]
             <if test="[(${c})] != null and [(${c})] != ''">
-                AND `[(*{poConditionColumns[__${cStat.index}__]})]`=#{[(${c})]}
+                AND `[(*{poConditionColumns[__${cStat.index}__]})]`[(*{poConditionOperates[__${cStat.index}__]})][(*{poConditionFieldValues[__${cStat.index}__]})]
             </if>[/]
         </where>
     </sql>

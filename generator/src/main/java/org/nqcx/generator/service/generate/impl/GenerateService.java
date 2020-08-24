@@ -650,7 +650,9 @@ public class GenerateService implements IGenerateService {
             List<String> poUpdateFields = new ArrayList<>();
 
             List<String> poConditionColumns = new ArrayList<>();
+            List<String> poConditionOperates = new ArrayList<>();
             List<String> poConditionFields = new ArrayList<>();
+            List<String> poConditionFieldValues = new ArrayList<>();
 
             Column idc = g.getTable().getIdColumn();
             final String[] tableColumnsStr = {""};
@@ -682,8 +684,76 @@ public class GenerateService implements IGenerateService {
                         poUpdateColumns.add(c.getField());
                         poUpdateFields.add("#{" + c.getField_() + "}");
 
+                        /*
+                        | Field         | Operator | value                          |
+                        |:--------------|:---------|:-------------------------------|
+                        | `field`       | =        | `#{field}`                     |
+                        | `field_no`    | !=       | `#{field_no}`                  |
+                        | `field__`     | like     | `concat('%',#{field__},'%')`   |
+                        | `field_no_`   | not like | `concat('%',#{field_no_},'%')` |
+                        | `field_in`    | in       | `(?,?,?)`                      |
+                        | `field_no_in` | not in   | `(?,?,?)`                      |
+                        | `field_lt`    | <        | `#{field_lt}`                  |
+                        | `field_le`    | <=       | `#{field_le}`                  |
+                        | `field_gt`    | >        | `#{field_gt}`                  |
+                        | `field_ge`    | >=       | `#{field_ge}`                  |
+                        */
+
                         poConditionColumns.add(c.getField());
+                        poConditionOperates.add("=");
                         poConditionFields.add(c.getField_());
+                        poConditionFieldValues.add("#{" + c.getField_() + "}");
+
+                        String conditionField;
+                        if ("String".equalsIgnoreCase(c.getType_())) {
+                            conditionField = c.getField_() + "_no";
+                            poConditionColumns.add(c.getField());
+                            poConditionOperates.add("!=");
+                            poConditionFields.add(conditionField);
+                            poConditionFieldValues.add("#{" + conditionField + "}");
+
+                            conditionField = c.getField_() + "__";
+                            poConditionColumns.add(c.getField());
+                            poConditionOperates.add(" like ");
+                            poConditionFields.add(conditionField);
+                            poConditionFieldValues.add("concat('%',#{" + conditionField + "},'%')");
+
+                            conditionField = c.getField_() + "_no_";
+                            poConditionColumns.add(c.getField());
+                            poConditionOperates.add(" not like ");
+                            poConditionFields.add(conditionField);
+                            poConditionFieldValues.add("concat('%',#{" + conditionField + "},'%')");
+                        } else if ("Long".equalsIgnoreCase(c.getType_())
+                                || "int".equalsIgnoreCase(c.getType_())
+                                || "Integer".equalsIgnoreCase(c.getType_())
+                                || "Float".equalsIgnoreCase(c.getType_())
+                                || "Double".equalsIgnoreCase(c.getType_())
+                                || "BigDecimal".equalsIgnoreCase(c.getType_())) {
+
+                            conditionField = c.getField_() + "_lt";
+                            poConditionColumns.add(c.getField());
+                            poConditionOperates.add("&lt;");
+                            poConditionFields.add(conditionField);
+                            poConditionFieldValues.add("#{" + conditionField + "}");
+
+                            conditionField = c.getField_() + "_le";
+                            poConditionColumns.add(c.getField());
+                            poConditionOperates.add("&lt;=");
+                            poConditionFields.add(conditionField);
+                            poConditionFieldValues.add("#{" + conditionField + "}");
+
+                            conditionField = c.getField_() + "_gt";
+                            poConditionColumns.add(c.getField());
+                            poConditionOperates.add("&gt;");
+                            poConditionFields.add(conditionField);
+                            poConditionFieldValues.add("#{" + conditionField + "}");
+
+                            conditionField = c.getField_() + "_ge";
+                            poConditionColumns.add(c.getField());
+                            poConditionOperates.add("&gt;=");
+                            poConditionFields.add(conditionField);
+                            poConditionFieldValues.add("#{" + conditionField + "}");
+                        }
                     }
                 }
             });
@@ -704,7 +774,9 @@ public class GenerateService implements IGenerateService {
             cxt.setVariable("poUpdateColumns", poUpdateColumns);
             cxt.setVariable("poUpdateFields", poUpdateFields);
             cxt.setVariable("poConditionColumns", poConditionColumns);
+            cxt.setVariable("poConditionOperates", poConditionOperates);
             cxt.setVariable("poConditionFields", poConditionFields);
+            cxt.setVariable("poConditionFieldValues", poConditionFieldValues);
 
             this.writeFile(g.getLogFile(),
                     package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoMapperPackage()),
@@ -876,10 +948,73 @@ public class GenerateService implements IGenerateService {
         if (g.getServiceVO_().isTrue()) {
             // vo
             baseVariable(cxt, imports, g.getAuthor(), g.getServiceVOPackage(), g.getServiceVO());
-
             mappingImport(imports, g.getDaoPO());
 
             cxt.setVariable("poName", g.getDaoPO());
+
+            List<String> voFieldComments = new ArrayList<>();
+            List<String> voFields = new ArrayList<>();
+            List<CgField> voGetterAndSetters = new ArrayList<>();
+
+            g.getTable().getColumns().forEach(c -> {
+                if (c.isCm_() || c.isId_())
+                    return;
+
+                /*
+                | Field         | Operator | value                          |
+                |:--------------|:---------|:-------------------------------|
+                | `field`       | =        | `#{field}`                     |
+                | `field_no`    | !=       | `#{field_no}`                  |
+                | `field__`     | like     | `concat('%',#{field__},'%')`   |
+                | `field_no_`   | not like | `concat('%',#{field_no_},'%')` |
+                | `field_in`    | in       | `(?,?,?)`                      |
+                | `field_no_in` | not in   | `(?,?,?)`                      |
+                | `field_lt`    | <        | `#{field_lt}`                  |
+                | `field_le`    | <=       | `#{field_le}`                  |
+                | `field_gt`    | >        | `#{field_gt}`                  |
+                | `field_ge`    | >=       | `#{field_ge}`                  |
+                */
+
+                if ("String".equalsIgnoreCase(c.getType_())) {
+
+//                    this.voField(voFieldComments, voFields, voGetterAndSetters,
+//                            c.getField_(), "String", "_no", "!=");
+
+                    this.voField(voFieldComments, voFields, voGetterAndSetters,
+                            c.getField_(), "String", "__", "like");
+
+//                    this.voField(voFieldComments, voFields, voGetterAndSetters,
+//                            c.getField_(), "String", "_no_", "not like");
+
+                } else if ("Long".equalsIgnoreCase(c.getType_())
+                        || "int".equalsIgnoreCase(c.getType_())
+                        || "Integer".equalsIgnoreCase(c.getType_())
+                        || "Float".equalsIgnoreCase(c.getType_())
+                        || "Double".equalsIgnoreCase(c.getType_())
+                        || "BigDecimal".equalsIgnoreCase(c.getType_())) {
+
+//                    this.voField(voFieldComments, voFields, voGetterAndSetters,
+//                            c.getField_(), "String", "_lt", "<");
+//
+//                    this.voField(voFieldComments, voFields, voGetterAndSetters,
+//                            c.getField_(), "String", "_le", "<=");
+//
+//                    this.voField(voFieldComments, voFields, voGetterAndSetters,
+//                            c.getField_(), "String", "_gt", ">");
+//
+//                    this.voField(voFieldComments, voFields, voGetterAndSetters,
+//                            c.getField_(), "String", "_ge", ">=");
+                }
+            });
+
+            this.voField(voFieldComments, voFields, voGetterAndSetters,
+                    "page", "Long", "", "Current page");
+            this.voField(voFieldComments, voFields, voGetterAndSetters,
+                    "pageSize", "Long", "", "Page size");
+
+            cxt.setVariable("voFieldComments", voFieldComments);
+            cxt.setVariable("voFields", voFields);
+            cxt.setVariable("voGetterAndSetter", voGetterAndSetters);
 
             this.writeFile(g.getLogFile(),
                     package2path(g.getServiceModuleFile().getPath(), JAVA_PATH, g.getServiceVOPackage()),
@@ -935,6 +1070,26 @@ public class GenerateService implements IGenerateService {
                     process(SERVICETEST_TXT_TEMPLATE_NAME, cxt));
             // end of service test
         }
+    }
+
+    /**
+     * @param voFieldComments    voFieldComments
+     * @param voFields           voFields
+     * @param voGetterAndSetters voGetterAndSetters
+     * @param field              field
+     * @param type               type
+     * @param suffix             suffix
+     * @param comments           comments
+     */
+    private void voField(List<String> voFieldComments, List<String> voFields, List<CgField> voGetterAndSetters,
+                         String field, String type, String suffix, String comments) {
+        voFieldComments.add("// " + comments);
+
+        Column c = new Column();
+        c.setType_(type);
+        c.setField_(field + suffix);
+        voFields.add(String.format("private %s %s;", c.getType_(), c.getField_()));
+        voGetterAndSetters.add(cgField(c));
     }
 
     /**
@@ -996,7 +1151,7 @@ public class GenerateService implements IGenerateService {
             // end of controller
         }
 
-       if (g.getWebRestController_().isTrue()) {
+        if (g.getWebRestController_().isTrue()) {
             // rest controller
             baseVariable(cxt, imports, g.getAuthor(), g.getWebRestControllerPackage(), g.getWebRestController());
 
