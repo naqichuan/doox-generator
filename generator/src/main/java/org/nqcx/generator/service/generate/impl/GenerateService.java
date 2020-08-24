@@ -116,7 +116,7 @@ public class GenerateService implements IGenerateService {
         CLASS_MAPPING.put("Autowired", "org.springframework.beans.factory.annotation.Autowired");
         CLASS_MAPPING.put("Qualifier", "org.springframework.beans.factory.annotation.Qualifier");
 
-        CLASS_MAPPING.put("MediaType", "org.springframework.http.MediaType");
+//        CLASS_MAPPING.put("MediaType", "org.springframework.http.MediaType");
         CLASS_MAPPING.put("Controller", "org.springframework.stereotype.Controller");
         CLASS_MAPPING.put("RestController", "org.springframework.web.bind.annotation.RestController");
         CLASS_MAPPING.put("PathVariable", "org.springframework.web.bind.annotation.PathVariable");
@@ -968,7 +968,6 @@ public class GenerateService implements IGenerateService {
             mappingImport(imports, "NPage");
             mappingImport(imports, "NSort");
 
-            mappingImport(imports, "MediaType");
             mappingImport(imports, "Controller");
             mappingImport(imports, "PathVariable");
             mappingImport(imports, "RequestMapping");
@@ -1005,7 +1004,6 @@ public class GenerateService implements IGenerateService {
             mappingImport(imports, "NPage");
             mappingImport(imports, "NSort");
 
-            mappingImport(imports, "MediaType");
             mappingImport(imports, "RestController");
             mappingImport(imports, "PathVariable");
             mappingImport(imports, "RequestMapping");

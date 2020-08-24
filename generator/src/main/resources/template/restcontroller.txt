@@ -120,7 +120,6 @@ public class [(${name})] extends AbstractController {
      */
     @RequestMapping(value = "/delete", method = RequestMethod.POST,
             produces = "application/json")
-    @ResponseBody
     public Map<?, ?> delete(@RequestParam(value = "ids[]") [(${idType})][] ids) {
         if (ids != null && ids.length > 0)
             [(${serviceVeriable})].deleteByIds(ids);
