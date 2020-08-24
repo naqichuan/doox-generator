@@ -30,14 +30,8 @@ public class [(${name})] extends AbstractController {
      */
     @RequestMapping(value = "/list", method = {RequestMethod.GET, RequestMethod.POST},
             produces = "application/json")
-    public Map<?, ?> list(@RequestParam(value = "page", required = false, defaultValue = "1") long page,
-                          @RequestParam(value = "pageSize", required = false, defaultValue = "20") long pageSize) {
-
-        DTO dtoRequest = new DTO().setPage(new NPage(page, pageSize));
-
-        DTO result = [(${serviceVeriable})].findAll(dtoRequest);
-
-        return buildResult(result);
+    public Map<?, ?> list([(${serviceVO})] [(${serviceVOVeriable})]) {
+        return return buildResult([(${serviceVeriable})].findAll([(${serviceVOVeriable})].vo2dto()));
     }
 
     /**

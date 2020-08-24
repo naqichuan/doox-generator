@@ -53,10 +53,10 @@
 
     <sql id="condition">
         <where>
-            <if test="[(${idFieldName})] != null and [(${idFieldName})] != ''">
+            <if test="[(${idFieldName})] != null">
                 `[(${idColumn})]`=[(${idField})]
             </if>[# th:each="c : ${poConditionFields}"]
-            <if test="[(${c})] != null and [(${c})] != ''">
+            <if test="[(${c})] != null[# th:if="${poConditionFieldIsString[__${cStat.index}__]}"] and [(${c})] != ''[/]">
                 AND `[(*{poConditionColumns[__${cStat.index}__]})]`[(*{poConditionOperates[__${cStat.index}__]})][(*{poConditionFieldValues[__${cStat.index}__]})]
             </if>[/]
         </where>

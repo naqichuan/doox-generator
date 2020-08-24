@@ -23,4 +23,10 @@ public class [(${name})] extends [(${poName})] {
     public void set[(${gs.name})]([(${gs.type})] [(${gs.field})]) {
         this.[(${gs.field})] = [(${gs.field})];
     }[/]
+
+    public DTO vo2dto() {
+        return new DTO()
+                .newPageWith(getPage(), getPageSize())
+                .newSortsWith(getSorts());
+    }
 }

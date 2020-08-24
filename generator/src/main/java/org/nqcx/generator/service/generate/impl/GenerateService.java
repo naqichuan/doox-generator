@@ -652,6 +652,7 @@ public class GenerateService implements IGenerateService {
             List<String> poConditionColumns = new ArrayList<>();
             List<String> poConditionOperates = new ArrayList<>();
             List<String> poConditionFields = new ArrayList<>();
+            List<Boolean> poConditionFieldIsString = new ArrayList<>();
             List<String> poConditionFieldValues = new ArrayList<>();
 
             Column idc = g.getTable().getIdColumn();
@@ -706,22 +707,27 @@ public class GenerateService implements IGenerateService {
 
                         String conditionField;
                         if ("String".equalsIgnoreCase(c.getType_())) {
+                            poConditionFieldIsString.add(true);
+
                             conditionField = c.getField_() + "_no";
                             poConditionColumns.add(c.getField());
                             poConditionOperates.add("!=");
                             poConditionFields.add(conditionField);
+                            poConditionFieldIsString.add(true);
                             poConditionFieldValues.add("#{" + conditionField + "}");
 
                             conditionField = c.getField_() + "__";
                             poConditionColumns.add(c.getField());
                             poConditionOperates.add(" like ");
                             poConditionFields.add(conditionField);
+                            poConditionFieldIsString.add(true);
                             poConditionFieldValues.add("concat('%',#{" + conditionField + "},'%')");
 
                             conditionField = c.getField_() + "_no_";
                             poConditionColumns.add(c.getField());
                             poConditionOperates.add(" not like ");
                             poConditionFields.add(conditionField);
+                            poConditionFieldIsString.add(true);
                             poConditionFieldValues.add("concat('%',#{" + conditionField + "},'%')");
                         } else if ("Long".equalsIgnoreCase(c.getType_())
                                 || "int".equalsIgnoreCase(c.getType_())
@@ -729,31 +735,37 @@ public class GenerateService implements IGenerateService {
                                 || "Float".equalsIgnoreCase(c.getType_())
                                 || "Double".equalsIgnoreCase(c.getType_())
                                 || "BigDecimal".equalsIgnoreCase(c.getType_())) {
+                            poConditionFieldIsString.add(false);
 
                             conditionField = c.getField_() + "_lt";
                             poConditionColumns.add(c.getField());
                             poConditionOperates.add("&lt;");
                             poConditionFields.add(conditionField);
+                            poConditionFieldIsString.add(false);
                             poConditionFieldValues.add("#{" + conditionField + "}");
 
                             conditionField = c.getField_() + "_le";
                             poConditionColumns.add(c.getField());
                             poConditionOperates.add("&lt;=");
                             poConditionFields.add(conditionField);
+                            poConditionFieldIsString.add(false);
                             poConditionFieldValues.add("#{" + conditionField + "}");
 
                             conditionField = c.getField_() + "_gt";
                             poConditionColumns.add(c.getField());
                             poConditionOperates.add("&gt;");
                             poConditionFields.add(conditionField);
+                            poConditionFieldIsString.add(false);
                             poConditionFieldValues.add("#{" + conditionField + "}");
 
                             conditionField = c.getField_() + "_ge";
                             poConditionColumns.add(c.getField());
                             poConditionOperates.add("&gt;=");
                             poConditionFields.add(conditionField);
+                            poConditionFieldIsString.add(false);
                             poConditionFieldValues.add("#{" + conditionField + "}");
-                        }
+                        } else
+                            poConditionFieldIsString.add(false);
                     }
                 }
             });
@@ -776,6 +788,7 @@ public class GenerateService implements IGenerateService {
             cxt.setVariable("poConditionColumns", poConditionColumns);
             cxt.setVariable("poConditionOperates", poConditionOperates);
             cxt.setVariable("poConditionFields", poConditionFields);
+            cxt.setVariable("poConditionFieldIsString", poConditionFieldIsString);
             cxt.setVariable("poConditionFieldValues", poConditionFieldValues);
 
             this.writeFile(g.getLogFile(),
@@ -948,6 +961,7 @@ public class GenerateService implements IGenerateService {
         if (g.getServiceVO_().isTrue()) {
             // vo
             baseVariable(cxt, imports, g.getAuthor(), g.getServiceVOPackage(), g.getServiceVO());
+            mappingImport(imports, "DTO");
             mappingImport(imports, g.getDaoPO());
 
             cxt.setVariable("poName", g.getDaoPO());
@@ -1122,8 +1136,6 @@ public class GenerateService implements IGenerateService {
             baseVariable(cxt, imports, g.getAuthor(), g.getWebControllerPackage(), g.getWebController());
 
             mappingImport(imports, "DTO");
-            mappingImport(imports, "NPage");
-            mappingImport(imports, "NSort");
 
             mappingImport(imports, "Controller");
             mappingImport(imports, "PathVariable");
@@ -1158,8 +1170,6 @@ public class GenerateService implements IGenerateService {
             baseVariable(cxt, imports, g.getAuthor(), g.getWebRestControllerPackage(), g.getWebRestController());
 
             mappingImport(imports, "DTO");
-            mappingImport(imports, "NPage");
-            mappingImport(imports, "NSort");
 
             mappingImport(imports, "RestController");
             mappingImport(imports, "PathVariable");
