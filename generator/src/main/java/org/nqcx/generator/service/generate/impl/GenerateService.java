@@ -1011,6 +1011,8 @@ public class GenerateService implements IGenerateService {
                     "page", "Long", "", "Current page");
             this.voField(voFieldComments, voFields, voGetterAndSetters,
                     "pageSize", "Long", "", "Page size");
+            this.voField(voFieldComments, voFields, voGetterAndSetters,
+                    "sorts", "String", "", "Sort fields and directions, field1,asc;field2,desc");
 
             cxt.setVariable("voFieldComments", voFieldComments);
             cxt.setVariable("voFields", voFields);
