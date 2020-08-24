@@ -367,6 +367,17 @@
                         <input type="text" name="webController" class="big_200" value="">
                     </td>
                 </tr>
+                <tr>
+                    <td class="lable"><input type="checkbox" name="webRestController_" value="true"></td>
+                    <td class="lable">Create RestController:</td>
+                    <td>
+                        <input type="text" name="webRestControllerPackage" class="big_240 right" value="">
+                    </td>
+                    <td class="lable">.</td>
+                    <td>
+                        <input type="text" name="webRestController" class="big_200" value="">
+                    </td>
+                </tr>
             </table>
         </fieldset>
         <br/>
@@ -1564,12 +1575,25 @@
         webController: function () {
             return $('input[name="webController"]');
         },
+        webRestController_: function () {
+            return $('input[name="webRestController_"]');
+        },
+        webRestControllerPackage: function () {
+            return $('input[name="webRestControllerPackage"]');
+        },
+        webRestController: function () {
+            return $('input[name="webRestController"]');
+        },
         _init: function () {
             this._().prop("checked", false);
 
             this.webController_().prop("checked", false);
             this.webControllerPackage().val('');
             this.webController().val('');
+
+            this.webRestController_().prop("checked", false);
+            this.webRestControllerPackage().val('');
+            this.webRestController().val('');
         },
         _reset: function () {
             this._init();
@@ -1588,7 +1612,7 @@
 
             var webName = tableName.replaceFirstUP();
             var webController = webName + "Controller";
-
+            var webRestController = webName + 'Rest' + "Controller";
 
             var wcValue = pValue + '.web.controller' + (tablePack ? "." + tablePack : "");
             if (wcValue.indexOf(".") === 0 && wcValue.length > 1)
@@ -1597,6 +1621,9 @@
             // set value
             this.webControllerPackage().val(wcValue);
             this.webController().val(webController);
+
+            this.webRestControllerPackage().val(wcValue);
+            this.webRestController().val(webRestController);
         }
     };
 

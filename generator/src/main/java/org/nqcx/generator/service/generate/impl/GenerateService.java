@@ -70,6 +70,7 @@ public class GenerateService implements IGenerateService {
     private final static String SERVICETEST_TXT_TEMPLATE_NAME = "servicetest.txt";
     private final static String VO_TXT_TEMPLATE_NAME = "vo.txt";
     private final static String CONTROLLER_TXT_TEMPLATE_NAME = "controller.txt";
+    private final static String REST_CONTROLLER_TXT_TEMPLATE_NAME = "restcontroller.txt";
 
     private final static String CACHESUPPORT_TXT_TEMPLATE_NAME = "cachesupport.txt";
 
@@ -117,6 +118,7 @@ public class GenerateService implements IGenerateService {
 
         CLASS_MAPPING.put("MediaType", "org.springframework.http.MediaType");
         CLASS_MAPPING.put("Controller", "org.springframework.stereotype.Controller");
+        CLASS_MAPPING.put("RestController", "org.springframework.web.bind.annotation.RestController");
         CLASS_MAPPING.put("PathVariable", "org.springframework.web.bind.annotation.PathVariable");
         CLASS_MAPPING.put("RequestMapping", "org.springframework.web.bind.annotation.RequestMapping");
         CLASS_MAPPING.put("RequestMethod", "org.springframework.web.bind.annotation.RequestMethod");
@@ -365,6 +367,8 @@ public class GenerateService implements IGenerateService {
         g.setServiceVOVeriable(StringUtils.uncapitalize(g.getServiceVO()));
         g.setWebControllerReference(g.getWebControllerPackage() + "." + g.getWebController());
         g.setWebControllerVeriable(StringUtils.uncapitalize(StringUtils.substring(g.getWebController(), 1)));
+        g.setWebRestControllerReference(g.getWebRestControllerPackage() + "." + g.getWebRestController());
+        g.setWebRestControllerVeriable(StringUtils.uncapitalize(StringUtils.substring(g.getWebRestController(), 1)));
 
         g.setWebAbstractControllerPackage(g.getpPackage() + ".web.controller");
         g.setWebAbstractController("AbstractController");
@@ -580,8 +584,6 @@ public class GenerateService implements IGenerateService {
                 String colAnno = "name = \"" + c.getField() + "\"";
                 if (!c.isNull_())
                     colAnno += ", nullable = false";
-//                else
-//                    colAnno += ", nullable = true";
 
                 if (c.getColumnLength() != null)
                     colAnno += ", length = " + c.getColumnLength();
@@ -993,6 +995,41 @@ public class GenerateService implements IGenerateService {
                     g.getWebController(), JAVA_EXT_NAME,
                     process(CONTROLLER_TXT_TEMPLATE_NAME, cxt));
             // end of controller
+        }
+
+       if (g.getWebRestController_().isTrue()) {
+            // rest controller
+            baseVariable(cxt, imports, g.getAuthor(), g.getWebRestControllerPackage(), g.getWebRestController());
+
+            mappingImport(imports, "DTO");
+            mappingImport(imports, "NPage");
+            mappingImport(imports, "NSort");
+
+            mappingImport(imports, "MediaType");
+            mappingImport(imports, "RestController");
+            mappingImport(imports, "PathVariable");
+            mappingImport(imports, "RequestMapping");
+            mappingImport(imports, "RequestMethod");
+            mappingImport(imports, "RequestParam");
+
+            mappingImport(imports, "Map");
+
+            mappingImport(imports, g.getServiceVO());
+            mappingImport(imports, g.getServiceService());
+            mappingImport(imports, g.getWebAbstractController());
+
+            cxt.setVariable("idType", g.getIdType());
+            cxt.setVariable("tableName", g.getTable().getName());
+            cxt.setVariable("serviceName", g.getServiceService());
+            cxt.setVariable("serviceVeriable", g.getServiceServiceVeriable());
+            cxt.setVariable("serviceVO", g.getServiceVO());
+            cxt.setVariable("serviceVOVeriable", g.getServiceVOVeriable());
+
+            this.writeFile(g.getLogFile(),
+                    package2path(g.getWebModuleFile().getPath(), JAVA_PATH, g.getWebRestControllerPackage()),
+                    g.getWebRestController(), JAVA_EXT_NAME,
+                    process(REST_CONTROLLER_TXT_TEMPLATE_NAME, cxt));
+            // end of rest controller
         }
     }
 

@@ -11,7 +11,7 @@ import [(${import})];
 /**
  * @author [(${author})] [(${#dates.format(date, 'yyyy-MM-dd HH:mm')})]
  */
-@Controller
+@RestController
 @RequestMapping("/[(${tableName})]")
 public class [(${name})] extends AbstractController {
 
@@ -19,16 +19,6 @@ public class [(${name})] extends AbstractController {
 
     public [(${name})]([(${serviceName})] [(${serviceVeriable})]) {
         this.[(${serviceVeriable})] = [(${serviceVeriable})];
-    }
-
-    /**
-     * index
-     *
-     * @return ModelAndView
-     */
-    @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
-    public ModelAndView index() {
-        return new ModelAndView("/[(${tableName})]/[(${tableName})]");
     }
 
     /**
@@ -40,7 +30,6 @@ public class [(${name})] extends AbstractController {
      */
     @RequestMapping(value = "/list", method = {RequestMethod.GET, RequestMethod.POST},
             produces = "application/json")
-    @ResponseBody
     public Map<?, ?> list(@RequestParam(value = "page", required = false, defaultValue = "1") long page,
                           @RequestParam(value = "pageSize", required = false, defaultValue = "20") long pageSize) {
 
@@ -59,7 +48,6 @@ public class [(${name})] extends AbstractController {
      */
     @RequestMapping(value = "/save", method = RequestMethod.POST,
             produces = "application/json")
-    @ResponseBody
     public Map<?, ?> save([(${serviceVO})] [(${serviceVOVeriable})]) {
         DTO dto = checkForm([(${serviceVOVeriable})], false);
         if (dto == null || !dto.isSuccess())
@@ -76,7 +64,6 @@ public class [(${name})] extends AbstractController {
      */
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET,
             produces = "application/json")
-    @ResponseBody
     public Map<?, ?> detail(@PathVariable("id") [(${idType})] id) {
         return buildResult(new DTO(true).setObject([(${serviceVeriable})].findById(id)));
     }
@@ -89,7 +76,6 @@ public class [(${name})] extends AbstractController {
      */
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET,
             produces = "application/json")
-    @ResponseBody
     public Map<?, ?> edit(@PathVariable("id") [(${idType})] id) {
         return detail(id);
     }
@@ -102,7 +88,6 @@ public class [(${name})] extends AbstractController {
      */
     @RequestMapping(value = "/modify", method = RequestMethod.POST,
             produces = "application/json")
-    @ResponseBody
     public Map<?, ?> modify([(${serviceVO})] [(${serviceVOVeriable})]) {
         DTO dto = checkForm([(${serviceVOVeriable})], true);
         if (dto == null || !dto.isSuccess())

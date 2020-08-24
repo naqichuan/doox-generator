@@ -100,6 +100,9 @@ public class Generate implements Serializable {
     private BoolEO webController_ = BoolEO.FALSE;
     private String webControllerPackage;
     private String webController;
+    private BoolEO webRestController_ = BoolEO.FALSE;
+    private String webRestControllerPackage;
+    private String webRestController;
     // end of web field
 
     // generate resource ======================================================
@@ -145,6 +148,8 @@ public class Generate implements Serializable {
     private String serviceVOVeriable;
     private String webControllerReference;
     private String webControllerVeriable;
+    private String webRestControllerReference;
+    private String webRestControllerVeriable;
     private String webAbstractControllerPackage;
     private String webAbstractController;
     private String webAbstractControllerReference;
@@ -663,6 +668,30 @@ public class Generate implements Serializable {
         this.webController = webController;
     }
 
+    public BoolEO getWebRestController_() {
+        return webRestController_;
+    }
+
+    public void setWebRestController_(BoolEO webRestController_) {
+        this.webRestController_ = webRestController_;
+    }
+
+    public String getWebRestControllerPackage() {
+        return webRestControllerPackage;
+    }
+
+    public void setWebRestControllerPackage(String webRestControllerPackage) {
+        this.webRestControllerPackage = webRestControllerPackage;
+    }
+
+    public String getWebRestController() {
+        return webRestController;
+    }
+
+    public void setWebRestController(String webRestController) {
+        this.webRestController = webRestController;
+    }
+
     // generate resource ======================================================
 
     public File getLogFile() {
@@ -866,22 +895,6 @@ public class Generate implements Serializable {
         this.daoBaseTestReference = daoBaseTestReference;
     }
 
-//    public String getServiceDOReference() {
-//        return serviceDOReference;
-//    }
-//
-//    public void setServiceDOReference(String serviceDOReference) {
-//        this.serviceDOReference = serviceDOReference;
-//    }
-//
-//    public String getServiceDOVeriable() {
-//        return serviceDOVeriable;
-//    }
-//
-//    public void setServiceDOVeriable(String serviceDOVeriable) {
-//        this.serviceDOVeriable = serviceDOVeriable;
-//    }
-
     public String getServiceServiceReference() {
         return serviceServiceReference;
     }
@@ -960,6 +973,22 @@ public class Generate implements Serializable {
 
     public void setWebControllerVeriable(String webControllerVeriable) {
         this.webControllerVeriable = webControllerVeriable;
+    }
+
+    public String getWebRestControllerReference() {
+        return webRestControllerReference;
+    }
+
+    public void setWebRestControllerReference(String webRestControllerReference) {
+        this.webRestControllerReference = webRestControllerReference;
+    }
+
+    public String getWebRestControllerVeriable() {
+        return webRestControllerVeriable;
+    }
+
+    public void setWebRestControllerVeriable(String webRestControllerVeriable) {
+        this.webRestControllerVeriable = webRestControllerVeriable;
     }
 
     public String getWebAbstractControllerPackage() {
