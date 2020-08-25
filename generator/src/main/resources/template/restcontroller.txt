@@ -39,9 +39,8 @@ public class [(${name})] extends AbstractController {
      * @param [(${serviceVOVeriable})] [(${serviceVOVeriable})]
      * @return Map
      */
-    @RequestMapping(value = "/save", method = RequestMethod.POST,
-            produces = "application/json")
-    public Map<?, ?> save([(${serviceVO})] [(${serviceVOVeriable})]) {
+    @PutMapping(value = "/save", produces = "application/json")
+    public Map<?, ?> save(@RequestBody [(${serviceVO})] [(${serviceVOVeriable})]) {
         DTO dto = checkForm([(${serviceVOVeriable})], false);
         if (dto == null || !dto.isSuccess())
             return buildResult(dto);
@@ -55,8 +54,7 @@ public class [(${name})] extends AbstractController {
      * @param id id
      * @return Map
      */
-    @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET,
-            produces = "application/json")
+    @GetMapping(value = "/detail/{id}", produces = "application/json")
     public Map<?, ?> detail(@PathVariable("id") [(${idType})] id) {
         return buildResult(new DTO(true).setObject([(${serviceVeriable})].findById(id)));
     }
@@ -67,8 +65,7 @@ public class [(${name})] extends AbstractController {
      * @param id id
      * @return Map
      */
-    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET,
-            produces = "application/json")
+    @GetMapping(value = "/edit/{id}", produces = "application/json")
     public Map<?, ?> edit(@PathVariable("id") [(${idType})] id) {
         return detail(id);
     }
@@ -79,9 +76,8 @@ public class [(${name})] extends AbstractController {
      * @param [(${serviceVOVeriable})] [(${serviceVOVeriable})]
      * @return Map
      */
-    @RequestMapping(value = "/modify", method = RequestMethod.POST,
-            produces = "application/json")
-    public Map<?, ?> modify([(${serviceVO})] [(${serviceVOVeriable})]) {
+    @PutMapping(value = "/modify", produces = "application/json")
+    public Map<?, ?> modify(@RequestBody [(${serviceVO})] [(${serviceVOVeriable})]) {
         DTO dto = checkForm([(${serviceVOVeriable})], true);
         if (dto == null || !dto.isSuccess())
             return buildResult(dto);
@@ -111,8 +107,7 @@ public class [(${name})] extends AbstractController {
      * @param ids ids
      * @return Map
      */
-    @RequestMapping(value = "/delete", method = RequestMethod.POST,
-            produces = "application/json")
+    @DeleteMapping(value = "/delete", produces = "application/json")
     public Map<?, ?> delete(@RequestParam(value = "ids[]") [(${idType})][] ids) {
         if (ids != null && ids.length > 0)
             [(${serviceVeriable})].deleteByIds(ids);

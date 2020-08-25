@@ -121,8 +121,14 @@ public class GenerateService implements IGenerateService {
         CLASS_MAPPING.put("RestController", "org.springframework.web.bind.annotation.RestController");
         CLASS_MAPPING.put("PathVariable", "org.springframework.web.bind.annotation.PathVariable");
         CLASS_MAPPING.put("RequestMapping", "org.springframework.web.bind.annotation.RequestMapping");
+        CLASS_MAPPING.put("GetMapping", "org.springframework.web.bind.annotation.GetMapping");
+        CLASS_MAPPING.put("PostMapping", "org.springframework.web.bind.annotation.PostMapping");
+        CLASS_MAPPING.put("PutMapping", "org.springframework.web.bind.annotation.PutMapping");
+        CLASS_MAPPING.put("PatchMapping", "org.springframework.web.bind.annotation.PatchMapping");
+        CLASS_MAPPING.put("DeleteMapping", "org.springframework.web.bind.annotation.DeleteMapping");
         CLASS_MAPPING.put("RequestMethod", "org.springframework.web.bind.annotation.RequestMethod");
         CLASS_MAPPING.put("RequestParam", "org.springframework.web.bind.annotation.RequestParam");
+        CLASS_MAPPING.put("RequestBody", "org.springframework.web.bind.annotation.RequestBody");
         CLASS_MAPPING.put("ResponseBody", "org.springframework.web.bind.annotation.ResponseBody");
         CLASS_MAPPING.put("ModelAndView", "org.springframework.web.servlet.ModelAndView");
 
@@ -1140,8 +1146,12 @@ public class GenerateService implements IGenerateService {
             mappingImport(imports, "Controller");
             mappingImport(imports, "PathVariable");
             mappingImport(imports, "RequestMapping");
+            mappingImport(imports, "GetMapping");
+            mappingImport(imports, "PutMapping");
+            mappingImport(imports, "DeleteMapping");
             mappingImport(imports, "RequestMethod");
             mappingImport(imports, "RequestParam");
+            mappingImport(imports, "RequestBody");
             mappingImport(imports, "ResponseBody");
             mappingImport(imports, "ModelAndView");
 
@@ -1174,8 +1184,12 @@ public class GenerateService implements IGenerateService {
             mappingImport(imports, "RestController");
             mappingImport(imports, "PathVariable");
             mappingImport(imports, "RequestMapping");
+            mappingImport(imports, "GetMapping");
+            mappingImport(imports, "PutMapping");
+            mappingImport(imports, "DeleteMapping");
             mappingImport(imports, "RequestMethod");
             mappingImport(imports, "RequestParam");
+            mappingImport(imports, "RequestBody");
 
             mappingImport(imports, "Map");
 
