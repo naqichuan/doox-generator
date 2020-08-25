@@ -36,6 +36,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.google.common.base.CaseFormat.LOWER_CAMEL;
+import static com.google.common.base.CaseFormat.LOWER_UNDERSCORE;
 import static org.nqcx.doox.commons.util.date.DateFormatUtils.TIME;
 
 /**
@@ -53,8 +55,12 @@ public class GenerateService implements IGenerateService {
 
     private final static String JAVA_PATH = "src/main/java/";
     private final static String TEST_PATH = "src/test/java/";
+    private final static String UI_API_PATH = "src/api/";
+    private final static String UI_VIEW_PATH = "src/view/";
     private final static String JAVA_EXT_NAME = ".java";
     private final static String XML_EXT_NAME = ".xml";
+    private final static String JS_EXT_NAME = ".js";
+    private final static String VUE_EXT_NAME = ".vue";
 
     private final static String DTO_TXT_TEMPLATE_NAME = "dto.txt";
     private final static String PROVIDE_TXT_TEMPLATE_NAME = "api.txt";
@@ -71,6 +77,9 @@ public class GenerateService implements IGenerateService {
     private final static String VO_TXT_TEMPLATE_NAME = "vo.txt";
     private final static String CONTROLLER_TXT_TEMPLATE_NAME = "controller.txt";
     private final static String REST_CONTROLLER_TXT_TEMPLATE_NAME = "restcontroller.txt";
+    private final static String UI_API_TXT_TEMPLATE_NAME = "uiapi.txt";
+    private final static String UI_VIEW_TXT_TEMPLATE_NAME = "uiview.txt";
+    private final static String UI_VIEW_INDEX_TXT_TEMPLATE_NAME = "uiviewindex.txt";
 
     private final static String CACHESUPPORT_TXT_TEMPLATE_NAME = "cachesupport.txt";
 
@@ -192,6 +201,10 @@ public class GenerateService implements IGenerateService {
         // web
         if (g.getWeb_().isTrue())
             this.generateWeb(g);
+
+        // web
+        if (g.getUi_().isTrue())
+            this.generateUi(g);
 
         return new DTO(true);
     }
@@ -426,6 +439,7 @@ public class GenerateService implements IGenerateService {
         g.setDaoModuleFile(new File(path + (!path.endsWith("/") && g.getDaoModule().length() > 0 ? "/" : "") + g.getDaoModule()));
         g.setServiceModuleFile(new File(path + (!path.endsWith("/") && g.getServiceModule().length() > 0 ? "/" : "") + g.getServiceModule()));
         g.setWebModuleFile(new File(path + (!path.endsWith("/") && g.getWebModule().length() > 0 ? "/" : "") + g.getWebModule()));
+        g.setUiModuleFile(new File(path + (!path.endsWith("/") && g.getUiModule().length() > 0 ? "/" : "") + g.getUiModule()));
     }
 
     /**
@@ -451,7 +465,7 @@ public class GenerateService implements IGenerateService {
     private void baseVariable(Context cxt, Set<String> imports,
                               String author, String _package, String name) {
         cxt.clearVariables();
-        imports.clear();
+        Optional.ofNullable(imports).ifPresent(Set::clear);
 
         cxt.setVariable("imports", imports);
         cxt.setVariable("date", new Date());
@@ -1212,6 +1226,108 @@ public class GenerateService implements IGenerateService {
         }
     }
 
+    /**
+     * @param g g
+     */
+    private void generateUi(Generate g) {
+
+        Context cxt = new Context();
+        String camelTableName = LOWER_UNDERSCORE.to(LOWER_CAMEL, g.getTableName());
+
+        if (BoolEO.TRUE.is(g.getUiApi_())) {
+            // ui api
+            baseVariable(cxt, null, g.getAuthor(), g.getUiApiPackage(), g.getUiApi());
+            cxt.setVariable("camelTableName", camelTableName);
+
+            String packagePath = g.getUiApiPackage().replace('.', '/');
+            cxt.setVariable("packagePath", packagePath);
+
+            this.writeFile(g.getLogFile(),
+                    package2path(g.getUiModuleFile().getPath(), UI_API_PATH, g.getUiApiPackage()),
+                    g.getUiApi(), JS_EXT_NAME,
+                    process(UI_API_TXT_TEMPLATE_NAME, cxt));
+
+            // end of ui api
+        }
+
+        if (BoolEO.TRUE.is(g.getUiView_())) {
+            // ui view
+            baseVariable(cxt, null, g.getAuthor(), g.getUiViewPackage(), g.getUiView());
+            cxt.setVariable("camelTableName", camelTableName);
+
+            String packagePath = g.getUiViewPackage().replace('.', '/');
+            cxt.setVariable("apiPath", UI_API_PATH.replace("src", "@") + packagePath + "/" + camelTableName);
+
+            Column idc = g.getTable().getIdColumn();
+            final String[] idFieldName = {idc != null ? idc.getField_() : null};
+
+            cxt.setVariable("idFieldName", idFieldName[0]);
+            cxt.setVariable("idFieldTitle", idFieldName[0].toUpperCase());
+
+            List<String> searchFields = new ArrayList<>();
+            List<String> searchLabels = new ArrayList<>();
+
+            List<String> tableTitleTitles = new ArrayList<>();
+            List<String> tableTitleKeys = new ArrayList<>();
+
+            List<String> newFormFields = new ArrayList<>();
+            List<String> newFormLabels = new ArrayList<>();
+            List<String> editFormFields = new ArrayList<>();
+            List<String> editFormLabels = new ArrayList<>();
+
+            List<String> validateFields = new ArrayList<>();
+
+            g.getTable().getColumns().forEach(c -> {
+                if (!c.isId_() && !c.isCm_()) {
+                    searchFields.add(c.getField_());
+                    searchLabels.add(StringUtils.capitalize(c.getField_()));
+
+                    tableTitleTitles.add(StringUtils.capitalize(c.getField_()));
+                    tableTitleKeys.add(c.getField_());
+
+                    newFormFields.add(c.getField_());
+                    newFormLabels.add(StringUtils.capitalize(c.getField_()));
+                    editFormFields.add(c.getField_());
+                    editFormLabels.add(StringUtils.capitalize(c.getField_()));
+
+                    if (!c.isNull_()) {
+                        validateFields.add(c.getField_());
+                    }
+                }
+            });
+
+            cxt.setVariable("searchFields", searchFields);
+            cxt.setVariable("searchLabels", searchLabels);
+
+            cxt.setVariable("tableTitleTitles", tableTitleTitles);
+            cxt.setVariable("tableTitleKeys", tableTitleKeys);
+
+            cxt.setVariable("newFormFields", newFormFields);
+            cxt.setVariable("newFormLabels", newFormLabels);
+            cxt.setVariable("editFormFields", editFormFields);
+            cxt.setVariable("editFormLabels", editFormLabels);
+
+            cxt.setVariable("validateFields", validateFields);
+
+            this.writeFile(g.getLogFile(),
+                    package2path(g.getUiModuleFile().getPath(), UI_VIEW_PATH, g.getUiViewPackage()),
+                    g.getUiView(), VUE_EXT_NAME,
+                    process(UI_VIEW_TXT_TEMPLATE_NAME, cxt));
+
+            // ui view index.js
+            baseVariable(cxt, null, g.getAuthor(), g.getUiViewPackage(), g.getUiView());
+            cxt.setVariable("camelTableName", camelTableName);
+
+
+            this.writeFile(g.getLogFile(),
+                    package2path(g.getUiModuleFile().getPath(), UI_VIEW_PATH, g.getUiViewPackage()),
+                    "index", JS_EXT_NAME,
+                    process(UI_VIEW_INDEX_TXT_TEMPLATE_NAME, cxt), true);
+
+            // end of ui view
+        }
+    }
+
     private String process(String template, IContext context) {
         return templateEngine().process(template, context);
     }
@@ -1233,10 +1349,25 @@ public class GenerateService implements IGenerateService {
     }
 
     /**
-     * @param pPath   string
-     * @param content string
+     * @param logFile logFile
+     * @param pPath   pPath
+     * @param name    name
+     * @param ext     ext
+     * @param content content
      */
     private void writeFile(File logFile, String pPath, String name, String ext, String content) {
+        this.writeFile(logFile, pPath, name, ext, content, false);
+    }
+
+    /**
+     * @param logFile     logFile
+     * @param pPath       pPath
+     * @param name        name
+     * @param ext         ext
+     * @param content     content
+     * @param existsAbort existsAbort
+     */
+    private void writeFile(File logFile, String pPath, String name, String ext, String content, boolean existsAbort) {
         if (isBlank(pPath))
             return;
         if (content == null)
@@ -1248,9 +1379,14 @@ public class GenerateService implements IGenerateService {
 
         String fileName = pPath + "/" + name + ext;
         File file = new File(fileName);
-        if (file.exists() && !overwrite)
-            // 文件存在且不覆盖文件，在文件名前加"_"
-            fileName = pPath + "/" + "_" + name + ext;
+        if (file.exists()) {
+            if (existsAbort)
+                return;
+
+            if (!overwrite)
+                // 文件存在且不覆盖文件，在文件名前加"_"
+                fileName = pPath + "/" + "_" + name + ext;
+        }
 
         // write log
         writeLog(logFile, fileName);

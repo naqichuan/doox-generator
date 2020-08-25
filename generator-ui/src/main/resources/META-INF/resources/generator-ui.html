@@ -139,6 +139,14 @@
                 </select>
             </td>
         </tr>
+        <tr height="30">
+            <td class="lable">UI:</td>
+            <td>
+                <select name="uiModuleName">
+                    <option value="">/</option>
+                </select>
+            </td>
+        </tr>
         <tr height="10">
             <td colspan="2">
                 <hr/>
@@ -376,6 +384,36 @@
                     <td class="lable">.</td>
                     <td>
                         <input type="text" name="webRestController" class="big_200" value="">
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+        <br/> <br/>
+        <fieldset>
+            <legend>
+                <span style="font-weight: 700;"><input type="checkbox" name="ui_" value="true">Module -> UI:</span>
+            </legend>
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td class="lable"><input type="checkbox" name="uiApi_" value="true"></td>
+                    <td class="lable">Create UI api:</td>
+                    <td>
+                        <input type="text" name="uiApiPackage" class="big_240 right" value="">
+                    </td>
+                    <td class="lable">.</td>
+                    <td>
+                        <input type="text" name="uiApi" class="big_200" value="">.js
+                    </td>
+                </tr>
+                <tr>
+                    <td class="lable"><input type="checkbox" name="uiView_" value="true"></td>
+                    <td class="lable">Create UI view:</td>
+                    <td>
+                        <input type="text" name="uiViewPackage" class="big_240 right" value="">
+                    </td>
+                    <td class="lable">.</td>
+                    <td>
+                        <input type="text" name="uiView" class="big_200" value="">.vue
                     </td>
                 </tr>
             </table>
@@ -833,9 +871,15 @@
 
                     // modules
                     if (_this._p.modules)
-                        _this.module.fillAll()
+                        _this.module.fillAllModules()
                     else
-                        _this.module.emptyAll();
+                        _this.module.emptyAllModules();
+                    // folders
+                    if (_this._p.folders)
+                        _this.module.fillAllFolders()
+                    else
+                        _this.module.emptyAllFolders();
+
 
                     // change
                     _this._change();
@@ -863,7 +907,9 @@
             this.pPackageTip();
 
             // modules
-            this.module.emptyAll();
+            this.module.emptyAllModules();
+            // folders
+            this.module.emptyAllFolders()
 
             path.setRelativePath('');
             path.loadCgFile('', []);
@@ -907,23 +953,33 @@
             web: function () {
                 return $('select[name="webModuleName"]');
             },
-            fillAll: function () {
+            ui: function () {
+                return $('select[name="uiModuleName"]');
+            },
+            fillAllModules: function () {
                 var _this = this;
 
-                _this.emptyAll();
+                _this.emptyAllModules();
 
                 // api
-                _this.fill(_this.api().attr("name"), '-api');
+                _this.fill(_this.api().attr("name"), '-api', project._p.modules);
                 // dao
-                _this.fill(_this.dao().attr("name"), '-dao');
+                _this.fill(_this.dao().attr("name"), '-dao', project._p.modules);
                 // service
-                _this.fill(_this.service().attr("name"), '-service');
+                _this.fill(_this.service().attr("name"), '-service', project._p.modules);
                 // web
-                _this.fill(_this.web().attr("name"), '-web');
+                _this.fill(_this.web().attr("name"), '-web', project._p.modules);
             },
-            fill: function (name, defaultModule) {
+            fillAllFolders: function () {
+                var _this = this;
+
+                _this.emptyAllFolders();
+
+                // ui
+                _this.fill(_this.ui().attr("name"), '-ui', project._p.folders);
+            },
+            fill: function (name, defaultModule, ml) {
                 var select = $('select[name="' + name + '"]');
-                var ml = project._p.modules;
                 for (var idx in ml) {
                     if (defaultModule && ml[idx].indexOf(defaultModule) > -1)
                         $('<option selected="selected" value="' + ml[idx] + '">' + ml[idx] + '</option>').appendTo(select);
@@ -931,7 +987,7 @@
                         $('<option value="' + ml[idx] + '">' + ml[idx] + '</option>').appendTo(select);
                 }
             },
-            emptyAll: function () {
+            emptyAllModules: function () {
                 // api
                 this.empty(this.api());
                 // dao
@@ -940,6 +996,10 @@
                 this.empty(this.service());
                 // web
                 this.empty(this.web());
+            },
+            emptyAllFolders: function () {
+                // ui
+                this.empty(this.ui());
             },
             empty: function (module) {
                 $('option', module).each(function () {
@@ -1631,6 +1691,70 @@
     project.module.changeWatchars.push(() => web.loadPackage());
 </script>
 <script type="text/javascript">
+    var ui = {
+        _: function () {
+            return $('input[name="ui_"]');
+        },
+        uiApi_: function () {
+            return $('input[name="uiApi_"]');
+        },
+        uiApiPackage: function () {
+            return $('input[name="uiApiPackage"]');
+        },
+        uiApi: function () {
+            return $('input[name="uiApi"]');
+        },
+        uiView_: function () {
+            return $('input[name="uiView_"]');
+        },
+        uiViewPackage: function () {
+            return $('input[name="uiViewPackage"]');
+        },
+        uiView: function () {
+            return $('input[name="uiView"]');
+        },
+        _init: function () {
+            this._().prop("checked", false);
+
+            this.uiApi_().prop("checked", false);
+            this.uiApiPackage().val('');
+            this.uiApi().val('');
+
+            this.uiView_().prop("checked", false);
+            this.uiViewPackage().val('');
+            this.uiView().val('');
+        },
+        _reset: function () {
+            this._init();
+        },
+        loadPackage: function () {
+            var tablePack = table.tablePack().val();
+
+            var tableName = table.tableName().val();
+            if (!tableName) {
+                this._reset();
+                return;
+            }
+
+            var uiName = tableName;
+            var uiApi = uiName;
+            var uiView = uiName;
+
+            // set value
+            var uaValue = tablePack || '';
+            this.uiApiPackage().val(uaValue);
+            this.uiApi().val(uiApi);
+
+            var uvValue = tablePack || '';
+            this.uiViewPackage().val(uvValue);
+            this.uiView().val(uiView);
+        }
+    };
+
+    table.tableNameWatchers.push(() => ui.loadPackage());
+    project.module.changeWatchars.push(() => ui.loadPackage());
+</script>
+<script type="text/javascript">
     var checkForm = function () {
         if (!project._loaded || !project.basedirElement().val()) {
             $.messager.show({
@@ -1653,7 +1777,8 @@
         } else if (!api._().is(":checked")
             && !dao._().is(":checked")
             && !service._().is(":checked")
-            && !web._().is(":checked")) {
+            && !web._().is(":checked")
+            && !ui._().is(":checked")) {
             $.messager.show({
                 title: 'Error',
                 msg: 'Please select modules.'
@@ -1683,7 +1808,8 @@
                 apiModule: project.module.api().val(),
                 daoModule: project.module.dao().val(),
                 serviceModule: project.module.service().val(),
-                webModule: project.module.web().val()
+                webModule: project.module.web().val(),
+                uiModule: project.module.ui().val()
             },
             success: function (result) {
                 if (result.success) {

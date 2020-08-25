@@ -81,14 +81,16 @@ public class ProjectService implements IProjectService {
             p.setProjectPath(p.getBasedir());
             p.setProjectType(PType.SINGLE);
 
-            List<String> modules = new ArrayList<>();
+            List<String> folders = new ArrayList<>();
             File[] childs = baseFile.listFiles();
-            for (File child : childs) {
-                if (child.isDirectory())
-                    modules.add(child.getName());
+            if(childs != null) {
+                for (File child : childs) {
+                    if (child.isDirectory())
+                        folders.add(child.getName());
+                }
             }
-
-            p.setModules(modules);
+            p.setModules(folders);
+            p.setFolders(folders);
         }
 
         // maven project

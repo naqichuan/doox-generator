@@ -29,6 +29,7 @@ public class Generate implements Serializable {
     private String daoModule;
     private String serviceModule;
     private String webModule;
+    private String uiModule;
     // end of project filed
 
     // table
@@ -79,8 +80,11 @@ public class Generate implements Serializable {
 
     // service field
     private BoolEO service_ = BoolEO.FALSE;
-    private BoolEO serviceDO_ = BoolEO.FALSE;
-    private String serviceDOPackage;
+//    private BoolEO serviceDO_ = BoolEO.FALSE;
+//    private String serviceDOPackage;
+    private BoolEO serviceVO_ = BoolEO.FALSE;
+    private String serviceVOPackage;
+    private String serviceVO;
     private BoolEO serviceService_ = BoolEO.FALSE;
     private String serviceServicePackage;
     private String serviceService;
@@ -94,9 +98,6 @@ public class Generate implements Serializable {
 
     // web field
     private BoolEO web_ = BoolEO.FALSE;
-    private BoolEO serviceVO_ = BoolEO.FALSE;
-    private String serviceVOPackage;
-    private String serviceVO;
     private BoolEO webController_ = BoolEO.FALSE;
     private String webControllerPackage;
     private String webController;
@@ -105,6 +106,16 @@ public class Generate implements Serializable {
     private String webRestController;
     // end of web field
 
+    // ui field
+    private BoolEO ui_ = BoolEO.FALSE;
+    private BoolEO uiApi_ = BoolEO.FALSE;
+    private String uiApiPackage;
+    private String uiApi;
+    private BoolEO uiView_ = BoolEO.FALSE;
+    private String uiViewPackage;
+    private String uiView;
+    // end of ui field
+
     // generate resource ======================================================
     private File logFile;
     private Table table;
@@ -112,6 +123,7 @@ public class Generate implements Serializable {
     private File daoModuleFile;
     private File serviceModuleFile;
     private File webModuleFile;
+    private File uiModuleFile;
 
     private String idType;
     private String idName;
@@ -248,6 +260,14 @@ public class Generate implements Serializable {
 
     public void setWebModule(String webModule) {
         this.webModule = webModule;
+    }
+
+    public String getUiModule() {
+        return uiModule;
+    }
+
+    public void setUiModule(String uiModule) {
+        this.uiModule = uiModule;
     }
 
     public BoolEO getApi_() {
@@ -516,21 +536,21 @@ public class Generate implements Serializable {
         this.service_ = service_;
     }
 
-    public BoolEO getServiceDO_() {
-        return serviceDO_;
-    }
+//    public BoolEO getServiceDO_() {
+//        return serviceDO_;
+//    }
 
-    public void setServiceDO_(BoolEO serviceDO_) {
-        this.serviceDO_ = serviceDO_;
-    }
+//    public void setServiceDO_(BoolEO serviceDO_) {
+//        this.serviceDO_ = serviceDO_;
+//    }
 
-    public String getServiceDOPackage() {
-        return serviceDOPackage;
-    }
+//    public String getServiceDOPackage() {
+//        return serviceDOPackage;
+//    }
 
-    public void setServiceDOPackage(String serviceDOPackage) {
-        this.serviceDOPackage = serviceDOPackage;
-    }
+//    public void setServiceDOPackage(String serviceDOPackage) {
+//        this.serviceDOPackage = serviceDOPackage;
+//    }
 
     public String getServiceServicePackage() {
         return serviceServicePackage;
@@ -692,6 +712,62 @@ public class Generate implements Serializable {
         this.webRestController = webRestController;
     }
 
+    public BoolEO getUi_() {
+        return ui_;
+    }
+
+    public void setUi_(BoolEO ui_) {
+        this.ui_ = ui_;
+    }
+
+    public BoolEO getUiApi_() {
+        return uiApi_;
+    }
+
+    public void setUiApi_(BoolEO uiApi_) {
+        this.uiApi_ = uiApi_;
+    }
+
+    public String getUiApiPackage() {
+        return uiApiPackage;
+    }
+
+    public void setUiApiPackage(String uiApiPackage) {
+        this.uiApiPackage = uiApiPackage;
+    }
+
+    public String getUiApi() {
+        return uiApi;
+    }
+
+    public void setUiApi(String uiApi) {
+        this.uiApi = uiApi;
+    }
+
+    public BoolEO getUiView_() {
+        return uiView_;
+    }
+
+    public void setUiView_(BoolEO uiView_) {
+        this.uiView_ = uiView_;
+    }
+
+    public String getUiViewPackage() {
+        return uiViewPackage;
+    }
+
+    public void setUiViewPackage(String uiViewPackage) {
+        this.uiViewPackage = uiViewPackage;
+    }
+
+    public String getUiView() {
+        return uiView;
+    }
+
+    public void setUiView(String uiView) {
+        this.uiView = uiView;
+    }
+
     // generate resource ======================================================
 
     public File getLogFile() {
@@ -741,6 +817,14 @@ public class Generate implements Serializable {
 
     public void setWebModuleFile(File webModuleFile) {
         this.webModuleFile = webModuleFile;
+    }
+
+    public File getUiModuleFile() {
+        return uiModuleFile;
+    }
+
+    public void setUiModuleFile(File uiModuleFile) {
+        this.uiModuleFile = uiModuleFile;
     }
 
     public String getIdType() {

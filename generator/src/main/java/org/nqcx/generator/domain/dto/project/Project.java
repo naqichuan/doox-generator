@@ -27,7 +27,8 @@ public class Project implements Serializable {
     private String artifactId;
     private String version;
 
-    private List<String> modules;
+    private List<String> modules; // maven module
+    private List<String> folders; // normal folders
 
     public String getBasedir() {
         return basedir;
@@ -91,6 +92,14 @@ public class Project implements Serializable {
 
     public void setModules(List<String> modules) {
         this.modules = modules;
+    }
+
+    public List<String> getFolders() {
+        return folders;
+    }
+
+    public void setFolders(List<String> folders) {
+        this.folders = folders;
     }
 
     @Override

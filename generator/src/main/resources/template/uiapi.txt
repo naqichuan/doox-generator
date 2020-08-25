@@ -1,0 +1,53 @@
+import axios from '@/libs/api.request'
+import qs from 'qs'
+
+export const [(${camelTableName})]List = params => {
+  return axios.request({
+    url: '[(${packagePath})]/list',
+    method: 'post',
+    params: params
+  })
+}
+
+export const [(${camelTableName})]Detail = (id) => {
+  return axios.request({
+    url: '[(${packagePath})]/detail/' + id,
+    method: 'get'
+  })
+}
+
+export const [(${camelTableName})]Save = data => {
+  return axios.request({
+    url: '[(${packagePath})]/save',
+    method: 'put',
+    data
+  })
+}
+
+export const [(${camelTableName})]Edit = id => {
+  return axios.request({
+    url: '[(${packagePath})]/edit/' + id,
+    method: 'get'
+  })
+}
+
+export const [(${camelTableName})]Modify = data => {
+  return axios.request({
+    url: '[(${packagePath})]/modify',
+    method: 'put',
+    data
+  })
+}
+
+export const [(${camelTableName})]Delete = (ids) => {
+  return axios.request({
+    url: '[(${packagePath})]/delete',
+    method: 'delete',
+    params: {
+      ids: ids
+    },
+    paramsSerializer: params => {
+      return qs.stringify(params, { indices: false })
+    }
+  })
+}

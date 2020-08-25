@@ -1,0 +1,3 @@
+import [(${camelTableName})] from './[(${camelTableName})].vue'
+
+export default [(${camelTableName})]
