@@ -45,7 +45,7 @@ public class [(${name})] extends AbstractController {
     }
 
     /**
-     * add
+     * save new
      *
      * @param [(${serviceVOVeriable})] [(${serviceVOVeriable})]
      * @return Map
