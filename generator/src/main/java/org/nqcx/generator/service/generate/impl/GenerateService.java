@@ -1324,6 +1324,21 @@ public class GenerateService implements IGenerateService {
                     searchFields.add(c.getField_());
                     searchLabels.add(StringUtils.capitalize(c.getField_()));
 
+                    if ("String".equalsIgnoreCase(c.getType_())) {
+
+                        searchFields.add(c.getField_() + "__");
+                        searchLabels.add(StringUtils.capitalize(c.getField_() + "__"));
+
+                    } else if ("Long".equalsIgnoreCase(c.getType_())
+                            || "int".equalsIgnoreCase(c.getType_())
+                            || "Integer".equalsIgnoreCase(c.getType_())
+                            || "Float".equalsIgnoreCase(c.getType_())
+                            || "Double".equalsIgnoreCase(c.getType_())
+                            || "BigDecimal".equalsIgnoreCase(c.getType_())) {
+
+                        // like vo
+                    }
+
                     tableTitleTitles.add(StringUtils.capitalize(c.getField_()));
                     tableTitleKeys.add(c.getField_());
 
