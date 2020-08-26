@@ -8,6 +8,9 @@
                    @keyup.enter.native="handleTableData"></Input>
           </FormItem>[/]
           <FormItem>
+            <Button type="dashed" icon="ios-refresh" @click="handleSearchReset">重置</Button>
+          </FormItem>
+          <FormItem>
             <Button type="primary" icon="ios-search" @click="handleTableData">查询</Button>
           </FormItem>
         </Form>
@@ -67,7 +70,7 @@ export default {
   },
   data () {
     return {
-      tableSearch: { [# th:each="c : ${searchFields}"][# th:if="${cStat.index > 0}"], [/][(${c})]: ''[/] },
+      tableSearch: {},
       tablePage: { page: 1, pageSize: 20, totalCount: 0 },
       tableSorts: [],
       tableTitle: [
@@ -112,6 +115,9 @@ export default {
       this.tablePage.pageSize = 20
       this.tablePage.totalCount = 0
       this.tableSorts = []
+    },
+    handleSearchReset () {
+      this.tableSearch = { [# th:each="c : ${searchFields}"][# th:if="${cStat.index > 0}"], [/][(${c})]: ''[/] }
     },
     handleTableData () { // 加载数据
       let _this = this
@@ -308,6 +314,7 @@ export default {
     }
   },
   created () {
+    this.handleSearchReset()
   },
   mounted () {
     this.handleTableData()
