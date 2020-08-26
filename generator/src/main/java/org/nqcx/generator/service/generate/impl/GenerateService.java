@@ -98,6 +98,7 @@ public class GenerateService implements IGenerateService {
         CLASS_MAPPING.put("List", "java.util.List");
         CLASS_MAPPING.put("Map", "java.util.Map");
         CLASS_MAPPING.put("Optional", "java.util.Optional");
+        CLASS_MAPPING.put("Objects", "java.util.Objects");
 
         CLASS_MAPPING.put("Entity", "javax.persistence.Entity");
         CLASS_MAPPING.put("Table", "javax.persistence.Table");
@@ -110,6 +111,7 @@ public class GenerateService implements IGenerateService {
         CLASS_MAPPING.put("DTO", "org.nqcx.doox.commons.lang.o.DTO");
         CLASS_MAPPING.put("NPage", "org.nqcx.doox.commons.lang.o.NPage");
         CLASS_MAPPING.put("NSort", "org.nqcx.doox.commons.lang.o.NSort");
+        CLASS_MAPPING.put("StringUtils", "org.nqcx.doox.commons.util.StringUtils");
 
         CLASS_MAPPING.put("PeriodConst", "org.nqcx.doox.commons.lang.consts.PeriodConst");
         CLASS_MAPPING.put("IMapper", "org.nqcx.doox.commons.data.mapper.IMapper");
@@ -982,6 +984,8 @@ public class GenerateService implements IGenerateService {
             // vo
             baseVariable(cxt, imports, g.getAuthor(), g.getServiceVOPackage(), g.getServiceVO());
             mappingImport(imports, "DTO");
+            mappingImport(imports, "StringUtils");
+            mappingImport(imports, "Objects");
             mappingImport(imports, g.getDaoPO());
 
             cxt.setVariable("poName", g.getDaoPO());
@@ -990,9 +994,16 @@ public class GenerateService implements IGenerateService {
             List<String> voFields = new ArrayList<>();
             List<CgField> voGetterAndSetters = new ArrayList<>();
 
+            List<String> voDtoFields = new ArrayList<>();
+            List<String> voDtoGetters = new ArrayList<>();
+            List<String> voDtoWiths = new ArrayList<>();
+
             g.getTable().getColumns().forEach(c -> {
-                if (c.isCm_() || c.isId_())
+                if (c.isCm_())
                     return;
+
+                voDtoFields.add(c.getField_());
+                voDtoGetters.add("get" + StringUtils.capitalize(c.getField_()) + "()");
 
                 /*
                 | Field         | Operator | value                          |
@@ -1010,15 +1021,25 @@ public class GenerateService implements IGenerateService {
                 */
 
                 if ("String".equalsIgnoreCase(c.getType_())) {
+                    voDtoWiths.add("StringUtils::isNotBlank");
 
 //                    this.voField(voFieldComments, voFields, voGetterAndSetters,
 //                            c.getField_(), "String", "_no", "!=");
+//                    voDtoFields.add(c.getField_() + "_no");
+//                    voDtoGetters.add("get" + StringUtils.capitalize(c.getField_())+ "_no" + "()");
+//                    voDtoWiths.add("StringUtils::isNotBlank");
 
                     this.voField(voFieldComments, voFields, voGetterAndSetters,
                             c.getField_(), "String", "__", "like");
+                    voDtoFields.add(c.getField_() + "__");
+                    voDtoGetters.add("get" + StringUtils.capitalize(c.getField_()) + "__" + "()");
+                    voDtoWiths.add("StringUtils::isNotBlank");
 
 //                    this.voField(voFieldComments, voFields, voGetterAndSetters,
 //                            c.getField_(), "String", "_no_", "not like");
+//                    voDtoFields.add(c.getField_() + "_no_");
+//                    voDtoGetters.add("get" + StringUtils.capitalize(c.getField_())+ "_no_" + "()");
+//                    voDtoWiths.add("StringUtils::isNotBlank");
 
                 } else if ("Long".equalsIgnoreCase(c.getType_())
                         || "int".equalsIgnoreCase(c.getType_())
@@ -1027,18 +1048,35 @@ public class GenerateService implements IGenerateService {
                         || "Double".equalsIgnoreCase(c.getType_())
                         || "BigDecimal".equalsIgnoreCase(c.getType_())) {
 
+                    voDtoWiths.add("x -> x > " + (c.isId_() ? "0" : "-1"));
+
 //                    this.voField(voFieldComments, voFields, voGetterAndSetters,
 //                            c.getField_(), "String", "_lt", "<");
-//
+//                    voDtoFields.add(c.getField_() + "_lt");
+//                    voDtoGetters.add("get" + StringUtils.capitalize(c.getField_())+ "_lt" + "()");
+//                    voDtoWiths.add("x -> x > " + (c.isId_() ? "0" : "-1"));
+
 //                    this.voField(voFieldComments, voFields, voGetterAndSetters,
 //                            c.getField_(), "String", "_le", "<=");
-//
+//                    voDtoFields.add(c.getField_() + "_le");
+//                    voDtoGetters.add("get" + StringUtils.capitalize(c.getField_())+ "_le" + "()");
+//                    voDtoWiths.add("x -> x > " + (c.isId_() ? "0" : "-1"));
+
 //                    this.voField(voFieldComments, voFields, voGetterAndSetters,
 //                            c.getField_(), "String", "_gt", ">");
-//
+//                    voDtoFields.add(c.getField_() + "_gt");
+//                    voDtoGetters.add("get" + StringUtils.capitalize(c.getField_())+ "_gt" + "()");
+//                    voDtoWiths.add("x -> x > " + (c.isId_() ? "0" : "-1"));
+
 //                    this.voField(voFieldComments, voFields, voGetterAndSetters,
 //                            c.getField_(), "String", "_ge", ">=");
-                }
+//                    voDtoFields.add(c.getField_() + "_ge");
+//                    voDtoGetters.add("get" + StringUtils.capitalize(c.getField_())+ "_ge" + "()");
+//                    voDtoWiths.add("x -> x > " + (c.isId_() ? "0" : "-1"));
+
+                } else
+                    voDtoWiths.add("Objects::nonNull");
+
             });
 
             this.voField(voFieldComments, voFields, voGetterAndSetters,
@@ -1051,6 +1089,10 @@ public class GenerateService implements IGenerateService {
             cxt.setVariable("voFieldComments", voFieldComments);
             cxt.setVariable("voFields", voFields);
             cxt.setVariable("voGetterAndSetter", voGetterAndSetters);
+
+            cxt.setVariable("voDtoFields", voDtoFields);
+            cxt.setVariable("voDtoGetters", voDtoGetters);
+            cxt.setVariable("voDtoWiths", voDtoWiths);
 
             this.writeFile(g.getLogFile(),
                     package2path(g.getServiceModuleFile().getPath(), JAVA_PATH, g.getServiceVOPackage()),
