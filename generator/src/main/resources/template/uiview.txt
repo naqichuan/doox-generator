@@ -18,7 +18,7 @@
           <Button icon="ios-add-circle" @click="handleNew">新建</Button>
         </ButtonGroup>
       </div>
-      <tables ref="dataTable" v-model="tableData" :columns="tableTitle" :loading="tableLoading"
+      <tables ref="dataTable" :data="tableData" :columns="tableTitle" :loading="tableLoading"
         @on-selection-change="handleTableSelectChange" @on-sort-change="handleTableSortChange"
         @on-delete="handleDelete" @on-edit="handleEdit"/>
       <div class="margin-top-10">
