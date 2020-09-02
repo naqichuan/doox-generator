@@ -128,7 +128,7 @@ export default {
       [(${camelTableName})]List(param).then(res => {
         const data = res.data
         if (data && data.success) {
-          this.tableData = data.list
+          _this.tableData = data.list
           _this.tablePage.current = data.page
           _this.tablePage.pageSize = data.pageSize
           _this.tablePage.totalCount = data.totalCount
