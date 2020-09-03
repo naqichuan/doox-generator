@@ -8,7 +8,7 @@
                    @keyup.enter.native="handleTableData"></Input>
           </FormItem>[/]
           <FormItem>
-            <Button type="dashed" icon="ios-refresh" @click="handleSearchReset">重置</Button>
+            <Button type="dashed" icon="ios-refresh" @click="handleSearchRefresh">重置</Button>
           </FormItem>
           <FormItem>
             <Button type="primary" icon="ios-search" @click="handleTableData">查询</Button>
@@ -71,7 +71,7 @@ export default {
   data () {
     return {
       tableSearch: {},
-      tablePage: { page: 1, pageSize: 20, totalCount: 0 },
+      tablePage: {},
       tableSorts: [],
       tableTitle: [
         { type: 'selection', width: 60, align: 'center' }, // 这里是复选框
@@ -110,8 +110,14 @@ export default {
       if (tableSearch.[(${c})]) param = Object.assign(param, { [(${c})]: tableSearch.[(${c})] })[/]
       return param
     },
-    handleSearchReset () {
+    handleSearchRefresh () {
       this.tableSearch = { [# th:each="c : ${searchFields}"][# th:if="${cStat.index > 0}"], [/][(${c})]: ''[/] }
+
+      this.tableSetPage.page = 1
+      this.tableSetPage.pageSize = 20
+      this.tableSetPage.totalCount = 0
+
+      this.tableSetSorts = []
     },
     handleTableData () { // 加载数据
       let _this = this
@@ -308,7 +314,7 @@ export default {
     }
   },
   created () {
-    this.handleSearchReset()
+    this.handleSearchRefresh()
   },
   mounted () {
     this.handleTableData()
