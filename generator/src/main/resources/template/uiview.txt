@@ -113,11 +113,11 @@ export default {
     handleSearchRefresh () {
       this.tableSearch = { [# th:each="c : ${searchFields}"][# th:if="${cStat.index > 0}"], [/][(${c})]: ''[/] }
 
-      this.tableSetPage.page = 1
-      this.tableSetPage.pageSize = 20
-      this.tableSetPage.totalCount = 0
+      this.tablePage.page = 1
+      this.tablePage.pageSize = 20
+      this.tablePage.totalCount = 0
 
-      this.tableSetSorts = []
+      this.tableSorts = []
     },
     handleTableData () { // 加载数据
       let _this = this
