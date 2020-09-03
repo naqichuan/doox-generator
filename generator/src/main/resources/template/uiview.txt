@@ -70,6 +70,21 @@ export default {
   },
   data () {
     return {
+      bools: [
+        { name: 'FALSE', text: '否' },
+        { name: 'TRUE', text: '是' }
+      ],
+      statuss: [
+        { name: 'NONE', text: '无' },
+        { name: 'AVAILABLE', text: '可用' },
+        { name: 'DISABLE', text: '不可用' },
+        { name: 'DELETED', text: '已删除' }
+      ],
+      genders: [
+        { name: 'NONE', text: '' },
+        { name: 'MALE', text: '男' },
+        { name: 'FEMALE', text: '女' }
+      ],
       tableSearch: {},
       tablePage: {},
       tableSorts: [],
