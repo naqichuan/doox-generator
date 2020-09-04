@@ -41,7 +41,14 @@ public class [(${name})] extends AbstractController {
             produces = "application/json")
     @ResponseBody
     public Map<?, ?> list([(${serviceVO})] [(${serviceVOVeriable})]) {
-        return buildResult([(${serviceVeriable})].findAll([(${serviceVOVeriable})].vo2dto()));
+
+        DTO dto = [(${serviceVeriable})].findAll([(${serviceVOVeriable})].vo2dto());
+
+        List<[(${serviceVO})]> list = dto.getList();
+        if (list != null)
+            dto.setList(Orika.l2l(list, [(${serviceVO})].class));
+
+        return buildResult(dto);
     }
 
     /**

@@ -112,6 +112,7 @@ public class GenerateService implements IGenerateService {
         CLASS_MAPPING.put("NPage", "org.nqcx.doox.commons.lang.o.NPage");
         CLASS_MAPPING.put("NSort", "org.nqcx.doox.commons.lang.o.NSort");
         CLASS_MAPPING.put("StringUtils", "org.nqcx.doox.commons.util.StringUtils");
+        CLASS_MAPPING.put("Orika", "org.nqcx.doox.commons.util.orika.Orika");
 
         CLASS_MAPPING.put("PeriodConst", "org.nqcx.doox.commons.lang.consts.PeriodConst");
         CLASS_MAPPING.put("IMapper", "org.nqcx.doox.commons.data.mapper.IMapper");
@@ -1198,6 +1199,7 @@ public class GenerateService implements IGenerateService {
             baseVariable(cxt, imports, g.getAuthor(), g.getWebControllerPackage(), g.getWebController());
 
             mappingImport(imports, "DTO");
+            mappingImport(imports, "Orika");
 
             mappingImport(imports, "Controller");
             mappingImport(imports, "PathVariable");
@@ -1236,6 +1238,7 @@ public class GenerateService implements IGenerateService {
             baseVariable(cxt, imports, g.getAuthor(), g.getWebRestControllerPackage(), g.getWebRestController());
 
             mappingImport(imports, "DTO");
+            mappingImport(imports, "Orika");
 
             mappingImport(imports, "RestController");
             mappingImport(imports, "PathVariable");
