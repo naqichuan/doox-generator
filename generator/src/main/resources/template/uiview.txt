@@ -153,8 +153,10 @@ export default {
           _this.tablePage.pageSize = data.pageSize
           _this.tablePage.totalCount = data.totalCount
         } else {
+          let em = ''
+          if (data && data.errorText) { em = '，' + data.errorText }
           _this.$Message.error({
-            content: '查询失败，请稍后重试！【' + data.errorText + '】',
+            content: '查询失败，请稍后重试' + em + '！',
             closable: true
           })
         }
@@ -188,8 +190,10 @@ export default {
           _this.$Message.success('删除成功')
           _this.handleTableData()
         } else {
+          let em = '删除失败!'
+          if (data && data.errorText) { em = data.errorText }
           _this.$Message.error({
-            content: data.errorText || '删除失败!',
+            content: em,
             closable: true
           })
         }
@@ -209,8 +213,10 @@ export default {
           _this.$Message.success('删除成功')
           _this.handleTableData()
         } else {
+          let em = '删除失败!'
+          if (data && data.errorText) { em = data.errorText }
           _this.$Message.error({
-            content: data.errorText || '删除失败!',
+            content: em,
             closable: true
           })
         }
@@ -236,7 +242,7 @@ export default {
               _this.handleTableData()
             } else {
               let em = '保存失败!'
-              if (data) { em = data.errorText || em }
+              if (data && data.errorText) { em = data.errorText }
               _this.$Message.error({
                 content: em,
                 closable: true
@@ -278,8 +284,10 @@ export default {
           }
           _this.editModal = true
         } else {
+          let em = '获取信息失败!'
+          if (data && data.errorText) { em = data.errorText }
           _this.$Message.error({
-            content: data.errorText || '获取信息失败!',
+            content: em,
             closable: true
           })
         }
@@ -301,7 +309,7 @@ export default {
               _this.handleTableData()
             } else {
               let em = '保存修改失败!'
-              if (data) { em = data.errorText || em }
+              if (data && data.errorText) { em = data.errorText }
               _this.$Message.error({
                 content: em,
                 closable: true
