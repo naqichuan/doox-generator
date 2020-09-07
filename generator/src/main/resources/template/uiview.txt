@@ -142,7 +142,7 @@ export default {
       _this.handleTableSelectChange([])
 
       let param = this.tableSearchParam()
-      if (this.tablePage) { param = Object.assign({ 'page': this.tablePage.page, 'pageSize': this.tablePage.pageSize }) }
+      if (this.tablePage) { param = Object.assign(param, { 'page': this.tablePage.page, 'pageSize': this.tablePage.pageSize }) }
       if (this.tableSorts && this.tableSorts.length > 0) { param = Object.assign(param, { 'sorts': this.tableSorts.join(';') }) }
 
       [(${camelTableName})]List(param).then(res => {
