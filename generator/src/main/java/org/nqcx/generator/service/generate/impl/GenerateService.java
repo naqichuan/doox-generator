@@ -10,6 +10,8 @@ package org.nqcx.generator.service.generate.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.nqcx.doox.commons.lang.enums.BoolEO;
+import org.nqcx.doox.commons.lang.enums.GenderEO;
+import org.nqcx.doox.commons.lang.enums.StatusEO;
 import org.nqcx.doox.commons.lang.o.DTO;
 import org.nqcx.doox.commons.util.date.DateUtils;
 import org.nqcx.generator.domain.dto.CgField;
@@ -113,6 +115,9 @@ public class GenerateService implements IGenerateService {
         CLASS_MAPPING.put("NSort", "org.nqcx.doox.commons.lang.o.NSort");
         CLASS_MAPPING.put("StringUtils", "org.nqcx.doox.commons.util.StringUtils");
         CLASS_MAPPING.put("Orika", "org.nqcx.doox.commons.util.orika.Orika");
+        CLASS_MAPPING.put("BoolEO", "org.nqcx.doox.commons.lang.enums.BoolEO");
+        CLASS_MAPPING.put("GenderEO", "org.nqcx.doox.commons.lang.enums.GenderEO");
+        CLASS_MAPPING.put("StatusEO", "org.nqcx.doox.commons.lang.enums.StatusEO");
 
         CLASS_MAPPING.put("PeriodConst", "org.nqcx.doox.commons.lang.consts.PeriodConst");
         CLASS_MAPPING.put("IMapper", "org.nqcx.doox.commons.data.mapper.IMapper");
