@@ -141,10 +141,9 @@ export default {
       // 更新选中
       _this.handleTableSelectChange([])
 
-      const param = Object.assign(this.tableSearchParam(),
-        { 'page': this.tablePage.page, 'pageSize': this.tablePage.pageSize },
-        { sorts: this.tableSorts.join(';') }
-      )
+      let param = this.tableSearchParam()
+      if (this.tablePage) { param = Object.assign({ 'page': this.tablePage.page, 'pageSize': this.tablePage.pageSize }) }
+      if (this.tableSorts && this.tableSorts.length > 0) { param = Object.assign(param, { 'sorts': this.tableSorts.join(';') }) }
 
       [(${camelTableName})]List(param).then(res => {
         const data = res.data
