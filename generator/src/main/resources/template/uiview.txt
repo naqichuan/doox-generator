@@ -227,27 +227,27 @@ export default {
           [(${camelTableName})]Save(_this.newForm).then(res => {
             const data = res.data
             if (data && data.success) {
-              if (!data) {
-                _this.$Message.error({
-                  content: '保存失败!',
-                  closable: true
-                })
+              _this.$Message.success({
+                content: '保存成功',
+                closable: true
+              })
+              _this.newModal = false
+              _this.newLoading = false
+              _this.handleTableData()
+            } else {
+              let em = '保存失败!'
+              if (data) { em = data.errorText || em }
+              _this.$Message.error({
+                content: em,
+                closable: true
+              })
+
+              setTimeout(() => {
                 _this.newLoading = false
-              } else if (!data.success) {
-                _this.$Message.error({
-                  content: data.errorText || '保存失败!',
-                  closable: true
+                _this.$nextTick(() => {
+                  _this.newLoading = true
                 })
-                _this.newLoading = false
-              } else {
-                _this.$Message.success({
-                  content: '保存成功',
-                  closable: true
-                })
-                _this.newModal = false
-                _this.newLoading = false
-                _this.handleTableData()
-              }
+              }, 1000)
             }
           }).catch(function (error) {
             console.error(error)
@@ -291,19 +291,7 @@ export default {
         if (valid) {
           [(${camelTableName})]Modify(_this.editForm).then(res => {
             const data = res.data
-            if (!data) {
-              _this.$Message.error({
-                content: '保存修改失败!',
-                closable: true
-              })
-              _this.editLoading = false
-            } else if (!data.success) {
-              _this.$Message.error({
-                content: data.errorText || '保存修改失败!',
-                closable: true
-              })
-              _this.editLoading = false
-            } else {
+            if (data && data.success) {
               _this.$Message.success({
                 content: '保存修改成功',
                 closable: true
@@ -311,6 +299,20 @@ export default {
               _this.editModal = false
               _this.editLoading = false
               _this.handleTableData()
+            } else {
+              let em = '保存修改失败!'
+              if (data) { em = data.errorText || em }
+              _this.$Message.error({
+                content: em,
+                closable: true
+              })
+
+              setTimeout(() => {
+                _this.editLoading = false
+                _this.$nextTick(() => {
+                  _this.editLoading = true
+                })
+              }, 1000)
             }
           }).catch(function (error) {
             console.error(error)
