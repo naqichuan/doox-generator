@@ -43,7 +43,7 @@
       <h3 slot="header" style="color:#2D8CF0">新建</h3>
       <Form ref="newForm" :model="newForm" :label-width="100" :rules="newValidate">[# th:each="c : ${newFormFields}"]
         <FormItem label="[(*{newFormLabels[__${cStat.index}__]})]" prop="[(${c})]">
-          <Input v-model="newForm.[(${c})]" placeholder="[(*{newFormLabels[__${cStat.index}__]})]" style="width: 200px"></Input>
+          <Input v-model="newForm.[(${c})]" placeholder="[(*{newFormLabels[__${cStat.index}__]})]" style="width: 400px"></Input>
         </FormItem>[/]
       </Form>
     </Modal>
@@ -52,7 +52,7 @@
       <h3 slot="header" style="color:#2D8CF0">编辑</h3>
       <Form ref="editForm" :model="editForm" :label-width="100" :rules="editValidate">[# th:each="c : ${editFormFields}"]
         <FormItem label="[(*{editFormLabels[__${cStat.index}__]})]" prop="[(${c})]">
-          <Input v-model="editForm.[(${c})]" placeholder="[(*{editFormLabels[__${cStat.index}__]})]" style="width: 200px"></Input>
+          <Input v-model="editForm.[(${c})]" placeholder="[(*{editFormLabels[__${cStat.index}__]})]" style="width: 400px"></Input>
         </FormItem>[/]
       </Form>
     </Modal>
