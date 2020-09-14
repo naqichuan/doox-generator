@@ -271,9 +271,9 @@ export default {
     },
     handleEdit ({ row }) { // 编辑页面
       this.$refs.editForm.resetFields()
-      this.editDetial(row.id)
+      this.editDetail(row.id)
     },
-    editDetial (id) { // 页面操作-数据编辑
+    editDetail (id) { // 页面操作-数据编辑
       let _this = this
 
       [(${camelTableName})]Edit(id).then(res => {
