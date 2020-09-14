@@ -39,7 +39,7 @@
       </div>
     </Card>
     <Modal v-model="newModal" :closable='false' :mask-closable=false :width="600"
-           :loading="newLoading" okText="保存" @on-ok="handleSaveNew">
+           :loading="newLoading" okText="保存" @on-ok="handleNewSave">
       <h3 slot="header" style="color:#2D8CF0">新建</h3>
       <Form ref="newForm" :model="newForm" :label-width="100" :rules="newValidate">[# th:each="c : ${newFormFields}"]
         <FormItem label="[(*{newFormLabels[__${cStat.index}__]})]" prop="[(${c})]">
@@ -48,7 +48,7 @@
       </Form>
     </Modal>
     <Modal v-model="editModal" :closable='false' :mask-closable=false :width="600"
-           :loading="editLoading" okText="保存修改" @on-ok="handleSaveEdit">
+           :loading="editLoading" okText="保存修改" @on-ok="handleEditSave">
       <h3 slot="header" style="color:#2D8CF0">编辑</h3>
       <Form ref="editForm" :model="editForm" :label-width="100" :rules="editValidate">[# th:each="c : ${editFormFields}"]
         <FormItem label="[(*{editFormLabels[__${cStat.index}__]})]" prop="[(${c})]">
@@ -226,7 +226,7 @@ export default {
       this.$refs.newForm.resetFields()
       this.newModal = true
     },
-    handleSaveNew () { // 页面提交-新建保存
+    handleNewSave () { // 页面提交-新建保存
       this.$refs.newForm.validate((valid) => {
         let _this = this
         if (valid) {
@@ -293,7 +293,7 @@ export default {
         }
       })
     },
-    handleSaveEdit () { // 页面提交-保存修改
+    handleEditSave () { // 页面提交-保存修改
       this.$refs.editForm.validate((valid) => {
         let _this = this
         if (valid) {
