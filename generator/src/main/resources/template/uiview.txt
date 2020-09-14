@@ -89,10 +89,10 @@ export default {
       tablePage: {},
       tableSorts: [],
       tableTitle: [
-        { type: 'selection', width: 60, align: 'center' }, // 这里是复选框
-        { title: '[(${idFieldTitle})]', key: '[(${idFieldName})]', sortable: 'custom', width: 60, align: 'center' }[# th:each="c : ${tableTitleTitles}"],
-        { title: '[(${c})]', key: '[(*{tableTitleKeys[__${cStat.index}__]})]' }[/],
-        { title: 'Handle', key: 'handle', align: 'center', width: 130, options: ['edit', 'delete'] }
+        { type: 'selection', align: 'center' }, // 这里是复选框
+        { title: '[(${idFieldTitle})]', key: '[(${idFieldName})]', sortable: 'custom', align: 'center' }[# th:each="c : ${tableTitleTitles}"],
+        { title: '[(${c})]', key: '[(*{tableTitleKeys[__${cStat.index}__]})]', tooltip: true }[/],
+        { title: 'Handle', key: 'handle', align: 'center', options: ['edit', 'delete'] }
       ],
       tableData: [],
       tableLoading: false,
