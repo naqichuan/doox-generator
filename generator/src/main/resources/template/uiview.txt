@@ -125,14 +125,17 @@ export default {
       if (tableSearch.[(${c})]) param = Object.assign(param, { [(${c})]: tableSearch.[(${c})] })[/]
       return param
     },
+    handleSearchInitiate () {
+      this.handleSearchRefresh()
+
+      this.tablePage.page = 1
+      this.tablePage.pageSize = 20
+      this.tablePage.totalCount = 0
+
+      this.tableSorts = []
+    },
     handleSearchRefresh () {
       this.tableSearch = { [# th:each="c : ${searchFields}"][# th:if="${cStat.index > 0}"], [/][(${c})]: ''[/] }
-
-      // this.tablePage.page = 1
-      // this.tablePage.pageSize = 20
-      // this.tablePage.totalCount = 0
-
-      // this.tableSorts = []
     },
     handleTableData () { // 加载数据
       let _this = this
@@ -338,7 +341,7 @@ export default {
     }
   },
   created () {
-    this.handleSearchRefresh()
+    this.handleSearchInitiate()
   },
   mounted () {
     this.handleTableData()
