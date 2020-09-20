@@ -26,6 +26,8 @@
         <Row>
           <Alert show-icon>
             已选择 <span class="select-count"></span>{{ tableSelectionCount }} 项
+            <a href="#" @click.prevent="handleTableSelectAll(true)"> 全部选择 </a>
+            <a href="#" @click.prevent="handleTableSelectAll(false)"> 全部取消 </a>
           </Alert>
         </Row>
         <!--分页条-->
@@ -183,6 +185,9 @@ export default {
       for (let i = 0; i < this.tableSelectionCount; i++) {
         this.tableSelections.push(selection[i].id)
       }
+    },
+    handleTableSelectAll (status) {
+      this.$refs.dataTable.selectAll(status)
     },
     handleDelete ({ row }) { // 列表操作-数据删除
       let _this = this
