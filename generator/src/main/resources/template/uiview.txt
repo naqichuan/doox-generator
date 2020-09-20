@@ -241,7 +241,6 @@ export default {
                 closable: true
               })
               _this.newModal = false
-              _this.newLoading = false
               _this.handleTableData()
             } else {
               let em = '保存失败!'
@@ -250,26 +249,19 @@ export default {
                 content: em,
                 closable: true
               })
-
-              setTimeout(() => {
-                _this.newLoading = false
-                _this.$nextTick(() => {
-                  _this.newLoading = true
-                })
-              }, 1000)
             }
           }).catch(function (error) {
             console.error(error)
             _this.newLoading = false
           })
-        } else {
-          setTimeout(() => {
-            _this.newLoading = false
-            _this.$nextTick(() => {
-              _this.newLoading = true
-            })
-          }, 1000)
         }
+
+        setTimeout(() => {
+          _this.editLoading = false
+          _this.$nextTick(() => {
+            _this.editLoading = true
+          })
+        }, 1000)
       })
     },
     handleEdit ({ row }) { // 编辑页面
@@ -308,7 +300,6 @@ export default {
                 closable: true
               })
               _this.editModal = false
-              _this.editLoading = false
               _this.handleTableData()
             } else {
               let em = '保存修改失败!'
@@ -317,26 +308,19 @@ export default {
                 content: em,
                 closable: true
               })
-
-              setTimeout(() => {
-                _this.editLoading = false
-                _this.$nextTick(() => {
-                  _this.editLoading = true
-                })
-              }, 1000)
             }
           }).catch(function (error) {
             console.error(error)
             _this.editLoading = false
           })
-        } else {
-          setTimeout(() => {
-            _this.editLoading = false
-            _this.$nextTick(() => {
-              _this.editLoading = true
-            })
-          }, 1000)
         }
+
+        setTimeout(() => {
+          _this.editLoading = false
+          _this.$nextTick(() => {
+            _this.editLoading = true
+          })
+        }, 1000)
       })
     }
   },
