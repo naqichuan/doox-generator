@@ -283,7 +283,7 @@ export default {
         const data = res.data
         if (data && data.success) {
           for (let item of Object.keys(_this.editForm)) {
-            _this.editForm[item] = data.object[item]
+            if (data.object && data.object[item]) { _this.editForm[item] = data.object[item] }
           }
           _this.editModal = true
         } else {
