@@ -257,9 +257,9 @@ export default {
         }
 
         setTimeout(() => {
-          _this.editLoading = false
+          _this.newLoading = false
           _this.$nextTick(() => {
-            _this.editLoading = true
+            _this.newLoading = true
           })
         }, 1000)
       })
