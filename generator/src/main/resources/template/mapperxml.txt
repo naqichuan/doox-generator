@@ -78,7 +78,7 @@
 
     <select id="getCount" parameterType="map" resultType="long">
         SELECT
-            count(`[(${idColumn})]`)
+            COUNT(`[(${idColumn})]`)
         FROM
             `[(${tableName})]`
         <include refid="condition" />
