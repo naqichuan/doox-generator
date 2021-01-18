@@ -10,8 +10,6 @@ package org.nqcx.generator.service.generate.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.nqcx.doox.commons.lang.enums.BoolEO;
-import org.nqcx.doox.commons.lang.enums.GenderEO;
-import org.nqcx.doox.commons.lang.enums.StatusEO;
 import org.nqcx.doox.commons.lang.o.DTO;
 import org.nqcx.doox.commons.util.date.DateUtils;
 import org.nqcx.generator.domain.dto.CgField;
@@ -665,8 +663,11 @@ public class GenerateService implements IGenerateService {
                     package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoMapperPackage()),
                     g.getDaoMapper(), JAVA_EXT_NAME,
                     process(MAPPER_TXT_TEMPLATE_NAME, cxt));
-            // end of mapper
 
+            // end of mapper
+        }
+
+        if (g.getDaoMapperXml_().isTrue()) {
             // mapper xml
             baseVariable(cxt, imports, g.getAuthor(), g.getDaoMapperPackage(), g.getDaoMapper());
 
@@ -820,8 +821,8 @@ public class GenerateService implements IGenerateService {
             cxt.setVariable("poConditionFieldValues", poConditionFieldValues);
 
             this.writeFile(g.getLogFile(),
-                    package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoMapperPackage()),
-                    g.getDaoMapper(), XML_EXT_NAME,
+                    package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoMapperXmlPackage()),
+                    g.getDaoMapperXml(), XML_EXT_NAME,
                     process(MAPPERXML_TXT_TEMPLATE_NAME, cxt));
             // end of mapper xml
         }

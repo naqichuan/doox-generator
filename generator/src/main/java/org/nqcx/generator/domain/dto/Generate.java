@@ -61,6 +61,9 @@ public class Generate implements Serializable {
     private BoolEO daoMapper_ = BoolEO.FALSE;
     private String daoMapperPackage;
     private String daoMapper;
+    private BoolEO daoMapperXml_ = BoolEO.FALSE;
+    private String daoMapperXmlPackage;
+    private String daoMapperXml;
     private BoolEO daoJpa_ = BoolEO.FALSE;
     private String daoJpaPackage;
     private String daoJpa;
@@ -420,6 +423,30 @@ public class Generate implements Serializable {
 
     public void setDaoMapper(String daoMapper) {
         this.daoMapper = daoMapper;
+    }
+
+    public BoolEO getDaoMapperXml_() {
+        return daoMapperXml_;
+    }
+
+    public void setDaoMapperXml_(BoolEO daoMapperXml_) {
+        this.daoMapperXml_ = daoMapperXml_;
+    }
+
+    public String getDaoMapperXmlPackage() {
+        return daoMapperXmlPackage;
+    }
+
+    public void setDaoMapperXmlPackage(String daoMapperXmlPackage) {
+        this.daoMapperXmlPackage = daoMapperXmlPackage;
+    }
+
+    public String getDaoMapperXml() {
+        return daoMapperXml;
+    }
+
+    public void setDaoMapperXml(String daoMapperXml) {
+        this.daoMapperXml = daoMapperXml;
     }
 
     public BoolEO getDaoJpa_() {

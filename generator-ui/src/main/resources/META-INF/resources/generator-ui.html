@@ -249,6 +249,17 @@
                     </td>
                 </tr>
                 <tr>
+                    <td class="lable"><input type="checkbox" name="daoMapperXml_" value="true"></td>
+                    <td class="lable">Create Mapper Xml:</td>
+                    <td>
+                        <input type="text" name="daoMapperXmlPackage" class="big_240 right" value="">
+                    </td>
+                    <td class="lable">.</td>
+                    <td>
+                        <input type="text" name="daoMapperXml" class="big_200" value="">
+                    </td>
+                </tr>
+                <tr>
                     <td class="lable"><input type="checkbox" name="daoJpa_" value="true"></td>
                     <td class="lable">Create Jpa:</td>
                     <td>
@@ -1264,6 +1275,8 @@
                 return "Date";
             else if (input.startWith('blob'))
                 return "byte[]";
+            else if (input.startWith('binary'))
+                return "String";
             else
                 return input;
         }
@@ -1369,6 +1382,15 @@
         mapper: function () {
             return $('input[name="daoMapper"]');
         },
+        daoMapperXml_: function () {
+            return $('input[name="daoMapperXml_"]');
+        },
+        mapperXmlPackage: function () {
+            return $('input[name="daoMapperXmlPackage"]');
+        },
+        mapperXml: function () {
+            return $('input[name="daoMapperXml"]');
+        },
         daoJpa_: function () {
             return $('input[name="daoJpa_"]');
         },
@@ -1423,6 +1445,9 @@
             this.daoMapper_().prop("checked", false);
             this.mapperPackage().val('');
             this.mapper().val('');
+            this.daoMapperXml_().prop("checked", false);
+            this.mapperXmlPackage().val('');
+            this.mapperXml().val('');
             this.daoJpa_().prop("checked", false);
             this.jpaPackage().val('');
             this.jpa().val('');
@@ -1457,6 +1482,7 @@
             var daoName = tableName.replaceFirstUP();
             var daoPO = daoName + "PO";
             var daoMapper = 'I' + daoName + 'Mapper';
+            var daoMapperXml = daoMapper;
             var daoJpa = 'I' + daoName + 'Jpa';
             var daoCacheSupport = 'CacheSupport';
             var daoDao = 'I' + daoName + 'DAO';
@@ -1470,6 +1496,8 @@
             var mapperValue = pValue + '.data.mapper' + (tablePack ? "." + tablePack : "");
             if (mapperValue.indexOf(".") === 0 && mapperValue.length > 1)
                 mapperValue = mapperValue.substring(1);
+
+            var mapperXmlValue = mapperValue;
 
             var jpaValue = pValue + '.data.jpa' + (tablePack ? "." + tablePack : "");
             if (jpaValue.indexOf(".") === 0 && jpaValue.length > 1)
@@ -1496,6 +1524,8 @@
             this.po().val(daoPO);
             this.mapperPackage().val(mapperValue);
             this.mapper().val(daoMapper);
+            this.mapperXmlPackage().val(mapperXmlValue);
+            this.mapperXml().val(daoMapperXml);
             this.jpaPackage().val(jpaValue);
             this.jpa().val(daoJpa);
             this.daoCacheSupportPackage().val(cacheValue);
