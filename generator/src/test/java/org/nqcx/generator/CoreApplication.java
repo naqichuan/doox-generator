@@ -13,6 +13,6 @@ import org.springframework.context.annotation.ImportResource;
  * @author naqichuan 2020-06-02 14:24
  */
 @SpringBootApplication
-@ImportResource(locations = {"classpath:spring/bean-core.xml", "classpath:spring/bean-data.xml"})
+@ImportResource(locations = {"classpath:spring/bean-data.xml"})
 public class CoreApplication {
 }

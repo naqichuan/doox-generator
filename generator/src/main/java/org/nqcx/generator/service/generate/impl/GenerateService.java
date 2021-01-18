@@ -21,7 +21,6 @@ import org.nqcx.generator.service.table.ITableService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -83,7 +82,6 @@ public class GenerateService implements IGenerateService {
 
     private final static String CACHESUPPORT_TXT_TEMPLATE_NAME = "cachesupport.txt";
 
-    private final Boolean overwrite; // 生成文件是否覆盖原来的文件
     private final ITableService tableService;
 
     static {
@@ -157,8 +155,7 @@ public class GenerateService implements IGenerateService {
     }
 
     @Autowired
-    public GenerateService(@Qualifier("overwrite") Boolean overwrite, ITableService tableService) {
-        this.overwrite = overwrite;
+    public GenerateService(ITableService tableService) {
         this.tableService = tableService;
     }
 
@@ -521,7 +518,7 @@ public class GenerateService implements IGenerateService {
             this.writeFile(g.getLogFile(),
                     package2path(g.getApiModuleFile().getPath(), JAVA_PATH, g.getApiDTOPackage()),
                     g.getApiDTO(), JAVA_EXT_NAME,
-                    process(DTO_TXT_TEMPLATE_NAME, cxt));
+                    process(DTO_TXT_TEMPLATE_NAME, cxt), g.getApiDTOOverwrite_().isTrue());
         }
 
         if (g.getApiApi_().isTrue()) {
@@ -531,7 +528,7 @@ public class GenerateService implements IGenerateService {
             this.writeFile(g.getLogFile(),
                     package2path(g.getApiModuleFile().getPath(), JAVA_PATH, g.getApiApiPackage()),
                     g.getApiApi(), JAVA_EXT_NAME,
-                    process(PROVIDE_TXT_TEMPLATE_NAME, cxt));
+                    process(PROVIDE_TXT_TEMPLATE_NAME, cxt), g.getApiApiOverwrite_().isTrue());
         }
     }
 
@@ -646,7 +643,7 @@ public class GenerateService implements IGenerateService {
             this.writeFile(g.getLogFile(),
                     package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoPOPackage()),
                     g.getDaoPO(), JAVA_EXT_NAME,
-                    process(PO_TXT_TEMPLATE_NAME, cxt));
+                    process(PO_TXT_TEMPLATE_NAME, cxt), g.getDaoPOOverwrite_().isTrue());
         }
 
         if (g.getDaoMapper_().isTrue()) {
@@ -662,7 +659,7 @@ public class GenerateService implements IGenerateService {
             this.writeFile(g.getLogFile(),
                     package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoMapperPackage()),
                     g.getDaoMapper(), JAVA_EXT_NAME,
-                    process(MAPPER_TXT_TEMPLATE_NAME, cxt));
+                    process(MAPPER_TXT_TEMPLATE_NAME, cxt), g.getDaoMapperOverwrite_().isTrue());
 
             // end of mapper
         }
@@ -823,7 +820,7 @@ public class GenerateService implements IGenerateService {
             this.writeFile(g.getLogFile(),
                     package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoMapperXmlPackage()),
                     g.getDaoMapperXml(), XML_EXT_NAME,
-                    process(MAPPERXML_TXT_TEMPLATE_NAME, cxt));
+                    process(MAPPERXML_TXT_TEMPLATE_NAME, cxt), g.getDaoMapperXmlOverwrite_().isTrue());
             // end of mapper xml
         }
 
@@ -840,7 +837,7 @@ public class GenerateService implements IGenerateService {
             this.writeFile(g.getLogFile(),
                     package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoJpaPackage()),
                     g.getDaoJpa(), JAVA_EXT_NAME,
-                    process(JPA_TXT_TEMPLATE_NAME, cxt));
+                    process(JPA_TXT_TEMPLATE_NAME, cxt), g.getDaoJpaOverwrite_().isTrue());
         }
 
         if (g.getDaoDAO_().isTrue()) {
@@ -856,7 +853,7 @@ public class GenerateService implements IGenerateService {
             this.writeFile(g.getLogFile(),
                     package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoDAOPackage()),
                     g.getDaoDAO(), JAVA_EXT_NAME,
-                    process(DAO_TXT_TEMPLATE_NAME, cxt));
+                    process(DAO_TXT_TEMPLATE_NAME, cxt), g.getDaoDAOOverwrite_().isTrue());
         }
 
         if (g.getDaoCacheSupport_().isTrue()) {
@@ -870,7 +867,7 @@ public class GenerateService implements IGenerateService {
             this.writeFile(g.getLogFile(),
                     package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoCacheSupportPackage()),
                     g.getDaoCacheSupport(), JAVA_EXT_NAME,
-                    process(CACHESUPPORT_TXT_TEMPLATE_NAME, cxt));
+                    process(CACHESUPPORT_TXT_TEMPLATE_NAME, cxt), g.getDaoCacheSupportOverwrite_().isTrue());
         }
 
         if (g.getDaoDAOImpl_().isTrue()) {
@@ -911,7 +908,7 @@ public class GenerateService implements IGenerateService {
             this.writeFile(g.getLogFile(),
                     package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoDAOImplPackage()),
                     StringUtils.capitalize(g.getDaoDAOVeriable()), JAVA_EXT_NAME,
-                    process(DAOIMPL_TXT_TEMPLATE_NAME, cxt));
+                    process(DAOIMPL_TXT_TEMPLATE_NAME, cxt), g.getDaoDAOImplOverwrite_().isTrue());
         }
 
         if (g.getDaoDAOTest_().isTrue()) {
@@ -936,7 +933,7 @@ public class GenerateService implements IGenerateService {
             this.writeFile(g.getLogFile(),
                     package2path(g.getDaoModuleFile().getPath(), TEST_PATH, g.getDaoDAOTestPackage()),
                     g.getDaoDAOTest(), JAVA_EXT_NAME,
-                    process(DAO_TEST_TXT_TEMPLATE_NAME, cxt));
+                    process(DAO_TEST_TXT_TEMPLATE_NAME, cxt), g.getDaoDAOTestOverwrite_().isTrue());
         }
     }
 
@@ -983,7 +980,7 @@ public class GenerateService implements IGenerateService {
             this.writeFile(g.getLogFile(),
                     package2path(g.getServiceModuleFile().getPath(), JAVA_PATH, g.getServiceServicePackage()),
                     g.getServiceService(), JAVA_EXT_NAME,
-                    process(SERVICE_TXT_TEMPLATE_NAME, cxt));
+                    process(SERVICE_TXT_TEMPLATE_NAME, cxt), g.getServiceServiceOverwrite_().isTrue());
             // end of service
         }
 
@@ -1104,7 +1101,7 @@ public class GenerateService implements IGenerateService {
             this.writeFile(g.getLogFile(),
                     package2path(g.getServiceModuleFile().getPath(), JAVA_PATH, g.getServiceVOPackage()),
                     g.getServiceVO(), JAVA_EXT_NAME,
-                    process(VO_TXT_TEMPLATE_NAME, cxt));
+                    process(VO_TXT_TEMPLATE_NAME, cxt), g.getServiceVOOverwrite_().isTrue());
             // end of vo
         }
 
@@ -1129,7 +1126,7 @@ public class GenerateService implements IGenerateService {
             this.writeFile(g.getLogFile(),
                     package2path(g.getServiceModuleFile().getPath(), JAVA_PATH, g.getServiceServiceImplPackage()),
                     g.getServiceServiceImpl(), JAVA_EXT_NAME,
-                    process(SERVICEIMPL_TXT_TEMPLATE_NAME, cxt));
+                    process(SERVICEIMPL_TXT_TEMPLATE_NAME, cxt), g.getServiceServiceImplOverwrite_().isTrue());
             // end of service impl
         }
 
@@ -1152,7 +1149,7 @@ public class GenerateService implements IGenerateService {
             this.writeFile(g.getLogFile(),
                     package2path(g.getServiceModuleFile().getPath(), TEST_PATH, g.getServiceServiceTestPackage()),
                     g.getServiceServiceTest(), JAVA_EXT_NAME,
-                    process(SERVICETEST_TXT_TEMPLATE_NAME, cxt));
+                    process(SERVICETEST_TXT_TEMPLATE_NAME, cxt), g.getServiceServiceTestOverwrite_().isTrue());
             // end of service test
         }
     }
@@ -1236,7 +1233,7 @@ public class GenerateService implements IGenerateService {
             this.writeFile(g.getLogFile(),
                     package2path(g.getWebModuleFile().getPath(), JAVA_PATH, g.getWebControllerPackage()),
                     g.getWebController(), JAVA_EXT_NAME,
-                    process(CONTROLLER_TXT_TEMPLATE_NAME, cxt));
+                    process(CONTROLLER_TXT_TEMPLATE_NAME, cxt), g.getWebControllerOverwrite_().isTrue());
             // end of controller
         }
 
@@ -1274,7 +1271,7 @@ public class GenerateService implements IGenerateService {
             this.writeFile(g.getLogFile(),
                     package2path(g.getWebModuleFile().getPath(), JAVA_PATH, g.getWebRestControllerPackage()),
                     g.getWebRestController(), JAVA_EXT_NAME,
-                    process(REST_CONTROLLER_TXT_TEMPLATE_NAME, cxt));
+                    process(REST_CONTROLLER_TXT_TEMPLATE_NAME, cxt), g.getWebRestControllerOverwrite_().isTrue());
             // end of rest controller
         }
     }
@@ -1298,7 +1295,7 @@ public class GenerateService implements IGenerateService {
             this.writeFile(g.getLogFile(),
                     package2path(g.getUiModuleFile().getPath(), UI_API_PATH, g.getUiApiPackage()),
                     g.getUiApi(), JS_EXT_NAME,
-                    process(UI_API_TXT_TEMPLATE_NAME, cxt));
+                    process(UI_API_TXT_TEMPLATE_NAME, cxt), g.getUiApiOverwrite_().isTrue());
 
             // end of ui api
         }
@@ -1380,17 +1377,16 @@ public class GenerateService implements IGenerateService {
             this.writeFile(g.getLogFile(),
                     package2path(g.getUiModuleFile().getPath(), UI_VIEW_PATH, g.getUiViewPackage()),
                     g.getUiView(), VUE_EXT_NAME,
-                    process(UI_VIEW_TXT_TEMPLATE_NAME, cxt));
+                    process(UI_VIEW_TXT_TEMPLATE_NAME, cxt), g.getUiViewOverwrite_().isTrue());
 
             // ui view index.js
             baseVariable(cxt, null, g.getAuthor(), g.getUiViewPackage(), g.getUiView());
             cxt.setVariable("camelTableName", camelTableName);
 
-
             this.writeFile(g.getLogFile(),
                     package2path(g.getUiModuleFile().getPath(), UI_VIEW_PATH, g.getUiViewPackage()),
                     "index", JS_EXT_NAME,
-                    process(UI_VIEW_INDEX_TXT_TEMPLATE_NAME, cxt), true);
+                    process(UI_VIEW_INDEX_TXT_TEMPLATE_NAME, cxt), g.getUiViewOverwrite_().isTrue(), true);
 
             // end of ui view
         }
@@ -1417,14 +1413,15 @@ public class GenerateService implements IGenerateService {
     }
 
     /**
-     * @param logFile logFile
-     * @param pPath   pPath
-     * @param name    name
-     * @param ext     ext
-     * @param content content
+     * @param logFile   logFile
+     * @param pPath     pPath
+     * @param name      name
+     * @param ext       ext
+     * @param content   content
+     * @param overwrite boolean
      */
-    private void writeFile(File logFile, String pPath, String name, String ext, String content) {
-        this.writeFile(logFile, pPath, name, ext, content, false);
+    private void writeFile(File logFile, String pPath, String name, String ext, String content, boolean overwrite) {
+        this.writeFile(logFile, pPath, name, ext, content, overwrite, false);
     }
 
     /**
@@ -1433,9 +1430,10 @@ public class GenerateService implements IGenerateService {
      * @param name        name
      * @param ext         ext
      * @param content     content
-     * @param existsAbort existsAbort
+     * @param overwrite   boolean
+     * @param existsAbort boolean
      */
-    private void writeFile(File logFile, String pPath, String name, String ext, String content, boolean existsAbort) {
+    private void writeFile(File logFile, String pPath, String name, String ext, String content, boolean overwrite, boolean existsAbort) {
         if (isBlank(pPath))
             return;
         if (content == null)

@@ -197,7 +197,7 @@
             </legend>
             <table border="0" cellpadding="0" cellspacing="0">
                 <tr>
-                    <td class="lable"><input type="checkbox" name="apiDTO_" value="true"></td>
+                    <td class="lable"><input type="checkbox" name="apiDTO_" value="true">Generate</td>
                     <td class="lable">Create DTO:</td>
                     <td>
                         <input type="text" name="apiDTOPackage" class="big_240 right" value="">
@@ -206,9 +206,10 @@
                     <td>
                         <input type="text" name="apiDTO" class="big_200" value="">
                     </td>
+                    <td class="lable"><input type="checkbox" name="apiDTOOverwrite_" value="true">Overwrite</td>
                 </tr>
                 <tr>
-                    <td class="lable"><input type="checkbox" name="apiApi_" value="true"></td>
+                    <td class="lable"><input type="checkbox" name="apiApi_" value="true">Generate</td>
                     <td class="lable" style="background-color: #008000;">Create Api:</td>
                     <td>
                         <input type="text" name="apiApiPackage" class="big_240 right" value="">
@@ -217,6 +218,7 @@
                     <td>
                         <input type="text" name="apiApi" class="big_200" value="">
                     </td>
+                    <td class="lable"><input type="checkbox" name="apiApiOverwrite_" value="true">Overwrite</td>
                 </tr>
             </table>
         </fieldset>
@@ -227,7 +229,7 @@
             </legend>
             <table border="0" cellpadding="0" cellspacing="0">
                 <tr>
-                    <td class="lable"><input type="checkbox" name="daoPO_" value="true"></td>
+                    <td class="lable"><input type="checkbox" name="daoPO_" value="true">Generate</td>
                     <td class="lable">Create PO:</td>
                     <td>
                         <input type="text" name="daoPOPackage" class="big_240 right" value="">
@@ -236,9 +238,10 @@
                     <td>
                         <input type="text" name="daoPO" class="big_200" value="">
                     </td>
+                    <td class="lable"><input type="checkbox" name="daoPOOverwrite_" value="true">Overwrite</td>
                 </tr>
                 <tr>
-                    <td class="lable"><input type="checkbox" name="daoMapper_" value="true"></td>
+                    <td class="lable"><input type="checkbox" name="daoMapper_" value="true">Generate</td>
                     <td class="lable">Create Mapper:</td>
                     <td>
                         <input type="text" name="daoMapperPackage" class="big_240 right" value="">
@@ -247,9 +250,10 @@
                     <td>
                         <input type="text" name="daoMapper" class="big_200" value="">
                     </td>
+                    <td class="lable"><input type="checkbox" name="daoMapperOverwrite_" value="true">Overwrite</td>
                 </tr>
                 <tr>
-                    <td class="lable"><input type="checkbox" name="daoMapperXml_" value="true"></td>
+                    <td class="lable"><input type="checkbox" name="daoMapperXml_" value="true">Generate</td>
                     <td class="lable">Create Mapper Xml:</td>
                     <td>
                         <input type="text" name="daoMapperXmlPackage" class="big_240 right" value="">
@@ -258,9 +262,10 @@
                     <td>
                         <input type="text" name="daoMapperXml" class="big_200" value="">
                     </td>
+                    <td class="lable"><input type="checkbox" name="daoMapperXmlOverwrite_" value="true">Overwrite</td>
                 </tr>
                 <tr>
-                    <td class="lable"><input type="checkbox" name="daoJpa_" value="true"></td>
+                    <td class="lable"><input type="checkbox" name="daoJpa_" value="true">Generate</td>
                     <td class="lable">Create Jpa:</td>
                     <td>
                         <input type="text" name="daoJpaPackage" class="big_240 right" value="">
@@ -269,9 +274,10 @@
                     <td>
                         <input type="text" name="daoJpa" class="big_200" value="">
                     </td>
+                    <td class="lable"><input type="checkbox" name="daoJpaOverwrite_" value="true">Overwrite</td>
                 </tr>
                 <tr>
-                    <td class="lable"><input type="checkbox" name="daoCacheSupport_" value="true"></td>
+                    <td class="lable"><input type="checkbox" name="daoCacheSupport_" value="true">Generate</td>
                     <td class="lable" style="background-color: #008000;">Create CacheSupport:</td>
                     <td>
                         <input type="text" name="daoCacheSupportPackage" class="big_240 right" value="">
@@ -280,9 +286,10 @@
                     <td>
                         <input type="text" name="daoCacheSupport" class="big_200" value="">
                     </td>
+                    <td class="lable"><input type="checkbox" name="daoCacheSupportOverwrite_" value="true">Overwrite</td>
                 </tr>
                 <tr>
-                    <td class="lable"><input type="checkbox" name="daoDAO_" value="true"></td>
+                    <td class="lable"><input type="checkbox" name="daoDAO_" value="true">Generate</td>
                     <td class="lable">Create DAO:</td>
                     <td>
                         <input type="text" name="daoDAOPackage" class="big_240 right" value="">
@@ -291,9 +298,10 @@
                     <td>
                         <input type="text" name="daoDAO" class="big_200" value="">
                     </td>
+                    <td class="lable"><input type="checkbox" name="daoDAOOverwrite_" value="true">Overwrite</td>
                 </tr>
                 <tr>
-                    <td class="lable"><input type="checkbox" name="daoDAOImpl_" value="true"></td>
+                    <td class="lable"><input type="checkbox" name="daoDAOImpl_" value="true">Generate</td>
                     <td class="lable">Create DAOImpl:</td>
                     <td>
                         <input type="text" name="daoDAOImplPackage" class="big_240 right" value="">
@@ -302,9 +310,10 @@
                     <td>
                         <input type="text" name="daoDAOImpl" class="big_200" value="">
                     </td>
+                    <td class="lable"><input type="checkbox" name="daoDAOImplOverwrite_" value="true">Overwrite</td>
                 </tr>
                 <tr>
-                    <td class="lable"><input type="checkbox" name="daoDAOTest_" value="true"></td>
+                    <td class="lable"><input type="checkbox" name="daoDAOTest_" value="true">Generate</td>
                     <td class="lable">Create DAOTest:</td>
                     <td>
                         <input type="text" name="daoDAOTestPackage" class="big_240 right" value="">
@@ -313,6 +322,7 @@
                     <td>
                         <input type="text" name="daoDAOTest" class="big_200" value="">
                     </td>
+                    <td class="lable"><input type="checkbox" name="daoDAOTestOverwrite_" value="true">Overwrite</td>
                 </tr>
             </table>
         </fieldset>
@@ -324,7 +334,7 @@
             </legend>
             <table border="0" cellpadding="0" cellspacing="0">
                 <tr>
-                    <td class="lable"><input type="checkbox" name="serviceVO_" value="true"></td>
+                    <td class="lable"><input type="checkbox" name="serviceVO_" value="true">Generate</td>
                     <td class="lable">Create VO:</td>
                     <td>
                         <input type="text" name="serviceVOPackage" class="big_240 right" value="">
@@ -333,9 +343,10 @@
                     <td>
                         <input type="text" name="serviceVO" class="big_200" value="">
                     </td>
+                    <td class="lable"><input type="checkbox" name="serviceVOOverwrite_" value="true">Overwrite</td>
                 </tr>
                 <tr>
-                    <td class="lable"><input type="checkbox" name="serviceService_" value="true"></td>
+                    <td class="lable"><input type="checkbox" name="serviceService_" value="true">Generate</td>
                     <td class="lable">Create Service:</td>
                     <td>
                         <input type="text" name="serviceServicePackage" class="big_240 right" value="">
@@ -344,9 +355,10 @@
                     <td>
                         <input type="text" name="serviceService" class="big_200" value="">
                     </td>
+                    <td class="lable"><input type="checkbox" name="serviceServiceOverwrite_" value="true">Overwrite</td>
                 </tr>
                 <tr>
-                    <td class="lable"><input type="checkbox" name="serviceServiceImpl_" value="true"></td>
+                    <td class="lable"><input type="checkbox" name="serviceServiceImpl_" value="true">Generate</td>
                     <td class="lable">Create ServiceImpl:</td>
                     <td>
                         <input type="text" name="serviceServiceImplPackage" class="big_240 right" value="">
@@ -355,9 +367,10 @@
                     <td>
                         <input type="text" name="serviceServiceImpl" class="big_200" value="">
                     </td>
+                    <td class="lable"><input type="checkbox" name="serviceServiceImplOverwrite_" value="true">Overwrite</td>
                 </tr>
                 <tr>
-                    <td class="lable"><input type="checkbox" name="serviceServiceTest_" value="true"></td>
+                    <td class="lable"><input type="checkbox" name="serviceServiceTest_" value="true">Generate</td>
                     <td class="lable">Create ServiceTest:</td>
                     <td>
                         <input type="text" name="serviceServiceTestPackage" class="big_240 right" value="">
@@ -366,6 +379,7 @@
                     <td>
                         <input type="text" name="serviceServiceTest" class="big_200" value="">
                     </td>
+                    <td class="lable"><input type="checkbox" name="serviceServiceTestOverwrite_" value="true">Overwrite</td>
                 </tr>
             </table>
         </fieldset>
@@ -376,7 +390,7 @@
             </legend>
             <table border="0" cellpadding="0" cellspacing="0">
                 <tr>
-                    <td class="lable"><input type="checkbox" name="webController_" value="true"></td>
+                    <td class="lable"><input type="checkbox" name="webController_" value="true">Generate</td>
                     <td class="lable">Create Controller:</td>
                     <td>
                         <input type="text" name="webControllerPackage" class="big_240 right" value="">
@@ -385,9 +399,10 @@
                     <td>
                         <input type="text" name="webController" class="big_200" value="">
                     </td>
+                    <td class="lable"><input type="checkbox" name="webControllerOverwrite_" value="true">Overwrite</td>
                 </tr>
                 <tr>
-                    <td class="lable"><input type="checkbox" name="webRestController_" value="true"></td>
+                    <td class="lable"><input type="checkbox" name="webRestController_" value="true">Generate</td>
                     <td class="lable">Create RestController:</td>
                     <td>
                         <input type="text" name="webRestControllerPackage" class="big_240 right" value="">
@@ -396,6 +411,7 @@
                     <td>
                         <input type="text" name="webRestController" class="big_200" value="">
                     </td>
+                    <td class="lable"><input type="checkbox" name="webRestControllerOverwrite_" value="true">Overwrite</td>
                 </tr>
             </table>
         </fieldset>
@@ -406,7 +422,7 @@
             </legend>
             <table border="0" cellpadding="0" cellspacing="0">
                 <tr>
-                    <td class="lable"><input type="checkbox" name="uiApi_" value="true"></td>
+                    <td class="lable"><input type="checkbox" name="uiApi_" value="true">Generate</td>
                     <td class="lable">Create UI api:</td>
                     <td>
                         <input type="text" name="uiApiPackage" class="big_240 right" value="">
@@ -415,9 +431,10 @@
                     <td>
                         <input type="text" name="uiApi" class="big_200" value="">.js
                     </td>
+                    <td class="lable"><input type="checkbox" name="uiApiOverwrite_" value="true">Overwrite</td>
                 </tr>
                 <tr>
-                    <td class="lable"><input type="checkbox" name="uiView_" value="true"></td>
+                    <td class="lable"><input type="checkbox" name="uiView_" value="true">Generate</td>
                     <td class="lable">Create UI view:</td>
                     <td>
                         <input type="text" name="uiViewPackage" class="big_240 right" value="">
@@ -426,6 +443,7 @@
                     <td>
                         <input type="text" name="uiView" class="big_200" value="">.vue
                     </td>
+                    <td class="lable"><input type="checkbox" name="uiViewOverwrite_" value="true">Overwrite</td>
                 </tr>
             </table>
         </fieldset>
@@ -1294,6 +1312,9 @@
         apiDTO_: function () {
             return $('input[name="apiDTO_"]');
         },
+        apiDTOOverwrite_: function () {
+            return $('input[name="apiDTOOverwrite_"]');
+        },
         apiDTOPackage: function () {
             return $('input[name="apiDTOPackage"]');
         },
@@ -1302,6 +1323,9 @@
         },
         apiApi_: function () {
             return $('input[name="apiApi_"]');
+        },
+        apiApiOverwrite_: function () {
+            return $('input[name="apiApiOverwrite_"]');
         },
         apiApiPackage: function () {
             return $('input[name="apiApiPackage"]');
@@ -1313,10 +1337,12 @@
             this._().prop("checked", false);
 
             this.apiDTO_().prop("checked", false);
+            this.apiDTOOverwrite_().prop("checked", false);
             this.apiDTOPackage().val('');
             this.apiDTO().val('');
 
             this.apiApi_().prop("checked", false);
+            this.apiApiOverwrite_().prop("checked", false);
             this.apiApiPackage().val('');
             this.apiApi().val('');
         },
@@ -1367,6 +1393,9 @@
         daoPO_: function () {
             return $('input[name="daoPO_"]');
         },
+        daoPOOverwrite_: function () {
+            return $('input[name="daoPOOverwrite_"]');
+        },
         poPackage: function () {
             return $('input[name="daoPOPackage"]');
         },
@@ -1375,6 +1404,9 @@
         },
         daoMapper_: function () {
             return $('input[name="daoMapper_"]');
+        },
+        daoMapperOverwrite_: function () {
+            return $('input[name="daoMapperOverwrite_"]');
         },
         mapperPackage: function () {
             return $('input[name="daoMapperPackage"]');
@@ -1385,6 +1417,9 @@
         daoMapperXml_: function () {
             return $('input[name="daoMapperXml_"]');
         },
+        daoMapperXmlOverwrite_: function () {
+            return $('input[name="daoMapperXmlOverwrite_"]');
+        },
         mapperXmlPackage: function () {
             return $('input[name="daoMapperXmlPackage"]');
         },
@@ -1393,6 +1428,9 @@
         },
         daoJpa_: function () {
             return $('input[name="daoJpa_"]');
+        },
+        daoJpaOverwrite_: function () {
+            return $('input[name="daoJpaOverwrite_"]');
         },
         jpaPackage: function () {
             return $('input[name="daoJpaPackage"]');
@@ -1403,6 +1441,9 @@
         daoCacheSupport_: function () {
             return $('input[name="daoCacheSupport_"]');
         },
+        daoCacheSupportOverwrite_: function () {
+            return $('input[name="daoCacheSupportOverwrite_"]');
+        },
         daoCacheSupportPackage: function () {
             return $('input[name="daoCacheSupportPackage"]');
         },
@@ -1411,6 +1452,9 @@
         },
         daoDAO_: function () {
             return $('input[name="daoDAO_"]');
+        },
+        daoDAOOverwrite_: function () {
+            return $('input[name="daoDAOOverwrite_"]');
         },
         daoPackage: function () {
             return $('input[name="daoDAOPackage"]');
@@ -1421,6 +1465,9 @@
         daoDAOImpl_: function () {
             return $('input[name="daoDAOImpl_"]');
         },
+        daoDAOImplOverwrite_: function () {
+            return $('input[name="daoDAOImplOverwrite_"]');
+        },
         daoImplPackage: function () {
             return $('input[name="daoDAOImplPackage"]');
         },
@@ -1429,6 +1476,9 @@
         },
         daoDAOTest_: function () {
             return $('input[name="daoDAOTest_"]');
+        },
+        daoDAOTestOverwrite_: function () {
+            return $('input[name="daoDAOTestOverwrite_"]');
         },
         testPackage: function () {
             return $('input[name="daoDAOTestPackage"]');
@@ -1440,27 +1490,35 @@
             this._().prop("checked", false);
 
             this.daoPO_().prop("checked", false);
+            this.daoPOOverwrite_().prop("checked", false);
             this.poPackage().val('');
             this.po().val('');
             this.daoMapper_().prop("checked", false);
+            this.daoMapperOverwrite_().prop("checked", false);
             this.mapperPackage().val('');
             this.mapper().val('');
             this.daoMapperXml_().prop("checked", false);
+            this.daoMapperXmlOverwrite_().prop("checked", false);
             this.mapperXmlPackage().val('');
             this.mapperXml().val('');
             this.daoJpa_().prop("checked", false);
+            this.daoJpaOverwrite_().prop("checked", false);
             this.jpaPackage().val('');
             this.jpa().val('');
             this.daoCacheSupport_().prop("checked", false);
+            this.daoCacheSupportOverwrite_().prop("checked", false);
             this.daoCacheSupportPackage().val('');
             this.daoCacheSupport().val('');
             this.daoDAO_().prop("checked", false);
+            this.daoDAOOverwrite_().prop("checked", false);
             this.daoPackage().val('');
             this.dao().val('');
             this.daoDAOImpl_().prop("checked", false);
+            this.daoDAOImplOverwrite_().prop("checked", false);
             this.daoImplPackage().val('');
             this.daoImpl().val('');
             this.daoDAOTest_().prop("checked", false);
+            this.daoDAOTestOverwrite_().prop("checked", false);
             this.testPackage().val('');
             this.test().val('');
         },
@@ -1550,6 +1608,9 @@
         serviceVO_: function () {
             return $('input[name="serviceVO_"]');
         },
+        serviceVOOverwrite_: function () {
+            return $('input[name="serviceVOOverwrite_"]');
+        },
         serviceVOPackage: function () {
             return $('input[name="serviceVOPackage"]');
         },
@@ -1558,6 +1619,9 @@
         },
         serviceService_: function () {
             return $('input[name="serviceService_"]');
+        },
+        serviceServiceOverwrite_: function () {
+            return $('input[name="serviceServiceOverwrite_"]');
         },
         serviceServicePackage: function () {
             return $('input[name="serviceServicePackage"]');
@@ -1568,14 +1632,20 @@
         serviceServiceImpl_: function () {
             return $('input[name="serviceServiceImpl_"]');
         },
-        serviceImplPackage: function () {
+        serviceServiceImplOverwrite_: function () {
+            return $('input[name="serviceServiceImplOverwrite_"]');
+        },
+        serviceServiceImplPackage: function () {
             return $('input[name="serviceServiceImplPackage"]');
         },
-        serviceImpl: function () {
+        serviceServiceImpl: function () {
             return $('input[name="serviceServiceImpl"]');
         },
         serviceServiceTest_: function () {
             return $('input[name="serviceServiceTest_"]');
+        },
+        serviceServiceTestOverwrite_: function () {
+            return $('input[name="serviceServiceTestOverwrite_"]');
         },
         serviceTestPackage: function () {
             return $('input[name="serviceServiceTestPackage"]');
@@ -1587,15 +1657,19 @@
             this._().prop("checked", false);
 
             this.serviceVO_().prop("checked", false);
+            this.serviceVOOverwrite_().prop("checked", false);
             this.serviceVOPackage().val('');
             this.serviceVO().val('');
             this.serviceService_().prop("checked", false);
+            this.serviceServiceOverwrite_().prop("checked", false);
             this.serviceServicePackage().val('');
             this.serviceService().val('');
             this.serviceServiceImpl_().prop("checked", false);
-            this.serviceImplPackage().val('');
-            this.serviceImpl().val('');
+            this.serviceServiceImplOverwrite_().prop("checked", false);
+            this.serviceServiceImplPackage().val('');
+            this.serviceServiceImpl().val('');
             this.serviceServiceTest_().prop("checked", false);
+            this.serviceServiceTestOverwrite_().prop("checked", false);
             this.serviceTestPackage().val('');
             this.serviceTest().val('');
         },
@@ -1641,8 +1715,8 @@
             this.serviceVO().val(serviceVO);
             this.serviceServicePackage().val(ssValue);
             this.serviceService().val(serviceService);
-            this.serviceImplPackage().val(ssiValue);
-            this.serviceImpl().val(serviceServiceImpl);
+            this.serviceServiceImplPackage().val(ssiValue);
+            this.serviceServiceImpl().val(serviceServiceImpl);
             this.serviceTestPackage().val(sstValue);
             this.serviceTest().val(serviceServiceTest);
         }
@@ -1659,6 +1733,9 @@
         webController_: function () {
             return $('input[name="webController_"]');
         },
+        webControllerOverwrite_: function () {
+            return $('input[name="webControllerOverwrite_"]');
+        },
         webControllerPackage: function () {
             return $('input[name="webControllerPackage"]');
         },
@@ -1667,6 +1744,9 @@
         },
         webRestController_: function () {
             return $('input[name="webRestController_"]');
+        },
+        webRestControllerOverwrite_: function () {
+            return $('input[name="webRestControllerOverwrite_"]');
         },
         webRestControllerPackage: function () {
             return $('input[name="webRestControllerPackage"]');
@@ -1678,10 +1758,12 @@
             this._().prop("checked", false);
 
             this.webController_().prop("checked", false);
+            this.webControllerOverwrite_().prop("checked", false);
             this.webControllerPackage().val('');
             this.webController().val('');
 
             this.webRestController_().prop("checked", false);
+            this.webRestControllerOverwrite_().prop("checked", false);
             this.webRestControllerPackage().val('');
             this.webRestController().val('');
         },
@@ -1728,6 +1810,9 @@
         uiApi_: function () {
             return $('input[name="uiApi_"]');
         },
+        uiApiOverwrite_: function () {
+            return $('input[name="uiApiOverwrite_"]');
+        },
         uiApiPackage: function () {
             return $('input[name="uiApiPackage"]');
         },
@@ -1736,6 +1821,9 @@
         },
         uiView_: function () {
             return $('input[name="uiView_"]');
+        },
+        uiViewOverwrite_: function () {
+            return $('input[name="uiViewOverwrite_"]');
         },
         uiViewPackage: function () {
             return $('input[name="uiViewPackage"]');
@@ -1747,10 +1835,12 @@
             this._().prop("checked", false);
 
             this.uiApi_().prop("checked", false);
+            this.uiApiOverwrite_().prop("checked", false);
             this.uiApiPackage().val('');
             this.uiApi().val('');
 
             this.uiView_().prop("checked", false);
+            this.uiViewOverwrite_().prop("checked", false);
             this.uiViewPackage().val('');
             this.uiView().val('');
         },

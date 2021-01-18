@@ -46,9 +46,11 @@ public class Generate implements Serializable {
     // api field
     private BoolEO api_ = BoolEO.FALSE;
     private BoolEO apiDTO_ = BoolEO.FALSE;
+    private BoolEO apiDTOOverwrite_ = BoolEO.FALSE;
     private String apiDTOPackage;
     private String apiDTO;
     private BoolEO apiApi_ = BoolEO.FALSE;
+    private BoolEO apiApiOverwrite_ = BoolEO.FALSE;
     private String apiApiPackage;
     private String apiApi;
     // end of api field
@@ -56,45 +58,55 @@ public class Generate implements Serializable {
     // dao field
     private BoolEO dao_ = BoolEO.FALSE;
     private BoolEO daoPO_ = BoolEO.FALSE;
+    private BoolEO daoPOOverwrite_ = BoolEO.FALSE;
     private String daoPOPackage;
     private String daoPO;
     private BoolEO daoMapper_ = BoolEO.FALSE;
+    private BoolEO daoMapperOverwrite_ = BoolEO.FALSE;
     private String daoMapperPackage;
     private String daoMapper;
     private BoolEO daoMapperXml_ = BoolEO.FALSE;
+    private BoolEO daoMapperXmlOverwrite_ = BoolEO.FALSE;
     private String daoMapperXmlPackage;
     private String daoMapperXml;
     private BoolEO daoJpa_ = BoolEO.FALSE;
+    private BoolEO daoJpaOverwrite_ = BoolEO.FALSE;
     private String daoJpaPackage;
     private String daoJpa;
     private BoolEO daoCacheSupport_ = BoolEO.FALSE;
+    private BoolEO daoCacheSupportOverwrite_ = BoolEO.FALSE;
     private String daoCacheSupportPackage;
     private String daoCacheSupport;
     private BoolEO daoDAO_ = BoolEO.FALSE;
+    private BoolEO daoDAOOverwrite_ = BoolEO.FALSE;
     private String daoDAOPackage;
     private String daoDAO;
     private BoolEO daoDAOImpl_ = BoolEO.FALSE;
+    private BoolEO daoDAOImplOverwrite_ = BoolEO.FALSE;
     private String daoDAOImplPackage;
     private String daoDAOImpl;
     private BoolEO daoDAOTest_ = BoolEO.FALSE;
+    private BoolEO daoDAOTestOverwrite_ = BoolEO.FALSE;
     private String daoDAOTestPackage;
     private String daoDAOTest;
     // end of dao field
 
     // service field
     private BoolEO service_ = BoolEO.FALSE;
-//    private BoolEO serviceDO_ = BoolEO.FALSE;
-//    private String serviceDOPackage;
     private BoolEO serviceVO_ = BoolEO.FALSE;
+    private BoolEO serviceVOOverwrite_ = BoolEO.FALSE;
     private String serviceVOPackage;
     private String serviceVO;
     private BoolEO serviceService_ = BoolEO.FALSE;
+    private BoolEO serviceServiceOverwrite_ = BoolEO.FALSE;
     private String serviceServicePackage;
     private String serviceService;
     private BoolEO serviceServiceImpl_ = BoolEO.FALSE;
+    private BoolEO serviceServiceImplOverwrite_ = BoolEO.FALSE;
     private String serviceServiceImplPackage;
     private String serviceServiceImpl;
     private BoolEO serviceServiceTest_ = BoolEO.FALSE;
+    private BoolEO serviceServiceTestOverwrite_ = BoolEO.FALSE;
     private String serviceServiceTestPackage;
     private String serviceServiceTest;
     // end of field
@@ -102,9 +114,11 @@ public class Generate implements Serializable {
     // web field
     private BoolEO web_ = BoolEO.FALSE;
     private BoolEO webController_ = BoolEO.FALSE;
+    private BoolEO webControllerOverwrite_ = BoolEO.FALSE;
     private String webControllerPackage;
     private String webController;
     private BoolEO webRestController_ = BoolEO.FALSE;
+    private BoolEO webRestControllerOverwrite_ = BoolEO.FALSE;
     private String webRestControllerPackage;
     private String webRestController;
     // end of web field
@@ -112,9 +126,11 @@ public class Generate implements Serializable {
     // ui field
     private BoolEO ui_ = BoolEO.FALSE;
     private BoolEO uiApi_ = BoolEO.FALSE;
+    private BoolEO uiApiOverwrite_ = BoolEO.FALSE;
     private String uiApiPackage;
     private String uiApi;
     private BoolEO uiView_ = BoolEO.FALSE;
+    private BoolEO uiViewOverwrite_ = BoolEO.FALSE;
     private String uiViewPackage;
     private String uiView;
     // end of ui field
@@ -289,6 +305,14 @@ public class Generate implements Serializable {
         this.apiDTO_ = apiDTO_;
     }
 
+    public BoolEO getApiDTOOverwrite_() {
+        return apiDTOOverwrite_;
+    }
+
+    public void setApiDTOOverwrite_(BoolEO apiDTOOverwrite_) {
+        this.apiDTOOverwrite_ = apiDTOOverwrite_;
+    }
+
     public String getApiDTOPackage() {
         return apiDTOPackage;
     }
@@ -311,6 +335,14 @@ public class Generate implements Serializable {
 
     public void setApiApi_(BoolEO apiApi_) {
         this.apiApi_ = apiApi_;
+    }
+
+    public BoolEO getApiApiOverwrite_() {
+        return apiApiOverwrite_;
+    }
+
+    public void setApiApiOverwrite_(BoolEO apiApiOverwrite_) {
+        this.apiApiOverwrite_ = apiApiOverwrite_;
     }
 
     public String getApiDTO() {
@@ -369,6 +401,14 @@ public class Generate implements Serializable {
         this.daoPO_ = daoPO_;
     }
 
+    public BoolEO getDaoPOOverwrite_() {
+        return daoPOOverwrite_;
+    }
+
+    public void setDaoPOOverwrite_(BoolEO daoPOOverwrite_) {
+        this.daoPOOverwrite_ = daoPOOverwrite_;
+    }
+
     public String getDaoPOPackage() {
         return daoPOPackage;
     }
@@ -417,6 +457,14 @@ public class Generate implements Serializable {
         this.daoMapper_ = daoMapper_;
     }
 
+    public BoolEO getDaoMapperOverwrite_() {
+        return daoMapperOverwrite_;
+    }
+
+    public void setDaoMapperOverwrite_(BoolEO daoMapperOverwrite_) {
+        this.daoMapperOverwrite_ = daoMapperOverwrite_;
+    }
+
     public String getDaoMapper() {
         return daoMapper;
     }
@@ -431,6 +479,14 @@ public class Generate implements Serializable {
 
     public void setDaoMapperXml_(BoolEO daoMapperXml_) {
         this.daoMapperXml_ = daoMapperXml_;
+    }
+
+    public BoolEO getDaoMapperXmlOverwrite_() {
+        return daoMapperXmlOverwrite_;
+    }
+
+    public void setDaoMapperXmlOverwrite_(BoolEO daoMapperXmlOverwrite_) {
+        this.daoMapperXmlOverwrite_ = daoMapperXmlOverwrite_;
     }
 
     public String getDaoMapperXmlPackage() {
@@ -457,6 +513,14 @@ public class Generate implements Serializable {
         this.daoJpa_ = daoJpa_;
     }
 
+    public BoolEO getDaoJpaOverwrite_() {
+        return daoJpaOverwrite_;
+    }
+
+    public void setDaoJpaOverwrite_(BoolEO daoJpaOverwrite_) {
+        this.daoJpaOverwrite_ = daoJpaOverwrite_;
+    }
+
     public String getDaoJpa() {
         return daoJpa;
     }
@@ -472,6 +536,14 @@ public class Generate implements Serializable {
 
     public void setDaoCacheSupport_(BoolEO daoCacheSupport_) {
         this.daoCacheSupport_ = daoCacheSupport_;
+    }
+
+    public BoolEO getDaoCacheSupportOverwrite_() {
+        return daoCacheSupportOverwrite_;
+    }
+
+    public void setDaoCacheSupportOverwrite_(BoolEO daoCacheSupportOverwrite_) {
+        this.daoCacheSupportOverwrite_ = daoCacheSupportOverwrite_;
     }
 
     public String getDaoCacheSupportPackage() {
@@ -498,6 +570,14 @@ public class Generate implements Serializable {
         this.daoDAO_ = daoDAO_;
     }
 
+    public BoolEO getDaoDAOOverwrite_() {
+        return daoDAOOverwrite_;
+    }
+
+    public void setDaoDAOOverwrite_(BoolEO daoDAOOverwrite_) {
+        this.daoDAOOverwrite_ = daoDAOOverwrite_;
+    }
+
     public String getDaoDAO() {
         return daoDAO;
     }
@@ -513,6 +593,14 @@ public class Generate implements Serializable {
 
     public void setDaoDAOImpl_(BoolEO daoDAOImpl_) {
         this.daoDAOImpl_ = daoDAOImpl_;
+    }
+
+    public BoolEO getDaoDAOImplOverwrite_() {
+        return daoDAOImplOverwrite_;
+    }
+
+    public void setDaoDAOImplOverwrite_(BoolEO daoDAOImplOverwrite_) {
+        this.daoDAOImplOverwrite_ = daoDAOImplOverwrite_;
     }
 
     public String getDaoDAOImplPackage() {
@@ -539,6 +627,14 @@ public class Generate implements Serializable {
         this.daoDAOTest_ = daoDAOTest_;
     }
 
+    public BoolEO getDaoDAOTestOverwrite_() {
+        return daoDAOTestOverwrite_;
+    }
+
+    public void setDaoDAOTestOverwrite_(BoolEO daoDAOTestOverwrite_) {
+        this.daoDAOTestOverwrite_ = daoDAOTestOverwrite_;
+    }
+
     public String getDaoDAOTestPackage() {
         return daoDAOTestPackage;
     }
@@ -563,22 +659,6 @@ public class Generate implements Serializable {
         this.service_ = service_;
     }
 
-//    public BoolEO getServiceDO_() {
-//        return serviceDO_;
-//    }
-
-//    public void setServiceDO_(BoolEO serviceDO_) {
-//        this.serviceDO_ = serviceDO_;
-//    }
-
-//    public String getServiceDOPackage() {
-//        return serviceDOPackage;
-//    }
-
-//    public void setServiceDOPackage(String serviceDOPackage) {
-//        this.serviceDOPackage = serviceDOPackage;
-//    }
-
     public String getServiceServicePackage() {
         return serviceServicePackage;
     }
@@ -587,20 +667,20 @@ public class Generate implements Serializable {
         this.serviceServicePackage = serviceServicePackage;
     }
 
-//    public String getServiceDO() {
-//        return serviceDO;
-//    }
-//
-//    public void setServiceDO(String serviceDO) {
-//        this.serviceDO = serviceDO;
-//    }
-
     public BoolEO getServiceService_() {
         return serviceService_;
     }
 
     public void setServiceService_(BoolEO serviceService_) {
         this.serviceService_ = serviceService_;
+    }
+
+    public BoolEO getServiceServiceOverwrite_() {
+        return serviceServiceOverwrite_;
+    }
+
+    public void setServiceServiceOverwrite_(BoolEO serviceServiceOverwrite_) {
+        this.serviceServiceOverwrite_ = serviceServiceOverwrite_;
     }
 
     public String getServiceService() {
@@ -617,6 +697,14 @@ public class Generate implements Serializable {
 
     public void setServiceServiceImpl_(BoolEO serviceServiceImpl_) {
         this.serviceServiceImpl_ = serviceServiceImpl_;
+    }
+
+    public BoolEO getServiceServiceImplOverwrite_() {
+        return serviceServiceImplOverwrite_;
+    }
+
+    public void setServiceServiceImplOverwrite_(BoolEO serviceServiceImplOverwrite_) {
+        this.serviceServiceImplOverwrite_ = serviceServiceImplOverwrite_;
     }
 
     public String getServiceServiceImplPackage() {
@@ -643,6 +731,14 @@ public class Generate implements Serializable {
         this.serviceServiceTest_ = serviceServiceTest_;
     }
 
+    public BoolEO getServiceServiceTestOverwrite_() {
+        return serviceServiceTestOverwrite_;
+    }
+
+    public void setServiceServiceTestOverwrite_(BoolEO serviceServiceTestOverwrite_) {
+        this.serviceServiceTestOverwrite_ = serviceServiceTestOverwrite_;
+    }
+
     public String getServiceServiceTestPackage() {
         return serviceServiceTestPackage;
     }
@@ -659,14 +755,6 @@ public class Generate implements Serializable {
         this.serviceServiceTest = serviceServiceTest;
     }
 
-    public BoolEO getWeb_() {
-        return web_;
-    }
-
-    public void setWeb_(BoolEO web_) {
-        this.web_ = web_;
-    }
-
     public BoolEO getServiceVO_() {
         return serviceVO_;
     }
@@ -675,20 +763,16 @@ public class Generate implements Serializable {
         this.serviceVO_ = serviceVO_;
     }
 
+    public BoolEO getServiceVOOverwrite_() {
+        return serviceVOOverwrite_;
+    }
+
+    public void setServiceVOOverwrite_(BoolEO serviceVOOverwrite_) {
+        this.serviceVOOverwrite_ = serviceVOOverwrite_;
+    }
+
     public String getServiceVOPackage() {
         return serviceVOPackage;
-    }
-
-    public void setServiceVOPackage(String serviceVOPackage) {
-        this.serviceVOPackage = serviceVOPackage;
-    }
-
-    public String getWebControllerPackage() {
-        return webControllerPackage;
-    }
-
-    public void setWebControllerPackage(String webControllerPackage) {
-        this.webControllerPackage = webControllerPackage;
     }
 
     public String getServiceVO() {
@@ -699,12 +783,40 @@ public class Generate implements Serializable {
         this.serviceVO = serviceVO;
     }
 
+    public void setServiceVOPackage(String serviceVOPackage) {
+        this.serviceVOPackage = serviceVOPackage;
+    }
+
+    public BoolEO getWeb_() {
+        return web_;
+    }
+
+    public void setWeb_(BoolEO web_) {
+        this.web_ = web_;
+    }
+
+    public String getWebControllerPackage() {
+        return webControllerPackage;
+    }
+
+    public void setWebControllerPackage(String webControllerPackage) {
+        this.webControllerPackage = webControllerPackage;
+    }
+
     public BoolEO getWebController_() {
         return webController_;
     }
 
     public void setWebController_(BoolEO webController_) {
         this.webController_ = webController_;
+    }
+
+    public BoolEO getWebControllerOverwrite_() {
+        return webControllerOverwrite_;
+    }
+
+    public void setWebControllerOverwrite_(BoolEO webControllerOverwrite_) {
+        this.webControllerOverwrite_ = webControllerOverwrite_;
     }
 
     public String getWebController() {
@@ -721,6 +833,14 @@ public class Generate implements Serializable {
 
     public void setWebRestController_(BoolEO webRestController_) {
         this.webRestController_ = webRestController_;
+    }
+
+    public BoolEO getWebRestControllerOverwrite_() {
+        return webRestControllerOverwrite_;
+    }
+
+    public void setWebRestControllerOverwrite_(BoolEO webRestControllerOverwrite_) {
+        this.webRestControllerOverwrite_ = webRestControllerOverwrite_;
     }
 
     public String getWebRestControllerPackage() {
@@ -755,6 +875,14 @@ public class Generate implements Serializable {
         this.uiApi_ = uiApi_;
     }
 
+    public BoolEO getUiApiOverwrite_() {
+        return uiApiOverwrite_;
+    }
+
+    public void setUiApiOverwrite_(BoolEO uiApiOverwrite_) {
+        this.uiApiOverwrite_ = uiApiOverwrite_;
+    }
+
     public String getUiApiPackage() {
         return uiApiPackage;
     }
@@ -777,6 +905,14 @@ public class Generate implements Serializable {
 
     public void setUiView_(BoolEO uiView_) {
         this.uiView_ = uiView_;
+    }
+
+    public BoolEO getUiViewOverwrite_() {
+        return uiViewOverwrite_;
+    }
+
+    public void setUiViewOverwrite_(BoolEO uiViewOverwrite_) {
+        this.uiViewOverwrite_ = uiViewOverwrite_;
     }
 
     public String getUiViewPackage() {
