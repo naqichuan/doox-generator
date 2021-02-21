@@ -648,7 +648,7 @@
             });
 
             if (!this.tablePackChanged && tableNameValue)
-                this.tablePack().val(tableNameValue.replace('_', '.'));
+                this.tablePack().val(tableNameValue.replaceAll('_', '.'));
             this.tablePackWatchers.forEach((watcher) => {
                 watcher();
             });
@@ -690,7 +690,7 @@
             this.tablePackTip();
 
             let tableNameValue = this.tableName().val() || this.tableName().attr('t-data');
-            this.tablePack().val(tableNameValue.replaceFirstLow());
+            this.tablePack().val(tableNameValue.replaceAll('_', '.'));
 
             this.tablePackWatchers.forEach((watcher) => {
                 watcher();
