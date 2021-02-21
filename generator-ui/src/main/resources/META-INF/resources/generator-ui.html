@@ -1297,7 +1297,7 @@
                 return "float";
             else if (input.startWith('decimal'))
                 return "BigDecimal";
-            else if (input.startWith('letchar') || input.startWith('text'))
+            else if (input.startWith('varchar') || input.startWith('text'))
                 return "String";
             else if (input.startWith('datetime') || input.startWith('date') || input.startWith('timestamp'))
                 return "Date";
