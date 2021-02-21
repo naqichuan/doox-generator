@@ -457,7 +457,7 @@
 <script type="text/javascript" src="webjars/doox-generator-ui/jquery/jquery.easyui.nqcx.js"></script>
 <script type="text/javascript" src="webjars/doox-generator-ui/js/doox-generator.js?v=1.2.0"></script>
 <script type="text/javascript">
-    var db = {
+    let db = {
         connbg: function () {
             return $('#connbg');
         },
@@ -484,7 +484,7 @@
             this.connChanged = false;
             this.connTip();
 
-            var _this = this;
+            let _this = this;
             nqcxGet('generator-api/connection/info', {}, function (result) {
                 if (result.success && result.result) {
                     _this.jdbcUrl().val(result.result.jdbcUrl);
@@ -499,7 +499,7 @@
             });
         },
         conn: function () {
-            var _this = this;
+            let _this = this;
 
             _this.conned = false;
             _this.connChanged = true;
@@ -561,7 +561,7 @@
 </script>
 <script type="text/javascript">
     // table
-    var table = {
+    let table = {
         tableName: function () {
             return $('select[name="tableName"]');
         },
@@ -586,9 +586,9 @@
         },
         _reload: function () {
             // 取当前 table name
-            var tableNameValue = this.tableName().val();
-            var colPrefixValue = this.colPrefix().val();
-            var tablePackValue = this.tablePack().val();
+            let tableNameValue = this.tableName().val();
+            let colPrefixValue = this.colPrefix().val();
+            let tablePackValue = this.tablePack().val();
 
             this.emptyTables();
             this._init();
@@ -604,7 +604,7 @@
             });
         },
         loadTables: function (tableNameValue, colPrefixValue, tablePackValue) {
-            var _this = this;
+            let _this = this;
             nqcxGet("generator-api/table/list", {}, function (response) {
                 if (response.success && response.list && response.list instanceof Array) {
                     response.list.forEach((item) => {
@@ -630,13 +630,13 @@
         },
         changeTable(lastTableName, lastColPrefixValue, lastTablePackValue) {
             $('select[name="tableName"] option').each(function () {
-                var value = $(this).val();
+                let value = $(this).val();
                 if (lastTableName && lastTableName === value) {
                     $(this).prop("selected", true);
                 }
             });
 
-            var tableNameValue = this.tableName().val() || this.tableName().attr('t-data');
+            let tableNameValue = this.tableName().val() || this.tableName().attr('t-data');
             this.tableNameWatchers.forEach((watcher) => {
                 watcher();
             });
@@ -648,7 +648,7 @@
             });
 
             if (!this.tablePackChanged && tableNameValue)
-                this.tablePack().val(tableNameValue.replaceFirstLow());
+                this.tablePack().val(tableNameValue.replace('_', '.'));
             this.tablePackWatchers.forEach((watcher) => {
                 watcher();
             });
@@ -689,7 +689,7 @@
             this.tablePackChanged = false;
             this.tablePackTip();
 
-            var tableNameValue = this.tableName().val() || this.tableName().attr('t-data');
+            let tableNameValue = this.tableName().val() || this.tableName().attr('t-data');
             this.tablePack().val(tableNameValue.replaceFirstLow());
 
             this.tablePackWatchers.forEach((watcher) => {
@@ -740,7 +740,7 @@
     });
 </script>
 <script type="text/javascript">
-    var project = {
+    let project = {
         authorElement: function () {
             return $('input[name="author"]');
         },
@@ -771,7 +771,7 @@
                 this.authorElement().removeClass("error");
         },
         loadAuthor: function () {
-            var _this = this;
+            let _this = this;
             nqcxPost("generator-api/project/author", {}, function (response) {
                 if (response.success) {
                     _this.author = response.object;
@@ -790,7 +790,7 @@
             if (!author)
                 author = '';
 
-            var _this = this;
+            let _this = this;
             nqcxPost("generator-api/project/author/change", {author: author}, function (response) {
                 if (response.success) {
                     _this.author = response.object;
@@ -814,7 +814,7 @@
                 this.basedirElement().removeClass("error");
         },
         loadBasedir: function (callback, errorCallback) {
-            var _this = this;
+            let _this = this;
 
             nqcxGet('generator-api/project/basedir', {}, function (response) {
                 if (response.success && response.object) {
@@ -838,11 +838,11 @@
             });
         },
         changeBasedir: function (basedir, callBack, errorCallBack) {
-            var basedirDecode = decodeURIComponent(basedir);
+            let basedirDecode = decodeURIComponent(basedir);
             if (!basedirDecode)
                 return;
 
-            var _this = this;
+            let _this = this;
             nqcxPost("generator-api/project/basedir/change", {"basedir": basedirDecode}, function (response) {
                 if (response && response.success) {
                     _this.basedirChanged = false;
@@ -864,7 +864,7 @@
         _p: {}, // project
         _loaded: false,
         _init: function () {
-            var _this = this;
+            let _this = this;
 
             this.loadAuthor();
             this.loadBasedir(function (basedir) {
@@ -872,11 +872,11 @@
             });
         },
         _load: function (basedir) {
-            var _this = this;
+            let _this = this;
             _this._p = {};
             _this._loaded = false;
 
-            var params = {};
+            let params = {};
             if (basedir)
                 params.basedir = basedir;
 
@@ -899,13 +899,13 @@
                     _this._loaded = true;
 
                     // modules
-                    if (_this._p.modules)
-                        _this.module.fillAllModules()
+                    if (_this._p && _this._p.modules)
+                        _this.module.fillAllModules();
                     else
                         _this.module.emptyAllModules();
                     // folders
-                    if (_this._p.folders)
-                        _this.module.fillAllFolders()
+                    if (_this._p && _this._p.folders)
+                        _this.module.fillAllFolders();
                     else
                         _this.module.emptyAllFolders();
 
@@ -986,7 +986,7 @@
                 return $('select[name="uiModuleName"]');
             },
             fillAllModules: function () {
-                var _this = this;
+                let _this = this;
 
                 _this.emptyAllModules();
 
@@ -1000,7 +1000,7 @@
                 _this.fill(_this.web().attr("name"), '-web', project._p.modules);
             },
             fillAllFolders: function () {
-                var _this = this;
+                let _this = this;
 
                 _this.emptyAllFolders();
 
@@ -1008,12 +1008,14 @@
                 _this.fill(_this.ui().attr("name"), '-ui', project._p.folders);
             },
             fill: function (name, defaultModule, ml) {
-                var select = $('select[name="' + name + '"]');
-                for (var idx in ml) {
-                    if (defaultModule && ml[idx].indexOf(defaultModule) > -1)
-                        $('<option selected="selected" value="' + ml[idx] + '">' + ml[idx] + '</option>').appendTo(select);
-                    else
-                        $('<option value="' + ml[idx] + '">' + ml[idx] + '</option>').appendTo(select);
+                let select = $('select[name="' + name + '"]');
+                for (let idx in ml) {
+                    if(ml.hasOwnProperty(idx)) {
+                        if (defaultModule && ml[idx].indexOf(defaultModule) > -1)
+                            $('<option selected="selected" value="' + ml[idx] + '">' + ml[idx] + '</option>').appendTo(select);
+                        else
+                            $('<option value="' + ml[idx] + '">' + ml[idx] + '</option>').appendTo(select);
+                    }
                 }
             },
             emptyAllModules: function () {
@@ -1062,7 +1064,7 @@
         project._init();
     });
     project.basedirElement().keyup(function (event) {
-        var basedir = $(this).val();
+        let basedir = $(this).val();
 
         project.basedirChanged = false;
         if (basedir !== project.basedir)
@@ -1091,7 +1093,7 @@
     });
 </script>
 <script type="text/javascript">
-    var path = {
+    let path = {
         relativePath: function () {
             return $('input[name="relativePath"]');
         },
@@ -1105,7 +1107,7 @@
             if ((event.keyCode || event.which) === 13) {
                 event.preventDefault();
 
-                var relativePathValue = this.relativePath().val();
+                let relativePathValue = this.relativePath().val();
 
                 if (!relativePathValue)
                     relativePathValue = '/';
@@ -1128,22 +1130,22 @@
 
                 return;
             }
-            var basedir = project.basedirElement().val();
+            let basedir = project.basedirElement().val();
 
             if (!pathValue)
                 pathValue = '';
             if (!nameValue)
                 nameValue = '';
 
-            var url = 'generator-api/project/openFile';
+            let url = 'generator-api/project/openFile';
             nqcxPost(url, {
                 basedir: basedir,
                 path: pathValue,
                 name: nameValue
             }, function (result) {
-                var relativePathPath = '/';
-                var relativePathName = '';
-                var cgFileListValue = [];
+                let relativePathPath = '/';
+                let relativePathName = '';
+                let cgFileListValue = [];
                 if (result.success) {
                     if (result.object) {
                         relativePathPath = result.object.path;
@@ -1157,14 +1159,16 @@
             });
         },
         loadCgFile: function (pathValue, cgFileList) {
-            var cgFileHtml = '';
+            let cgFileHtml = '';
             if (pathValue)
                 cgFileHtml += '<li><a href="javascript:void(0);" onclick="path.openFile(\'' + pathValue + '\',\'\');">..</a></li>';
-            for (var idx in cgFileList) {
-                if (cgFileList[idx].file)
-                    cgFileHtml += '<li>' + cgFileList[idx].name + '</li>';
-                else
-                    cgFileHtml += '<li><a href="javascript:void(0);" onclick="path.openFile(\'' + cgFileList[idx].path + '\',\'' + cgFileList[idx].name + '\');">' + cgFileList[idx].name + '</a></li>';
+            for (let idx in cgFileList) {
+                if (cgFileList.hasOwnProperty(idx)) {
+                    if (cgFileList[idx].file)
+                        cgFileHtml += '<li>' + cgFileList[idx].name + '</li>';
+                    else
+                        cgFileHtml += '<li><a href="javascript:void(0);" onclick="path.openFile(\'' + cgFileList[idx].path + '\',\'' + cgFileList[idx].name + '\');">' + cgFileList[idx].name + '</a></li>';
+                }
             }
             this.fileShow().html(cgFileHtml);
         }
@@ -1175,7 +1179,7 @@
     });
 </script>
 <script type="text/javascript">
-    var tableInfo = {
+    let tableInfo = {
         projectDiv: function () {
             return $('#config_pojo_div');
         },
@@ -1187,17 +1191,19 @@
                 return;
             this.info().html('');
 
-            for (var idx in columns) {
-                var colstr = '<tr>';
-                colstr += '<td>' + columns[idx].field + '</td>';
-                colstr += '<td>' + columns[idx].type + '</td>';
-                colstr += '<td>' + columns[idx].collation + '</td>';
-                colstr += '<td>' + columns[idx].isNull + '</td>';
-                colstr += '<td>' + columns[idx].key + '</td>';
-                colstr += '<td>' + columns[idx].defaultValue + '</td>';
-                colstr += '<td>' + columns[idx].extra + '</td>';
-                colstr += '<td>' + columns[idx].privileges + '</td>';
-                colstr += '<td>' + columns[idx].comment + '</td>';
+            for (let idx in columns) {
+                let colstr = '<tr>';
+                if (columns.hasOwnProperty(idx)) {
+                    colstr += '<td>' + columns[idx].field + '</td>';
+                    colstr += '<td>' + columns[idx].type + '</td>';
+                    colstr += '<td>' + columns[idx].collation + '</td>';
+                    colstr += '<td>' + columns[idx].isNull + '</td>';
+                    colstr += '<td>' + columns[idx].key + '</td>';
+                    colstr += '<td>' + columns[idx].defaultValue + '</td>';
+                    colstr += '<td>' + columns[idx].extra + '</td>';
+                    colstr += '<td>' + columns[idx].privileges + '</td>';
+                    colstr += '<td>' + columns[idx].comment + '</td>';
+                }
                 colstr += '</tr>';
 
                 this.info().append(colstr);
@@ -1207,14 +1213,14 @@
             this.loadTable()
         },
         loadTable: function () {
-            var tableName = table.tableName().val();
+            let tableName = table.tableName().val();
             if (!tableName) {
                 this.resetTable();
                 this.resetConfig()
                 return;
             }
 
-            var columns = [];
+            let columns = [];
             nqcxGet("generator-api/table/get/" + tableName, {}, function (result) {
                 if (result.object && result.object.columns) {
                     columns = result.object.columns;
@@ -1227,14 +1233,16 @@
             this.info().html('');
         },
         config: function (columns) {
-            var tableName = table.tableName().val();
+            let tableName = table.tableName().val();
             if (!tableName)
                 return;
 
-            var tableHtml = '<hr />';
+            let tableHtml = '<hr />';
             tableHtml += '<table border="0" cellpadding="0" cellspacing="0">';
-            for (idx in columns) {
-                tableHtml += '<tr>' + this.row1(columns[idx]) + '</tr>';
+            for (let idx in columns) {
+                if (columns.hasOwnProperty(idx)) {
+                    tableHtml += '<tr>' + this.row1(columns[idx]) + '</tr>';
+                }
             }
             tableHtml += '</table>';
             this.projectDiv().html(tableHtml);
@@ -1243,12 +1251,12 @@
             this.projectDiv().html('');
         },
         row1: function (column) {
-            var rowHtml = '';
-            var field = column.field;
-            var type = column.type;
-            var field_ = this.toField(field);
-            var type_ = this.toType(type);
-            var show = 'private ' + type_ + ' ' + field_ + ";";
+            let rowHtml = '';
+            let field = column.field;
+            let type = column.type;
+            let field_ = this.toField(field);
+            let type_ = this.toType(type);
+            let show = 'private ' + type_ + ' ' + field_ + ";";
 
             rowHtml += '<td><input id="pojoColumn_' + field + '" type="text" name="pojoColumn" class="big_200" value="' + field + '" readonly="true" /></td>';
             rowHtml += '<td>' + type + '</td>';
@@ -1259,20 +1267,22 @@
             return rowHtml;
         },
         show1: function (suffix) {
-            var field_ = document.getElementById('pojoField_' + suffix).value;
-            var type_ = document.getElementById('pojoType_' + suffix).value;
-            var show1 = 'private ' + type_ + ' ' + field_ + ";";
+            let field_ = document.getElementById('pojoField_' + suffix).value;
+            let type_ = document.getElementById('pojoType_' + suffix).value;
+            let show1 = 'private ' + type_ + ' ' + field_ + ";";
             $('#jojoText_' + suffix).html(show1);
         },
         toField: function (input) {
-            var prefix = table.colPrefix().val();
-            var ps = prefix.split(',');
+            let prefix = table.colPrefix().val();
+            let ps = prefix.split(',');
             if (ps != null && ps.length > 0) {
-                for (var idx in ps) {
-                    if (!ps[idx])
-                        continue;
-                    input = input.replace(new RegExp('^' + ps[idx], 'g'), '');
-                }
+                for (let idx in ps) {
+                    if (ps.hasOwnProperty(idx)) {
+                        if (!ps[idx])
+                            continue;
+                        input = input.replace(new RegExp('^' + ps[idx], 'g'), '');
+                    }
+                 }
             }
             return input.replaceFirstUP().replaceFirstLow();
         },
@@ -1287,7 +1297,7 @@
                 return "float";
             else if (input.startWith('decimal'))
                 return "BigDecimal";
-            else if (input.startWith('varchar') || input.startWith('text'))
+            else if (input.startWith('letchar') || input.startWith('text'))
                 return "String";
             else if (input.startWith('datetime') || input.startWith('date') || input.startWith('timestamp'))
                 return "Date";
@@ -1305,7 +1315,7 @@
     table.colPrefixWatchers.push(() => tableInfo.loadTable());
 </script>
 <script type="text/javascript">
-    var api = {
+    let api = {
         _: function () {
             return $('input[name="api_"]');
         },
@@ -1351,25 +1361,25 @@
         },
         loadPackage: function () {
             // project package value
-            var pValue = project.pPackage().val() || '';
+            let pValue = project.pPackage().val() || '';
 
-            var tablePack = table.tablePack().val();
+            let tablePack = table.tablePack().val();
 
-            var tableName = table.tableName().val();
+            let tableName = table.tableName().val();
             if (!tableName) {
                 this._reset();
                 return;
             }
 
-            var apiName = tableName.replaceFirstUP();
-            var apiDTO = apiName;
-            var apiApi = 'I' + apiName + 'Api';
+            let apiName = tableName.replaceFirstUP();
+            let apiDTO = apiName;
+            let apiApi = 'I' + apiName + 'Api';
 
-            var poValue = pValue + '.domain.dto' + (tablePack ? "." + tablePack : "");
+            let poValue = pValue + '.domain.dto' + (tablePack ? "." + tablePack : "");
             if (poValue.indexOf(".") === 0 && poValue.length > 1)
                 poValue = poValue.substring(1);
 
-            var ppValue = pValue + '.api' + (tablePack ? "." + tablePack : "");
+            let ppValue = pValue + '.api' + (tablePack ? "." + tablePack : "");
             if (ppValue.indexOf(".") === 0 && ppValue.length > 1)
                 ppValue = ppValue.substring(1);
 
@@ -1386,7 +1396,7 @@
     project.module.changeWatchars.push(() => api.loadPackage());
 </script>
 <script type="text/javascript">
-    var dao = {
+    let dao = {
         _: function () {
             return $('input[name="dao_"]');
         },
@@ -1527,53 +1537,53 @@
         },
         loadPackage: function () {
             // project pakcage value
-            var pValue = project.pPackage().val() || '';
+            let pValue = project.pPackage().val() || '';
 
-            var tablePack = table.tablePack().val();
+            let tablePack = table.tablePack().val();
 
-            var tableName = table.tableName().val();
+            let tableName = table.tableName().val();
             if (!tableName) {
                 this._reset();
                 return;
             }
 
-            var daoName = tableName.replaceFirstUP();
-            var daoPO = daoName + "PO";
-            var daoMapper = 'I' + daoName + 'Mapper';
-            var daoMapperXml = daoMapper;
-            var daoJpa = 'I' + daoName + 'Jpa';
-            var daoCacheSupport = 'CacheSupport';
-            var daoDao = 'I' + daoName + 'DAO';
-            var daoDaoImpl = daoName + 'DAO';
-            var daoTest = daoDaoImpl + 'Test';
+            let daoName = tableName.replaceFirstUP();
+            let daoPO = daoName + "PO";
+            let daoMapper = 'I' + daoName + 'Mapper';
+            let daoMapperXml = daoMapper;
+            let daoJpa = 'I' + daoName + 'Jpa';
+            let daoCacheSupport = 'CacheSupport';
+            let daoDao = 'I' + daoName + 'DAO';
+            let daoDaoImpl = daoName + 'DAO';
+            let daoTest = daoDaoImpl + 'Test';
 
-            var poValue = pValue + '.domain.po' + (tablePack ? "." + tablePack : "");
+            let poValue = pValue + '.domain.po' + (tablePack ? "." + tablePack : "");
             if (poValue.indexOf(".") === 0 && poValue.length > 1)
                 poValue = poValue.substring(1);
 
-            var mapperValue = pValue + '.data.mapper' + (tablePack ? "." + tablePack : "");
+            let mapperValue = pValue + '.data.mapper' + (tablePack ? "." + tablePack : "");
             if (mapperValue.indexOf(".") === 0 && mapperValue.length > 1)
                 mapperValue = mapperValue.substring(1);
 
-            var mapperXmlValue = mapperValue;
+            let mapperXmlValue = mapperValue;
 
-            var jpaValue = pValue + '.data.jpa' + (tablePack ? "." + tablePack : "");
+            let jpaValue = pValue + '.data.jpa' + (tablePack ? "." + tablePack : "");
             if (jpaValue.indexOf(".") === 0 && jpaValue.length > 1)
                 jpaValue = jpaValue.substring(1);
 
-            var cacheValue = pValue + '.data.cache';
+            let cacheValue = pValue + '.data.cache';
             if (cacheValue.indexOf(".") === 0 && cacheValue.length > 1)
                 cacheValue = cacheValue.substring(1);
 
-            var daoValue = pValue + '.dao' + (tablePack ? "." + tablePack : "");
+            let daoValue = pValue + '.dao' + (tablePack ? "." + tablePack : "");
             if (daoValue.indexOf(".") === 0 && daoValue.length > 1)
                 daoValue = daoValue.substring(1);
 
-            var daoImplValue = daoValue + '.impl';
+            let daoImplValue = daoValue + '.impl';
             if (daoImplValue.indexOf(".") === 0 && daoImplValue.length > 1)
                 daoImplValue = daoImplValue.substring(1);
 
-            var testValue = pValue + '.dao' + (tablePack ? "." + tablePack : "");
+            let testValue = pValue + '.dao' + (tablePack ? "." + tablePack : "");
             if (testValue.indexOf(".") === 0 && testValue.length > 1)
                 testValue = testValue.substring(1);
 
@@ -1601,7 +1611,7 @@
     project.module.changeWatchars.push(() => dao.loadPackage());
 </script>
 <script type="text/javascript">
-    var service = {
+    let service = {
         _: function () {
             return $('input[name="service_"]');
         },
@@ -1678,35 +1688,35 @@
         },
         loadPackage: function () {
             // project pakcage value
-            var pValue = project.pPackage().val() || '';
+            let pValue = project.pPackage().val() || '';
 
-            var tablePack = table.tablePack().val();
+            let tablePack = table.tablePack().val();
 
-            var tableName = table.tableName().val();
+            let tableName = table.tableName().val();
             if (!tableName) {
                 this._reset();
                 return;
             }
 
-            var serviceName = tableName.replaceFirstUP();
-            var serviceVO = serviceName + "VO";
-            var serviceService = 'I' + serviceName + "Service";
-            var serviceServiceImpl = serviceName + "Service"
-            var serviceServiceTest = serviceServiceImpl + "Test"
+            let serviceName = tableName.replaceFirstUP();
+            let serviceVO = serviceName + "VO";
+            let serviceService = 'I' + serviceName + "Service";
+            let serviceServiceImpl = serviceName + "Service";
+            let serviceServiceTest = serviceServiceImpl + "Test";
 
-            var svValue = pValue + '.domain.vo' + (tablePack ? "." + tablePack : "");
+            let svValue = pValue + '.domain.vo' + (tablePack ? "." + tablePack : "");
             if (svValue.indexOf(".") === 0 && svValue.length > 1)
                 svValue = svValue.substring(1);
 
-            var ssValue = pValue + '.service' + (tablePack ? "." + tablePack : "");
+            let ssValue = pValue + '.service' + (tablePack ? "." + tablePack : "");
             if (ssValue.indexOf(".") === 0 && ssValue.length > 1)
                 ssValue = ssValue.substring(1);
 
-            var ssiValue = ssValue + '.impl';
+            let ssiValue = ssValue + '.impl';
             if (ssiValue.indexOf(".") === 0 && ssiValue.length > 1)
                 ssiValue = ssiValue.substring(1);
 
-            var sstValue = pValue + '.service' + (tablePack ? "." + tablePack : "");
+            let sstValue = pValue + '.service' + (tablePack ? "." + tablePack : "");
             if (sstValue.indexOf(".") === 0 && sstValue.length > 1)
                 sstValue = sstValue.substring(1);
 
@@ -1726,7 +1736,7 @@
     project.module.changeWatchars.push(() => service.loadPackage());
 </script>
 <script type="text/javascript">
-    var web = {
+    let web = {
         _: function () {
             return $('input[name="web_"]');
         },
@@ -1772,21 +1782,21 @@
         },
         loadPackage: function () {
             // project pakcage value
-            var pValue = project.pPackage().val() || '';
+            let pValue = project.pPackage().val() || '';
 
-            var tablePack = table.tablePack().val();
+            let tablePack = table.tablePack().val();
 
-            var tableName = table.tableName().val();
+            let tableName = table.tableName().val();
             if (!tableName) {
                 this._reset();
                 return;
             }
 
-            var webName = tableName.replaceFirstUP();
-            var webController = webName + "Controller";
-            var webRestController = webName + 'Rest' + "Controller";
+            let webName = tableName.replaceFirstUP();
+            let webController = webName + "Controller";
+            let webRestController = webName + 'Rest' + "Controller";
 
-            var wcValue = pValue + '.web.controller' + (tablePack ? "." + tablePack : "");
+            let wcValue = pValue + '.web.controller' + (tablePack ? "." + tablePack : "");
             if (wcValue.indexOf(".") === 0 && wcValue.length > 1)
                 wcValue = wcValue.substring(1);
 
@@ -1803,7 +1813,7 @@
     project.module.changeWatchars.push(() => web.loadPackage());
 </script>
 <script type="text/javascript">
-    var ui = {
+    let ui = {
         _: function () {
             return $('input[name="ui_"]');
         },
@@ -1848,24 +1858,24 @@
             this._init();
         },
         loadPackage: function () {
-            var tablePack = table.tablePack().val();
+            let tablePack = table.tablePack().val();
 
-            var tableName = table.tableName().val();
+            let tableName = table.tableName().val();
             if (!tableName) {
                 this._reset();
                 return;
             }
 
-            var uiName = tableName;
-            var uiApi = uiName;
-            var uiView = uiName;
+            let uiName = tableName;
+            let uiApi = uiName;
+            let uiView = uiName;
 
             // set value
-            var uaValue = tablePack || '';
+            let uaValue = tablePack || '';
             this.uiApiPackage().val(uaValue);
             this.uiApi().val(uiApi);
 
-            var uvValue = tablePack || '';
+            let uvValue = tablePack || '';
             this.uiViewPackage().val(uvValue);
             this.uiView().val(uiView);
         }
@@ -1875,7 +1885,7 @@
     project.module.changeWatchars.push(() => ui.loadPackage());
 </script>
 <script type="text/javascript">
-    var checkForm = function () {
+    let checkForm = function () {
         if (!project._loaded || !project.basedirElement().val()) {
             $.messager.show({
                 title: 'Error',
@@ -1908,7 +1918,7 @@
         return true;
     };
 
-    var generate = function () {
+    let generate = function () {
         $('#generate_form').form('nqcxSubmit', {
             url: "generator-api/generate/doit",
             onSubmit: function () {

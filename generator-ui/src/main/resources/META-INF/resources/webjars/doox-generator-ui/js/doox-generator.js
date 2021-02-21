@@ -32,6 +32,9 @@ String.prototype.replaceFirstLow = function () {
             return m.toLowerCase();
     });
 };
+String.prototype.replaceAll = function(regexp, replacement) {
+    return this.replace(new RegExp(regexp, "gm"), replacement);
+};
 // end of string
 
 var nqcxPost = function (url, data, callBack) {
