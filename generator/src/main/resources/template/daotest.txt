@@ -19,7 +19,6 @@ public class [(${name})] extends BaseDAOTest {
 
     protected [(${daoName})] getDao() {
         return [(${daoVeriable})];
-        // return [(${jpaVeriable})];
     }
 
     @Test
