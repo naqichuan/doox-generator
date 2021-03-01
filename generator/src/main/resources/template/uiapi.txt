@@ -1,7 +1,7 @@
 import axios from '@/libs/api.request'
 import qs from 'qs'
 
-export const [(${camelTableName})]List = params => {
+export const [(${lowerCamelTableName})]List = params => {
   return axios.request({
     url: '[(${packagePath})]/list',
     method: 'post',
@@ -9,14 +9,14 @@ export const [(${camelTableName})]List = params => {
   })
 }
 
-export const [(${camelTableName})]Detail = (id) => {
+export const [(${lowerCamelTableName})]Detail = (id) => {
   return axios.request({
     url: '[(${packagePath})]/detail/' + id,
     method: 'get'
   })
 }
 
-export const [(${camelTableName})]Save = data => {
+export const [(${lowerCamelTableName})]Save = data => {
   return axios.request({
     url: '[(${packagePath})]/save',
     method: 'put',
@@ -24,14 +24,14 @@ export const [(${camelTableName})]Save = data => {
   })
 }
 
-export const [(${camelTableName})]Edit = id => {
+export const [(${lowerCamelTableName})]Edit = id => {
   return axios.request({
     url: '[(${packagePath})]/edit/' + id,
     method: 'get'
   })
 }
 
-export const [(${camelTableName})]Modify = data => {
+export const [(${lowerCamelTableName})]Modify = data => {
   return axios.request({
     url: '[(${packagePath})]/modify',
     method: 'put',
@@ -39,7 +39,7 @@ export const [(${camelTableName})]Modify = data => {
   })
 }
 
-export const [(${camelTableName})]Delete = (ids) => {
+export const [(${lowerCamelTableName})]Delete = (ids) => {
   return axios.request({
     url: '[(${packagePath})]/delete',
     method: 'delete',
