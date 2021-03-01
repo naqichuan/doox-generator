@@ -121,8 +121,8 @@ export default {
   methods: {
     [(${lowerCamelTableName})]TableSearchParam () { // 查询参数
       let param = {}
-      let [(${lowerCamelTableName})]TableSearch = this.[(${lowerCamelTableName})]TableSearch[# th:each="c : ${searchFields}"]
-      if ([(${lowerCamelTableName})]TableSearch.[(${c})]) param = Object.assign(param, { [(${c})]: [(${lowerCamelTableName})]TableSearch.[(${c})] })[/]
+      let tableSearch = this.[(${lowerCamelTableName})]TableSearch[# th:each="c : ${searchFields}"]
+      if (tableSearch.[(${c})]) param = Object.assign(param, { [(${c})]: tableSearch.[(${c})] })[/]
       return param
     },
     handle[(${upperCamelTableName})]SearchInitiate () {
