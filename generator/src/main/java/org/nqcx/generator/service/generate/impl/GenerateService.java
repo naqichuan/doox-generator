@@ -35,8 +35,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.google.common.base.CaseFormat.LOWER_CAMEL;
-import static com.google.common.base.CaseFormat.LOWER_UNDERSCORE;
+import static com.google.common.base.CaseFormat.*;
 import static org.nqcx.doox.commons.util.date.DateFormatUtils.TIME;
 
 /**
@@ -1282,12 +1281,14 @@ public class GenerateService implements IGenerateService {
     private void generateUi(Generate g) {
 
         Context cxt = new Context();
-        String camelTableName = LOWER_UNDERSCORE.to(LOWER_CAMEL, g.getTableName());
+        String lowerCamelTableName = LOWER_UNDERSCORE.to(LOWER_CAMEL, g.getTableName());
+        String upperCamelTableName = LOWER_UNDERSCORE.to(UPPER_CAMEL, g.getTableName());
 
         if (BoolEO.TRUE.is(g.getUiApi_())) {
             // ui api
             baseVariable(cxt, null, g.getAuthor(), g.getUiApiPackage(), g.getUiApi());
-            cxt.setVariable("camelTableName", camelTableName);
+            cxt.setVariable("lowerCamelTableName", lowerCamelTableName);
+            cxt.setVariable("upperCamelTableName", upperCamelTableName);
 
             String packagePath = g.getUiApiPackage().replace('.', '/');
             cxt.setVariable("packagePath", packagePath);
@@ -1303,10 +1304,11 @@ public class GenerateService implements IGenerateService {
         if (BoolEO.TRUE.is(g.getUiView_())) {
             // ui view
             baseVariable(cxt, null, g.getAuthor(), g.getUiViewPackage(), g.getUiView());
-            cxt.setVariable("camelTableName", camelTableName);
+            cxt.setVariable("lowerCamelTableName", lowerCamelTableName);
+            cxt.setVariable("upperCamelTableName", upperCamelTableName);
 
             String packagePath = g.getUiViewPackage().replace('.', '/');
-            cxt.setVariable("apiPath", UI_API_PATH.replace("src", "@") + packagePath + "/" + camelTableName);
+            cxt.setVariable("apiPath", UI_API_PATH.replace("src", "@") + packagePath + "/" + lowerCamelTableName);
 
             Column idc = g.getTable().getIdColumn();
             final String[] idFieldName = {idc != null ? idc.getField_() : null};
@@ -1381,7 +1383,8 @@ public class GenerateService implements IGenerateService {
 
             // ui view index.js
             baseVariable(cxt, null, g.getAuthor(), g.getUiViewPackage(), g.getUiView());
-            cxt.setVariable("camelTableName", camelTableName);
+            cxt.setVariable("lowerCamelTableName", lowerCamelTableName);
+            cxt.setVariable("upperCamelTableName", upperCamelTableName);
 
             this.writeFile(g.getLogFile(),
                     package2path(g.getUiModuleFile().getPath(), UI_VIEW_PATH, g.getUiViewPackage()),

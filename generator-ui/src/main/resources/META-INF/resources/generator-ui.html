@@ -498,7 +498,7 @@
                 }
             });
         },
-        conn: function () {
+        conn: function (onlyConnect) {
             let _this = this;
 
             _this.conned = false;
@@ -516,6 +516,13 @@
                         _this.conned = true;
                         _this.connChanged = false;
                         _this.connTip();
+
+                        if (onlyConnect) {
+                            $.messager.show({
+                                title: 'Success',
+                                msg: 'Connected.'
+                            });
+                        }
                     } else {
                         $.messager.show({
                             title: 'Error',
@@ -523,9 +530,11 @@
                         });
                     }
 
-                    _this.connWatchers.forEach((watcher) => {
-                        watcher();
-                    });
+                    if (!onlyConnect) {
+                        _this.connWatchers.forEach((watcher) => {
+                            watcher();
+                        });
+                    }
                 },
                 error: function () {
                     $.messager.show({
@@ -533,9 +542,11 @@
                         msg: 'Connect db fail! Please try again later.'
                     });
 
-                    _this.connWatchers.forEach((watcher) => {
-                        watcher();
-                    });
+                    if (!onlyConnect) {
+                        _this.connWatchers.forEach((watcher) => {
+                            watcher();
+                        });
+                    }
                 }
             });
         }
@@ -547,12 +558,13 @@
 
     // Connect db and load table
     $('.connectDB').keyup(function (event) {
-        db.connChanged = true;
+        //shift 16, control 17, alt 18, meta 91
+        db.connChanged = (event.which !== 16 && event.which !== 17 && event.which !== 18 && event.which !== 91);
         db.connTip();
 
         if ((event.keyCode || event.which) === 13) {
             event.preventDefault();
-            db.conn();
+            db.conn(event.shiftKey);
         }
     });
     $('#connectDB').click(function () {

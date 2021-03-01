@@ -2,57 +2,57 @@
   <div>
     <Card class="clearfix">
       <div class="search-con search-con-top">
-        <Form ref="searchForm" inline class="search" :model="tableSearch" @submit.native.prevent>[# th:each="c : ${searchFields}"]
+        <Form ref="[(${lowerCamelTableName})]SearchForm" inline class="search" :model="[(${lowerCamelTableName})]TableSearch" @submit.native.prevent>[# th:each="c : ${searchFields}"]
           <FormItem prop="[(${c})]">
-            <Input type="text" style="width: 150px" placeholder="[(*{searchLabels[__${cStat.index}__]})]" v-model="tableSearch.[(${c})]"
-                   @keyup.enter.native="handleTableData"></Input>
+            <Input type="text" style="width: 150px" placeholder="[(*{searchLabels[__${cStat.index}__]})]" v-model="[(${lowerCamelTableName})]TableSearch.[(${c})]"
+                   @keyup.enter.native="handle[(${upperCamelTableName})]TableData"></Input>
           </FormItem>[/]
           <FormItem>
-            <Button type="dashed" icon="ios-refresh" @click="handleSearchRefresh">重置</Button>
+            <Button type="dashed" icon="ios-refresh" @click="handle[(${upperCamelTableName})]SearchRefresh">重置</Button>
           </FormItem>
           <FormItem>
-            <Button type="primary" icon="ios-search" @click="handleTableData">查询</Button>
+            <Button type="primary" icon="ios-search" @click="handle[(${upperCamelTableName})]TableData">查询</Button>
           </FormItem>
         </Form>
         <ButtonGroup>
-          <Button icon="ios-add-circle" @click="handleNew">新建</Button>
+          <Button icon="ios-add-circle" @click="handle[(${upperCamelTableName})]New">新建</Button>
         </ButtonGroup>
       </div>
-      <tables ref="dataTable" v-model="tableData" :columns="tableTitle" :loading="tableLoading"
-        @on-selection-change="handleTableSelectChange" @on-sort-change="handleTableSortChange"
-        @on-delete="handleDelete" @on-edit="handleEdit"/>
+      <tables ref="[(${lowerCamelTableName})]DataTable" v-model="[(${lowerCamelTableName})]TableData" :columns="[(${lowerCamelTableName})]TableTitle" :loading="[(${lowerCamelTableName})]TableLoading"
+        @on-selection-change="handle[(${upperCamelTableName})]TableSelectChange" @on-sort-change="handle[(${upperCamelTableName})]TableSortChange"
+        @on-delete="handle[(${upperCamelTableName})]Delete" @on-edit="handle[(${upperCamelTableName})]Edit"/>
       <div class="margin-top-10">
         <!-- 选中提示 -->
         <Row>
           <Alert show-icon>
-            已选择 <span class="select-count"></span>{{ tableSelectionCount }} 项
+            已选择 <span class="select-count"></span>{{ [(${lowerCamelTableName})]TableSelectionCount }} 项
           </Alert>
         </Row>
         <!--分页条-->
         <Row class="operation">
-          <Poptip confirm transfer title="确定要删除选中的数据吗？" @on-ok="handleDeleteAll">
+          <Poptip confirm transfer title="确定要删除选中的数据吗？" @on-ok="handle[(${upperCamelTableName})]DeleteAll">
             <Button icon="ios-trash">批量删除</Button>
           </Poptip>
-           <Page ref="tablePage" :total="tablePage.totalCount" :page-size="tablePage.pageSize" :current="tablePage.page"
-            show-total placement="top" style="float: right" @on-change="handleTablePageChange"></Page>
+           <Page ref="[(${lowerCamelTableName})]TablePage" :total="[(${lowerCamelTableName})]TablePage.totalCount" :page-size="[(${lowerCamelTableName})]TablePage.pageSize" :current="[(${lowerCamelTableName})]TablePage.page"
+            show-total placement="top" style="float: right" @on-change="handle[(${upperCamelTableName})]TablePageChange"></Page>
         </Row>
       </div>
     </Card>
-    <Modal v-model="newModal" :closable='false' :mask-closable=false :width="600"
-           :loading="newLoading" okText="保存" @on-ok="handleNewSave">
+    <Modal v-model="[(${lowerCamelTableName})]NewModal" :closable='false' :mask-closable=false :width="600"
+           :loading="[(${lowerCamelTableName})]NewLoading" okText="保存" @on-ok="handle[(${upperCamelTableName})]NewSave">
       <h3 slot="header" style="color:#2D8CF0">新建</h3>
-      <Form ref="newForm" :model="newForm" :label-width="100" :rules="newValidate">[# th:each="c : ${newFormFields}"]
+      <Form ref="[(${lowerCamelTableName})]NewForm" :model="[(${lowerCamelTableName})]NewForm" :label-width="100" :rules="[(${lowerCamelTableName})]NewValidate">[# th:each="c : ${newFormFields}"]
         <FormItem label="[(*{newFormLabels[__${cStat.index}__]})]" prop="[(${c})]">
-          <Input v-model="newForm.[(${c})]" placeholder="[(*{newFormLabels[__${cStat.index}__]})]" style="width: 400px"></Input>
+          <Input v-model="[(${lowerCamelTableName})]NewForm.[(${c})]" placeholder="[(*{newFormLabels[__${cStat.index}__]})]" style="width: 400px"></Input>
         </FormItem>[/]
       </Form>
     </Modal>
-    <Modal v-model="editModal" :closable='false' :mask-closable=false :width="600"
-           :loading="editLoading" okText="保存修改" @on-ok="handleEditSave">
+    <Modal v-model="[(${lowerCamelTableName})]EditModal" :closable='false' :mask-closable=false :width="600"
+           :loading="[(${lowerCamelTableName})]EditLoading" okText="保存修改" @on-ok="handle[(${upperCamelTableName})]EditSave">
       <h3 slot="header" style="color:#2D8CF0">编辑</h3>
-      <Form ref="editForm" :model="editForm" :label-width="100" :rules="editValidate">[# th:each="c : ${editFormFields}"]
+      <Form ref="[(${lowerCamelTableName})]EditForm" :model="[(${lowerCamelTableName})]EditForm" :label-width="100" :rules="[(${lowerCamelTableName})]EditValidate">[# th:each="c : ${editFormFields}"]
         <FormItem label="[(*{editFormLabels[__${cStat.index}__]})]" prop="[(${c})]">
-          <Input v-model="editForm.[(${c})]" placeholder="[(*{editFormLabels[__${cStat.index}__]})]" style="width: 400px"></Input>
+          <Input v-model="[(${lowerCamelTableName})]EditForm.[(${c})]" placeholder="[(*{editFormLabels[__${cStat.index}__]})]" style="width: 400px"></Input>
         </FormItem>[/]
       </Form>
     </Modal>
@@ -61,10 +61,10 @@
 
 <script>
 import Tables from '_c/tables'
-import { [(${camelTableName})]List, [(${camelTableName})]Save, [(${camelTableName})]Edit, [(${camelTableName})]Modify, [(${camelTableName})]Delete } from '[(${apiPath})]'
+import { [(${lowerCamelTableName})]List, [(${lowerCamelTableName})]Save, [(${lowerCamelTableName})]Edit, [(${lowerCamelTableName})]Modify, [(${lowerCamelTableName})]Delete } from '[(${apiPath})]'
 
 export default {
-  name: '[(${camelTableName})]',
+  name: '[(${lowerCamelTableName})]',
   components: {
     Tables
   },
@@ -85,33 +85,33 @@ export default {
         { name: 'MALE', text: '男' },
         { name: 'FEMALE', text: '女' }
       ],
-      tableSearch: {},
-      tablePage: {},
-      tableSorts: [],
-      tableTitle: [
+      [(${lowerCamelTableName})]TableSearch: {},
+      [(${lowerCamelTableName})]TablePage: {},
+      [(${lowerCamelTableName})]TableSorts: [],
+      [(${lowerCamelTableName})]TableTitle: [
         { type: 'selection', width: 50, align: 'center' }, // 这里是复选框
         { title: '[(${idFieldTitle})]', key: '[(${idFieldName})]', sortable: 'custom', width: 70, align: 'center' }[# th:each="c : ${tableTitleTitles}"],
         { title: '[(${c})]', key: '[(*{tableTitleKeys[__${cStat.index}__]})]', width: 100, tooltip: true }[/],
         { title: 'Handle', key: 'handle', width: 140, align: 'center', options: ['edit', 'delete'] }
       ],
-      tableData: [],
-      tableLoading: false,
-      tableSelections: [],
-      tableSelectionCount: 0,
+      [(${lowerCamelTableName})]TableData: [],
+      [(${lowerCamelTableName})]TableLoading: false,
+      [(${lowerCamelTableName})]TableSelections: [],
+      [(${lowerCamelTableName})]TableSelectionCount: 0,
 
-      newModal: false,
-      newLoading: true,
-      newForm: { [# th:each="c : ${newFormFields}"][# th:if="${cStat.index > 0}"], [/][(${c})]: ''[/] },
-      newValidate: {[# th:each="c : ${validateFields}"][# th:if="${cStat.index > 0}"],[/]
+      [(${lowerCamelTableName})]NewModal: false,
+      [(${lowerCamelTableName})]NewLoading: true,
+      [(${lowerCamelTableName})]NewForm: { [# th:each="c : ${newFormFields}"][# th:if="${cStat.index > 0}"], [/][(${c})]: ''[/] },
+      [(${lowerCamelTableName})]NewValidate: {[# th:each="c : ${validateFields}"][# th:if="${cStat.index > 0}"],[/]
         [(${c})]: [
           { required: true, message: '不能空', trigger: 'blur' }
         ][/]
       },
 
-      editModal: false,
-      editLoading: true,
-      editForm: { [(${idFieldName})]: 0[# th:each="c : ${editFormFields}"], [(${c})]: ''[/] },
-      editValidate: {[# th:each="c : ${validateFields}"][# th:if="${cStat.index > 0}"],[/]
+      [(${lowerCamelTableName})]EditModal: false,
+      [(${lowerCamelTableName})]EditLoading: true,
+      [(${lowerCamelTableName})]EditForm: { [(${idFieldName})]: 0[# th:each="c : ${editFormFields}"], [(${c})]: ''[/] },
+      [(${lowerCamelTableName})]EditValidate: {[# th:each="c : ${validateFields}"][# th:if="${cStat.index > 0}"],[/]
         [(${c})]: [
           { required: true, message: '不能空', trigger: 'blur' }
         ][/]
@@ -119,42 +119,42 @@ export default {
     }
   },
   methods: {
-    tableSearchParam () { // 查询参数
+    [(${lowerCamelTableName})]TableSearchParam () { // 查询参数
       let param = {}
-      let tableSearch = this.tableSearch[# th:each="c : ${searchFields}"]
-      if (tableSearch.[(${c})]) param = Object.assign(param, { [(${c})]: tableSearch.[(${c})] })[/]
+      let [(${lowerCamelTableName})]TableSearch = this.[(${lowerCamelTableName})]TableSearch[# th:each="c : ${searchFields}"]
+      if ([(${lowerCamelTableName})]TableSearch.[(${c})]) param = Object.assign(param, { [(${c})]: [(${lowerCamelTableName})]TableSearch.[(${c})] })[/]
       return param
     },
-    handleSearchInitiate () {
-      this.handleSearchRefresh()
+    handle[(${upperCamelTableName})]SearchInitiate () {
+      this.handle[(${upperCamelTableName})]SearchRefresh()
 
-      this.tablePage.page = 1
-      this.tablePage.pageSize = 20
-      this.tablePage.totalCount = 0
+      this.[(${lowerCamelTableName})]TablePage.page = 1
+      this.[(${lowerCamelTableName})]TablePage.pageSize = 20
+      this.[(${lowerCamelTableName})]TablePage.totalCount = 0
 
-      this.tableSorts = []
+      this.[(${lowerCamelTableName})]TableSorts = []
     },
-    handleSearchRefresh () {
-      this.tableSearch = { [# th:each="c : ${searchFields}"][# th:if="${cStat.index > 0}"], [/][(${c})]: ''[/] }
+    handle[(${upperCamelTableName})]SearchRefresh () {
+      this.[(${lowerCamelTableName})]TableSearch = { [# th:each="c : ${searchFields}"][# th:if="${cStat.index > 0}"], [/][(${c})]: ''[/] }
     },
-    handleTableData () { // 加载数据
+    handle[(${upperCamelTableName})]TableData () { // 加载数据
       let _this = this
-      _this.tableLoading = true
+      _this.[(${lowerCamelTableName})]TableLoading = true
 
       // 更新选中
-      _this.handleTableSelectChange([])
+      _this.handle[(${upperCamelTableName})]TableSelectChange([])
 
-      let param = this.tableSearchParam()
-      if (this.tablePage) { param = Object.assign(param, { 'page': this.tablePage.page, 'pageSize': this.tablePage.pageSize }) }
-      if (this.tableSorts && this.tableSorts.length > 0) { param = Object.assign(param, { 'sorts': this.tableSorts.join(';') }) }
+      let param = this.[(${lowerCamelTableName})]TableSearchParam()
+      if (this.[(${lowerCamelTableName})]TablePage) { param = Object.assign(param, { 'page': this.[(${lowerCamelTableName})]TablePage.page, 'pageSize': this.[(${lowerCamelTableName})]TablePage.pageSize }) }
+      if (this.[(${lowerCamelTableName})]TableSorts && this.[(${lowerCamelTableName})]TableSorts.length > 0) { param = Object.assign(param, { 'sorts': this.[(${lowerCamelTableName})]TableSorts.join(';') }) }
 
-      [(${camelTableName})]List(param).then(res => {
+      [(${lowerCamelTableName})]List(param).then(res => {
         const data = res.data
         if (data && data.success) {
-          _this.tableData = data.list
-          _this.tablePage.current = data.page
-          _this.tablePage.pageSize = data.pageSize
-          _this.tablePage.totalCount = data.totalCount
+          _this.[(${lowerCamelTableName})]TableData = data.list
+          _this.[(${lowerCamelTableName})]TablePage.current = data.page
+          _this.[(${lowerCamelTableName})]TablePage.pageSize = data.pageSize
+          _this.[(${lowerCamelTableName})]TablePage.totalCount = data.totalCount
         } else {
           let em = ''
           if (data && data.errorText) { em = '，' + data.errorText }
@@ -163,35 +163,35 @@ export default {
             closable: true
           })
         }
-        _this.tableLoading = false
+        _this.[(${lowerCamelTableName})]TableLoading = false
       })
     },
-    handleTablePageChange (page) { // 变更页码
-      this.tablePage.page = page
-      this.handleTableData()
+    handle[(${upperCamelTableName})]TablePageChange (page) { // 变更页码
+      this.[(${lowerCamelTableName})]TablePage.page = page
+      this.handle[(${upperCamelTableName})]TableData()
     },
-    handleTableSortChange (sort) { // 变更排序
-      this.tableSorts = []
-      if (sort && (sort.order === 'desc' || sort.order === 'asc')) { this.tableSorts.push(sort.key + ',' + sort.order) }
-      this.handleTableData()
+    handle[(${upperCamelTableName})]TableSortChange (sort) { // 变更排序
+      this.[(${lowerCamelTableName})]TableSorts = []
+      if (sort && (sort.order === 'desc' || sort.order === 'asc')) { this.[(${lowerCamelTableName})]TableSorts.push(sort.key + ',' + sort.order) }
+      this.handle[(${upperCamelTableName})]TableData()
     },
-    handleTableSelectChange (selection) { // 变更选中
-      this.tableSelectionCount = 0
-      this.tableSelections = []
+    handle[(${upperCamelTableName})]TableSelectChange (selection) { // 变更选中
+      this.[(${lowerCamelTableName})]TableSelectionCount = 0
+      this.[(${lowerCamelTableName})]TableSelections = []
 
-      this.tableSelectionCount = selection.length
-      for (let i = 0; i < this.tableSelectionCount; i++) {
-        this.tableSelections.push(selection[i].id)
+      this.[(${lowerCamelTableName})]TableSelectionCount = selection.length
+      for (let i = 0; i < this.[(${lowerCamelTableName})]TableSelectionCount; i++) {
+        this.[(${lowerCamelTableName})]TableSelections.push(selection[i].id)
       }
     },
-    handleDelete ({ row }) { // 列表操作-数据删除
+    handle[(${upperCamelTableName})]Delete ({ row }) { // 列表操作-数据删除
       let _this = this
 
-      [(${camelTableName})]Delete([row.id]).then(res => {
+      [(${lowerCamelTableName})]Delete([row.id]).then(res => {
         const data = res.data
         if (data && data.success) {
           _this.$Message.success('删除成功')
-          _this.handleTableData()
+          _this.handle[(${upperCamelTableName})]TableData()
         } else {
           let em = '删除失败!'
           if (data && data.errorText) { em = data.errorText }
@@ -202,19 +202,19 @@ export default {
         }
       })
     },
-    handleDeleteAll () { // 批量操作-批量删除
+    handle[(${upperCamelTableName})]DeleteAll () { // 批量操作-批量删除
       let _this = this
 
-      if (_this.tableSelections.length === 0) {
+      if (_this.[(${lowerCamelTableName})]TableSelections.length === 0) {
         _this.$Message.error('请选择要删除的数据……')
         return
       }
 
-      [(${camelTableName})]Delete(_this.tableSelections).then(res => {
+      [(${lowerCamelTableName})]Delete(_this.[(${lowerCamelTableName})]TableSelections).then(res => {
         const data = res.data
         if (data && data.success) {
           _this.$Message.success('删除成功')
-          _this.handleTableData()
+          _this.handle[(${upperCamelTableName})]TableData()
         } else {
           let em = '删除失败!'
           if (data && data.errorText) { em = data.errorText }
@@ -225,23 +225,23 @@ export default {
         }
       })
     },
-    handleNew () { // 新建页面
-      this.$refs.newForm.resetFields()
-      this.newModal = true
+    handle[(${upperCamelTableName})]New () { // 新建页面
+      this.$refs.[(${lowerCamelTableName})]NewForm.resetFields()
+      this.[(${lowerCamelTableName})]NewModal = true
     },
-    handleNewSave () { // 页面提交-新建保存
-      this.$refs.newForm.validate((valid) => {
+    handle[(${upperCamelTableName})]NewSave () { // 页面提交-新建保存
+      this.$refs.[(${lowerCamelTableName})]NewForm.validate((valid) => {
         let _this = this
         if (valid) {
-          [(${camelTableName})]Save(_this.newForm).then(res => {
+          [(${lowerCamelTableName})]Save(_this.[(${lowerCamelTableName})]NewForm).then(res => {
             const data = res.data
             if (data && data.success) {
               _this.$Message.success({
                 content: '保存成功',
                 closable: true
               })
-              _this.newModal = false
-              _this.handleTableData()
+              _this.[(${lowerCamelTableName})]NewModal = false
+              _this.handle[(${upperCamelTableName})]TableData()
             } else {
               let em = '保存失败!'
               if (data && data.errorText) { em = data.errorText }
@@ -256,27 +256,27 @@ export default {
         }
 
         setTimeout(() => {
-          _this.newLoading = false
+          _this.[(${lowerCamelTableName})]NewLoading = false
           _this.$nextTick(() => {
-            _this.newLoading = true
+            _this.[(${lowerCamelTableName})]NewLoading = true
           })
         }, 1000)
       })
     },
-    handleEdit ({ row }) { // 编辑页面
-      this.$refs.editForm.resetFields()
-      this.editDetail(row.id)
+    handle[(${upperCamelTableName})]Edit ({ row }) { // 编辑页面
+      this.$refs.[(${lowerCamelTableName})]EditForm.resetFields()
+      this.[(${lowerCamelTableName})]EditDetail(row.id)
     },
-    editDetail (id) { // 页面操作-数据编辑
+    [(${lowerCamelTableName})]EditDetail (id) { // 页面操作-数据编辑
       let _this = this
 
-      [(${camelTableName})]Edit(id).then(res => {
+      [(${lowerCamelTableName})]Edit(id).then(res => {
         const data = res.data
         if (data && data.success) {
-          for (let item of Object.keys(_this.editForm)) {
-            if (data.object && data.object[item]) { _this.editForm[item] = data.object[item] }
+          for (let item of Object.keys(_this.[(${lowerCamelTableName})]EditForm)) {
+            if (data.object && data.object[item]) { _this.[(${lowerCamelTableName})]EditForm[item] = data.object[item] }
           }
-          _this.editModal = true
+          _this.[(${lowerCamelTableName})]EditModal = true
         } else {
           let em = '获取信息失败!'
           if (data && data.errorText) { em = data.errorText }
@@ -287,19 +287,19 @@ export default {
         }
       })
     },
-    handleEditSave () { // 页面提交-保存修改
-      this.$refs.editForm.validate((valid) => {
+    handle[(${upperCamelTableName})]EditSave () { // 页面提交-保存修改
+      this.$refs.[(${lowerCamelTableName})]EditForm.validate((valid) => {
         let _this = this
         if (valid) {
-          [(${camelTableName})]Modify(_this.editForm).then(res => {
+          [(${lowerCamelTableName})]Modify(_this.[(${lowerCamelTableName})]EditForm).then(res => {
             const data = res.data
             if (data && data.success) {
               _this.$Message.success({
                 content: '保存修改成功',
                 closable: true
               })
-              _this.editModal = false
-              _this.handleTableData()
+              _this.[(${lowerCamelTableName})]EditModal = false
+              _this.handle[(${upperCamelTableName})]TableData()
             } else {
               let em = '保存修改失败!'
               if (data && data.errorText) { em = data.errorText }
@@ -314,19 +314,19 @@ export default {
         }
 
         setTimeout(() => {
-          _this.editLoading = false
+          _this.[(${lowerCamelTableName})]EditLoading = false
           _this.$nextTick(() => {
-            _this.editLoading = true
+            _this.[(${lowerCamelTableName})]EditLoading = true
           })
         }, 1000)
       })
     }
   },
   created () {
-    this.handleSearchInitiate()
+    this.handle[(${upperCamelTableName})]SearchInitiate()
   },
   mounted () {
-    this.handleTableData()
+    this.handle[(${upperCamelTableName})]TableData()
   }
 }
 </script>
