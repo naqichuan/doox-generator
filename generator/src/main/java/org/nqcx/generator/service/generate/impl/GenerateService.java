@@ -1308,7 +1308,7 @@ public class GenerateService implements IGenerateService {
             cxt.setVariable("upperCamelTableName", upperCamelTableName);
 
             String packagePath = g.getUiViewPackage().replace('.', '/');
-            cxt.setVariable("apiPath", UI_API_PATH.replace("src", "@") + packagePath + "/" + lowerCamelTableName);
+            cxt.setVariable("apiPath", UI_API_PATH.replace("src", "@") + packagePath + "/" + g.getUiApi());
 
             Column idc = g.getTable().getIdColumn();
             final String[] idFieldName = {idc != null ? idc.getField_() : null};
