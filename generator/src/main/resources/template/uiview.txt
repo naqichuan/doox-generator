@@ -152,7 +152,7 @@ export default {
         const data = res.data
         if (data && data.success) {
           _this.[(${lowerCamelTableName})]TableData = data.list
-          _this.[(${lowerCamelTableName})]TablePage.current = data.page
+          _this.[(${lowerCamelTableName})]TablePage.page = data.page
           _this.[(${lowerCamelTableName})]TablePage.pageSize = data.pageSize
           _this.[(${lowerCamelTableName})]TablePage.totalCount = data.totalCount
         } else {
