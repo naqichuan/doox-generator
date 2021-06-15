@@ -3,7 +3,7 @@ import qs from 'qs'
 
 export const [(${lowerCamelTableName})]List = params => {
   return axios.request({
-    url: '[(${packagePath})]/list',
+    url: '[(${packagePath})]/[(${tableName})]/list',
     method: 'post',
     params: params
   })
@@ -11,14 +11,14 @@ export const [(${lowerCamelTableName})]List = params => {
 
 export const [(${lowerCamelTableName})]Detail = (id) => {
   return axios.request({
-    url: '[(${packagePath})]/detail/' + id,
+    url: '[(${packagePath})]/[(${tableName})]/detail/' + id,
     method: 'get'
   })
 }
 
 export const [(${lowerCamelTableName})]Save = data => {
   return axios.request({
-    url: '[(${packagePath})]/save',
+    url: '[(${packagePath})]/[(${tableName})]/save',
     method: 'put',
     data
   })
@@ -26,14 +26,14 @@ export const [(${lowerCamelTableName})]Save = data => {
 
 export const [(${lowerCamelTableName})]Edit = id => {
   return axios.request({
-    url: '[(${packagePath})]/edit/' + id,
+    url: '[(${packagePath})]/[(${tableName})]/edit/' + id,
     method: 'get'
   })
 }
 
 export const [(${lowerCamelTableName})]Modify = data => {
   return axios.request({
-    url: '[(${packagePath})]/modify',
+    url: '[(${packagePath})]/[(${tableName})]/modify',
     method: 'put',
     data
   })
@@ -41,7 +41,7 @@ export const [(${lowerCamelTableName})]Modify = data => {
 
 export const [(${lowerCamelTableName})]Delete = (ids) => {
   return axios.request({
-    url: '[(${packagePath})]/delete',
+    url: '[(${packagePath})]/[(${tableName})]/delete',
     method: 'delete',
     params: {
       ids: ids

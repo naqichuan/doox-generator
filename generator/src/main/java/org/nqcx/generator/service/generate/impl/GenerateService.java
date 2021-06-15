@@ -1287,6 +1287,7 @@ public class GenerateService implements IGenerateService {
         if (BoolEO.TRUE.is(g.getUiApi_())) {
             // ui api
             baseVariable(cxt, null, g.getAuthor(), g.getUiApiPackage(), g.getUiApi());
+            cxt.setVariable("tableName", g.getTable().getName());
             cxt.setVariable("lowerCamelTableName", lowerCamelTableName);
             cxt.setVariable("upperCamelTableName", upperCamelTableName);
 
