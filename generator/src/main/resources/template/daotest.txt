@@ -14,7 +14,7 @@ import [(${import})];
 public class [(${name})] extends BaseDAOTest {
 
     @Autowired
-    @Qualifier("[(${daoVeriable})]")
+    @Qualifier("[(${daoNameQualifier})]")
     private [(${daoName})] [(${daoVeriable})];
 
     protected [(${daoName})] getDao() {

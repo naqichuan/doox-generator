@@ -28,6 +28,7 @@ import org.thymeleaf.context.IContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
+import java.beans.Introspector;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -922,6 +923,7 @@ public class GenerateService implements IGenerateService {
             mappingImport(imports, g.getDaoDAO());
 
             cxt.setVariable("daoName", g.getDaoDAO());
+            cxt.setVariable("daoNameQualifier", Introspector.decapitalize(g.getDaoDAO()));
             cxt.setVariable("daoVeriable", g.getDaoDAOVeriable());
 
             cxt.setVariable("poName", g.getDaoPO());
@@ -1118,6 +1120,8 @@ public class GenerateService implements IGenerateService {
             cxt.setVariable("poName", g.getDaoPO());
             cxt.setVariable("idType", g.getIdType());
             cxt.setVariable("daoName", g.getDaoDAO());
+            cxt.setVariable("daoNameQualifier", Introspector.decapitalize(g.getDaoDAO()));
+
             cxt.setVariable("serviceName", g.getServiceService());
 
             cxt.setVariable("daoVeriable", g.getDaoDAOVeriable());
