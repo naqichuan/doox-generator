@@ -161,6 +161,7 @@ public class Generate implements Serializable {
     private String daoCacheSupportReference;
     private String daoDAOReference;
     private String daoDAOVeriable;
+    private String daoDAONameQualifier;
     private String daoDAOImplReference;
 
     private String daoBaseTestPackage;
@@ -1108,6 +1109,14 @@ public class Generate implements Serializable {
 
     public void setDaoDAOVeriable(String daoDAOVeriable) {
         this.daoDAOVeriable = daoDAOVeriable;
+    }
+
+    public String getDaoDAONameQualifier() {
+        return daoDAONameQualifier;
+    }
+
+    public void setDaoDAONameQualifier(String daoDAONameQualifier) {
+        this.daoDAONameQualifier = daoDAONameQualifier;
     }
 
     public String getDaoDAOImplReference() {

@@ -367,6 +367,7 @@ public class GenerateService implements IGenerateService {
         g.setDaoDAOReference(g.getDaoDAOPackage() + "." + g.getDaoDAO());
         g.setDaoCacheSupportReference(g.getDaoCacheSupportPackage() + "." + g.getDaoCacheSupport());
         g.setDaoDAOVeriable(StringUtils.uncapitalize(StringUtils.substring(g.getDaoDAO(), 1)));
+        g.setDaoDAONameQualifier(Introspector.decapitalize(StringUtils.substring(g.getDaoDAO(), 1)));
         g.setDaoDAOImplReference(g.getDaoDAOImplPackage() + "." + g.getDaoDAOImpl());
 
         g.setDaoBaseTestPackage(g.getpPackage() + ".dao");
@@ -923,7 +924,7 @@ public class GenerateService implements IGenerateService {
             mappingImport(imports, g.getDaoDAO());
 
             cxt.setVariable("daoName", g.getDaoDAO());
-            cxt.setVariable("daoNameQualifier", Introspector.decapitalize(g.getDaoDAO()));
+            cxt.setVariable("daoNameQualifier", g.getDaoDAONameQualifier());
             cxt.setVariable("daoVeriable", g.getDaoDAOVeriable());
 
             cxt.setVariable("poName", g.getDaoPO());
@@ -1120,7 +1121,7 @@ public class GenerateService implements IGenerateService {
             cxt.setVariable("poName", g.getDaoPO());
             cxt.setVariable("idType", g.getIdType());
             cxt.setVariable("daoName", g.getDaoDAO());
-            cxt.setVariable("daoNameQualifier", Introspector.decapitalize(g.getDaoDAO()));
+            cxt.setVariable("daoNameQualifier", g.getDaoDAONameQualifier());
 
             cxt.setVariable("serviceName", g.getServiceService());
 
