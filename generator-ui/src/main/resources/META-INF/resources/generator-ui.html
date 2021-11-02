@@ -1300,15 +1300,15 @@
         },
         toType: function (input) {
             if (input.startWith('bigint'))
-                return "long";
+                return "Long";
             else if (input.startWith('int'))
-                return "int";
+                return "Integer";
             else if (input.startWith('tinyint'))
-                return "int";
+                return "Integer";
             else if (input.startWith('smallint'))
-                return "int";
+                return "Integer";
             else if (input.startWith('float'))
-                return "float";
+                return "Float";
             else if (input.startWith('decimal'))
                 return "BigDecimal";
             else if (input.startWith('varchar') || input.startWith('text') || input.startWith('longtext'))
