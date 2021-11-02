@@ -1029,56 +1029,20 @@ public class GenerateService implements IGenerateService {
                 if ("String".equalsIgnoreCase(c.getType_())) {
                     voDtoWiths.add("StringUtils::isNotBlank");
 
-//                    this.voField(voFieldComments, voFields, voGetterAndSetters,
-//                            c.getField_(), "String", "_no", "!=");
-//                    voDtoFields.add(c.getField_() + "_no");
-//                    voDtoGetters.add("get" + StringUtils.capitalize(c.getField_())+ "_no" + "()");
-//                    voDtoWiths.add("StringUtils::isNotBlank");
-
                     this.voField(voFieldComments, voFields, voGetterAndSetters,
                             c.getField_(), "String", "__", "like");
                     voDtoFields.add(c.getField_() + "__");
                     voDtoGetters.add("get" + StringUtils.capitalize(c.getField_()) + "__" + "()");
                     voDtoWiths.add("StringUtils::isNotBlank");
 
-//                    this.voField(voFieldComments, voFields, voGetterAndSetters,
-//                            c.getField_(), "String", "_no_", "not like");
-//                    voDtoFields.add(c.getField_() + "_no_");
-//                    voDtoGetters.add("get" + StringUtils.capitalize(c.getField_())+ "_no_" + "()");
-//                    voDtoWiths.add("StringUtils::isNotBlank");
-
-                } else if ("Long".equalsIgnoreCase(c.getType_())
-                        || "int".equalsIgnoreCase(c.getType_())
-                        || "Integer".equalsIgnoreCase(c.getType_())
-                        || "Float".equalsIgnoreCase(c.getType_())
-                        || "Double".equalsIgnoreCase(c.getType_())
-                        || "BigDecimal".equalsIgnoreCase(c.getType_())) {
+                } else if ("byte".equals(c.getType_())
+                        || "short".equals(c.getType_())
+                        || "int".equals(c.getType_())
+                        || "long".equals(c.getType_())
+                        || "float".equals(c.getType_())
+                        || "double".equals(c.getType_())) {
 
                     voDtoWiths.add("x -> x > " + (c.isId_() ? "0" : "-1"));
-
-//                    this.voField(voFieldComments, voFields, voGetterAndSetters,
-//                            c.getField_(), "String", "_lt", "<");
-//                    voDtoFields.add(c.getField_() + "_lt");
-//                    voDtoGetters.add("get" + StringUtils.capitalize(c.getField_())+ "_lt" + "()");
-//                    voDtoWiths.add("x -> x > " + (c.isId_() ? "0" : "-1"));
-
-//                    this.voField(voFieldComments, voFields, voGetterAndSetters,
-//                            c.getField_(), "String", "_le", "<=");
-//                    voDtoFields.add(c.getField_() + "_le");
-//                    voDtoGetters.add("get" + StringUtils.capitalize(c.getField_())+ "_le" + "()");
-//                    voDtoWiths.add("x -> x > " + (c.isId_() ? "0" : "-1"));
-
-//                    this.voField(voFieldComments, voFields, voGetterAndSetters,
-//                            c.getField_(), "String", "_gt", ">");
-//                    voDtoFields.add(c.getField_() + "_gt");
-//                    voDtoGetters.add("get" + StringUtils.capitalize(c.getField_())+ "_gt" + "()");
-//                    voDtoWiths.add("x -> x > " + (c.isId_() ? "0" : "-1"));
-
-//                    this.voField(voFieldComments, voFields, voGetterAndSetters,
-//                            c.getField_(), "String", "_ge", ">=");
-//                    voDtoFields.add(c.getField_() + "_ge");
-//                    voDtoGetters.add("get" + StringUtils.capitalize(c.getField_())+ "_ge" + "()");
-//                    voDtoWiths.add("x -> x > " + (c.isId_() ? "0" : "-1"));
 
                 } else
                     voDtoWiths.add("Objects::nonNull");
