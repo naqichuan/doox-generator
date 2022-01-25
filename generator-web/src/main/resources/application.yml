@@ -15,9 +15,9 @@ server:
 ##spring config
 spring:
   application:
-    name: dooxgenerator
+    name: @spring.application.name@
   profiles:
-    active: base
+    active: @spring.profiles.active@
   devtools:
     add-properties: false
     livereload:
@@ -36,5 +36,5 @@ logging:
 
 ## project basedir
 project:
-  basedir: @project.basedir@
-  author: Naqichuan
+  basedir: @project.default.basedir@
+  author: @project.default.autor@

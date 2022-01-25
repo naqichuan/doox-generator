@@ -5,9 +5,9 @@
 <!-- debug:当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。 -->
 <configuration scan="true" scanPeriod="10 seconds">
     <!-- properties -->
-    <springProperty scope="context" name="LOGGING_FILE_PATH" source="logging.file.path"/>
-    <springProperty scope="context" name="LOGGING_CONTEXT_NAME" source="logging.context.name"/>
-    <springProperty scope="context" name="LOGGING_LEVEL_ROOT" source="logging.level.root"/>
+    <springProperty scope="context" name="LOGGING_CONTEXT_NAME" source="logging.context.name" defaultValue="doox-generator"/>
+    <springProperty scope="context" name="LOGGING_FILE_PATH" source="logging.file.path" defaultValue="./logs"/>
+    <springProperty scope="context" name="LOGGING_LEVEL_ROOT" source="logging.level.root" defaultValue="info"/>
 
     <contextName>${LOGGING_CONTEXT_NAME}</contextName>
 

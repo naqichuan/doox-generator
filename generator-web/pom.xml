@@ -10,13 +10,22 @@
     </parent>
 
     <artifactId>generator-web</artifactId>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <properties>
-        <logging.file.path>/doox/logs/doox-generator</logging.file.path>
-        <logging.context.name>doox-generator</logging.context.name>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <spring.application.name>doox-generator</spring.application.name>
+        <spring.profiles.active>base</spring.profiles.active>
+
+        <logging.file.path>./logs</logging.file.path>
+        <logging.context.name>${spring.application.name}</logging.context.name>
         <logging.level.root>info</logging.level.root>
         <logging.level.web>info</logging.level.web>
+
+        <project.default.basedir>${project.basedir}</project.default.basedir>
+        <project.default.autor>Naqichuan</project.default.autor>
 
         <server.port>1280</server.port>
     </properties>
@@ -131,7 +140,7 @@
     </dependencies>
 
     <build>
-        <finalName>generator-web</finalName>
+        <finalName>doox-generator-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -164,6 +173,20 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
+                <spring.profiles.active>nqcx</spring.profiles.active>
+
+                <logging.file.path>/doox/logs/doox-generator</logging.file.path>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <spring.profiles.active>prod</spring.profiles.active>
+
+                <project.default.basedir>./</project.default.basedir>
             </properties>
         </profile>
     </profiles>
