@@ -30,8 +30,8 @@ public class [(${name})] extends AbstractController {
     @RequestMapping(value = "/list", method = {RequestMethod.GET, RequestMethod.POST},
             produces = "application/json")
     public Map<?, ?> list([(${serviceVO})] [(${serviceVOVeriable})]) {
-        if ([(${serviceVOVeriable})].getPage() == null)
-            [(${serviceVOVeriable})].setPage(1L);
+        if ([(${serviceVOVeriable})].getNpage() == null)
+            [(${serviceVOVeriable})].setNpage(1L);
 
         DTO dto = [(${serviceVeriable})].findAll([(${serviceVOVeriable})].vo2dto());
 

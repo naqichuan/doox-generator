@@ -87,8 +87,8 @@ public class [(${name})] extends BaseServiceTest {
     @Test
     public void findAll() {
         // page and sort(field)
-        DTO dtoRequest = new DTO().setPage(new NPage(1, 20))
-                .setSort(NSort.by(new NSort.NOrder(NSort.NDirection.DESC, "id"),
+        DTO dtoRequest = new DTO().setNpage(new NPage(1, 20))
+                .setNsort(NSort.by(new NSort.NOrder(NSort.NDirection.DESC, "id"),
                         new NSort.NOrder(NSort.NDirection.ASC, "create")));
 
         DTO dtoResult = [(${serviceVeriable})].findAll(dtoRequest);

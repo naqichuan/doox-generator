@@ -11,7 +11,6 @@ import org.nqcx.doox.commons.web.cookie.CookieCipherTools;
 import org.nqcx.doox.commons.web.cookie.CookieUtils;
 import org.nqcx.doox.commons.web.cookie.NqcxCookie;
 import org.nqcx.doox.commons.web.interceptor.WebContextInterceptor;
-import org.nqcx.doox.commons.web.values.NqcxValues;
 import org.nqcx.generator.web.interceptor.AppContextInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -115,25 +114,11 @@ public class WebConfig implements WebMvcConfigurer {
 
     // ========================================================================
 
-    @Bean
-    public NqcxValues getNqcxValues() {
-        Map<String, String> values = new HashMap<>();
-
-        NqcxValues nvs = new NqcxValues();
-        nvs.setValues(values);
-
-        return nvs;
-    }
-
-    // ========================================================================
-
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
         Map<String, Object> map = new HashMap<>();
-        map.put("nqcxValues", getNqcxValues());
 
         map.put("homeUrl", getHomeUrl());
-//        map.put("WI", new WebInformation());
     }
 
     // ========================================================================
