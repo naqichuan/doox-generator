@@ -27,7 +27,7 @@ public class [(${name})] extends [(${poName})] {
     public DTO vo2dto() {
         return new DTO()[# th:each="f : ${voDtoFields}"]
 //                .putParamWhen("[(${f})]", [(*{voDtoGetters[__${fStat.index}__]})], [(*{voDtoWiths[__${fStat.index}__]})])[/]
-                .newPageWith(getNpage(), getNpageSize())
-                .newSortsWith(getNsorts());
+                .newPageWith(getPage(), getPageSize())
+                .newSortsWith(getSorts());
     }
 }
