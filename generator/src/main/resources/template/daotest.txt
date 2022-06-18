@@ -92,9 +92,14 @@ public class [(${name})] extends BaseDAOTest {
     @Test
     public void findAll() {
         // page and sort(field)
-        DTO dtoRequest = new DTO().setNpage(new NPage(1, 20))
-                .setNsort(NSort.by(new NSort.NOrder(NSort.NDirection.DESC, "id"),
-                        new NSort.NOrder(NSort.NDirection.ASC, "create")));
+        DTO dtoRequest = new DTO()
+                // .putParam("id", 1L)                                                  // 参数示例
+                // .putParam("date_gt", "2021-07-22")                                   // 参数示例
+                // .putParam("number_gt", 10L)                                          // 参数示例
+                // .setPage(new NPage(1, 20))                                           // 写法以下一行等效
+                .newPageWith(1L, 20L)
+                //.setSort(NSort.by(new NSort.NOrder(NSort.NDirection.DESC, "id")))     // 写法以下一行等效
+                .newSortsWith("id,desc");                                               // 排序字段写 PO 类里的 field name，不写数据库字段
 
         DTO dtoResult = getDao().findAll(dtoRequest);
 
