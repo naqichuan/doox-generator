@@ -58,7 +58,7 @@ public class ConnectionController extends AbstractController {
             password = vals[2] == null ? password : vals[2];
         }
 
-        return buildResult(new DTO(true)
+        return dto2map(new DTO(true)
                 .putResult("jdbcUrl", jdbcUrl)
                 .putResult("jdbcUser", user)
                 .putResult("jdbcPassword", password)
@@ -83,13 +83,13 @@ public class ConnectionController extends AbstractController {
         boolean success = connService.connect(jdbcUrl, user, password);
 
         if (!success)
-            return buildResult(new DTO().putResult("12", "Connect fail"));
+            return dto2map(new DTO().putResult("12", "Connect fail"));
 
         String cookieValue = jdbcUrl + "," + user + "," + password;
         // 记录写入 cookie
         CookieUtils.setCookie(response, jdbcCookie.getName(), cookieValue);
 
-        return buildResult(new DTO(true));
+        return dto2map(new DTO(true));
     }
 
     /**
@@ -105,6 +105,6 @@ public class ConnectionController extends AbstractController {
 
         CookieUtils.removeCookie(request, response, jdbcCookie.getName());
 
-        return buildResult(new DTO(true));
+        return dto2map(new DTO(true));
     }
 }

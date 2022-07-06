@@ -71,7 +71,7 @@ public class ProjectController extends AbstractController {
         if (StringUtils.isBlank(basedir))
             basedir = getCookieValue(request, basedirCookie.getName());
 
-        return buildResult(projectService.basedir(basedir));
+        return dto2map(projectService.basedir(basedir));
     }
 
     @RequestMapping(value = "/basedir/change", method = {RequestMethod.POST},
@@ -87,13 +87,13 @@ public class ProjectController extends AbstractController {
                 // 记录写入 cookie
                 CookieUtils.setCookie(response, basedirCookie.getName(), cookieValue);
 
-                return buildResult(new DTO(true).setObject(basedir));
+                return dto2map(new DTO(true).setObject(basedir));
             } catch (IOException e) {
                 LOGGER.error("", e);
             }
         }
 
-        return buildResult(new DTO(false));
+        return dto2map(new DTO(false));
     }
 
     /**
@@ -110,7 +110,7 @@ public class ProjectController extends AbstractController {
         if (basedirCookieValue != null && basedirCookieValue.length() > 0)
             basedir = basedirCookieValue;
 
-        return buildResult(projectService.info(basedir));
+        return dto2map(projectService.info(basedir));
     }
 
     /**
@@ -131,7 +131,7 @@ public class ProjectController extends AbstractController {
             CookieUtils.setCookie(response, authorCookie.getName(), author);
         }
 
-        return buildResult(new DTO(true).setObject(author));
+        return dto2map(new DTO(true).setObject(author));
     }
 
     /**
@@ -157,7 +157,7 @@ public class ProjectController extends AbstractController {
         // 记录写入 cookie
         CookieUtils.setCookie(response, authorCookie.getName(), author);
 
-        return buildResult(new DTO(true).setObject(author));
+        return dto2map(new DTO(true).setObject(author));
     }
 
     /**
@@ -173,6 +173,6 @@ public class ProjectController extends AbstractController {
             @RequestParam(value = "basedir") String basedir,
             @RequestParam(value = "path", required = false, defaultValue = "") String path,
             @RequestParam(value = "name", required = false, defaultValue = "") String name) {
-        return buildResult(projectService.openFile(basedir, path, name));
+        return dto2map(projectService.openFile(basedir, path, name));
     }
 }

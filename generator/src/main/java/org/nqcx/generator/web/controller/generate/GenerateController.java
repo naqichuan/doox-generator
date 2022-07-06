@@ -42,6 +42,6 @@ public class GenerateController extends AbstractController {
     @RequestMapping(value = "/doit", method = {RequestMethod.GET, RequestMethod.POST}, produces = "application/json")
     @ResponseBody
     public Map<?, ?> doit(GenerateVO vo) {
-        return buildResult(generateService.generate(Orika.o2o(vo, Generate.class)));
+        return dto2map(generateService.generate(Orika.o2o(vo, Generate.class)));
     }
 }

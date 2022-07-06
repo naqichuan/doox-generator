@@ -39,7 +39,7 @@ public class [(${name})] extends AbstractController {
         if (list != null)
             dto.setList(Orika.l2l(list, [(${serviceVO})].class));
 
-        return buildResult(dto);
+        return dto2map(dto);
     }
 
     /**
@@ -52,9 +52,9 @@ public class [(${name})] extends AbstractController {
     public Map<?, ?> save(@RequestBody [(${serviceVO})] [(${serviceVOVeriable})]) {
         DTO dto = checkForm([(${serviceVOVeriable})], false);
         if (dto == null || !dto.isSuccess())
-            return buildResult(dto);
+            return dto2map(dto);
 
-        return buildResult(new DTO(true).setObject([(${serviceVeriable})].save([(${serviceVOVeriable})])));
+        return dto2map(new DTO(true).setObject([(${serviceVeriable})].save([(${serviceVOVeriable})])));
     }
 
     /**
@@ -65,7 +65,7 @@ public class [(${name})] extends AbstractController {
      */
     @GetMapping(value = "/detail/{id}", produces = "application/json")
     public Map<?, ?> detail(@PathVariable("id") [(${idType})] id) {
-        return buildResult(new DTO(true).setObject([(${serviceVeriable})].findById(id)));
+        return dto2map(new DTO(true).setObject([(${serviceVeriable})].findById(id)));
     }
 
     /**
@@ -89,9 +89,9 @@ public class [(${name})] extends AbstractController {
     public Map<?, ?> modify(@RequestBody [(${serviceVO})] [(${serviceVOVeriable})]) {
         DTO dto = checkForm([(${serviceVOVeriable})], true);
         if (dto == null || !dto.isSuccess())
-            return buildResult(dto);
+            return dto2map(dto);
 
-        return buildResult(new DTO(true).setObject([(${serviceVeriable})].modify([(${serviceVOVeriable})])));
+        return dto2map(new DTO(true).setObject([(${serviceVeriable})].modify([(${serviceVOVeriable})])));
     }
 
     /**
@@ -121,6 +121,6 @@ public class [(${name})] extends AbstractController {
         if (ids != null && ids.length > 0)
             [(${serviceVeriable})].deleteByIds(ids);
 
-        return buildResult(new DTO(true));
+        return dto2map(new DTO(true));
     }
 }
