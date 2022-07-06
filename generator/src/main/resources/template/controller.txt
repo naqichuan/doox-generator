@@ -41,8 +41,8 @@ public class [(${name})] extends AbstractController {
             produces = "application/json")
     @ResponseBody
     public Map<?, ?> list([(${serviceVO})] [(${serviceVOVeriable})]) {
-        if ([(${serviceVOVeriable})].getNpage() == null)
-            [(${serviceVOVeriable})].setNpage(1L);
+        if ([(${serviceVOVeriable})].getPage() == null)
+            [(${serviceVOVeriable})].setPage(1L);
 
         DTO dto = [(${serviceVeriable})].findAll([(${serviceVOVeriable})].vo2dto());
 
