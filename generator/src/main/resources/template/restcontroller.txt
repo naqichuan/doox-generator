@@ -52,7 +52,7 @@ public class [(${name})] extends AbstractController {
     public Map<?, ?> save(@RequestBody [(${serviceVO})] [(${serviceVOVeriable})]) {
         DTO dto = checkForm([(${serviceVOVeriable})], false);
         if (dto == null || !dto.isSuccess())
-            return dto2map(dto);
+            return dto2map(Optional.ofNullable(dto).orElse(new DTO()));
 
         return dto2map(new DTO(true).setObject([(${serviceVeriable})].save([(${serviceVOVeriable})])));
     }
@@ -89,7 +89,7 @@ public class [(${name})] extends AbstractController {
     public Map<?, ?> modify(@RequestBody [(${serviceVO})] [(${serviceVOVeriable})]) {
         DTO dto = checkForm([(${serviceVOVeriable})], true);
         if (dto == null || !dto.isSuccess())
-            return dto2map(dto);
+            return dto2map(Optional.ofNullable(dto).orElse(new DTO()));
 
         return dto2map(new DTO(true).setObject([(${serviceVeriable})].modify([(${serviceVOVeriable})])));
     }

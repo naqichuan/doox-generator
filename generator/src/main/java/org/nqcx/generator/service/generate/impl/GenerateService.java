@@ -1186,6 +1186,7 @@ public class GenerateService implements IGenerateService {
 
             mappingImport(imports, "Map");
             mappingImport(imports, "List");
+            mappingImport(imports, "Optional");
 
             mappingImport(imports, g.getServiceVO());
             mappingImport(imports, g.getServiceService());
@@ -1224,6 +1225,7 @@ public class GenerateService implements IGenerateService {
 
             mappingImport(imports, "Map");
             mappingImport(imports, "List");
+            mappingImport(imports, "Optional");
 
             mappingImport(imports, g.getServiceVO());
             mappingImport(imports, g.getServiceService());
