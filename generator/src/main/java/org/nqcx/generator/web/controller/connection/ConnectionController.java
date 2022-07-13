@@ -11,6 +11,7 @@ package org.nqcx.generator.web.controller.connection;
 import org.nqcx.doox.commons.lang.o.DTO;
 import org.nqcx.doox.commons.web.cookie.CookieUtils;
 import org.nqcx.doox.commons.web.cookie.NqcxCookie;
+import org.nqcx.generator.domain.o.GenerateErrorCode;
 import org.nqcx.generator.service.conn.IConnService;
 import org.nqcx.generator.web.controller.AbstractController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,7 +84,7 @@ public class ConnectionController extends AbstractController {
         boolean success = connService.connect(jdbcUrl, user, password);
 
         if (!success)
-            return dto2map(new DTO().putResult("12", "Connect fail"));
+            return dto2map(new DTO().putError(GenerateErrorCode.E12.buildError()));
 
         String cookieValue = jdbcUrl + "," + user + "," + password;
         // 记录写入 cookie

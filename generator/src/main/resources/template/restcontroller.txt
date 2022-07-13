@@ -103,9 +103,9 @@ public class [(${name})] extends AbstractController {
         DTO dto = new DTO();
 
         if ([(${serviceVOVeriable})] == null)
-            return dto.putResult("10", "操作数据出错"); //操作数据出错
+            return dto.putError(NErrorCode.E1.buildError()); // 参数异常
         if (isModify && [(${serviceVOVeriable})].getId() == 0)
-            return dto.putResult("11", "操作的数据不存在"); //操作的数据不存在
+            return dto.putError(NErrorCode.E3.buildError()); // 数据为空或不存在
 
         return dto.setSuccess(true);
     }

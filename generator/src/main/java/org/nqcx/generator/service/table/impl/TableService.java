@@ -11,6 +11,7 @@ package org.nqcx.generator.service.table.impl;
 import org.nqcx.doox.commons.lang.o.DTO;
 import org.nqcx.generator.domain.dto.table.Column;
 import org.nqcx.generator.domain.dto.table.Table;
+import org.nqcx.generator.domain.o.GenerateErrorCode;
 import org.nqcx.generator.service.conn.CgResult;
 import org.nqcx.generator.service.conn.IConnService;
 import org.nqcx.generator.service.table.ITableService;
@@ -42,7 +43,8 @@ public class TableService implements ITableService {
         String sql = "SHOW TABLES";
         CgResult result = connService.query(sql);
         if (!result.isSuccess())
-            return dto.putResult("10", result.getMsg());
+            return dto.putError(GenerateErrorCode.E10.buildError())
+                    .putResult("msg", result.getMsg());
 
         List<Table> list = new ArrayList<Table>();
         try {
@@ -56,7 +58,8 @@ public class TableService implements ITableService {
             }
             return dto.setSuccess(true).setList(list);
         } catch (SQLException e) {
-            dto.setSuccess(false).putResult("10", e.toString());
+            dto.setSuccess(false).putError(GenerateErrorCode.E10.buildError())
+                    .putResult("msg", e.toString());
             logger.error("", e);
         } finally {
             result.close();
@@ -94,7 +97,8 @@ public class TableService implements ITableService {
             }
             dto.setSuccess(true).setObject(t);
         } catch (SQLException e) {
-            dto.setSuccess(false).putResult("10", e.toString());
+            dto.setSuccess(false).putError(GenerateErrorCode.E10.buildError())
+                    .putResult("msg", e.toString());
             logger.error("", e);
         } finally {
             result.close();

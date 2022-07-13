@@ -16,6 +16,7 @@ import org.nqcx.generator.domain.dto.CgField;
 import org.nqcx.generator.domain.dto.Generate;
 import org.nqcx.generator.domain.dto.table.Column;
 import org.nqcx.generator.domain.dto.table.Table;
+import org.nqcx.generator.domain.o.GenerateErrorCode;
 import org.nqcx.generator.service.generate.IGenerateService;
 import org.nqcx.generator.service.table.ITableService;
 import org.slf4j.Logger;
@@ -109,6 +110,7 @@ public class GenerateService implements IGenerateService {
         CLASS_MAPPING.put("DTO", "org.nqcx.doox.commons.lang.o.DTO");
         CLASS_MAPPING.put("NPage", "org.nqcx.doox.commons.lang.o.NPage");
         CLASS_MAPPING.put("NSort", "org.nqcx.doox.commons.lang.o.NSort");
+        CLASS_MAPPING.put("NErrorCode", "org.nqcx.doox.commons.lang.o.NErrorCode");
         CLASS_MAPPING.put("StringUtils", "org.nqcx.doox.commons.util.StringUtils");
         CLASS_MAPPING.put("Orika", "org.nqcx.doox.commons.util.orika.Orika");
         CLASS_MAPPING.put("BoolEO", "org.nqcx.doox.commons.lang.enums.BoolEO");
@@ -168,21 +170,21 @@ public class GenerateService implements IGenerateService {
     @Override
     public DTO generate(Generate g) {
         if (g == null)
-            return new DTO(false).putResult("100", "生成代码失败！");
+            return new DTO(false).putError(GenerateErrorCode.E100.buildError());
 
         if (!pathExist(g.getpPath()))
-            return new DTO(false).putResult("101", "工程路径不存在");
+            return new DTO(false).putError(GenerateErrorCode.E101.buildError());
 
         // 取表
         DTO trd = tableService.getTable(g.getTableName());
         Table table;
         if (trd == null || !trd.isSuccess() || (table = trd.getObject()) == null)
-            return new DTO(false).putResult("102", "表不存在！");
+            return new DTO(false).putError(GenerateErrorCode.E102.buildError());
         g.setTable(table);
 
         // 初始化
         if (!this.generateInit(g))
-            return new DTO(false).putResult("100", "生成代码失败！");
+            return new DTO(false).putError(GenerateErrorCode.E100.buildError());
 
         // 写入空行到日志
         this.writeLog(g.getLogFile(), "");
@@ -1170,6 +1172,7 @@ public class GenerateService implements IGenerateService {
             baseVariable(cxt, imports, g.getAuthor(), g.getWebControllerPackage(), g.getWebController());
 
             mappingImport(imports, "DTO");
+            mappingImport(imports, "NErrorCode");
             mappingImport(imports, "Orika");
 
             mappingImport(imports, "Controller");
@@ -1211,6 +1214,7 @@ public class GenerateService implements IGenerateService {
             baseVariable(cxt, imports, g.getAuthor(), g.getWebRestControllerPackage(), g.getWebRestController());
 
             mappingImport(imports, "DTO");
+            mappingImport(imports, "NErrorCode");
             mappingImport(imports, "Orika");
 
             mappingImport(imports, "RestController");
