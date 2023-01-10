@@ -486,10 +486,10 @@
 
             let _this = this;
             nqcxGet('generator-api/connection/info', {}, function (result) {
-                if (result.success && result.result) {
-                    _this.jdbcUrl().val(result.result.jdbcUrl);
-                    _this.jdbcUser().val(result.result.jdbcUser);
-                    _this.jdbcPassword().val(result.result.jdbcPassword);
+                if (result.success && result.results) {
+                    _this.jdbcUrl().val(result.results.jdbcUrl);
+                    _this.jdbcUser().val(result.results.jdbcUser);
+                    _this.jdbcPassword().val(result.results.jdbcPassword);
                 } else {
                     $.messager.show({
                         title: 'Error',
