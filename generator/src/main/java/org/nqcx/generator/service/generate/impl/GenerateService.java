@@ -122,6 +122,7 @@ public class GenerateService implements IGenerateService {
         CLASS_MAPPING.put("DAOSupport", "org.nqcx.doox.commons.dao.DAOSupport");
         CLASS_MAPPING.put("IJpa", "org.nqcx.doox.commons.data.jpa.IJpa");
         CLASS_MAPPING.put("IDAO", "org.nqcx.doox.commons.dao.IDAO");
+        CLASS_MAPPING.put("Mapper", "org.apache.ibatis.annotations.Mapper");
 
         CLASS_MAPPING.put("IService", "org.nqcx.doox.commons.service.IService");
         CLASS_MAPPING.put("ServiceSupport", "org.nqcx.doox.commons.service.ServiceSupport");
@@ -653,6 +654,7 @@ public class GenerateService implements IGenerateService {
             // mapper
             baseVariable(cxt, imports, g.getAuthor(), g.getDaoMapperPackage(), g.getDaoMapper());
 
+            mappingImport(imports, "Mapper");
             mappingImport(imports, "IMapper");
             mappingImport(imports, g.getDaoPO());
 

@@ -11,6 +11,7 @@ import [(${import})];
 /**
  * @author [(${author})] [(${#dates.format(date, 'yyyy-MM-dd HH:mm')})]
  */
+@Mapper
 public interface [(${name})] extends IMapper<[(${poName})], [(${idType})]> {
 
 }
