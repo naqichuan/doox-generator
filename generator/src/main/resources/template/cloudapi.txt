@@ -12,49 +12,49 @@ import [(${import})];
  * @author [(${author})] [(${#dates.format(date, 'yyyy-MM-dd HH:mm')})]
  */
 @RestController
-@RequestMapping("/[(${tableName})]")
+@RequestMapping("/cloud/[(${tableName})]")
 public class [(${name})] extends AbstractController {
 
-    private final [(${serviceName})] [(${serviceVeriable})];
+    private final [(${serviceName})] [(${serviceVariable})];
 
-    public [(${name})]([(${serviceName})] [(${serviceVeriable})]) {
-        this.[(${serviceVeriable})] = [(${serviceVeriable})];
+    public [(${name})]([(${serviceName})] [(${serviceVariable})]) {
+        this.[(${serviceVariable})] = [(${serviceVariable})];
     }
 
     /**
      * list
      *
-     * @param [(${serviceVOVeriable})] vo
+     * @param [(${serviceVOVariable})] vo
      * @return Map
      */
     @RequestMapping(value = "/list", method = {RequestMethod.GET, RequestMethod.POST},
             produces = "application/json")
-    public Map<?, ?> list([(${serviceVO})] [(${serviceVOVeriable})]) {
-        if ([(${serviceVOVeriable})].getPage() == null)
-            [(${serviceVOVeriable})].setPage(1L);
+    public DTO list([(${serviceVO})] [(${serviceVOVariable})]) {
+        if ([(${serviceVOVariable})].getPage() == null)
+            [(${serviceVOVariable})].setPage(1L);
 
-        DTO dto = [(${serviceVeriable})].findAll([(${serviceVOVeriable})].vo2dto());
+        DTO dto = [(${serviceVariable})].findAll([(${serviceVOVariable})].vo2dto());
 
         List<[(${serviceVO})]> list = dto.getList();
         if (list != null)
             dto.setList(Orika.l2l(list, [(${serviceVO})].class));
 
-        return dto2map(dto);
+        return dto;
     }
 
     /**
      * save new
      *
-     * @param [(${serviceVOVeriable})] [(${serviceVOVeriable})]
+     * @param [(${serviceVOVariable})] [(${serviceVOVariable})]
      * @return Map
      */
     @PutMapping(value = "/save", produces = "application/json")
-    public Map<?, ?> save(@RequestBody [(${serviceVO})] [(${serviceVOVeriable})]) {
-        DTO dto = checkForm([(${serviceVOVeriable})], false);
+    public DTO save(@RequestBody [(${serviceVO})] [(${serviceVOVariable})]) {
+        DTO dto = checkForm([(${serviceVOVariable})], false);
         if (dto == null || !dto.isSuccess())
-            return dto2map(Optional.ofNullable(dto).orElse(new DTO()));
+            return Optional.ofNullable(dto).orElse(new DTO());
 
-        return dto2map(new DTO(true).setObject([(${serviceVeriable})].save([(${serviceVOVeriable})])));
+        return new DTO(true).setObject([(${serviceVariable})].save([(${serviceVOVariable})]));
     }
 
     /**
@@ -64,8 +64,8 @@ public class [(${name})] extends AbstractController {
      * @return Map
      */
     @GetMapping(value = "/detail/{id}", produces = "application/json")
-    public Map<?, ?> detail(@PathVariable("id") [(${idType})] id) {
-        return dto2map(new DTO(true).setObject([(${serviceVeriable})].findById(id)));
+    public DTO detail(@PathVariable("id") [(${idType})] id) {
+        return new DTO(true).setObject([(${serviceVariable})].findById(id));
     }
 
     /**
@@ -75,23 +75,23 @@ public class [(${name})] extends AbstractController {
      * @return Map
      */
     @GetMapping(value = "/edit/{id}", produces = "application/json")
-    public Map<?, ?> edit(@PathVariable("id") [(${idType})] id) {
+    public DTO edit(@PathVariable("id") [(${idType})] id) {
         return detail(id);
     }
 
     /**
      * modify
      *
-     * @param [(${serviceVOVeriable})] [(${serviceVOVeriable})]
+     * @param [(${serviceVOVariable})] [(${serviceVOVariable})]
      * @return Map
      */
     @PutMapping(value = "/modify", produces = "application/json")
-    public Map<?, ?> modify(@RequestBody [(${serviceVO})] [(${serviceVOVeriable})]) {
-        DTO dto = checkForm([(${serviceVOVeriable})], true);
+    public DTO modify(@RequestBody [(${serviceVO})] [(${serviceVOVariable})]) {
+        DTO dto = checkForm([(${serviceVOVariable})], true);
         if (dto == null || !dto.isSuccess())
-            return dto2map(Optional.ofNullable(dto).orElse(new DTO()));
+            return Optional.ofNullable(dto).orElse(new DTO());
 
-        return dto2map(new DTO(true).setObject([(${serviceVeriable})].modify([(${serviceVOVeriable})])));
+        return new DTO(true).setObject([(${serviceVariable})].modify([(${serviceVOVariable})]));
     }
 
     /**
@@ -99,12 +99,12 @@ public class [(${name})] extends AbstractController {
      *
      * @return DTO
      */
-    private DTO checkForm([(${serviceVO})] [(${serviceVOVeriable})], boolean isModify) {
+    private DTO checkForm([(${serviceVO})] [(${serviceVOVariable})], boolean isModify) {
         DTO dto = new DTO();
 
-        if ([(${serviceVOVeriable})] == null)
+        if ([(${serviceVOVariable})] == null)
             return dto.putError(NErrorCode.E1.buildError()); // 参数异常
-        if (isModify && [(${serviceVOVeriable})].getId() == 0)
+        if (isModify && [(${serviceVOVariable})].getId() == 0)
             return dto.putError(NErrorCode.E3.buildError()); // 数据为空或不存在
 
         return dto.setSuccess(true);
@@ -117,10 +117,10 @@ public class [(${name})] extends AbstractController {
      * @return Map
      */
     @DeleteMapping(value = "/delete", produces = "application/json")
-    public Map<?, ?> delete([(${idType})][] ids) {
+    public DTO delete([(${idType})][] ids) {
         if (ids != null && ids.length > 0)
-            [(${serviceVeriable})].deleteByIds(ids);
+            [(${serviceVariable})].deleteByIds(ids);
 
-        return dto2map(new DTO(true));
+        return new DTO(true);
     }
 }

@@ -76,7 +76,8 @@ public class GenerateService implements IGenerateService {
     private final static String SERVICETEST_TXT_TEMPLATE_NAME = "servicetest.txt";
     private final static String VO_TXT_TEMPLATE_NAME = "vo.txt";
     private final static String CONTROLLER_TXT_TEMPLATE_NAME = "controller.txt";
-    private final static String REST_CONTROLLER_TXT_TEMPLATE_NAME = "restcontroller.txt";
+    private final static String CLOUDAPI_TXT_TEMPLATE_NAME = "cloudapi.txt";
+    private final static String OPENAPI_TXT_TEMPLATE_NAME = "openapi.txt";
     private final static String UI_API_TXT_TEMPLATE_NAME = "uiapi.txt";
     private final static String UI_VIEW_TXT_TEMPLATE_NAME = "uiview.txt";
     private final static String UI_VIEW_INDEX_TXT_TEMPLATE_NAME = "uiviewindex.txt";
@@ -340,7 +341,7 @@ public class GenerateService implements IGenerateService {
         if (g == null)
             return;
 
-        // name & reference & veriable
+        // name & reference & variable
         this.nrv(g);
 
         // class mapping
@@ -348,7 +349,7 @@ public class GenerateService implements IGenerateService {
     }
 
     /**
-     * name & reference & veriable
+     * name & reference & variable
      *
      * @param g g
      */
@@ -357,19 +358,19 @@ public class GenerateService implements IGenerateService {
             return;
 
         g.setApiDTOReference(g.getApiDTOPackage() + "." + g.getApiDTO());
-        g.setApiDTOVeriable(StringUtils.uncapitalize(g.getApiDTO()));
+        g.setApiDTOVariable(StringUtils.uncapitalize(g.getApiDTO()));
         g.setApiApiReference(g.getApiApiPackage() + "." + g.getApiApi());
-        g.setApiApiVeriable(StringUtils.uncapitalize(StringUtils.substring(g.getApiApi(), 1)));
+        g.setApiApiVariable(StringUtils.uncapitalize(StringUtils.substring(g.getApiApi(), 1)));
 
         g.setDaoPOReference(g.getDaoPOPackage() + "." + g.getDaoPO());
-        g.setDaoPOVeriable(StringUtils.uncapitalize(g.getDaoPO()));
+        g.setDaoPOVariable(StringUtils.uncapitalize(g.getDaoPO()));
         g.setDaoMapperReference(g.getDaoMapperPackage() + "." + g.getDaoMapper());
-        g.setDaoMapperVeriable(StringUtils.uncapitalize(StringUtils.substring(g.getDaoMapper(), 1)));
+        g.setDaoMapperVariable(StringUtils.uncapitalize(StringUtils.substring(g.getDaoMapper(), 1)));
         g.setDaoJpaReference(g.getDaoJpaPackage() + "." + g.getDaoJpa());
-        g.setDaoJpaVeriable(StringUtils.uncapitalize(StringUtils.substring(g.getDaoJpa(), 1)));
+        g.setDaoJpaVariable(StringUtils.uncapitalize(StringUtils.substring(g.getDaoJpa(), 1)));
         g.setDaoDAOReference(g.getDaoDAOPackage() + "." + g.getDaoDAO());
         g.setDaoCacheSupportReference(g.getDaoCacheSupportPackage() + "." + g.getDaoCacheSupport());
-        g.setDaoDAOVeriable(StringUtils.uncapitalize(StringUtils.substring(g.getDaoDAO(), 1)));
+        g.setDaoDAOVariable(StringUtils.uncapitalize(StringUtils.substring(g.getDaoDAO(), 1)));
         g.setDaoDAONameQualifier(Introspector.decapitalize(StringUtils.substring(g.getDaoDAO(), 1)));
         g.setDaoDAOImplReference(g.getDaoDAOImplPackage() + "." + g.getDaoDAOImpl());
 
@@ -380,7 +381,7 @@ public class GenerateService implements IGenerateService {
         g.setDaoDAOTest(g.getDaoDAOTest());
 
         g.setServiceServiceReference(g.getServiceServicePackage() + "." + g.getServiceService());
-        g.setServiceServiceVeriable(StringUtils.uncapitalize(StringUtils.substring(g.getServiceService(), 1)));
+        g.setServiceServiceVariable(StringUtils.uncapitalize(StringUtils.substring(g.getServiceService(), 1)));
         g.setServiceServiceImplReference(g.getServiceServiceImplPackage() + "." + g.getServiceServiceImpl());
 
         g.setServiceBaseTestPackage(g.getpPackage() + ".service");
@@ -390,13 +391,15 @@ public class GenerateService implements IGenerateService {
         g.setServiceServiceTest(g.getServiceServiceTest());
 
         g.setServiceVOReference(g.getServiceVOPackage() + "." + g.getServiceVO());
-        g.setServiceVOVeriable(StringUtils.uncapitalize(g.getServiceVO()));
-        g.setWebControllerReference(g.getWebControllerPackage() + "." + g.getWebController());
-        g.setWebControllerVeriable(StringUtils.uncapitalize(StringUtils.substring(g.getWebController(), 1)));
-        g.setWebRestControllerReference(g.getWebRestControllerPackage() + "." + g.getWebRestController());
-        g.setWebRestControllerVeriable(StringUtils.uncapitalize(StringUtils.substring(g.getWebRestController(), 1)));
+        g.setServiceVOVariable(StringUtils.uncapitalize(g.getServiceVO()));
+        g.setWebApiControllerReference(g.getWebApiControllerPackage() + "." + g.getWebApiController());
+        g.setWebApiControllerVariable(StringUtils.uncapitalize(StringUtils.substring(g.getWebApiController(), 1)));
+        g.setWebCloudapiReference(g.getWebCloudapiPackage() + "." + g.getWebCloudapi());
+        g.setWebCloudapiVariable(StringUtils.uncapitalize(StringUtils.substring(g.getWebCloudapi(), 1)));
+        g.setWebOpenapiReference(g.getWebOpenapiPackage() + "." + g.getWebOpenapi());
+        g.setWebOpenapiVariable(StringUtils.uncapitalize(StringUtils.substring(g.getWebOpenapi(), 1)));
 
-        g.setWebAbstractControllerPackage(g.getpPackage() + ".web.controller");
+        g.setWebAbstractControllerPackage(g.getpPackage() + ".web");
         g.setWebAbstractController("AbstractController");
         g.setWebAbstractControllerReference(g.getWebAbstractControllerPackage() + "." + g.getWebAbstractController());
     }
@@ -424,7 +427,7 @@ public class GenerateService implements IGenerateService {
         CLASS_MAPPING.put(g.getServiceBaseTest(), g.getServiceBaseTestReference());
 
         CLASS_MAPPING.put(g.getServiceVO(), g.getServiceVOReference());
-        CLASS_MAPPING.put(g.getWebController(), g.getWebControllerReference());
+        CLASS_MAPPING.put(g.getWebApiController(), g.getWebApiControllerReference());
 
         CLASS_MAPPING.put(g.getWebAbstractController(), g.getWebAbstractControllerReference());
     }
@@ -442,11 +445,11 @@ public class GenerateService implements IGenerateService {
     private void modulePath(Generate g) {
         String path = g.getpPath();
 
-        g.setApiModuleFile(new File(path + (!path.endsWith("/") && g.getApiModule().length() > 0 ? "/" : "") + g.getApiModule()));
-        g.setDaoModuleFile(new File(path + (!path.endsWith("/") && g.getDaoModule().length() > 0 ? "/" : "") + g.getDaoModule()));
-        g.setServiceModuleFile(new File(path + (!path.endsWith("/") && g.getServiceModule().length() > 0 ? "/" : "") + g.getServiceModule()));
-        g.setWebModuleFile(new File(path + (!path.endsWith("/") && g.getWebModule().length() > 0 ? "/" : "") + g.getWebModule()));
-        g.setUiModuleFile(new File(path + (!path.endsWith("/") && g.getUiModule().length() > 0 ? "/" : "") + g.getUiModule()));
+        g.setApiModuleFile(new File(path + (!path.endsWith("/") && !g.getApiModule().isEmpty() ? "/" : "") + g.getApiModule()));
+        g.setDaoModuleFile(new File(path + (!path.endsWith("/") && !g.getDaoModule().isEmpty() ? "/" : "") + g.getDaoModule()));
+        g.setServiceModuleFile(new File(path + (!path.endsWith("/") && !g.getServiceModule().isEmpty() ? "/" : "") + g.getServiceModule()));
+        g.setWebModuleFile(new File(path + (!path.endsWith("/") && !g.getWebModule().isEmpty() ? "/" : "") + g.getWebModule()));
+        g.setUiModuleFile(new File(path + (!path.endsWith("/") && !g.getUiModule().isEmpty() ? "/" : "") + g.getUiModule()));
     }
 
     /**
@@ -458,7 +461,7 @@ public class GenerateService implements IGenerateService {
             return;
 
         String name = CLASS_MAPPING.get(className);
-        if (name != null && name.length() > 0)
+        if (name != null && !name.isEmpty())
             imports.add(name);
     }
 
@@ -505,7 +508,7 @@ public class GenerateService implements IGenerateService {
 
                 mappingImport(imports, c.getType_());
 
-                if (c.getComment() != null && c.getComment().length() > 0)
+                if (c.getComment() != null && !c.getComment().isEmpty())
                     oFieldComments.add("// " + c.getComment());
                 else
                     oFieldComments.add("");
@@ -537,15 +540,15 @@ public class GenerateService implements IGenerateService {
     }
 
     /**
-     * @param modulePath   modulePath
-     * @param resoucesPath resoucesPath
-     * @param _package     _package
+     * @param modulePath    modulePath
+     * @param resourcesPath resourcesPath
+     * @param _package      _package
      * @return sting
      */
-    private String package2path(String modulePath, String resoucesPath, String _package) {
+    private String package2path(String modulePath, String resourcesPath, String _package) {
         return StringUtils.trimToEmpty(modulePath)
                 + "/"
-                + StringUtils.trimToEmpty(resoucesPath)
+                + StringUtils.trimToEmpty(resourcesPath)
                 + _package.replace('.', '/');
     }
 
@@ -593,7 +596,7 @@ public class GenerateService implements IGenerateService {
                 CgField field = cgField(c);
                 field.setAnnotations(new LinkedHashSet<>());
 
-                if (c.getComment() != null && c.getComment().length() > 0)
+                if (c.getComment() != null && !c.getComment().isEmpty())
                     poFieldComments.add("// " + c.getComment());
                 else
                     poFieldComments.add("");
@@ -608,30 +611,7 @@ public class GenerateService implements IGenerateService {
                     field.getAnnotations().add("@GeneratedValue(strategy = GenerationType.IDENTITY)");
                 }
 
-                String colAnno = "name = \"" + c.getField() + "\"";
-                if (!c.isNull_())
-                    colAnno += ", nullable = false";
-
-                if (c.getColumnLength() != null)
-                    colAnno += ", length = " + c.getColumnLength();
-
-                if (c.isCm_()) {
-                    colAnno += ", insertable = false, updatable = false";
-                    String columnDefinition = c.getType_().toUpperCase();
-                    if (c.getDefaultValue() != null && c.getDefaultValue().length() > 0) {
-                        if (columnDefinition.length() != 0)
-                            columnDefinition += " ";
-                        columnDefinition += "DEFAULT " + c.getDefaultValue().toUpperCase();
-                    }
-
-                    if (c.getExtra() != null && c.getExtra().length() > 0) {
-                        if (columnDefinition.length() != 0)
-                            columnDefinition += " ";
-
-                        columnDefinition += c.getExtra().toUpperCase();
-                    }
-                    colAnno += ", columnDefinition = \"" + columnDefinition + "\"";
-                }
+                String colAnno = getColAnno(c);
                 field.getAnnotations().add("@Column(" + colAnno + ")");
 
                 poFields.add(String.format("private %s %s;", c.getType_(), c.getField_()));
@@ -693,7 +673,7 @@ public class GenerateService implements IGenerateService {
             final String[] idField = {idc != null ? "#{" + idc.getField_() + "}" : null};
 
             g.getTable().getColumns().forEach(c -> {
-                if (tableColumnsStr[0].length() > 0)
+                if (!tableColumnsStr[0].isEmpty())
                     tableColumnsStr[0] += ", ";
                 tableColumnsStr[0] += "`";
                 tableColumnsStr[0] += c.getField();
@@ -876,7 +856,7 @@ public class GenerateService implements IGenerateService {
         }
 
         if (g.getDaoDAOImpl_().isTrue()) {
-            // dao defalt & jpa impl
+            // dao default & jpa impl
             baseVariable(cxt, imports, g.getAuthor(), g.getDaoDAOImplPackage(), g.getDaoDAOImpl());
 
             cxt.setVariable("poName", g.getDaoPO());
@@ -887,7 +867,7 @@ public class GenerateService implements IGenerateService {
             cxt.setVariable("daoName", g.getDaoDAO());
             cxt.setVariable("mapperName", g.getDaoMapper());
 
-            cxt.setVariable("mapperVeriable", g.getDaoMapperVeriable());
+            cxt.setVariable("mapperVariable", g.getDaoMapperVariable());
 
             imports.clear();
             mappingImport(imports, "stereotype.Repository");
@@ -902,17 +882,17 @@ public class GenerateService implements IGenerateService {
 
             // 如果没有 jpa 选项，不增加 jpa 引用
             if (BoolEO.TRUE.is(g.getDaoJpa_())) {
-                cxt.setVariable("jpaVeriable", g.getDaoJpaVeriable());
+                cxt.setVariable("jpaVariable", g.getDaoJpaVariable());
                 cxt.setVariable("jpaName", g.getDaoJpa());
-                cxt.setVariable("jpaVeriable", g.getDaoJpaVeriable());
+                cxt.setVariable("jpaVariable", g.getDaoJpaVariable());
 
                 mappingImport(imports, g.getDaoJpa());
             }
 
-            cxt.setVariable("name", StringUtils.capitalize(g.getDaoDAOVeriable()));
+            cxt.setVariable("name", StringUtils.capitalize(g.getDaoDAOVariable()));
             this.writeFile(g.getLogFile(),
                     package2path(g.getDaoModuleFile().getPath(), JAVA_PATH, g.getDaoDAOImplPackage()),
-                    StringUtils.capitalize(g.getDaoDAOVeriable()), JAVA_EXT_NAME,
+                    StringUtils.capitalize(g.getDaoDAOVariable()), JAVA_EXT_NAME,
                     process(DAOIMPL_TXT_TEMPLATE_NAME, cxt), g.getDaoDAOImplOverwrite_().isTrue());
         }
 
@@ -929,7 +909,7 @@ public class GenerateService implements IGenerateService {
 
             cxt.setVariable("daoName", g.getDaoDAO());
             cxt.setVariable("daoNameQualifier", g.getDaoDAONameQualifier());
-            cxt.setVariable("daoVeriable", g.getDaoDAOVeriable());
+            cxt.setVariable("daoVariable", g.getDaoDAOVariable());
 
             cxt.setVariable("poName", g.getDaoPO());
             cxt.setVariable("idType", g.getIdType());
@@ -941,6 +921,46 @@ public class GenerateService implements IGenerateService {
                     g.getDaoDAOTest(), JAVA_EXT_NAME,
                     process(DAO_TEST_TXT_TEMPLATE_NAME, cxt), g.getDaoDAOTestOverwrite_().isTrue());
         }
+    }
+
+    /**
+     * getColAnno
+     *
+     * @param c c
+     * @return {@link String}
+     * @author naqichuan 2024/3/5 下午3:32
+     */
+    private static String getColAnno(Column c) {
+        String colAnno = "name = \"" + c.getField() + "\"";
+        if (!c.isNull_())
+            colAnno += ", nullable = false";
+
+        if (c.getColumnLength() != null)
+            colAnno += ", length = " + c.getColumnLength();
+
+        if (c.isCm_()) {
+            colAnno += ", insertable = false, updatable = false";
+            String columnDefinition = getColumnDefinition(c);
+            colAnno += ", columnDefinition = \"" + columnDefinition + "\"";
+        }
+        return colAnno;
+    }
+
+    private static String getColumnDefinition(Column c) {
+        String columnDefinition = c.getType_().toUpperCase();
+        if (c.getDefaultValue() != null && !c.getDefaultValue().isEmpty()) {
+            if (!columnDefinition.isEmpty())
+                columnDefinition += " ";
+            columnDefinition += "DEFAULT " + c.getDefaultValue().toUpperCase();
+        }
+
+        if (c.getExtra() != null && !c.getExtra().isEmpty()) {
+            if (!columnDefinition.isEmpty())
+                columnDefinition += " ";
+
+            columnDefinition += c.getExtra().toUpperCase();
+        }
+        return columnDefinition;
     }
 
     /**
@@ -1093,7 +1113,7 @@ public class GenerateService implements IGenerateService {
 
             cxt.setVariable("serviceName", g.getServiceService());
 
-            cxt.setVariable("daoVeriable", g.getDaoDAOVeriable());
+            cxt.setVariable("daoVariable", g.getDaoDAOVariable());
 
             this.writeFile(g.getLogFile(),
                     package2path(g.getServiceModuleFile().getPath(), JAVA_PATH, g.getServiceServiceImplPackage()),
@@ -1114,7 +1134,7 @@ public class GenerateService implements IGenerateService {
             cxt.setVariable("poName", g.getDaoPO());
             cxt.setVariable("idType", g.getIdType());
             cxt.setVariable("serviceName", g.getServiceService());
-            cxt.setVariable("serviceVeriable", g.getServiceServiceVeriable());
+            cxt.setVariable("serviceVariable", g.getServiceServiceVariable());
 
             this.testSetter(g, cxt);
 
@@ -1169,9 +1189,9 @@ public class GenerateService implements IGenerateService {
         Context cxt = new Context();
         Set<String> imports = new LinkedHashSet<>();
 
-        if (g.getWebController_().isTrue()) {
-            // controller
-            baseVariable(cxt, imports, g.getAuthor(), g.getWebControllerPackage(), g.getWebController());
+        if (g.getWebApiController_().isTrue()) {
+            // api controller
+            baseVariable(cxt, imports, g.getAuthor(), g.getWebApiControllerPackage(), g.getWebApiController());
 
             mappingImport(imports, "DTO");
             mappingImport(imports, "NErrorCode");
@@ -1200,20 +1220,20 @@ public class GenerateService implements IGenerateService {
             cxt.setVariable("idType", g.getIdType());
             cxt.setVariable("tableName", g.getTable().getName());
             cxt.setVariable("serviceName", g.getServiceService());
-            cxt.setVariable("serviceVeriable", g.getServiceServiceVeriable());
+            cxt.setVariable("serviceVariable", g.getServiceServiceVariable());
             cxt.setVariable("serviceVO", g.getServiceVO());
-            cxt.setVariable("serviceVOVeriable", g.getServiceVOVeriable());
+            cxt.setVariable("serviceVOVariable", g.getServiceVOVariable());
 
             this.writeFile(g.getLogFile(),
-                    package2path(g.getWebModuleFile().getPath(), JAVA_PATH, g.getWebControllerPackage()),
-                    g.getWebController(), JAVA_EXT_NAME,
-                    process(CONTROLLER_TXT_TEMPLATE_NAME, cxt), g.getWebControllerOverwrite_().isTrue());
-            // end of controller
+                    package2path(g.getWebModuleFile().getPath(), JAVA_PATH, g.getWebApiControllerPackage()),
+                    g.getWebApiController(), JAVA_EXT_NAME,
+                    process(CONTROLLER_TXT_TEMPLATE_NAME, cxt), g.getWebApiControllerOverwrite_().isTrue());
+            // end of api controller
         }
 
-        if (g.getWebRestController_().isTrue()) {
-            // rest controller
-            baseVariable(cxt, imports, g.getAuthor(), g.getWebRestControllerPackage(), g.getWebRestController());
+        if (g.getWebCloudapi_().isTrue()) {
+            // rcloudapi
+            baseVariable(cxt, imports, g.getAuthor(), g.getWebCloudapiPackage(), g.getWebCloudapi());
 
             mappingImport(imports, "DTO");
             mappingImport(imports, "NErrorCode");
@@ -1240,15 +1260,55 @@ public class GenerateService implements IGenerateService {
             cxt.setVariable("idType", g.getIdType());
             cxt.setVariable("tableName", g.getTable().getName());
             cxt.setVariable("serviceName", g.getServiceService());
-            cxt.setVariable("serviceVeriable", g.getServiceServiceVeriable());
+            cxt.setVariable("serviceVariable", g.getServiceServiceVariable());
             cxt.setVariable("serviceVO", g.getServiceVO());
-            cxt.setVariable("serviceVOVeriable", g.getServiceVOVeriable());
+            cxt.setVariable("serviceVOVariable", g.getServiceVOVariable());
 
             this.writeFile(g.getLogFile(),
-                    package2path(g.getWebModuleFile().getPath(), JAVA_PATH, g.getWebRestControllerPackage()),
-                    g.getWebRestController(), JAVA_EXT_NAME,
-                    process(REST_CONTROLLER_TXT_TEMPLATE_NAME, cxt), g.getWebRestControllerOverwrite_().isTrue());
-            // end of rest controller
+                    package2path(g.getWebModuleFile().getPath(), JAVA_PATH, g.getWebCloudapiPackage()),
+                    g.getWebCloudapi(), JAVA_EXT_NAME,
+                    process(CLOUDAPI_TXT_TEMPLATE_NAME, cxt), g.getWebCloudapiOverwrite_().isTrue());
+            // end of cloudapi
+        }
+
+        if (g.getWebOpenapi_().isTrue()) {
+            // openapi
+            baseVariable(cxt, imports, g.getAuthor(), g.getWebOpenapiPackage(), g.getWebOpenapi());
+
+            mappingImport(imports, "DTO");
+            mappingImport(imports, "NErrorCode");
+            mappingImport(imports, "Orika");
+
+            mappingImport(imports, "RestController");
+            mappingImport(imports, "PathVariable");
+            mappingImport(imports, "RequestMapping");
+            mappingImport(imports, "GetMapping");
+            mappingImport(imports, "PutMapping");
+            mappingImport(imports, "DeleteMapping");
+            mappingImport(imports, "RequestMethod");
+            mappingImport(imports, "RequestParam");
+            mappingImport(imports, "RequestBody");
+
+            mappingImport(imports, "Map");
+            mappingImport(imports, "List");
+            mappingImport(imports, "Optional");
+
+            mappingImport(imports, g.getServiceVO());
+            mappingImport(imports, g.getServiceService());
+            mappingImport(imports, g.getWebAbstractController());
+
+            cxt.setVariable("idType", g.getIdType());
+            cxt.setVariable("tableName", g.getTable().getName());
+            cxt.setVariable("serviceName", g.getServiceService());
+            cxt.setVariable("serviceVariable", g.getServiceServiceVariable());
+            cxt.setVariable("serviceVO", g.getServiceVO());
+            cxt.setVariable("serviceVOVariable", g.getServiceVOVariable());
+
+            this.writeFile(g.getLogFile(),
+                    package2path(g.getWebModuleFile().getPath(), JAVA_PATH, g.getWebOpenapiPackage()),
+                    g.getWebOpenapi(), JAVA_EXT_NAME,
+                    process(OPENAPI_TXT_TEMPLATE_NAME, cxt), g.getWebOpenapiOverwrite_().isTrue());
+            // end of openapi controller
         }
     }
 
@@ -1317,14 +1377,14 @@ public class GenerateService implements IGenerateService {
                         searchFields.add(c.getField_() + "__");
                         searchLabels.add(StringUtils.capitalize(c.getField_() + "__"));
 
-                    } else if ("Long".equalsIgnoreCase(c.getType_())
-                            || "int".equalsIgnoreCase(c.getType_())
-                            || "Integer".equalsIgnoreCase(c.getType_())
-                            || "Float".equalsIgnoreCase(c.getType_())
-                            || "Double".equalsIgnoreCase(c.getType_())
-                            || "BigDecimal".equalsIgnoreCase(c.getType_())) {
-
-                        // like vo
+//                    } else if ("Long".equalsIgnoreCase(c.getType_())
+//                            || "int".equalsIgnoreCase(c.getType_())
+//                            || "Integer".equalsIgnoreCase(c.getType_())
+//                            || "Float".equalsIgnoreCase(c.getType_())
+//                            || "Double".equalsIgnoreCase(c.getType_())
+//                            || "BigDecimal".equalsIgnoreCase(c.getType_())) {
+//
+//                        // like vo
                     }
 
                     tableTitleTitles.add(StringUtils.capitalize(c.getField_()));

@@ -20,14 +20,14 @@ public class [(${name})] extends DAOSupport<[(${mapperName})], [(${poName})], [(
 
     {
         KOS.put(KO_[(${idNameUpperCase})].fieldStr(), KO_[(${idNameUpperCase})]);
-    }[# th:if="${jpaName != null and jpaVeriable != null}"]
+    }[# th:if="${jpaName != null and jpaVariable != null}"]
 
-    private final [(${jpaName})] [(${jpaVeriable})];[/]
+    private final [(${jpaName})] [(${jpaVariable})];[/]
 
-    public [(${name})]([(${mapperName})] [(${mapperVeriable})],[# th:if="${jpaName != null and jpaVeriable != null}"]
-                       [(${jpaName})] [(${jpaVeriable})],[/]
+    public [(${name})]([(${mapperName})] [(${mapperVariable})],[# th:if="${jpaName != null and jpaVariable != null}"]
+                       [(${jpaName})] [(${jpaVariable})],[/]
                        RedisTemplate<String, String> redisTemplate) {
-        super([(${mapperVeriable})], redisTemplate);[# th:if="${jpaName != null and jpaVeriable != null}"]
-        this.[(${jpaVeriable})] = [(${jpaVeriable})];[/]
+        super([(${mapperVariable})], redisTemplate);[# th:if="${jpaName != null and jpaVariable != null}"]
+        this.[(${jpaVariable})] = [(${jpaVariable})];[/]
     }
 }

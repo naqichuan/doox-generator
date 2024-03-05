@@ -14,7 +14,7 @@ import [(${import})];
 public class [(${name})] extends BaseServiceTest {
 
     @Autowired
-    private [(${serviceName})] [(${serviceVeriable})];
+    private [(${serviceName})] [(${serviceVariable})];
 
     @Test
     public void save() {
@@ -22,7 +22,7 @@ public class [(${name})] extends BaseServiceTest {
 [# th:each="dg : ${poSetters}"]
         [(${dg})][/]
 
-        [(${serviceVeriable})].save(po);
+        [(${serviceVariable})].save(po);
     }
 
     @Test
@@ -36,7 +36,7 @@ public class [(${name})] extends BaseServiceTest {
             [(${dg})][/]
         }
 
-        [(${serviceVeriable})].saveAll(list);
+        [(${serviceVariable})].saveAll(list);
     }
 
     @Test
@@ -45,7 +45,7 @@ public class [(${name})] extends BaseServiceTest {
 [# th:each="dg : ${poSetters}"]
         [(${dg})][/]
 
-        [(${serviceVeriable})].modify(po);
+        [(${serviceVariable})].modify(po);
     }
 
     @Test
@@ -57,19 +57,19 @@ public class [(${name})] extends BaseServiceTest {
 [# th:each="dg : ${poSetters}"]
         [(${dg})][/]
 
-        [(${serviceVeriable})].modifyAll(list);
+        [(${serviceVariable})].modifyAll(list);
     }
 
     @Test
     public void findById() {
-        [(${poName})] po = [(${serviceVeriable})].findById(1[# th:if="${idType == 'Long'}"]L[/]);
+        [(${poName})] po = [(${serviceVariable})].findById(1[# th:if="${idType == 'Long'}"]L[/]);
         System.out.println(po);
     }
 
     @Test
     public void findAllByIds() {
         List<[(${idType})]> ids = Arrays.asList(2[# th:if="${idType == 'Long'}"]L[/], 3[# th:if="${idType == 'Long'}"]L[/], 4[# th:if="${idType == 'Long'}"]L[/], 5[# th:if="${idType == 'Long'}"]L[/]);
-        List<[(${poName})]> list = [(${serviceVeriable})].findAllByIds(ids);
+        List<[(${poName})]> list = [(${serviceVariable})].findAllByIds(ids);
 
         Optional.ofNullable(list)
                 .ifPresent(l -> l.forEach(System.out::println));
@@ -78,7 +78,7 @@ public class [(${name})] extends BaseServiceTest {
     @Test
     public void listAll() {
         DTO dto = new DTO();
-        List<[(${poName})]> list = [(${serviceVeriable})].listAll(dto);
+        List<[(${poName})]> list = [(${serviceVariable})].listAll(dto);
 
         Optional.ofNullable(list)
                 .ifPresent(l -> l.forEach(System.out::println));
@@ -96,7 +96,7 @@ public class [(${name})] extends BaseServiceTest {
                 //.setSort(NSort.by(new NSort.NOrder(NSort.NDirection.DESC, "id")))     // 写法以下一行等效
                 .newSortsWith("id,desc");                                               // 排序字段写 PO 类里的 field name，不写数据库字段
 
-        DTO dtoResult = [(${serviceVeriable})].findAll(dtoRequest);
+        DTO dtoResult = [(${serviceVariable})].findAll(dtoRequest);
 
         if (dtoResult != null && dtoResult.getList() != null)
             dtoResult.getList().forEach(System.out::println);
@@ -108,19 +108,19 @@ public class [(${name})] extends BaseServiceTest {
     public void getCount() {
         DTO dtoRequest = new DTO();
 
-        long count = [(${serviceVeriable})].getCount(dtoRequest);
+        long count = [(${serviceVariable})].getCount(dtoRequest);
 
         System.out.println(count);
     }
 
     @Test
     public void deleteById() {
-        [(${serviceVeriable})].deleteById(6[# th:if="${idType == 'Long'}"]L[/]);
+        [(${serviceVariable})].deleteById(6[# th:if="${idType == 'Long'}"]L[/]);
     }
 
     @Test
     public void deleteByIds() {
         List<[(${idType})]> ids = Arrays.asList(7[# th:if="${idType == 'Long'}"]L[/], 8[# th:if="${idType == 'Long'}"]L[/]);
-        [(${serviceVeriable})].deleteByIds(ids);
+        [(${serviceVariable})].deleteByIds(ids);
     }
 }

@@ -15,10 +15,10 @@ public class [(${name})] extends BaseDAOTest {
 
     @Autowired
     @Qualifier("[(${daoNameQualifier})]")
-    private [(${daoName})] [(${daoVeriable})];
+    private [(${daoName})] [(${daoVariable})];
 
     protected [(${daoName})] getDao() {
-        return [(${daoVeriable})];
+        return [(${daoVariable})];
     }
 
     @Test

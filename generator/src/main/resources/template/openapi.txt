@@ -11,24 +11,14 @@ import [(${import})];
 /**
  * @author [(${author})] [(${#dates.format(date, 'yyyy-MM-dd HH:mm')})]
  */
-@Controller
-@RequestMapping("/api/[(${tableName})]")
+@RestController
+@RequestMapping("/open/[(${tableName})]")
 public class [(${name})] extends AbstractController {
 
 //    private final [(${serviceName})] [(${serviceVariable})];
 
 //    public [(${name})]([(${serviceName})] [(${serviceVariable})]) {
 //        this.[(${serviceVariable})] = [(${serviceVariable})];
-//    }
-
-//    /**
-//     * index
-//     *
-//     * @return ModelAndView
-//     */
-//    @GetMapping(value = {"", "/"})
-//    public ModelAndView index() {
-//        return new ModelAndView("/[(${tableName})]/[(${tableName})]");
 //    }
 
 //    /**
@@ -39,7 +29,6 @@ public class [(${name})] extends AbstractController {
 //     */
 //    @RequestMapping(value = "/list", method = {RequestMethod.GET, RequestMethod.POST},
 //            produces = "application/json")
-//    @ResponseBody
 //    public DTO list([(${serviceVO})] [(${serviceVOVariable})]) {
 //        if ([(${serviceVOVariable})].getPage() == null)
 //            [(${serviceVOVariable})].setPage(1L);
@@ -60,7 +49,6 @@ public class [(${name})] extends AbstractController {
 //     * @return Map
 //     */
 //    @PutMapping(value = "/save", produces = "application/json")
-//    @ResponseBody
 //    public DTO save(@RequestBody [(${serviceVO})] [(${serviceVOVariable})]) {
 //        DTO dto = checkForm([(${serviceVOVariable})], false);
 //        if (dto == null || !dto.isSuccess())
@@ -76,7 +64,6 @@ public class [(${name})] extends AbstractController {
 //     * @return Map
 //     */
 //    @GetMapping(value = "/detail/{id}", produces = "application/json")
-//    @ResponseBody
 //    public DTO detail(@PathVariable("id") [(${idType})] id) {
 //        return new DTO(true).setObject([(${serviceVariable})].findById(id));
 //    }
@@ -88,7 +75,6 @@ public class [(${name})] extends AbstractController {
 //     * @return Map
 //     */
 //    @GetMapping(value = "/edit/{id}", produces = "application/json")
-//    @ResponseBody
 //    public DTO edit(@PathVariable("id") [(${idType})] id) {
 //        return detail(id);
 //    }
@@ -100,7 +86,6 @@ public class [(${name})] extends AbstractController {
 //     * @return Map
 //     */
 //    @PutMapping(value = "/modify", produces = "application/json")
-//    @ResponseBody
 //    public DTO modify(@RequestBody [(${serviceVO})] [(${serviceVOVariable})]) {
 //        DTO dto = checkForm([(${serviceVOVariable})], true);
 //        if (dto == null || !dto.isSuccess())
@@ -132,7 +117,6 @@ public class [(${name})] extends AbstractController {
 //     * @return Map
 //     */
 //    @DeleteMapping(value = "/delete", produces = "application/json")
-//    @ResponseBody
 //    public DTO delete([(${idType})][] ids) {
 //        if (ids != null && ids.length > 0)
 //            [(${serviceVariable})].deleteByIds(ids);

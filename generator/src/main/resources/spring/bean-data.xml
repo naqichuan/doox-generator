@@ -6,7 +6,7 @@
 
     <!--==================== dataSource ====================-->
     <bean id="abstractDataSource" class="com.alibaba.druid.pool.DruidDataSource">
-        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
         <property name="filters" value="stat"/>
         <!--连接池的最大数据库连接数。设为0表示无限制。一般把maxActive设置成可能的并发量就行了-->
         <property name="maxActive" value="1000"/>

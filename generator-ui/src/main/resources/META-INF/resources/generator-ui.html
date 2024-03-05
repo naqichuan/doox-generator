@@ -390,27 +390,39 @@
             </legend>
             <table border="0" cellpadding="0" cellspacing="0">
                 <tr>
-                    <td class="lable"><input type="checkbox" name="webController_" value="true"></td>
-                    <td class="lable">Controller</td>
-                    <td class="lable"><input type="checkbox" name="webControllerOverwrite_" value="true">Overwrite: </td>
+                    <td class="lable"><input type="checkbox" name="webApiController_" value="true"></td>
+                    <td class="lable">ApiController</td>
+                    <td class="lable"><input type="checkbox" name="webApiControllerOverwrite_" value="true">Overwrite: </td>
                     <td>
-                        <input type="text" name="webControllerPackage" class="big_240 right" value="">
+                        <input type="text" name="webApiControllerPackage" class="big_240 right" value="">
                     </td>
                     <td class="lable">.</td>
                     <td>
-                        <input type="text" name="webController" class="big_200" value="">
+                        <input type="text" name="webApiController" class="big_200" value="">
                     </td>
                 </tr>
                 <tr>
-                    <td class="lable"><input type="checkbox" name="webRestController_" value="true"></td>
-                    <td class="lable">RestController</td>
-                    <td class="lable"><input type="checkbox" name="webRestControllerOverwrite_" value="true">Overwrite: </td>
+                    <td class="lable"><input type="checkbox" name="webCloudapi_" value="true"></td>
+                    <td class="lable">Cloudapi</td>
+                    <td class="lable"><input type="checkbox" name="webCloudapiOverwrite_" value="true">Overwrite: </td>
                     <td>
-                        <input type="text" name="webRestControllerPackage" class="big_240 right" value="">
+                        <input type="text" name="webCloudapiPackage" class="big_240 right" value="">
                     </td>
                     <td class="lable">.</td>
                     <td>
-                        <input type="text" name="webRestController" class="big_200" value="">
+                        <input type="text" name="webCloudapi" class="big_200" value="">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="lable"><input type="checkbox" name="webOpenapi_" value="true"></td>
+                    <td class="lable">Openapi</td>
+                    <td class="lable"><input type="checkbox" name="webOpenapiOverwrite_" value="true">Overwrite: </td>
+                    <td>
+                        <input type="text" name="webOpenapiPackage" class="big_240 right" value="">
+                    </td>
+                    <td class="lable">.</td>
+                    <td>
+                        <input type="text" name="webOpenapi" class="big_200" value="">
                     </td>
                 </tr>
             </table>
@@ -1754,42 +1766,59 @@
         _: function () {
             return $('input[name="web_"]');
         },
-        webController_: function () {
-            return $('input[name="webController_"]');
+        webApiController_: function () {
+            return $('input[name="webApiController_"]');
         },
-        webControllerOverwrite_: function () {
-            return $('input[name="webControllerOverwrite_"]');
+        webApiControllerOverwrite_: function () {
+            return $('input[name="webApiControllerOverwrite_"]');
         },
-        webControllerPackage: function () {
-            return $('input[name="webControllerPackage"]');
+        webApiControllerPackage: function () {
+            return $('input[name="webApiControllerPackage"]');
         },
-        webController: function () {
-            return $('input[name="webController"]');
+        webApiController: function () {
+            return $('input[name="webApiController"]');
         },
-        webRestController_: function () {
-            return $('input[name="webRestController_"]');
+        webCloudapi_: function () {
+            return $('input[name="webCloudapi_"]');
         },
-        webRestControllerOverwrite_: function () {
-            return $('input[name="webRestControllerOverwrite_"]');
+        webCloudapiOverwrite_: function () {
+            return $('input[name="webCloudapiOverwrite_"]');
         },
-        webRestControllerPackage: function () {
-            return $('input[name="webRestControllerPackage"]');
+        webCloudapiPackage: function () {
+            return $('input[name="webCloudapiPackage"]');
         },
-        webRestController: function () {
-            return $('input[name="webRestController"]');
+        webCloudapi: function () {
+            return $('input[name="webCloudapi"]');
+        },
+        webOpenapi_: function () {
+            return $('input[name="webOpenapi_"]');
+        },
+        webOpenapiOverwrite_: function () {
+            return $('input[name="webOpenapiOverwrite_"]');
+        },
+        webOpenapiPackage: function () {
+            return $('input[name="webOpenapiPackage"]');
+        },
+        webOpenapi: function () {
+            return $('input[name="webOpenapi"]');
         },
         _init: function () {
             this._().prop("checked", false);
 
-            this.webController_().prop("checked", false);
-            this.webControllerOverwrite_().prop("checked", false);
-            this.webControllerPackage().val('');
-            this.webController().val('');
+            this.webApiController_().prop("checked", false);
+            this.webApiControllerOverwrite_().prop("checked", false);
+            this.webApiControllerPackage().val('');
+            this.webApiController().val('');
 
-            this.webRestController_().prop("checked", false);
-            this.webRestControllerOverwrite_().prop("checked", false);
-            this.webRestControllerPackage().val('');
-            this.webRestController().val('');
+            this.webCloudapi_().prop("checked", false);
+            this.webCloudapiOverwrite_().prop("checked", false);
+            this.webCloudapiPackage().val('');
+            this.webCloudapi().val('');
+
+            this.webOpenapi_().prop("checked", false);
+            this.webOpenapiOverwrite_().prop("checked", false);
+            this.webOpenapiPackage().val('');
+            this.webOpenapi().val('');
         },
         _reset: function () {
             this._init();
@@ -1807,19 +1836,30 @@
             }
 
             let webName = tableName.replaceFirstUP();
-            let webController = webName + "Controller";
-            let webRestController = webName + 'Rest' + "Controller";
 
-            let wcValue = pValue + '.web.controller' + (tablePack ? "." + tablePack : "");
-            if (wcValue.indexOf(".") === 0 && wcValue.length > 1)
-                wcValue = wcValue.substring(1);
+            let webApiController = webName + "Controller";
+            let wacValue = pValue + '.web.api.controller' + (tablePack ? "." + tablePack : "");
+            if (wacValue.indexOf(".") === 0 && wacValue.length > 1)
+                wacValue = wacValue.substring(1);
 
-            // set value
-            this.webControllerPackage().val(wcValue);
-            this.webController().val(webController);
+            this.webApiControllerPackage().val(wacValue);
+            this.webApiController().val(webApiController);
 
-            this.webRestControllerPackage().val(wcValue);
-            this.webRestController().val(webRestController);
+            let webCloudapi = webName + 'Cloudapi';
+            let wccValue = pValue + '.web.cloud.controller' + (tablePack ? "." + tablePack : "");
+            if (wccValue.indexOf(".") === 0 && wccValue.length > 1)
+                wccValue = wccValue.substring(1);
+
+            this.webCloudapiPackage().val(wccValue);
+            this.webCloudapi().val(webCloudapi);
+
+            let webOpenapi = webName + 'Openapi';
+            let wocValue = pValue + '.web.open.controller' + (tablePack ? "." + tablePack : "");
+            if (wocValue.indexOf(".") === 0 && wocValue.length > 1)
+                wocValue = wocValue.substring(1);
+
+            this.webOpenapiPackage().val(wocValue);
+            this.webOpenapi().val(webOpenapi);
         }
     };
 

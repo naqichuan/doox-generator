@@ -113,14 +113,18 @@ public class Generate implements Serializable {
 
     // web field
     private BoolEO web_ = BoolEO.FALSE;
-    private BoolEO webController_ = BoolEO.FALSE;
-    private BoolEO webControllerOverwrite_ = BoolEO.FALSE;
-    private String webControllerPackage;
-    private String webController;
-    private BoolEO webRestController_ = BoolEO.FALSE;
-    private BoolEO webRestControllerOverwrite_ = BoolEO.FALSE;
-    private String webRestControllerPackage;
-    private String webRestController;
+    private BoolEO webApiController_ = BoolEO.FALSE;
+    private BoolEO webApiControllerOverwrite_ = BoolEO.FALSE;
+    private String webApiControllerPackage;
+    private String webApiController;
+    private BoolEO webCloudapi_ = BoolEO.FALSE;
+    private BoolEO webCloudapiOverwrite_ = BoolEO.FALSE;
+    private String webCloudapiPackage;
+    private String webCloudapi;
+    private BoolEO webOpenapi_ = BoolEO.FALSE;
+    private BoolEO webOpenapiOverwrite_ = BoolEO.FALSE;
+    private String webOpenapiPackage;
+    private String webOpenapi;
     // end of web field
 
     // ui field
@@ -148,19 +152,19 @@ public class Generate implements Serializable {
     private String idName;
 
     private String apiDTOReference;
-    private String apiDTOVeriable;
+    private String apiDTOVariable;
     private String apiApiReference;
-    private String apiApiVeriable;
+    private String apiApiVariable;
 
     private String daoPOReference;
-    private String daoPOVeriable;
+    private String daoPOVariable;
     private String daoMapperReference;
-    private String daoMapperVeriable;
+    private String daoMapperVariable;
     private String daoJpaReference;
-    private String daoJpaVeriable;
+    private String daoJpaVariable;
     private String daoCacheSupportReference;
     private String daoDAOReference;
-    private String daoDAOVeriable;
+    private String daoDAOVariable;
     private String daoDAONameQualifier;
     private String daoDAOImplReference;
 
@@ -169,7 +173,7 @@ public class Generate implements Serializable {
     private String daoBaseTestReference;
 
     private String serviceServiceReference;
-    private String serviceServiceVeriable;
+    private String serviceServiceVariable;
     private String serviceServiceImplReference;
 
     private String serviceBaseTestPackage;
@@ -177,11 +181,13 @@ public class Generate implements Serializable {
     private String serviceBaseTestReference;
 
     private String serviceVOReference;
-    private String serviceVOVeriable;
-    private String webControllerReference;
-    private String webControllerVeriable;
-    private String webRestControllerReference;
-    private String webRestControllerVeriable;
+    private String serviceVOVariable;
+    private String webApiControllerReference;
+    private String webApiControllerVariable;
+    private String webCloudapiReference;
+    private String webCloudapiVariable;
+    private String webOpenapiReference;
+    private String webOpenapiVariable;
     private String webAbstractControllerPackage;
     private String webAbstractController;
     private String webAbstractControllerReference;
@@ -796,68 +802,100 @@ public class Generate implements Serializable {
         this.web_ = web_;
     }
 
-    public String getWebControllerPackage() {
-        return webControllerPackage;
+    public String getWebApiControllerPackage() {
+        return webApiControllerPackage;
     }
 
-    public void setWebControllerPackage(String webControllerPackage) {
-        this.webControllerPackage = webControllerPackage;
+    public void setWebApiControllerPackage(String webApiControllerPackage) {
+        this.webApiControllerPackage = webApiControllerPackage;
     }
 
-    public BoolEO getWebController_() {
-        return webController_;
+    public BoolEO getWebApiController_() {
+        return webApiController_;
     }
 
-    public void setWebController_(BoolEO webController_) {
-        this.webController_ = webController_;
+    public void setWebApiController_(BoolEO webApiController_) {
+        this.webApiController_ = webApiController_;
     }
 
-    public BoolEO getWebControllerOverwrite_() {
-        return webControllerOverwrite_;
+    public BoolEO getWebApiControllerOverwrite_() {
+        return webApiControllerOverwrite_;
     }
 
-    public void setWebControllerOverwrite_(BoolEO webControllerOverwrite_) {
-        this.webControllerOverwrite_ = webControllerOverwrite_;
+    public void setWebApiControllerOverwrite_(BoolEO webApiControllerOverwrite_) {
+        this.webApiControllerOverwrite_ = webApiControllerOverwrite_;
     }
 
-    public String getWebController() {
-        return webController;
+    public String getWebApiController() {
+        return webApiController;
     }
 
-    public void setWebController(String webController) {
-        this.webController = webController;
+    public void setWebApiController(String webApiController) {
+        this.webApiController = webApiController;
     }
 
-    public BoolEO getWebRestController_() {
-        return webRestController_;
+    public BoolEO getWebCloudapi_() {
+        return webCloudapi_;
     }
 
-    public void setWebRestController_(BoolEO webRestController_) {
-        this.webRestController_ = webRestController_;
+    public void setWebCloudapi_(BoolEO webCloudapi_) {
+        this.webCloudapi_ = webCloudapi_;
     }
 
-    public BoolEO getWebRestControllerOverwrite_() {
-        return webRestControllerOverwrite_;
+    public BoolEO getWebCloudapiOverwrite_() {
+        return webCloudapiOverwrite_;
     }
 
-    public void setWebRestControllerOverwrite_(BoolEO webRestControllerOverwrite_) {
-        this.webRestControllerOverwrite_ = webRestControllerOverwrite_;
+    public void setWebCloudapiOverwrite_(BoolEO webCloudapiOverwrite_) {
+        this.webCloudapiOverwrite_ = webCloudapiOverwrite_;
     }
 
-    public String getWebRestControllerPackage() {
-        return webRestControllerPackage;
+    public String getWebCloudapiPackage() {
+        return webCloudapiPackage;
     }
 
-    public void setWebRestControllerPackage(String webRestControllerPackage) {
-        this.webRestControllerPackage = webRestControllerPackage;
+    public void setWebCloudapiPackage(String webCloudapiPackage) {
+        this.webCloudapiPackage = webCloudapiPackage;
     }
 
-    public String getWebRestController() {
-        return webRestController;
+    public String getWebCloudapi() {
+        return webCloudapi;
     }
 
-    public void setWebRestController(String webRestController) {
-        this.webRestController = webRestController;
+    public void setWebCloudapi(String webCloudapi) {
+        this.webCloudapi = webCloudapi;
+    }
+
+    public BoolEO getWebOpenapi_() {
+        return webOpenapi_;
+    }
+
+    public void setWebOpenapi_(BoolEO webOpenapi_) {
+        this.webOpenapi_ = webOpenapi_;
+    }
+
+    public BoolEO getWebOpenapiOverwrite_() {
+        return webOpenapiOverwrite_;
+    }
+
+    public void setWebOpenapiOverwrite_(BoolEO webOpenapiOverwrite_) {
+        this.webOpenapiOverwrite_ = webOpenapiOverwrite_;
+    }
+
+    public String getWebOpenapiPackage() {
+        return webOpenapiPackage;
+    }
+
+    public void setWebOpenapiPackage(String webOpenapiPackage) {
+        this.webOpenapiPackage = webOpenapiPackage;
+    }
+
+    public String getWebOpenapi() {
+        return webOpenapi;
+    }
+
+    public void setWebOpenapi(String webOpenapi) {
+        this.webOpenapi = webOpenapi;
     }
 
     public BoolEO getUi_() {
@@ -1015,12 +1053,12 @@ public class Generate implements Serializable {
         this.apiDTOReference = apiDTOReference;
     }
 
-    public String getApiDTOVeriable() {
-        return apiDTOVeriable;
+    public String getApiDTOVariable() {
+        return apiDTOVariable;
     }
 
-    public void setApiDTOVeriable(String apiDTOVeriable) {
-        this.apiDTOVeriable = apiDTOVeriable;
+    public void setApiDTOVariable(String apiDTOVariable) {
+        this.apiDTOVariable = apiDTOVariable;
     }
 
     public String getApiApiReference() {
@@ -1031,12 +1069,12 @@ public class Generate implements Serializable {
         this.apiApiReference = apiApiReference;
     }
 
-    public String getApiApiVeriable() {
-        return apiApiVeriable;
+    public String getApiApiVariable() {
+        return apiApiVariable;
     }
 
-    public void setApiApiVeriable(String apiApiVeriable) {
-        this.apiApiVeriable = apiApiVeriable;
+    public void setApiApiVariable(String apiApiVariable) {
+        this.apiApiVariable = apiApiVariable;
     }
 
     public String getDaoPOReference() {
@@ -1047,12 +1085,12 @@ public class Generate implements Serializable {
         this.daoPOReference = daoPOReference;
     }
 
-    public String getDaoPOVeriable() {
-        return daoPOVeriable;
+    public String getDaoPOVariable() {
+        return daoPOVariable;
     }
 
-    public void setDaoPOVeriable(String daoPOVeriable) {
-        this.daoPOVeriable = daoPOVeriable;
+    public void setDaoPOVariable(String daoPOVariable) {
+        this.daoPOVariable = daoPOVariable;
     }
 
     public String getDaoMapperReference() {
@@ -1063,12 +1101,12 @@ public class Generate implements Serializable {
         this.daoMapperReference = daoMapperReference;
     }
 
-    public String getDaoMapperVeriable() {
-        return daoMapperVeriable;
+    public String getDaoMapperVariable() {
+        return daoMapperVariable;
     }
 
-    public void setDaoMapperVeriable(String daoMapperVeriable) {
-        this.daoMapperVeriable = daoMapperVeriable;
+    public void setDaoMapperVariable(String daoMapperVariable) {
+        this.daoMapperVariable = daoMapperVariable;
     }
 
     public String getDaoJpaReference() {
@@ -1079,12 +1117,12 @@ public class Generate implements Serializable {
         this.daoJpaReference = daoJpaReference;
     }
 
-    public String getDaoJpaVeriable() {
-        return daoJpaVeriable;
+    public String getDaoJpaVariable() {
+        return daoJpaVariable;
     }
 
-    public void setDaoJpaVeriable(String daoJpaVeriable) {
-        this.daoJpaVeriable = daoJpaVeriable;
+    public void setDaoJpaVariable(String daoJpaVariable) {
+        this.daoJpaVariable = daoJpaVariable;
     }
 
     public String getDaoCacheSupportReference() {
@@ -1103,12 +1141,12 @@ public class Generate implements Serializable {
         this.daoDAOReference = daoDAOReference;
     }
 
-    public String getDaoDAOVeriable() {
-        return daoDAOVeriable;
+    public String getDaoDAOVariable() {
+        return daoDAOVariable;
     }
 
-    public void setDaoDAOVeriable(String daoDAOVeriable) {
-        this.daoDAOVeriable = daoDAOVeriable;
+    public void setDaoDAOVariable(String daoDAOVariable) {
+        this.daoDAOVariable = daoDAOVariable;
     }
 
     public String getDaoDAONameQualifier() {
@@ -1159,12 +1197,12 @@ public class Generate implements Serializable {
         this.serviceServiceReference = serviceServiceReference;
     }
 
-    public String getServiceServiceVeriable() {
-        return serviceServiceVeriable;
+    public String getServiceServiceVariable() {
+        return serviceServiceVariable;
     }
 
-    public void setServiceServiceVeriable(String serviceServiceVeriable) {
-        this.serviceServiceVeriable = serviceServiceVeriable;
+    public void setServiceServiceVariable(String serviceServiceVariable) {
+        this.serviceServiceVariable = serviceServiceVariable;
     }
 
     public String getServiceServiceImplReference() {
@@ -1207,44 +1245,60 @@ public class Generate implements Serializable {
         this.serviceVOReference = serviceVOReference;
     }
 
-    public String getServiceVOVeriable() {
-        return serviceVOVeriable;
+    public String getServiceVOVariable() {
+        return serviceVOVariable;
     }
 
-    public void setServiceVOVeriable(String serviceVOVeriable) {
-        this.serviceVOVeriable = serviceVOVeriable;
+    public void setServiceVOVariable(String serviceVOVariable) {
+        this.serviceVOVariable = serviceVOVariable;
     }
 
-    public String getWebControllerReference() {
-        return webControllerReference;
+    public String getWebApiControllerReference() {
+        return webApiControllerReference;
     }
 
-    public void setWebControllerReference(String webControllerReference) {
-        this.webControllerReference = webControllerReference;
+    public void setWebApiControllerReference(String webApiControllerReference) {
+        this.webApiControllerReference = webApiControllerReference;
     }
 
-    public String getWebControllerVeriable() {
-        return webControllerVeriable;
+    public String getWebApiControllerVariable() {
+        return webApiControllerVariable;
     }
 
-    public void setWebControllerVeriable(String webControllerVeriable) {
-        this.webControllerVeriable = webControllerVeriable;
+    public void setWebApiControllerVariable(String webApiControllerVariable) {
+        this.webApiControllerVariable = webApiControllerVariable;
     }
 
-    public String getWebRestControllerReference() {
-        return webRestControllerReference;
+    public String getWebCloudapiReference() {
+        return webCloudapiReference;
     }
 
-    public void setWebRestControllerReference(String webRestControllerReference) {
-        this.webRestControllerReference = webRestControllerReference;
+    public void setWebCloudapiReference(String webCloudapiReference) {
+        this.webCloudapiReference = webCloudapiReference;
     }
 
-    public String getWebRestControllerVeriable() {
-        return webRestControllerVeriable;
+    public String getWebCloudapiVariable() {
+        return webCloudapiVariable;
     }
 
-    public void setWebRestControllerVeriable(String webRestControllerVeriable) {
-        this.webRestControllerVeriable = webRestControllerVeriable;
+    public void setWebCloudapiVariable(String webCloudapiVariable) {
+        this.webCloudapiVariable = webCloudapiVariable;
+    }
+
+    public String getWebOpenapiReference() {
+        return webOpenapiReference;
+    }
+
+    public void setWebOpenapiReference(String webOpenapiReference) {
+        this.webOpenapiReference = webOpenapiReference;
+    }
+
+    public String getWebOpenapiVariable() {
+        return webOpenapiVariable;
+    }
+
+    public void setWebOpenapiVariable(String webOpenapiVariable) {
+        this.webOpenapiVariable = webOpenapiVariable;
     }
 
     public String getWebAbstractControllerPackage() {
