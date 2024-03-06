@@ -92,7 +92,7 @@
             <td class="lable">Type:</td>
             <td>
                 <!--<input type="radio" name="pType" value="Single"/>Single-->
-                <!--<input type="radio" name="pType" value="Multiple" checked="checked"/>Multiple-->
+                <!--<input type="radio" name="pType" value="Multiple"/>Multiple-->
                 <input type="text" class="big_140 readonly" name="pType" value="" readonly="true">
             </td>
         </tr>
@@ -192,8 +192,7 @@
         <br/> <br/>
         <fieldset>
             <legend>
-                <span style="font-weight: 700;"><input type="checkbox" name="api_"
-                                                       value="true">Module -> Api</span>
+                <span style="font-weight: 700;"><input type="checkbox" name="api_" value="true">Module -> Api</span>
             </legend>
             <table border="0" cellpadding="0" cellspacing="0">
                 <tr>
@@ -211,7 +210,7 @@
                 <tr>
                     <td class="lable"><input type="checkbox" name="apiApi_" value="true"></td>
                     <td class="lable" style="background-color: #008000;">Api</td>
-                    <td class="lable"><input type="checkbox" name="apiApiOverwrite_" value="true">Overwrite: </td>
+                    <td class="lable" style="background-color: #008000;"><input type="checkbox" name="apiApiOverwrite_" value="true">Overwrite: </td>
                     <td>
                         <input type="text" name="apiApiPackage" class="big_240 right" value="">
                     </td>
@@ -266,8 +265,8 @@
                 </tr>
                 <tr>
                     <td class="lable"><input type="checkbox" name="daoJpa_" value="true"></td>
-                    <td class="lable">Jpa</td>
-                    <td class="lable"><input type="checkbox" name="daoJpaOverwrite_" value="true">Overwrite: </td>
+                    <td class="lable" style="background-color: #008000;">Jpa</td>
+                    <td class="lable" style="background-color: #008000;"><input type="checkbox" name="daoJpaOverwrite_" value="true">Overwrite: </td>
                     <td>
                         <input type="text" name="daoJpaPackage" class="big_240 right" value="">
                     </td>
@@ -279,7 +278,7 @@
                 <tr>
                     <td class="lable"><input type="checkbox" name="daoCacheSupport_" value="true"></td>
                     <td class="lable" style="background-color: #008000;">CacheSupport</td>
-                    <td class="lable"><input type="checkbox" name="daoCacheSupportOverwrite_" value="true">Overwrite: </td>
+                    <td class="lable" style="background-color: #008000;"><input type="checkbox" name="daoCacheSupportOverwrite_" value="true">Overwrite: </td>
                     <td>
                         <input type="text" name="daoCacheSupportPackage" class="big_240 right" value="">
                     </td>
@@ -329,8 +328,7 @@
         <br/> <br/>
         <fieldset>
             <legend>
-                <span style="font-weight: 700;"><input type="checkbox" name="service_"
-                                                       value="true">Module -> Service</span>
+                <span style="font-weight: 700;"><input type="checkbox" name="service_" value="true">Module -> Service</span>
             </legend>
             <table border="0" cellpadding="0" cellspacing="0">
                 <tr>
@@ -391,7 +389,7 @@
             <table border="0" cellpadding="0" cellspacing="0">
                 <tr>
                     <td class="lable"><input type="checkbox" name="webApiController_" value="true"></td>
-                    <td class="lable">ApiController</td>
+                    <td class="lable">Controller</td>
                     <td class="lable"><input type="checkbox" name="webApiControllerOverwrite_" value="true">Overwrite: </td>
                     <td>
                         <input type="text" name="webApiControllerPackage" class="big_240 right" value="">
@@ -1372,7 +1370,7 @@
         _init: function () {
             this._().prop("checked", false);
 
-            this.apiDTO_().prop("checked", false);
+            this.apiDTO_().prop("checked", true);
             this.apiDTOOverwrite_().prop("checked", false);
             this.apiDTOPackage().val('');
             this.apiDTO().val('');
@@ -1525,15 +1523,15 @@
         _init: function () {
             this._().prop("checked", false);
 
-            this.daoPO_().prop("checked", false);
+            this.daoPO_().prop("checked", true);
             this.daoPOOverwrite_().prop("checked", false);
             this.poPackage().val('');
             this.po().val('');
-            this.daoMapper_().prop("checked", false);
+            this.daoMapper_().prop("checked", true);
             this.daoMapperOverwrite_().prop("checked", false);
             this.mapperPackage().val('');
             this.mapper().val('');
-            this.daoMapperXml_().prop("checked", false);
+            this.daoMapperXml_().prop("checked", true);
             this.daoMapperXmlOverwrite_().prop("checked", false);
             this.mapperXmlPackage().val('');
             this.mapperXml().val('');
@@ -1545,15 +1543,15 @@
             this.daoCacheSupportOverwrite_().prop("checked", false);
             this.daoCacheSupportPackage().val('');
             this.daoCacheSupport().val('');
-            this.daoDAO_().prop("checked", false);
+            this.daoDAO_().prop("checked", true);
             this.daoDAOOverwrite_().prop("checked", false);
             this.daoPackage().val('');
             this.dao().val('');
-            this.daoDAOImpl_().prop("checked", false);
+            this.daoDAOImpl_().prop("checked", true);
             this.daoDAOImplOverwrite_().prop("checked", false);
             this.daoImplPackage().val('');
             this.daoImpl().val('');
-            this.daoDAOTest_().prop("checked", false);
+            this.daoDAOTest_().prop("checked", true);
             this.daoDAOTestOverwrite_().prop("checked", false);
             this.testPackage().val('');
             this.test().val('');
@@ -1692,19 +1690,19 @@
         _init: function () {
             this._().prop("checked", false);
 
-            this.serviceVO_().prop("checked", false);
+            this.serviceVO_().prop("checked", true);
             this.serviceVOOverwrite_().prop("checked", false);
             this.serviceVOPackage().val('');
             this.serviceVO().val('');
-            this.serviceService_().prop("checked", false);
+            this.serviceService_().prop("checked", true);
             this.serviceServiceOverwrite_().prop("checked", false);
             this.serviceServicePackage().val('');
             this.serviceService().val('');
-            this.serviceServiceImpl_().prop("checked", false);
+            this.serviceServiceImpl_().prop("checked", true);
             this.serviceServiceImplOverwrite_().prop("checked", false);
             this.serviceServiceImplPackage().val('');
             this.serviceServiceImpl().val('');
-            this.serviceServiceTest_().prop("checked", false);
+            this.serviceServiceTest_().prop("checked", true);
             this.serviceServiceTestOverwrite_().prop("checked", false);
             this.serviceTestPackage().val('');
             this.serviceTest().val('');
@@ -1805,17 +1803,17 @@
         _init: function () {
             this._().prop("checked", false);
 
-            this.webApiController_().prop("checked", false);
+            this.webApiController_().prop("checked", true);
             this.webApiControllerOverwrite_().prop("checked", false);
             this.webApiControllerPackage().val('');
             this.webApiController().val('');
 
-            this.webCloudapi_().prop("checked", false);
+            this.webCloudapi_().prop("checked", true);
             this.webCloudapiOverwrite_().prop("checked", false);
             this.webCloudapiPackage().val('');
             this.webCloudapi().val('');
 
-            this.webOpenapi_().prop("checked", false);
+            this.webOpenapi_().prop("checked", true);
             this.webOpenapiOverwrite_().prop("checked", false);
             this.webOpenapiPackage().val('');
             this.webOpenapi().val('');
