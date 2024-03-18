@@ -61,7 +61,7 @@ public class [(${name})] extends AbstractController {
      * 详细
      *
      * @param id id
-     * @return Map
+     * @return DTO
      */
     @GetMapping(value = "/detail/{id}", produces = "application/json")
     public DTO detail(@PathVariable("id") [(${idType})] id) {
@@ -72,7 +72,7 @@ public class [(${name})] extends AbstractController {
      * edit
      *
      * @param id id
-     * @return Map
+     * @return DTO
      */
     @GetMapping(value = "/edit/{id}", produces = "application/json")
     public DTO edit(@PathVariable("id") [(${idType})] id) {
@@ -83,7 +83,7 @@ public class [(${name})] extends AbstractController {
      * modify
      *
      * @param [(${serviceVOVariable})] [(${serviceVOVariable})]
-     * @return Map
+     * @return DTO
      */
     @PutMapping(value = "/modify", produces = "application/json")
     public DTO modify(@RequestBody [(${serviceVO})] [(${serviceVOVariable})]) {
@@ -114,7 +114,7 @@ public class [(${name})] extends AbstractController {
      * delete
      *
      * @param ids ids
-     * @return Map
+     * @return DTO
      */
     @DeleteMapping(value = "/delete", produces = "application/json")
     public DTO delete([(${idType})][] ids) {

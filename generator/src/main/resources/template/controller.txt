@@ -35,7 +35,7 @@ public class [(${name})] extends AbstractController {
 //     * list
 //     *
 //     * @param [(${serviceVOVariable})] vo
-//     * @return Map
+//     * @return DTO
 //     */
 //    @RequestMapping(value = "/list", method = {RequestMethod.GET, RequestMethod.POST},
 //            produces = "application/json")
@@ -57,7 +57,7 @@ public class [(${name})] extends AbstractController {
 //     * save new
 //     *
 //     * @param [(${serviceVOVariable})] [(${serviceVOVariable})]
-//     * @return Map
+//     * @return DTO
 //     */
 //    @PutMapping(value = "/save", produces = "application/json")
 //    @ResponseBody
@@ -73,7 +73,7 @@ public class [(${name})] extends AbstractController {
 //     * 详细
 //     *
 //     * @param id id
-//     * @return Map
+//     * @return DTO
 //     */
 //    @GetMapping(value = "/detail/{id}", produces = "application/json")
 //    @ResponseBody
@@ -85,7 +85,7 @@ public class [(${name})] extends AbstractController {
 //     * edit
 //     *
 //     * @param id id
-//     * @return Map
+//     * @return DTO
 //     */
 //    @GetMapping(value = "/edit/{id}", produces = "application/json")
 //    @ResponseBody
@@ -97,7 +97,7 @@ public class [(${name})] extends AbstractController {
 //     * modify
 //     *
 //     * @param [(${serviceVOVariable})] [(${serviceVOVariable})]
-//     * @return Map
+//     * @return DTO
 //     */
 //    @PutMapping(value = "/modify", produces = "application/json")
 //    @ResponseBody
@@ -129,7 +129,7 @@ public class [(${name})] extends AbstractController {
 //     * delete
 //     *
 //     * @param ids ids
-//     * @return Map
+//     * @return DTO
 //     */
 //    @DeleteMapping(value = "/delete", produces = "application/json")
 //    @ResponseBody
