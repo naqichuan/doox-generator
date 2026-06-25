@@ -291,14 +291,14 @@ public class GenerateService implements IGenerateService {
             }
 
             if ("DATETIME".equalsIgnoreCase(c.getType())
-                    && StringUtils.containsIgnoreCase(c.getField(), "_create")) {
+                    && (StringUtils.containsIgnoreCase(c.getField(), "_create") || StringUtils.containsIgnoreCase(c.getField(), "_gmt_create"))) {
                 c.setCm_(true);
 
                 c.setMybatisValue("NOW()");
             }
 
             if ("TIMESTAMP".equalsIgnoreCase(c.getType())
-                    && StringUtils.containsIgnoreCase(c.getField(), "_modify")) {
+                    && (StringUtils.containsIgnoreCase(c.getField(), "_modify") || StringUtils.containsIgnoreCase(c.getField(), "_gmt_modified"))) {
                 c.setCm_(true);
 
                 c.setMybatisValue("CURRENT_TIMESTAMP()");
