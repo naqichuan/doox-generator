@@ -14,7 +14,7 @@
 
     <insert id="save" parameterType="[(${poName})]" useGeneratedKeys="true" keyProperty="[(${idFieldName})]">
         INSERT INTO `[(${tableName})]` (
-            <include refid="[(${tableName})]_columns" />
+            <include refid="[(${tableName})]_columns" />[(${cmColumnsStr})]
         ) VALUES ([# th:each="c : ${poInsertColumns}"][# th:if="${cStat.index > 0}"],[/]
             [(*{poInsertFields[__${cStat.index}__]})][/]
         )

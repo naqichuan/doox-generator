@@ -656,6 +656,8 @@ public class GenerateService implements IGenerateService {
             List<String> resultMap = new ArrayList<>();
             List<String> poInsertColumns = new ArrayList<>();
             List<String> poInsertFields = new ArrayList<>();
+            List<String> cmInsertColumns = new ArrayList<>();
+            List<String> cmInsertFields = new ArrayList<>();
 
             List<String> poUpdateColumns = new ArrayList<>();
             List<String> poUpdateFields = new ArrayList<>();
@@ -667,34 +669,40 @@ public class GenerateService implements IGenerateService {
             List<String> poConditionFieldValues = new ArrayList<>();
 
             Column idc = g.getTable().getIdColumn();
-            final String[] tableColumnsStr = {""};
+            final String[] tableColumnsStr = {"", ""};
             final String[] idColumn = {idc != null ? idc.getField() : null};
             final String[] idFieldName = {idc != null ? idc.getField_() : null};
             final String[] idField = {idc != null ? "#{" + idc.getField_() + "}" : null};
 
             g.getTable().getColumns().forEach(c -> {
-                if (!tableColumnsStr[0].isEmpty())
-                    tableColumnsStr[0] += ", ";
-                tableColumnsStr[0] += "`";
-                tableColumnsStr[0] += c.getField();
-                tableColumnsStr[0] += "`";
-
-                poInsertColumns.add(c.getField());
-
                 if (c.isId_()) {
+                    if (!tableColumnsStr[0].isEmpty())
+                        tableColumnsStr[0] += ", ";
+                    tableColumnsStr[0] += "`" + c.getField() + "`";
+                    poInsertColumns.add(c.getField());
+
                     resultMap.add("<id property=\"" + c.getField_() + "\" column=\"" + c.getField() + "\" />");
 
                     poInsertFields.add(c.getMybatisValue());
+                } else if (c.isCm_()) {
+                    if (!tableColumnsStr[1].isEmpty())
+                        tableColumnsStr[1] += ", ";
+                    tableColumnsStr[1] += "`" + c.getField() + "`";
+
+                    cmInsertColumns.add(c.getField());
+                    cmInsertFields.add(c.getMybatisValue());
                 } else {
+                    if (!tableColumnsStr[0].isEmpty())
+                        tableColumnsStr[0] += ", ";
+                    tableColumnsStr[0] += "`" + c.getField() + "`";
+                    poInsertColumns.add(c.getField());
+
                     resultMap.add("<result property=\"" + c.getField_() + "\" column=\"" + c.getField() + "\" />");
 
-                    if (c.isCm_()) {
-                        poInsertFields.add(c.getMybatisValue());
-                    } else {
-                        poInsertFields.add("#{" + c.getField_() + "}");
+                    poInsertFields.add("#{" + c.getField_() + "}");
 
-                        poUpdateColumns.add(c.getField());
-                        poUpdateFields.add("#{" + c.getField_() + "}");
+                    poUpdateColumns.add(c.getField());
+                    poUpdateFields.add("#{" + c.getField_() + "}");
 
                         /*
                         | Field         | Operator | value                          |
@@ -711,75 +719,78 @@ public class GenerateService implements IGenerateService {
                         | `field_ge`    | >=       | `#{field_ge}`                  |
                         */
 
+                    poConditionColumns.add(c.getField());
+                    poConditionOperates.add("=");
+                    poConditionFields.add(c.getField_());
+                    poConditionFieldValues.add("#{" + c.getField_() + "}");
+
+                    String conditionField;
+                    if ("String".equalsIgnoreCase(c.getType_())) {
+                        poConditionFieldIsString.add(true);
+
+                        conditionField = c.getField_() + "_no";
                         poConditionColumns.add(c.getField());
-                        poConditionOperates.add("=");
-                        poConditionFields.add(c.getField_());
-                        poConditionFieldValues.add("#{" + c.getField_() + "}");
+                        poConditionOperates.add("!=");
+                        poConditionFields.add(conditionField);
+                        poConditionFieldIsString.add(true);
+                        poConditionFieldValues.add("#{" + conditionField + "}");
 
-                        String conditionField;
-                        if ("String".equalsIgnoreCase(c.getType_())) {
-                            poConditionFieldIsString.add(true);
+                        conditionField = c.getField_() + "__";
+                        poConditionColumns.add(c.getField());
+                        poConditionOperates.add(" like ");
+                        poConditionFields.add(conditionField);
+                        poConditionFieldIsString.add(true);
+                        poConditionFieldValues.add("concat('%',#{" + conditionField + "},'%')");
 
-                            conditionField = c.getField_() + "_no";
-                            poConditionColumns.add(c.getField());
-                            poConditionOperates.add("!=");
-                            poConditionFields.add(conditionField);
-                            poConditionFieldIsString.add(true);
-                            poConditionFieldValues.add("#{" + conditionField + "}");
+                        conditionField = c.getField_() + "_no_";
+                        poConditionColumns.add(c.getField());
+                        poConditionOperates.add(" not like ");
+                        poConditionFields.add(conditionField);
+                        poConditionFieldIsString.add(true);
+                        poConditionFieldValues.add("concat('%',#{" + conditionField + "},'%')");
+                    } else if ("Long".equalsIgnoreCase(c.getType_())
+                            || "int".equalsIgnoreCase(c.getType_())
+                            || "Integer".equalsIgnoreCase(c.getType_())
+                            || "Float".equalsIgnoreCase(c.getType_())
+                            || "Double".equalsIgnoreCase(c.getType_())
+                            || "BigDecimal".equalsIgnoreCase(c.getType_())) {
+                        poConditionFieldIsString.add(false);
 
-                            conditionField = c.getField_() + "__";
-                            poConditionColumns.add(c.getField());
-                            poConditionOperates.add(" like ");
-                            poConditionFields.add(conditionField);
-                            poConditionFieldIsString.add(true);
-                            poConditionFieldValues.add("concat('%',#{" + conditionField + "},'%')");
+                        conditionField = c.getField_() + "_lt";
+                        poConditionColumns.add(c.getField());
+                        poConditionOperates.add("&lt;");
+                        poConditionFields.add(conditionField);
+                        poConditionFieldIsString.add(false);
+                        poConditionFieldValues.add("#{" + conditionField + "}");
 
-                            conditionField = c.getField_() + "_no_";
-                            poConditionColumns.add(c.getField());
-                            poConditionOperates.add(" not like ");
-                            poConditionFields.add(conditionField);
-                            poConditionFieldIsString.add(true);
-                            poConditionFieldValues.add("concat('%',#{" + conditionField + "},'%')");
-                        } else if ("Long".equalsIgnoreCase(c.getType_())
-                                || "int".equalsIgnoreCase(c.getType_())
-                                || "Integer".equalsIgnoreCase(c.getType_())
-                                || "Float".equalsIgnoreCase(c.getType_())
-                                || "Double".equalsIgnoreCase(c.getType_())
-                                || "BigDecimal".equalsIgnoreCase(c.getType_())) {
-                            poConditionFieldIsString.add(false);
+                        conditionField = c.getField_() + "_le";
+                        poConditionColumns.add(c.getField());
+                        poConditionOperates.add("&lt;=");
+                        poConditionFields.add(conditionField);
+                        poConditionFieldIsString.add(false);
+                        poConditionFieldValues.add("#{" + conditionField + "}");
 
-                            conditionField = c.getField_() + "_lt";
-                            poConditionColumns.add(c.getField());
-                            poConditionOperates.add("&lt;");
-                            poConditionFields.add(conditionField);
-                            poConditionFieldIsString.add(false);
-                            poConditionFieldValues.add("#{" + conditionField + "}");
+                        conditionField = c.getField_() + "_gt";
+                        poConditionColumns.add(c.getField());
+                        poConditionOperates.add("&gt;");
+                        poConditionFields.add(conditionField);
+                        poConditionFieldIsString.add(false);
+                        poConditionFieldValues.add("#{" + conditionField + "}");
 
-                            conditionField = c.getField_() + "_le";
-                            poConditionColumns.add(c.getField());
-                            poConditionOperates.add("&lt;=");
-                            poConditionFields.add(conditionField);
-                            poConditionFieldIsString.add(false);
-                            poConditionFieldValues.add("#{" + conditionField + "}");
+                        conditionField = c.getField_() + "_ge";
+                        poConditionColumns.add(c.getField());
+                        poConditionOperates.add("&gt;=");
+                        poConditionFields.add(conditionField);
+                        poConditionFieldIsString.add(false);
+                        poConditionFieldValues.add("#{" + conditionField + "}");
+                    } else
+                        poConditionFieldIsString.add(false);
 
-                            conditionField = c.getField_() + "_gt";
-                            poConditionColumns.add(c.getField());
-                            poConditionOperates.add("&gt;");
-                            poConditionFields.add(conditionField);
-                            poConditionFieldIsString.add(false);
-                            poConditionFieldValues.add("#{" + conditionField + "}");
-
-                            conditionField = c.getField_() + "_ge";
-                            poConditionColumns.add(c.getField());
-                            poConditionOperates.add("&gt;=");
-                            poConditionFields.add(conditionField);
-                            poConditionFieldIsString.add(false);
-                            poConditionFieldValues.add("#{" + conditionField + "}");
-                        } else
-                            poConditionFieldIsString.add(false);
-                    }
                 }
             });
+
+            if (!poInsertFields.isEmpty() && !cmInsertColumns.isEmpty())
+                tableColumnsStr[1] = "," + tableColumnsStr[1];
 
             cxt.setVariable("tableName", g.getTable().getName());
             cxt.setVariable("namespace", g.getDaoMapperReference());
@@ -792,7 +803,10 @@ public class GenerateService implements IGenerateService {
             cxt.setVariable("idField", idField[0]);
             cxt.setVariable("resultMap", resultMap);
             cxt.setVariable("tableColumnsStr", tableColumnsStr[0]);
+            cxt.setVariable("cmColumnsStr", tableColumnsStr[1]);
+            poInsertColumns.addAll(cmInsertColumns);
             cxt.setVariable("poInsertColumns", poInsertColumns);
+            poInsertFields.addAll(cmInsertFields);
             cxt.setVariable("poInsertFields", poInsertFields);
             cxt.setVariable("poUpdateColumns", poUpdateColumns);
             cxt.setVariable("poUpdateFields", poUpdateFields);
